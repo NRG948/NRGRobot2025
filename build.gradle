@@ -1,11 +1,19 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2025.1.1"
+    id "com.diffplug.spotless"  version "7.0.1"
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+        licenseHeaderFile  "./.styleguide-license"
+    }
 }
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
@@ -102,3 +110,6 @@ wpi.java.configureTestTasks(test)
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
+
+// Reformat Java files before compiing the robot code.
+compileJava.dependsOn 'spotlessApply'
