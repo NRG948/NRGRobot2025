@@ -7,6 +7,8 @@
  
 package frc.robot;
 
+import com.nrg948.preferences.RobotPreferences;
+import com.nrg948.preferences.RobotPreferencesLayout;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -20,6 +22,7 @@ import frc.robot.subsystems.Subsystems;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
+@RobotPreferencesLayout(groupName = "Preferences", column = 0, row = 0, width = 1, height = 1)
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Subsystems subsystems = new Subsystems();
@@ -30,6 +33,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    RobotPreferences.addShuffleBoardTab();
+    subsystems.initShuffleboard();
+
     // Configure the trigger bindings
     configureBindings();
   }

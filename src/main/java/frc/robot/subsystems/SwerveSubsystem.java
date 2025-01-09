@@ -75,7 +75,7 @@ import java.util.function.Supplier;
     type = "Grid Layout",
     gridColumns = 3,
     gridRows = 2)
-public class SwerveSubsystem extends SubsystemBase {
+public class SwerveSubsystem extends SubsystemBase implements ShuffleboardProducer {
   private static final Rotation2d ROTATE_180_DEGREES = Rotation2d.fromDegrees(180);
 
   @RobotPreferencesValue(column = 0, row = 0)
@@ -563,6 +563,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   /** Adds a tab for swerve drive in Shuffleboard. */
+  @Override
   public void addShuffleboardTab() {
     if (ENABLE_DRIVE_TAB.getValue()) {
       ShuffleboardTab swerveDriveTab = Shuffleboard.getTab("Drive");

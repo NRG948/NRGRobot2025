@@ -117,7 +117,6 @@ public class Elevator extends SubsystemBase {
     SparkMaxConfig sparkMaxConfig = new SparkMaxConfig();
     sparkMaxConfig
         .encoder
-        .countsPerRevolution(1)
         .positionConversionFactor(METERS_PER_REVOLUTION)
         .velocityConversionFactor(METERS_PER_REVOLUTION);
     sparkMaxConfig

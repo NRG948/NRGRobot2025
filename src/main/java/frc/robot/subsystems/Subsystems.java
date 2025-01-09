@@ -10,7 +10,16 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class Subsystems {
+  public final SwerveSubsystem drivetrain = new SwerveSubsystem();
   public final Elevator elevator = new Elevator();
 
-  public final Subsystem[] all = new Subsystem[] {elevator};
+  public final Subsystem[] all = new Subsystem[] {drivetrain, elevator};
+
+  public void initShuffleboard() {
+    for (Subsystem subsystem : all) {
+      if (subsystem instanceof ShuffleboardProducer) {
+        ShuffleboardProducer.class.cast(subsystem).addShuffleboardTab();
+      }
+    }
+  }
 }
