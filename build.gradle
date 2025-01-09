@@ -1,3 +1,12 @@
+buildscript {
+    dependencies {
+        // Add the Reflections library and dependencies to the classpath so we
+        // can generate its metadata during the build.
+        classpath 'org.reflections:reflections:0.10.2'
+        classpath 'org.dom4j:dom4j:2.1.3'
+    }
+}
+
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2025.1.1"
@@ -17,6 +26,16 @@ spotless {
 }
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
+
+repositories {
+    maven {
+        url = uri("https://maven.pkg.github.com/NRG948/nrgcommon")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+            password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+}
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
@@ -63,6 +82,7 @@ dependencies {
     annotationProcessor wpi.java.deps.wpilibAnnotations()
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
+    implementation 'com.nrg948:nrgcommon:2025.1.0'
 
     roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
     roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
@@ -113,3 +133,35 @@ tasks.withType(JavaCompile) {
 
 // Reformat Java files before compiing the robot code.
 compileJava.dependsOn 'spotlessApply'
+
+// Generates metadata consumed by the NRG Common Library to find annotations at runtime.
+task generateReflectionsMetadata {
+    dependsOn compileJava
+
+    doLast {
+        // Create a class loader for the main project files.
+        Set<File> projectDirs = project.sourceSets.main.output.classesDirs.files
+        URL[] projectUrls = projectDirs.collect { it.toURI().toURL() }.toArray(new URL[0])
+        ClassLoader projectLoader = new URLClassLoader(projectUrls, (java.lang.ClassLoader)null)
+
+        // Create a class loader for the project runtime dependencies.
+        Set<File> classpathFiles = project.configurations.runtimeClasspath.files
+        URL[] classpathUrls = classpathFiles.collect { it.toURI().toURL() }.toArray(new URL[0])
+        ClassLoader classpathLoader = new URLClassLoader(classpathUrls, (java.lang.ClassLoader)null)
+
+        // Generate the metadata for the Reflections library.
+        new org.reflections.Reflections(
+            new org.reflections.util.ConfigurationBuilder()
+                .forPackage("frc.robot", projectLoader)
+                .forPackage("com.nrg948", classpathLoader)
+                .setScanners(
+                    org.reflections.scanners.Scanners.FieldsAnnotated,
+                    org.reflections.scanners.Scanners.MethodsAnnotated,
+                    org.reflections.scanners.Scanners.SubTypes,
+                    org.reflections.scanners.Scanners.TypesAnnotated))
+            .save("${project.sourceSets.main.output.classesDirs.asPath}/META-INF/reflections/${project.archivesBaseName}-reflections.xml")
+    }
+}
+
+// Generate the NRG Common Library metadata when the robot code is built.
+jar.dependsOn generateReflectionsMetadata
