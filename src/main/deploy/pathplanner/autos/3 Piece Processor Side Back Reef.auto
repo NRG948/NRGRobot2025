@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Processor Start to Reef(F)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef(F) to Processor Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Processor Intake to Reef(E)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef(E) to Processor Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Processor Intake to Reef(D)"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
