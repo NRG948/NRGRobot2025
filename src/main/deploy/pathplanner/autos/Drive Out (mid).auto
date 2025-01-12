@@ -1,0 +1,19 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Mid Start to Side"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Drive Out",
+  "choreoAuto": false
+}

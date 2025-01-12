@@ -9,7 +9,10 @@
     "Processor Intake",
     "Processor Start"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "Drive Out",
+    "Score one"
+  ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
