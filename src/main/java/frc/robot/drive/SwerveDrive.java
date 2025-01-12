@@ -33,6 +33,7 @@ public class SwerveDrive extends RobotDriveBase {
   private final Supplier<Rotation2d> orientationSupplier;
   private final double maxDriveSpeed;
   private final double maxRotationalSpeed;
+  private final ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
   // The current supplied state updated by the periodic method.
   private Rotation2d orientation;
@@ -143,7 +144,10 @@ public class SwerveDrive extends RobotDriveBase {
     rSpeed *= m_maxOutput * maxRotationalSpeed;
 
     if (!fieldRelative) {
-      setChassisSpeeds(new ChassisSpeeds(xSpeed, ySpeed, rSpeed));
+      chassisSpeeds.vxMetersPerSecond = xSpeed;
+      chassisSpeeds.vyMetersPerSecond = ySpeed;
+      chassisSpeeds.omegaRadiansPerSecond = rSpeed;
+      setChassisSpeeds(chassisSpeeds);
     } else {
       Optional<Alliance> alliance = DriverStation.getAlliance();
 
@@ -152,7 +156,15 @@ public class SwerveDrive extends RobotDriveBase {
         ySpeed *= -1.0;
       }
 
-      setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rSpeed, orientation));
+      double orientationRadians = -orientation.getRadians();
+
+      chassisSpeeds.vxMetersPerSecond =
+          (xSpeed * Math.cos(orientationRadians)) - (ySpeed * Math.sin(orientationRadians));
+      chassisSpeeds.vyMetersPerSecond =
+          (xSpeed * Math.sin(orientationRadians)) + (ySpeed * Math.cos(orientationRadians));
+      chassisSpeeds.omegaRadiansPerSecond = rSpeed;
+
+      setChassisSpeeds(chassisSpeeds);
     }
   }
 
