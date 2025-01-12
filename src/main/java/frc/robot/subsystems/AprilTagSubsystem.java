@@ -68,7 +68,7 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
 
   private final SendableChooser<Integer> aprilTagIdChooser = new SendableChooser<>();
   private final AprilTagFieldLayout aprilTagFieldLayout =
-      AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo); // update to k2025Reefscape
+      AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
   private BooleanLogEntry hasTargetLogger;
   private DoubleLogEntry distanceLogger;
