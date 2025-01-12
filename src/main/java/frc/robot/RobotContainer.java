@@ -34,6 +34,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     RobotPreferences.addShuffleBoardTab();
+
     subsystems.initShuffleboard();
 
     // Configure the trigger bindings

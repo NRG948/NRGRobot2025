@@ -1,0 +1,50 @@
+[
+  {
+    "name": "/Preferences/AprilTag/Robot Vision",
+    "type": "string",
+    "value": "CompetitionBase2024",
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/AprilTag/Enable Tab",
+    "type": "boolean",
+    "value": true,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Drive/Enable Tab",
+    "type": "boolean",
+    "value": false,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/AprilTag/Enabled",
+    "type": "boolean",
+    "value": true,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Drive/Robot Base",
+    "type": "string",
+    "value": "PracticeBase2024",
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Preferences/WriteDefault",
+    "type": "boolean",
+    "value": false,
+    "properties": {
+      "persistent": true
+    }
+  }
+]

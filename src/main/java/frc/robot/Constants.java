@@ -7,7 +7,11 @@
  
 package frc.robot;
 
+import com.nrg948.preferences.RobotPreferences;
+import com.nrg948.preferences.RobotPreferencesValue;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.parameters.VisionParameters;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -38,4 +42,21 @@ public final class Constants {
     /** The driver Xbox controller port. */
     public static final int DRIVER_CONTROLLER_PORT = 0;
   }
+
+  public static final String CAMERA1_NAME = "948Mono001";
+
+  @RobotPreferencesValue
+  public static RobotPreferences.EnumValue<VisionParameters> PARAMETERS =
+      new RobotPreferences.EnumValue<VisionParameters>(
+          "AprilTag", "Robot Vision", VisionParameters.CompetitionBase2024);
+
+  /** Used to transform the center of robot position to the camera position. */
+  public static final Transform3d APRILTAG_ROBOT_TO_CAMERA1 =
+      PARAMETERS.getValue().getRobotToCamera();
+
+  /** Used to transform the camera position to the center of robot position. */
+  public static final Transform3d APRILTAG_CAMERA_TO_ROBOT = APRILTAG_ROBOT_TO_CAMERA1.inverse();
+
+  /** Field of view of the AprilTag camera in degrees. */
+  public static final double APRILTAG_CAMERA_FOV = 70;
 }
