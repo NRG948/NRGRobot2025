@@ -14,24 +14,25 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Subsystems {
   public final SwerveSubsystem drivetrain = new SwerveSubsystem();
   public final Elevator elevator = new Elevator();
-  public final Optional<AprilTagSubsystem> aprilTag;
-
-  // public final Subsystem[] all = new Subsystem[] {drivetrain, elevator};
+  public final Optional<AprilTagSubsystem> aprilTag =
+      newOptionalSubsystem(
+          AprilTagSubsystem.class,
+          AprilTagSubsystem.ENABLED,
+          Constants.CAMERA1_NAME,
+          Constants.APRILTAG_ROBOT_TO_CAMERA1);
 
   ArrayList<Subsystem> all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, elevator));
 
+  /** Constructs the robot subsystems container. */
   public Subsystems() {
-    if (AprilTagSubsystem.ENABLED.getValue()) {
-      aprilTag =
-          Optional.of(
-              new AprilTagSubsystem(Constants.CAMERA1_NAME, Constants.APRILTAG_ROBOT_TO_CAMERA1));
+    if (aprilTag.isPresent()) {
       all.add(aprilTag.get());
-    } else {
-      aprilTag = Optional.empty();
     }
   }
 
@@ -41,27 +42,35 @@ public class Subsystems {
    * @param <T> The of subsystem.
    * @param subsystemClass The subsystem class.
    * @param enabled The preferences value indicating whether the subsystem is enabled.
+   * @param initArgs The arguments to pass to the subsystem's constructor.
    * @return Returns a non-empty {@link Optional} instance if the subsystem is enabled. Otherwise,
    *     this method returns {@link Optional#empty}.
    */
   private static <T extends Subsystem> Optional<T> newOptionalSubsystem(
-      Class<T> subsystemClass, RobotPreferences.BooleanValue enabled) {
-
+      Class<T> subsystemClass, RobotPreferences.BooleanValue enabled, Object... initArgs) {
     if (!enabled.getValue()) {
       return Optional.empty();
     }
 
+    Class<?>[] initArgClasses = Stream.of(initArgs).map(Object::getClass).toArray(Class<?>[]::new);
+
     try {
-      return Optional.of(subsystemClass.getConstructor().newInstance());
+      return Optional.of(subsystemClass.getConstructor(initArgClasses).newInstance(initArgs));
     } catch (InstantiationException
         | IllegalAccessException
         | IllegalArgumentException
         | InvocationTargetException
-        | NoSuchMethodException
         | SecurityException e) {
       System.err.printf(
           "ERROR: An unexpected exception was caught while creating an instance of %s.%n",
           subsystemClass.getName());
+      e.printStackTrace();
+      return Optional.empty();
+    } catch (NoSuchMethodException e) {
+      System.err.printf(
+          "ERROR: The class is missing constructor %s(%s).%n",
+          subsystemClass.getName(),
+          Stream.of(initArgClasses).map(Class::getSimpleName).collect(Collectors.joining(", ")));
       e.printStackTrace();
       return Optional.empty();
     }
