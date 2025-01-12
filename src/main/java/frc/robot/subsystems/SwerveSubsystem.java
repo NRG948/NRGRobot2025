@@ -530,16 +530,25 @@ public class SwerveSubsystem extends SubsystemBase implements ShuffleboardProduc
 
       positionLayout
           .addDouble("X", () -> odometry.getEstimatedPosition().getX())
-          .withPosition(0, 0);
+          .withPosition(0, 0)
+          .withWidget(BuiltInWidgets.kTextView);
       positionLayout
           .addDouble("Y", () -> odometry.getEstimatedPosition().getY())
-          .withPosition(1, 0);
+          .withPosition(1, 0)
+          .withWidget(BuiltInWidgets.kTextView);
 
-      positionLayout.addDouble("est. X", () -> lastVisionMeasurement.getX()).withPosition(0, 1);
-      positionLayout.addDouble("est. Y", () -> lastVisionMeasurement.getY()).withPosition(1, 1);
+      positionLayout
+          .addDouble("est. X", () -> lastVisionMeasurement.getX())
+          .withPosition(0, 1)
+          .withWidget(BuiltInWidgets.kTextView);
+      positionLayout
+          .addDouble("est. Y", () -> lastVisionMeasurement.getY())
+          .withPosition(1, 1)
+          .withWidget(BuiltInWidgets.kTextView);
       positionLayout
           .addDouble("est. angle", () -> lastVisionMeasurement.getRotation().getDegrees())
-          .withPosition(2, 1);
+          .withPosition(2, 1)
+          .withWidget(BuiltInWidgets.kTextView);
     }
   }
 }

@@ -373,13 +373,18 @@ public class SwerveModule {
             .getLayout("State", BuiltInLayouts.kGrid)
             .withProperties(Map.of("Number of columns", 1, "Number of rows", 3))
             .withPosition(1, 0);
-    translationLayout.addDouble("Position", () -> getPosition().distanceMeters).withPosition(0, 0);
+    translationLayout
+        .addDouble("Position", () -> getPosition().distanceMeters)
+        .withPosition(0, 0)
+        .withWidget(BuiltInWidgets.kTextView);
     translationLayout
         .addDouble("Velocity", () -> getState().speedMetersPerSecond)
-        .withPosition(0, 1);
+        .withPosition(0, 1)
+        .withWidget(BuiltInWidgets.kTextView);
     translationLayout
         .addDouble("Angular Velocity", () -> getVelocities().steeringVelocity)
-        .withPosition(0, 2);
+        .withPosition(0, 2)
+        .withWidget(BuiltInWidgets.kTextView);
 
     return moduleLayout;
   }
