@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.264549180327867,
-        "y": 2.2388319672131147
+        "x": 7.2885245901639335,
+        "y": 2.2328381147540983
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.474000000000001,
-        "y": 2.620999999999999
+        "x": 6.497975409836068,
+        "y": 2.6150061475409827
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Processor Start"
     },
     {
       "anchor": {
@@ -48,7 +48,7 @@
   "folder": "Processor Start",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.3161635763414
+    "rotation": -1.5911402711944727
   },
   "useDefaultConstraints": true
 }

@@ -1,0 +1,25 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Barge Start to Reef(I)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef(I) Back Out"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Score one",
+  "choreoAuto": false
+}
