@@ -202,9 +202,9 @@ public class SwerveSubsystem extends SubsystemBase implements ShuffleboardProduc
    * is up to date.
    */
   private void updateSensorState() {
-    Rotation2d rawGyro = gyro.getAngle();
-    rawOrientation = rawGyro.getRadians();
-    rawOrientationLog.append(rawGyro.getDegrees());
+    double rawGyro = gyro.getAngle();
+    rawOrientation = rawGyro;
+    rawOrientationLog.append(Math.toDegrees(rawGyro));
     orientation = new Rotation2d(MathUtil.angleModulus(rawOrientation + rawOrientationOffset));
   }
 

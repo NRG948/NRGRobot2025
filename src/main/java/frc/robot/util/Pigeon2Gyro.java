@@ -7,19 +7,22 @@
  
 package frc.robot.util;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Angle;
 
 public class Pigeon2Gyro implements Gyro {
   private Pigeon2 pigeon;
+  private StatusSignal<Angle> angle;
 
   public Pigeon2Gyro(int canID) {
     pigeon = new Pigeon2(canID, "rio");
+    angle = pigeon.getYaw();
   }
 
   @Override
-  public Rotation2d getAngle() {
-    return pigeon.getRotation2d();
+  public double getAngle() {
+    return Math.toRadians(angle.refresh().getValueAsDouble());
   }
 
   @Override

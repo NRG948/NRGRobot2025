@@ -7,11 +7,9 @@
  
 package frc.robot.util;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-
 public interface Gyro {
-  /** Returns the gyro angle with positive values in the counter-clockwise direction. */
-  Rotation2d getAngle();
+  /** Returns the gyro angle in radians with positive values in the counter-clockwise direction. */
+  double getAngle();
 
   /** Resets the gyro to 0. */
   void reset();
