@@ -8,20 +8,10 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.HolonomicDriveController;
@@ -54,12 +44,14 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.drive.SwerveDrive;
 import frc.robot.drive.SwerveModule;
 import frc.robot.parameters.SwerveAngleEncoder;
 import frc.robot.parameters.SwerveDriveParameters;
 import frc.robot.parameters.SwerveMotors;
+import frc.robot.util.Gyro;
+import frc.robot.util.MotorController;
+import frc.robot.util.RelativeEncoder;
 import frc.robot.util.SwerveModuleVelocities;
 import frc.robot.util.SwerveModuleVoltages;
 import java.util.Map;
@@ -90,78 +82,51 @@ public class SwerveSubsystem extends SubsystemBase implements ShuffleboardProduc
   public static final double DRIVE_KP = 1.0;
 
   // 4 pairs of motors for drive & steering.
-  private final SparkMax frontLeftDriveMotor =
-      new SparkMax(
-          PARAMETERS.getValue().getMotorId(SwerveMotors.FrontLeftDrive), MotorType.kBrushless);
-  private final SparkMax frontLeftSteeringMotor =
-      new SparkMax(
-          PARAMETERS.getValue().getMotorId(SwerveMotors.FrontLeftSteering), MotorType.kBrushless);
+  private final MotorController frontLeftDriveMotor =
+      PARAMETERS.getValue().getMotorController(SwerveMotors.FrontLeftDrive);
+  private final MotorController frontLeftSteeringMotor =
+      PARAMETERS.getValue().getMotorController(SwerveMotors.FrontLeftSteering);
 
-  private final SparkMax frontRightDriveMotor =
-      new SparkMax(
-          PARAMETERS.getValue().getMotorId(SwerveMotors.FrontRightDrive), MotorType.kBrushless);
-  private final SparkMax frontRightSteeringMotor =
-      new SparkMax(
-          PARAMETERS.getValue().getMotorId(SwerveMotors.FrontRightSteering), MotorType.kBrushless);
+  private final MotorController frontRightDriveMotor =
+      PARAMETERS.getValue().getMotorController(SwerveMotors.FrontRightDrive);
+  private final MotorController frontRightSteeringMotor =
+      PARAMETERS.getValue().getMotorController(SwerveMotors.FrontRightSteering);
 
-  private final SparkMax backLeftDriveMotor =
-      new SparkMax(
-          PARAMETERS.getValue().getMotorId(SwerveMotors.BackLeftDrive), MotorType.kBrushless);
-  private final SparkMax backLeftSteeringMotor =
-      new SparkMax(
-          PARAMETERS.getValue().getMotorId(SwerveMotors.BackLeftSteering), MotorType.kBrushless);
+  private final MotorController backLeftDriveMotor =
+      PARAMETERS.getValue().getMotorController(SwerveMotors.BackLeftDrive);
+  private final MotorController backLeftSteeringMotor =
+      PARAMETERS.getValue().getMotorController(SwerveMotors.BackLeftSteering);
 
-  private final SparkMax backRightDriveMotor =
-      new SparkMax(
-          PARAMETERS.getValue().getMotorId(SwerveMotors.BackRightDrive), MotorType.kBrushless);
-  private final SparkMax backRightSteeringMotor =
-      new SparkMax(
-          PARAMETERS.getValue().getMotorId(SwerveMotors.BackRightSteering), MotorType.kBrushless);
+  private final MotorController backRightDriveMotor =
+      PARAMETERS.getValue().getMotorController(SwerveMotors.BackRightDrive);
+  private final MotorController backRightSteeringMotor =
+      PARAMETERS.getValue().getMotorController(SwerveMotors.BackRightSteering);
 
   // 4 CANcoders for the steering angle.
   private final CANcoder frontLeftAngle =
-      new CANcoder(PARAMETERS.getValue().getAngleEncoderId(SwerveAngleEncoder.FrontLeft));
+      PARAMETERS.getValue().getAngleEncoder(SwerveAngleEncoder.FrontLeft);
   private final CANcoder frontRightAngle =
-      new CANcoder(PARAMETERS.getValue().getAngleEncoderId(SwerveAngleEncoder.FrontRight));
+      PARAMETERS.getValue().getAngleEncoder(SwerveAngleEncoder.FrontRight);
   private final CANcoder backLeftAngle =
-      new CANcoder(PARAMETERS.getValue().getAngleEncoderId(SwerveAngleEncoder.BackLeft));
+      PARAMETERS.getValue().getAngleEncoder(SwerveAngleEncoder.BackLeft);
   private final CANcoder backRightAngle =
-      new CANcoder(PARAMETERS.getValue().getAngleEncoderId(SwerveAngleEncoder.BackRight));
+      PARAMETERS.getValue().getAngleEncoder(SwerveAngleEncoder.BackRight);
 
   private final SwerveModule frontLeftModule =
-      createSwerveModule(
-          frontLeftDriveMotor,
-          frontLeftSteeringMotor,
-          frontLeftAngle,
-          PARAMETERS.getValue().getAngleOffset(SwerveAngleEncoder.FrontLeft),
-          "Front Left");
+      createSwerveModule(frontLeftDriveMotor, frontLeftSteeringMotor, frontLeftAngle, "Front Left");
   private final SwerveModule frontRightModule =
       createSwerveModule(
-          frontRightDriveMotor,
-          frontRightSteeringMotor,
-          frontRightAngle,
-          PARAMETERS.getValue().getAngleOffset(SwerveAngleEncoder.FrontRight),
-          "Front Right");
+          frontRightDriveMotor, frontRightSteeringMotor, frontRightAngle, "Front Right");
   private final SwerveModule backLeftModule =
-      createSwerveModule(
-          backLeftDriveMotor,
-          backLeftSteeringMotor,
-          backLeftAngle,
-          PARAMETERS.getValue().getAngleOffset(SwerveAngleEncoder.BackLeft),
-          "Back Left");
+      createSwerveModule(backLeftDriveMotor, backLeftSteeringMotor, backLeftAngle, "Back Left");
   private final SwerveModule backRightModule =
-      createSwerveModule(
-          backRightDriveMotor,
-          backRightSteeringMotor,
-          backRightAngle,
-          PARAMETERS.getValue().getAngleOffset(SwerveAngleEncoder.BackRight),
-          "Back Right");
+      createSwerveModule(backRightDriveMotor, backRightSteeringMotor, backRightAngle, "Back Right");
 
   private final SwerveModule[] modules = {
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
 
-  private final Pigeon2 gyro = new Pigeon2(Constants.RobotConstants.CAN.PIGEON_ID, "rio");
+  private final Gyro gyro = PARAMETERS.getValue().getGyro();
 
   private final SwerveDriveKinematics kinematics = PARAMETERS.getValue().getKinematics();
 
@@ -197,38 +162,7 @@ public class SwerveSubsystem extends SubsystemBase implements ShuffleboardProduc
    * @return An initialized {@link SwerveModule} object.
    */
   private static SwerveModule createSwerveModule(
-      SparkMax driveMotor,
-      SparkMax steeringMotor,
-      CANcoder wheelAngle,
-      double angleOffset,
-      String name) {
-
-    final double metersPerRotation =
-        (PARAMETERS.getValue().getWheelDiameter() * Math.PI)
-            / PARAMETERS.getValue().getDriveGearRatio();
-
-    SparkMaxConfig driveMotorConfig = new SparkMaxConfig();
-    driveMotorConfig
-        .idleMode(IdleMode.kBrake)
-        .encoder
-        .positionConversionFactor(metersPerRotation)
-        .velocityConversionFactor(metersPerRotation);
-    driveMotor.configure(
-        driveMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    SparkMaxConfig steeringMotorConfig = new SparkMaxConfig();
-    steeringMotorConfig
-        .idleMode(IdleMode.kBrake)
-        .inverted(PARAMETERS.getValue().isSteeringInverted());
-    steeringMotor.configure(
-        steeringMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    CANcoderConfigurator wheelAngleConfigurator = wheelAngle.getConfigurator();
-    CANcoderConfiguration wheelAngleConfig = new CANcoderConfiguration();
-
-    wheelAngleConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
-    wheelAngleConfig.MagnetSensor.MagnetOffset = angleOffset / 360.0;
-    wheelAngleConfigurator.apply(wheelAngleConfig);
+      MotorController driveMotor, MotorController steeringMotor, CANcoder wheelAngle, String name) {
 
     RelativeEncoder driveEncoder = driveMotor.getEncoder();
     StatusSignal<Angle> wheelOrientation = wheelAngle.getAbsolutePosition();
@@ -268,7 +202,7 @@ public class SwerveSubsystem extends SubsystemBase implements ShuffleboardProduc
    * is up to date.
    */
   private void updateSensorState() {
-    Rotation2d rawGyro = gyro.getRotation2d();
+    Rotation2d rawGyro = gyro.getAngle();
     rawOrientation = rawGyro.getRadians();
     rawOrientationLog.append(rawGyro.getDegrees());
     orientation = new Rotation2d(MathUtil.angleModulus(rawOrientation + rawOrientationOffset));

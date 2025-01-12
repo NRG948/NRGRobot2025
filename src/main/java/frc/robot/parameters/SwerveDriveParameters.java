@@ -13,12 +13,19 @@ import static frc.robot.parameters.SwerveModuleParameters.MK4IFast;
 import static frc.robot.parameters.SwerveModuleParameters.MK4IFaster;
 import static frc.robot.parameters.SwerveModuleParameters.MK4Standard;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.CANcoderConfigurator;
+import com.ctre.phoenix6.hardware.CANcoder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.math.util.Units;
+import frc.robot.util.Gyro;
+import frc.robot.util.MotorController;
+import frc.robot.util.NavXGyro;
+import frc.robot.util.Pigeon2Gyro;
 
 /** An enum representing the properties for the swerve drive base of a specific robot instance. */
 public enum SwerveDriveParameters {
@@ -37,20 +44,9 @@ public enum SwerveDriveParameters {
       new int[] {12, 14, 16, 18}, // CANCoder CAN IDs
       new double[] {144.23, 26.02, 201.18, 202.59},
       0.15,
-      0.15),
-  RookieBase2023Characterized(
-      67.5853,
-      Units.inchesToMeters(22.729),
-      Units.inchesToMeters(19.39),
-      MK4Standard,
-      Falcon500,
-      NeoV1_1,
-      new int[] {2, 3, 4, 5, 6, 7, 8, 9}, // drive, steer motor controller CAN IDs
-      new int[] {12, 14, 16, 18}, // CANCoder CAN IDs
-      new double[] {144.23, 26.02, 201.18, 202.59},
-      new FeedforwardConstants(0.13638, 2.3316, 0.058878),
-      new FeedforwardConstants(0.13638, 2.3316, 0.058878) // TODO; characterize steering
-      ),
+      0.15,
+      false,
+      0),
   PracticeBase2024(
       24.2,
       0.578,
@@ -62,19 +58,9 @@ public enum SwerveDriveParameters {
       new int[] {31, 32, 33, 34}, // CANCoder CAN IDs
       new double[] {186.5, 69.61, 172.62, 21.27},
       0.15,
-      0.15),
-  PracticeBase2024Characterized(
-      24.2,
-      0.578,
-      0.528,
-      MK4IFast,
-      Falcon500,
-      NeoV1_1,
-      new int[] {6, 7, 19, 18, 8, 9, 13, 14}, // drive, steer motor controller CAN IDs
-      new int[] {31, 32, 33, 34}, // CANCoder CAN IDs
-      new double[] {186.5, 69.61, 172.62, 21.27},
-      new FeedforwardConstants(0.14566, 2.3072, 0.0393),
-      0.15), // TODO: Redo characterization
+      0.15,
+      false,
+      0),
   CompetitionBase2024(
       58.5, // TODO: Find out real mass
       Units.inchesToMeters(22.755), // .578m  (22.755)
@@ -86,7 +72,9 @@ public enum SwerveDriveParameters {
       new int[] {31, 32, 33, 34}, // CANCoder CAN IDs
       new double[] {169.10, 144.67, 120.85, 202.85},
       0.15,
-      0.15);
+      0.15,
+      false,
+      0);
 
   public static class Constants {
     /**
@@ -105,6 +93,8 @@ public enum SwerveDriveParameters {
   private final int[] motorIds;
   private final int[] angleEncoderIds;
   private final double[] angleOffset;
+  private final boolean usesPigeon;
+  private final int pigeonID;
 
   private final double maxDriveSpeed;
   private final double maxDriveAcceleration;
@@ -173,7 +163,9 @@ public enum SwerveDriveParameters {
       int[] angleEncoderIds,
       double[] angleOffset,
       FeedforwardConstants driveFeedForward,
-      FeedforwardConstants steeringFeedForward) {
+      FeedforwardConstants steeringFeedForward,
+      boolean usesPigeon,
+      int pigeonID) {
     this.robotMass = robotMass;
     this.wheelDistanceX = wheelDistanceX;
     this.wheelDistanceY = wheelDistanceY;
@@ -185,6 +177,8 @@ public enum SwerveDriveParameters {
     this.angleOffset = angleOffset;
     this.driveFeedforward = driveFeedForward;
     this.steeringFeedforward = steeringFeedForward;
+    this.usesPigeon = usesPigeon;
+    this.pigeonID = pigeonID;
 
     double scaleFactor = Constants.SCALE_FACTOR;
 
@@ -269,7 +263,9 @@ public enum SwerveDriveParameters {
       int[] angleEncoderIds,
       double[] angleOffset,
       FeedforwardConstants driveFeedForward,
-      double steeringkS) {
+      double steeringkS,
+      boolean usesPigeon,
+      int pigeonID) {
     this(
         robotMass,
         wheelDistanceX,
@@ -284,7 +280,9 @@ public enum SwerveDriveParameters {
         new CalculatedFeedforwardConstants(
             steeringkS,
             () -> swerveModule.calculateMaxSteeringSpeed(steeringMotor),
-            () -> swerveModule.calculateMaxSteeringAcceleration(steeringMotor, robotMass)));
+            () -> swerveModule.calculateMaxSteeringAcceleration(steeringMotor, robotMass)),
+        usesPigeon,
+        pigeonID);
   }
 
   /**
@@ -335,7 +333,9 @@ public enum SwerveDriveParameters {
       int[] angleEncoderIds,
       double[] angleOffset,
       double drivekS,
-      double steeringkS) {
+      double steeringkS,
+      boolean usesPigeon,
+      int pigeonID) {
     this(
         robotMass,
         wheelDistanceX,
@@ -353,7 +353,9 @@ public enum SwerveDriveParameters {
         new CalculatedFeedforwardConstants(
             steeringkS,
             () -> swerveModule.calculateMaxSteeringSpeed(steeringMotor),
-            () -> swerveModule.calculateMaxSteeringAcceleration(steeringMotor, robotMass)));
+            () -> swerveModule.calculateMaxSteeringAcceleration(steeringMotor, robotMass)),
+        usesPigeon,
+        pigeonID);
   }
 
   /**
@@ -481,6 +483,28 @@ public enum SwerveDriveParameters {
   }
 
   /**
+   * Returns the motor controller for the specified motor.
+   *
+   * @param motor The motor.
+   * @return The motor controller.
+   */
+  public MotorController getMotorController(SwerveMotors motor) {
+    int motorID = getMotorId(motor);
+
+    switch (motor) {
+      case FrontLeftDrive:
+      case FrontRightDrive:
+      case BackLeftDrive:
+      case BackRightDrive:
+        final double metersPerRotation = (getWheelDiameter() * Math.PI) / getDriveGearRatio();
+        return this.driveMotor.getController(motorID, false, true, metersPerRotation);
+
+      default:
+        return this.steeringMotor.getController(motorID, isSteeringInverted(), true, 1.0);
+    }
+  }
+
+  /**
    * Returns the CANcoder ids of the specified module.
    *
    * @param angleEncoder The angle encoder.
@@ -497,6 +521,24 @@ public enum SwerveDriveParameters {
    */
   public double getAngleOffset(SwerveAngleEncoder angleEncoder) {
     return this.angleOffset[angleEncoder.getIndex()];
+  }
+
+  /**
+   * Returns and configures the angle encoder for the specified module.
+   *
+   * @param angleEncoder The angle encoder.
+   * @return The angle encoder for the specified module.
+   */
+  public CANcoder getAngleEncoder(SwerveAngleEncoder angleEncoder) {
+    int deviceID = getAngleEncoderId(angleEncoder);
+    CANcoder wheelAngleEncoder = new CANcoder(deviceID);
+    CANcoderConfigurator wheelAngleConfigurator = wheelAngleEncoder.getConfigurator();
+    CANcoderConfiguration wheelAngleConfig = new CANcoderConfiguration();
+
+    wheelAngleConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
+    wheelAngleConfig.MagnetSensor.MagnetOffset = getAngleOffset(angleEncoder) / 360.0;
+    wheelAngleConfigurator.apply(wheelAngleConfig);
+    return wheelAngleEncoder;
   }
 
   /**
@@ -650,5 +692,13 @@ public enum SwerveDriveParameters {
    */
   public boolean isSteeringInverted() {
     return swerveModule.isSteeringInverted();
+  }
+
+  /** Returns the correct gyro implementation for the robot. */
+  public Gyro getGyro() {
+    if (usesPigeon) {
+      return new Pigeon2Gyro(pigeonID);
+    }
+    return new NavXGyro();
   }
 }

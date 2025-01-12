@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.DriveUsingController;
 import frc.robot.subsystems.Subsystems;
 
 /**
@@ -36,6 +37,9 @@ public class RobotContainer {
     RobotPreferences.addShuffleBoardTab();
 
     subsystems.initShuffleboard();
+
+    subsystems.drivetrain.setDefaultCommand(
+        new DriveUsingController(subsystems, m_driverController));
 
     // Configure the trigger bindings
     configureBindings();

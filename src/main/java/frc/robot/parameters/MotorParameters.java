@@ -7,6 +7,14 @@
  
 package frc.robot.parameters;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import frc.robot.util.MotorController;
+import frc.robot.util.SparkAdapter;
+import frc.robot.util.TalonFXAdapter;
+import org.ejml.simple.UnsupportedOperation;
+
 /** A enum representing the properties on a specific motor type. */
 public enum MotorParameters {
   /**
@@ -85,5 +93,21 @@ public enum MotorParameters {
    */
   public int getPulsesPerRevolution() {
     return this.pulsesPerRevolution;
+  }
+
+  public MotorController getController(
+      int deviceID, boolean isInverted, boolean brakeMode, double metersPerRotation) {
+    switch (this) {
+      case Falcon500:
+      case KrakenX60:
+        return new TalonFXAdapter(new TalonFX(deviceID), isInverted, brakeMode, metersPerRotation);
+      case NeoV1_1:
+      case NeoVortexMax:
+      case Neo550:
+        return new SparkAdapter(
+            new SparkMax(deviceID, MotorType.kBrushless), isInverted, brakeMode, metersPerRotation);
+      default:
+        throw new UnsupportedOperation("Unknown Motor Type");
+    }
   }
 }
