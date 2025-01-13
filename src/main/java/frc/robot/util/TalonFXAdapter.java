@@ -14,7 +14,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Voltage;
 
 public class TalonFXAdapter implements MotorController {
-
   private final TalonFX talonFX;
   private final double metersPerRotation;
 

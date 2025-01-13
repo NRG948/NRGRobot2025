@@ -12,7 +12,7 @@ import com.studica.frc.AHRS.NavXComType;
 import com.studica.frc.AHRS.NavXUpdateRate;
 
 public class NavXGyro implements Gyro {
-  private AHRS ahrs = new AHRS(NavXComType.kMXP_SPI, NavXUpdateRate.k50Hz);
+  private final AHRS ahrs = new AHRS(NavXComType.kMXP_SPI, NavXUpdateRate.k50Hz);
 
   @Override
   public double getAngle() {

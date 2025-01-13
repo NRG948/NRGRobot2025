@@ -13,9 +13,9 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 public class TalonFXEncoderAdapter implements RelativeEncoder {
-  private StatusSignal<Angle> position;
-  private StatusSignal<AngularVelocity> velocity;
-  private double metersPerRotation;
+  private final StatusSignal<Angle> position;
+  private final StatusSignal<AngularVelocity> velocity;
+  private final double metersPerRotation;
 
   public TalonFXEncoderAdapter(TalonFX controller, double metersPerRotation) {
     position = controller.getPosition();
