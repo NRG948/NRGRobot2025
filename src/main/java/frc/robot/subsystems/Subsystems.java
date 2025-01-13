@@ -83,4 +83,19 @@ public class Subsystems {
       }
     }
   }
+
+  public void periodic() {
+    if (aprilTag.isPresent()) {
+      AprilTagSubsystem aprilTag = this.aprilTag.get();
+      var visionEst = aprilTag.getEstimateGlobalPose();
+
+      visionEst.ifPresent(
+          (est) -> {
+            var estPose = est.estimatedPose.toPose2d();
+            var estStdDevs = aprilTag.getEstimationStdDevs();
+
+            drivetrain.addVisionMeasurement(estPose, est.timestampSeconds, estStdDevs);
+          });
+    }
+  }
 }
