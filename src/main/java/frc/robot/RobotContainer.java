@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveUsingController;
 import frc.robot.subsystems.Subsystems;
 
@@ -54,7 +55,9 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {}
+  private void configureBindings() {
+    m_driverController.back().onTrue(DriveCommands.resetOrientation(subsystems));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
