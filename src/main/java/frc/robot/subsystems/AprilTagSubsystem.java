@@ -15,6 +15,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
 import edu.wpi.first.cscore.VideoSource;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -221,6 +222,14 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
     }
     var bestCameraToTarget = target.get().getBestCameraToTarget();
     return Math.hypot(bestCameraToTarget.getX(), bestCameraToTarget.getY());
+  }
+
+  public Transform3d getTranformToTag(int id) {
+    Optional<PhotonTrackedTarget> target = getTarget(id);
+    if (target.isEmpty()) {
+      return new Transform3d();
+    }
+    return target.get().getBestCameraToTarget(); 
   }
 
   /**
