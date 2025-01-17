@@ -74,7 +74,21 @@ public enum SwerveDriveParameters {
       0.15,
       0.15,
       false,
-      0);
+      0),
+  PracticeBase2025(
+      24.2,
+      0.578,
+      0.528,
+      MK4IFast,
+      Falcon500,
+      NeoV1_1,
+      new int[] {6, 7, 19, 18, 8, 9, 13, 14}, // drive, steer motor controller CAN IDs
+      new int[] {31, 32, 33, 34}, // CANCoder CAN IDs
+      new double[] {186.5, 69.61, 172.62, 21.27},
+      0.15,
+      0.15,
+      true,
+      2);
 
   public static class Constants {
     /**
