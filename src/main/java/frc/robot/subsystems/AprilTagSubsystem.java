@@ -24,6 +24,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -53,18 +54,17 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProducer {
   public static final Matrix<N3, N1> SINGLE_TAG_STD_DEVS = VecBuilder.fill(4, 4, 8);
   public static final Matrix<N3, N1> MULTI_TAG_STD_DEVS = VecBuilder.fill(0.5, 0.5, 1);
-  public static PhotonPipelineResult NO_RESULT = new PhotonPipelineResult();
-  public static Pose3d NO_APRILTAG = new Pose3d();
-  public static EstimatedRobotPose NO_APRILTAG_ESTIMATE =
+  public static final PhotonPipelineResult NO_RESULT = new PhotonPipelineResult();
+  public static final Pose3d NO_APRILTAG = new Pose3d();
+  public static final EstimatedRobotPose NO_APRILTAG_ESTIMATE =
       new EstimatedRobotPose(NO_APRILTAG, 0, List.of(), PoseStrategy.LOWEST_AMBIGUITY);
-
+  public static final double LAST_RESULT_TIMEOUT = 0.1;
   protected final PhotonCamera camera;
 
   private final Transform3d cameraToRobot;
   private final Transform3d robotToCamera;
   private Optional<PhotonPipelineResult> result = Optional.empty();
   private final PhotonPoseEstimator estimator;
-  private double lastEstTimestamp = 0;
   private double angleToTarget;
   private double distanceToTarget;
   private double poseAmibiguity;
@@ -204,7 +204,11 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
         != currentResult.orElse(NO_RESULT).hasTargets()) {
       hasTargetLogger.append(currentResult.orElse(NO_RESULT).hasTargets());
     }
-    this.result = currentResult;
+    if (currentResult.isPresent()
+        || (Timer.getFPGATimestamp() - this.result.orElse(NO_RESULT).getTimestampSeconds())
+            > LAST_RESULT_TIMEOUT) {
+      this.result = currentResult;
+    }
 
     if (hasTargets()) {
       PhotonTrackedTarget bestTarget = getBestTarget();
