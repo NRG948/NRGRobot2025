@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.parameters.ElevatorLevel;
 
 public class Elevator extends SubsystemBase {
 
@@ -139,14 +140,14 @@ public class Elevator extends SubsystemBase {
     logIsSeekingGoal.append(false);
   }
 
-  public void setGoalPosition(double pos) {
+  public void setGoalPosition(ElevatorLevel level) {
     timer.reset();
     timer.start();
     isSeekingGoal = true;
-    goalState.position = pos;
+    goalState.position = level.getHeight();
     goalState.velocity = 0;
     logIsSeekingGoal.append(true);
-    logGoalPosition.append(pos);
+    logGoalPosition.append(level.getHeight());
     logGoalVelocity.append(0);
   }
 
