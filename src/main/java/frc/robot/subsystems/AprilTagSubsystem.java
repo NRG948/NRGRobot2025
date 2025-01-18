@@ -65,8 +65,11 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
   private final Transform3d robotToCamera;
   private Optional<PhotonPipelineResult> result = Optional.empty();
   private final PhotonPoseEstimator estimator;
-  private double angleToTarget;
-  private double distanceToTarget;
+  private double angleToBestTarget;
+  private double distanceToBestTarget;
+  private double angleToSelectedTarget;
+  private double distanceToSelectedTarget;
+
   private double poseAmibiguity;
   private int selectedAprilTag;
   private Pose3d selectedAprilTagPose = new Pose3d();
@@ -212,18 +215,25 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
 
     if (hasTargets()) {
       PhotonTrackedTarget bestTarget = getBestTarget();
-      angleToTarget = -bestTarget.getYaw();
-      Transform3d bestTargetTransform = bestTarget.getBestCameraToTarget();
-      distanceToTarget = Math.hypot(bestTargetTransform.getX(), bestTargetTransform.getY());
+      Transform3d bestTargetTransform = robotToCamera.plus(bestTarget.getBestCameraToTarget());
+      distanceToBestTarget = Math.hypot(bestTargetTransform.getX(), bestTargetTransform.getY());
+      angleToBestTarget = Math.atan2(bestTargetTransform.getY(), bestTargetTransform.getX());
       poseAmibiguity = bestTarget.getPoseAmbiguity();
 
-      distanceLogger.append(distanceToTarget);
-      angleLogger.append(angleToTarget);
+      distanceLogger.append(distanceToBestTarget);
+      angleLogger.append(angleToBestTarget);
     }
 
     if (ENABLE_TAB.getValue()) {
       selectedAprilTag = aprilTagIdChooser.getSelected().intValue();
       selectedAprilTagPose = getAprilTagPose(selectedAprilTag);
+
+      Optional<PhotonTrackedTarget> target = getTarget(selectedAprilTag);
+      if (target.isPresent()) {
+        var robotToTarget = robotToCamera.plus(target.get().getBestCameraToTarget());
+        distanceToSelectedTarget = Math.hypot(robotToTarget.getX(), robotToTarget.getY());
+        angleToSelectedTarget = Math.atan2(robotToTarget.getY(), robotToTarget.getX());
+      }
     }
   }
 
@@ -234,16 +244,6 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
    */
   protected PhotonPipelineResult getLatestResult() {
     return result.orElse(NO_RESULT);
-  }
-
-  /**
-   * Return angle to specificed target
-   *
-   * @param target Target
-   * @return Angle to target
-   */
-  public static double calculateAngleToTarget(PhotonTrackedTarget target) {
-    return Math.toRadians(-target.getYaw());
   }
 
   /**
@@ -282,12 +282,14 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
     return result.orElse(NO_RESULT).getBestTarget();
   }
 
+  /** Returns the distance in meters to the best target from the robot center. */
   public double getDistanceToBestTarget() {
-    return distanceToTarget;
+    return distanceToBestTarget;
   }
 
+  /** Returns angle in radians to best target relative to robot center. */
   public double getAngleToBestTarget() {
-    return angleToTarget;
+    return angleToBestTarget;
   }
 
   public double getAmibiguity() {
@@ -313,7 +315,8 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
   }
 
   /**
-   * Returns the distance to the target with the input ID. Returns 0 if target not found.
+   * Returns the distance from center of the robot to the target with the input ID. Returns 0 if
+   * target not found.
    *
    * @param id The AprilTag ID.
    * @return The distance to the target with the input ID.
@@ -323,22 +326,8 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
     if (target.isEmpty()) {
       return 0.0;
     }
-    var bestCameraToTarget = target.get().getBestCameraToTarget();
+    var bestCameraToTarget = robotToCamera.plus(target.get().getBestCameraToTarget());
     return Math.hypot(bestCameraToTarget.getX(), bestCameraToTarget.getY());
-  }
-
-  /**
-   * Returns the angle to the target with the input ID. Returns 0 if target not found.
-   *
-   * @param id The AprilTag ID.
-   * @return The angle to the target with the input ID.
-   */
-  public double getAngleToTarget(int id) {
-    Optional<PhotonTrackedTarget> target = getTarget(id);
-    if (target.isEmpty()) {
-      return 0.0;
-    }
-    return calculateAngleToTarget(target.get());
   }
 
   public void addShuffleboardTab() {
@@ -357,10 +346,10 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
     targetLayout.add("ID Selection", aprilTagIdChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
     targetLayout.addBoolean("Has Target", this::hasTargets).withWidget(BuiltInWidgets.kBooleanBox);
     targetLayout
-        .addDouble("Distance", () -> getDistanceToTarget(selectedAprilTag))
+        .addDouble("Distance", () -> distanceToSelectedTarget)
         .withWidget(BuiltInWidgets.kTextView);
     targetLayout
-        .addDouble("Angle", () -> Math.toDegrees(getAngleToTarget(selectedAprilTag)))
+        .addDouble("Angle", () -> Math.toDegrees(angleToSelectedTarget))
         .withWidget(BuiltInWidgets.kTextView);
 
     visionTab
