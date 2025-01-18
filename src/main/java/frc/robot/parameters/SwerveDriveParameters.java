@@ -68,9 +68,10 @@ public enum SwerveDriveParameters {
       MK4IFaster,
       Falcon500,
       NeoV1_1,
-      new int[] {6, 7, 19, 18, 8, 9, 13, 14}, // drive, steer motor controller CAN IDs
-      new int[] {31, 32, 33, 34}, // CANCoder CAN IDs
-      new double[] {169.10, 144.67, 120.85, 202.85},
+      // for 2025 testing, the camera is treated as the front of the robot
+      new int[] {13, 14, 8, 9, 19, 18, 6, 7}, // drive, steer motor controller CAN IDs
+      new int[] {34, 33, 32, 31}, // CANCoder CAN IDs
+      new double[] {22.85, 300.85, 324.67, 349.10},
       0.15,
       0.15,
       false,

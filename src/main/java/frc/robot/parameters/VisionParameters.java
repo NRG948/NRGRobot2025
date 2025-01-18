@@ -15,7 +15,9 @@ import edu.wpi.first.math.util.Units;
 /** Add your docs here. */
 public enum VisionParameters {
   PracticeBase2024(0, 0, 0, 0, 0, 180), // TODO: Get real values
-  CompetitionBase2024(-11.375, 0, 23.625, 0, -21.5, 180); // test robot
+  CompetitionBase2024(
+      11.375, 0, 23.625, 0, 21.5,
+      0); // test robot, flipping front/back of the robot compared to 2024
 
   private double x;
   private double y;
