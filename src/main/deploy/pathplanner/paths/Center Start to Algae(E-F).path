@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.3125,
-        "y": 4.072950819672131
+        "x": 7.324487704918032,
+        "y": 4.036987704918033
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.58125,
-        "y": 4.060963114754099
+        "x": 6.641188524590164,
+        "y": 3.7013319672131155
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Barge Start Center"
     },
     {
       "anchor": {
-        "x": 5.969877049180327,
-        "y": 4.072950819672131
+        "x": 5.265,
+        "y": 2.7575
       },
       "prevControl": {
-        "x": 6.521311475409834,
-        "y": 4.072950819672131
+        "x": 6.056188524590163,
+        "y": 3.1890573770491817
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef(G) End"
+      "linkedName": "Algae(E-F)"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 120.96375653207346
   },
   "reversed": false,
-  "folder": "Middle Start",
+  "folder": "From Center Start",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 179.10668705589302
   },
   "useDefaultConstraints": true
 }

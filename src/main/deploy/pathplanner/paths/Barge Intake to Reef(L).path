@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 3.4905,
-        "y": 5.117
+        "x": 3.4764344262295084,
+        "y": 5.019979508196721
       },
       "prevControl": {
-        "x": 2.3302500000000004,
-        "y": 6.101749999999999
+        "x": 2.316184426229509,
+        "y": 6.0047295081967205
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -60.75117366345309
+    "rotation": -60.25511870305777
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Cycle Barge Intake",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -54.0

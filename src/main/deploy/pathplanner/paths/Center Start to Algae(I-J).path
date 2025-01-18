@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.826024590163935,
-        "y": 4.348668032786886
+        "x": 7.324487704918032,
+        "y": 4.036987704918033
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.486274590163935,
-        "y": 5.754168032786886
+        "x": 6.28155737704918,
+        "y": 4.612397540983606
       },
       "isLocked": false,
-      "linkedName": "Reef(A)"
+      "linkedName": "Barge Start Center"
     },
     {
       "anchor": {
-        "x": 1.3,
-        "y": 7.0
+        "x": 5.03483606557377,
+        "y": 5.27172131147541
       },
       "prevControl": {
-        "x": 2.2425,
-        "y": 6.72575
+        "x": 5.9818647540983605,
+        "y": 4.744262295081968
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Algae(I-J)"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -54.0
+    "rotation": -120.00492087082402
   },
   "reversed": false,
-  "folder": "Cycle Barge Intake",
+  "folder": "From Center Start",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 179.10668705589302
   },
   "useDefaultConstraints": true
 }

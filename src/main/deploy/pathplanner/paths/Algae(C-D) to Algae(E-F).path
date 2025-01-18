@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 121.53479190518819
+    "rotation": 120.96375653207346
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Algae Removers",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 55.375844920051

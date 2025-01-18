@@ -7,7 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Processor Start to Reef(F)"
+            "pathName": "Center Start to Reef(G)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef(G) to Processor Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Processor Intake to Reef(D)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef(D) to Processor Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Processor Intake to Reef(F)"
           }
         },
         {
@@ -20,18 +44,6 @@
           "type": "path",
           "data": {
             "pathName": "Processor Intake to Reef(E)"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Reef(E) to Processor Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Processor Intake to Reef(D)"
           }
         }
       ]

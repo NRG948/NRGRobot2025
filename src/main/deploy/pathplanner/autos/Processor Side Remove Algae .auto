@@ -7,37 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Processor Start to Reef(F)"
+            "pathName": "Center Start to Algae(E-F)"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Reef(F) to Processor Intake"
+            "pathName": "Algae(E-F) to Algae(C-D)"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Processor Intake to Reef(E)"
+            "pathName": "Algae(C-D) to Algae(A-B)"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Reef(E) to Processor Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Processor Intake to Reef(D)"
+            "pathName": "Algae(A-B) to Algae(K-L)"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Processor Side",
+  "folder": "Target Algae",
   "choreoAuto": false
 }

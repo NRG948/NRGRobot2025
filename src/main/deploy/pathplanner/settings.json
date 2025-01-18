@@ -3,15 +3,20 @@
   "robotLength": 0.74,
   "holonomicMode": true,
   "pathFolders": [
-    "Barge Intake",
-    "Barge Start",
-    "Middle Start",
-    "Processor Intake",
-    "Processor Start"
+    "Algae Removers",
+    "Back Outs",
+    "Cycle Barge Intake",
+    "Cycle Processor Intake",
+    "From Barge Start",
+    "From Center Start",
+    "From Processor Start"
   ],
   "autoFolders": [
-    "Drive Out",
-    "Score one"
+    "Barge Side",
+    "Move Out",
+    "1 Piece Autos",
+    "Processor Side",
+    "Target Algae"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

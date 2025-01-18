@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.17725,
-        "y": 5.234
+        "x": 5.03483606557377,
+        "y": 5.27172131147541
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.65075,
-        "y": 5.565499999999999
+        "x": 4.50833606557377,
+        "y": 5.6032213114754095
       },
       "isLocked": false,
       "linkedName": "Algae(I-J)"
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -58.84069549165573
+    "rotation": -57.094757077012204
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Algae Removers",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -121.7872531216647
+    "rotation": -120.00492087082402
   },
   "useDefaultConstraints": true
 }

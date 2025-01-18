@@ -45,7 +45,7 @@
     "rotation": 52.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Cycle Processor Intake",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -119.745

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.826024590163935,
-        "y": 4.348668032786886
+        "x": 5.265,
+        "y": 2.7575
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.486274590163935,
-        "y": 5.754168032786886
+        "x": 4.81905737704918,
+        "y": 2.3946721311475403
       },
       "isLocked": false,
-      "linkedName": "Reef(A)"
+      "linkedName": "Algae(E-F)"
     },
     {
       "anchor": {
-        "x": 1.3,
-        "y": 7.0
+        "x": 3.7635,
+        "y": 2.7575
       },
       "prevControl": {
-        "x": 2.2425,
-        "y": 6.72575
+        "x": 4.147745901639344,
+        "y": 2.442622950819673
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Algae(C-D)"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -54.0
+    "rotation": 55.375844920051
   },
   "reversed": false,
-  "folder": "Cycle Barge Intake",
+  "folder": "Algae Removers",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 120.96375653207346
   },
   "useDefaultConstraints": true
 }

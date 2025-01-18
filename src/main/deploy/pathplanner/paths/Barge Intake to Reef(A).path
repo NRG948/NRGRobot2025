@@ -45,10 +45,10 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Cycle Barge Intake",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -53.66246366675546
+    "rotation": -54.0
   },
   "useDefaultConstraints": true
 }
