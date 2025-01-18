@@ -76,6 +76,13 @@ public enum MotorParameters {
     return motor;
   }
 
+  /**
+   * @return The stall torque in Nm.
+   */
+  public double getStallTorque() {
+    return this.motor.stallTorqueNewtonMeters;
+  }
+
   public MotorController getController(
       int deviceID, boolean isInverted, boolean brakeMode, double metersPerRotation) {
     switch (this) {

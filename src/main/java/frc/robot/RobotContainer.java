@@ -9,6 +9,8 @@ package frc.robot;
 
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -28,6 +30,8 @@ import frc.robot.subsystems.Subsystems;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Subsystems subsystems = new Subsystems();
+  private final RobotAutonomous autonomous =
+      new RobotAutonomous(subsystems, null); // TODO: figure out what rotaion feedback override.
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -35,15 +39,28 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    RobotPreferences.addShuffleBoardTab();
-
-    subsystems.initShuffleboard();
+    initShuffleboard();
 
     subsystems.drivetrain.setDefaultCommand(
         new DriveUsingController(subsystems, m_driverController));
 
     // Configure the trigger bindings
     configureBindings();
+  }
+
+  private void initShuffleboard() {
+    RobotPreferences.addShuffleBoardTab();
+
+    subsystems.initShuffleboard();
+
+    ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator");
+    autonomous.addShuffleboardLayout(operatorTab);
+    // ShuffleboardLayout statusLayout =
+    //     operatorTab
+    //         .getLayout("Status", BuiltInLayouts.kGrid)
+    //         .withProperties(Map.of("Number of columns", 1, "Number of rows", 1))
+    //         .withPosition(6, 0)
+    //         .withSize(2, 2);
   }
 
   /**

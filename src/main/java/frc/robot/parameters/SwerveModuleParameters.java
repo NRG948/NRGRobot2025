@@ -108,7 +108,6 @@ public enum SwerveModuleParameters {
     return this.steeringInverted;
   }
 
-
   /**
    * Returns the theoretical maximum drive speed in m/s when using the specified motor.
    *

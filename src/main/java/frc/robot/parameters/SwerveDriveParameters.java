@@ -16,6 +16,8 @@ import static frc.robot.parameters.SwerveModuleParameters.MK4Standard;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -605,6 +607,7 @@ public enum SwerveDriveParameters {
   public double getDriveKa() {
     return this.driveFeedforward.kA;
   }
+
   /**
    * Returns a {@link SwerveDriveKinematics} object used to convert chassis speeds to individual
    * module states.
@@ -704,5 +707,20 @@ public enum SwerveDriveParameters {
       return new Pigeon2Gyro(pigeonID);
     }
     return new NavXGyro();
+  }
+
+  /** Returns the moment of the robot base. */
+  public double getMomentOfInertia() {
+    return getRobotMass()
+        * (Math.pow(getWheelDistanceX(), 2) + Math.pow(getWheelDistanceY(), 2))
+        / 12;
+  }
+
+  /** Returns the robot config for pathplanner. */
+  public RobotConfig getPathplannerConfig() {
+    ModuleConfig moduleconfig =
+        new ModuleConfig(
+            getWheelDiameter() / 2, getMaxDriveSpeed(), 1.0, driveMotor.getDCMotor(), 40.0, 1);
+    return new RobotConfig(getRobotMass(), getMomentOfInertia(), moduleconfig, getWheelDistanceX());
   }
 }
