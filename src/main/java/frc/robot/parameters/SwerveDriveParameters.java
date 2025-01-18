@@ -591,16 +591,6 @@ public enum SwerveDriveParameters {
   public double getDriveKa() {
     return this.driveFeedforward.kA;
   }
-
-  /**
-   * Returns the pulses per meter of the integrated encoder.
-   *
-   * @return The pulses per meter of the integrated encoder.
-   */
-  public double getDrivePulsesPerMeter() {
-    return this.swerveModule.calculateDrivePulsesPerMeter(this.driveMotor);
-  }
-
   /**
    * Returns a {@link SwerveDriveKinematics} object used to convert chassis speeds to individual
    * module states.

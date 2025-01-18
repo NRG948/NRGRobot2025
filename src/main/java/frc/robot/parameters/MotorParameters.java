@@ -10,13 +10,11 @@ package frc.robot.parameters;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.util.MotorController;
 import frc.robot.util.SparkAdapter;
 import frc.robot.util.TalonFXAdapter;
 import org.ejml.simple.UnsupportedOperation;
-
 
 /** A enum representing the properties on a specific motor type. */
 public enum MotorParameters {
@@ -24,8 +22,8 @@ public enum MotorParameters {
    * A VEX PRO <a href="https://www.vexrobotics.com/217-6515.html">Falcon 500</a> motor with
    * integrated Talon FX motor controller and encoders.
    */
-  //Falcon500(6380.0, 4.69, 2048),
-  Falcon500(DCMotor.getFalcon500(1)),  
+  // Falcon500(6380.0, 4.69, 2048),
+  Falcon500(DCMotor.getFalcon500(1)),
 
   /**
    * A WestCoast Products <a href="https://docs.wcproducts.com/kraken-x60/kraken-x60-motor">Kraken
@@ -43,7 +41,7 @@ public enum MotorParameters {
    * controller.
    */
   NeoVortexMax(DCMotor.getNeoVortex(1)),
-  
+
   /**
    * A REV Robotics <a href="https://www.revrobotics.com/rev-21-1651/">NEO 550 Brushless Motor</a>
    * with integrated encoder.
@@ -70,7 +68,7 @@ public enum MotorParameters {
    * @return The free speed RPM.
    */
   public double getFreeSpeedRPM() {
-    //return this.freeSpeedRPM;
+    // return this.freeSpeedRPM;
     return this.motor.freeSpeedRadPerSec / (2 * Math.PI) * 60;
   }
 

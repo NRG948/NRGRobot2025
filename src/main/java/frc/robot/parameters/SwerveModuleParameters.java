@@ -108,15 +108,6 @@ public enum SwerveModuleParameters {
     return this.steeringInverted;
   }
 
-  /**
-   * Returns the pulses per meter of the integrated encoder on the specified motor.
-   *
-   * @param motor
-   * @return The pulses per meter of the integrated encoder on the specified motor.
-   */
-  public double calculateDrivePulsesPerMeter(MotorParameters motor) {
-    return (motor.getPulsesPerRevolution() * this.driveGearRatio) / (this.wheelDiameter * Math.PI);
-  }
 
   /**
    * Returns the theoretical maximum drive speed in m/s when using the specified motor.
