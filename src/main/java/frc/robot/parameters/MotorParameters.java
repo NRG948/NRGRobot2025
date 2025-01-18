@@ -72,25 +72,8 @@ public enum MotorParameters {
     return this.motor.freeSpeedRadPerSec / (2 * Math.PI) * 60;
   }
 
-  /**
-   * Returns the stall torque of the motor in Nm.
-   *
-   * @return The stall torque in Nm.
-   */
-  public double getStallTorque() {
-    return this.motor.stallTorqueNewtonMeters;
-  }
-
-  public DCMotor getFalconFX(int numMotors) {
-    return DCMotor.getFalcon500(numMotors);
-  }
-
-  public DCMotor getKrakenMotor(int numMotors) {
-    return DCMotor.getKrakenX60(numMotors);
-  }
-
-  public DCMotor getNeoMotor(int numMotors) {
-    return DCMotor.getNeo550(numMotors);
+  public DCMotor getDCMotor() {
+    return motor;
   }
 
   public MotorController getController(
