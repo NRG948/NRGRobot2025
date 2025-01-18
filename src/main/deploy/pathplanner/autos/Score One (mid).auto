@@ -20,6 +20,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Score one",
+  "folder": null,
   "choreoAuto": false
 }

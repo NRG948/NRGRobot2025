@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.53675,
-        "y": 3.9274999999999993
+        "x": 1.3,
+        "y": 7.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.22475,
-        "y": 5.702000000000001
+        "x": 2.19375,
+        "y": 5.585
       },
       "isLocked": false,
-      "linkedName": "Mid Start"
+      "linkedName": "Barge Intake"
     },
     {
       "anchor": {
-        "x": 6.809016393442622,
-        "y": 7.36357581967213
+        "x": 3.07125,
+        "y": 4.2395
       },
       "prevControl": {
-        "x": 7.215,
-        "y": 5.6922500000000005
+        "x": 2.1742500000000002,
+        "y": 5.57525
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Drive Out Barge Side"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 92.86240522611166
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 93.63266745392717
+    "rotation": -53.66246366675546
   },
   "useDefaultConstraints": true
 }

@@ -8,11 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.376500000000001,
-        "y": 5.43875
+        "x": 5.60625,
+        "y": 5.8385
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef(A)"
     },
     {
       "anchor": {
@@ -45,7 +45,7 @@
     "rotation": -54.0
   },
   "reversed": false,
-  "folder": "Barge Intake",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

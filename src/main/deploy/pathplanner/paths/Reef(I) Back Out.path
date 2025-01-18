@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.514344262295082,
-        "y": 6.176793032786884
+        "x": 5.87925,
+        "y": 6.3065
       },
       "isLocked": false,
       "linkedName": "Reef(I)"
@@ -20,8 +20,8 @@
         "y": 7.36357581967213
       },
       "prevControl": {
-        "x": 6.3691475409844776,
-        "y": 6.215233606563123
+        "x": 5.87925,
+        "y": 6.3065
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 92.86240522611166
+    "rotation": -127.94253702764212
   },
   "reversed": false,
-  "folder": "Barge Start",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -119.745

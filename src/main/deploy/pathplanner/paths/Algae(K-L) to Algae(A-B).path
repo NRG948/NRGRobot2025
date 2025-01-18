@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.53675,
-        "y": 3.9274999999999993
+        "x": 3.7245000000000004,
+        "y": 5.234
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.22475,
-        "y": 5.702000000000001
+        "x": 2.9347499999999993,
+        "y": 5.097499999999999
       },
       "isLocked": false,
-      "linkedName": "Mid Start"
+      "linkedName": "Algae(K-L)"
     },
     {
       "anchor": {
-        "x": 6.809016393442622,
-        "y": 7.36357581967213
+        "x": 3.07125,
+        "y": 4.05425
       },
       "prevControl": {
-        "x": 7.215,
-        "y": 5.6922500000000005
+        "x": 2.9664374999999996,
+        "y": 4.332125
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Drive Out Barge Side"
+      "linkedName": "Algae(A-B)"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 92.86240522611166
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 93.63266745392717
+    "rotation": -57.094757077012204
   },
   "useDefaultConstraints": true
 }

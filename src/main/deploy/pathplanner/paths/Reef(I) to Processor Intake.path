@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.9319515306122454,
-        "y": 4.580899234693877
+        "x": 6.766500000000001,
+        "y": 4.463749999999999
       },
       "isLocked": false,
       "linkedName": "Reef(I)"
@@ -20,8 +20,8 @@
         "y": 1.11
       },
       "prevControl": {
-        "x": 6.409630102040817,
-        "y": 1.364891581632652
+        "x": 6.40575,
+        "y": 1.7532499999999993
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": 52.0
   },
   "reversed": false,
-  "folder": "Processor Intake",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -119.745
