@@ -34,6 +34,11 @@ public final class Constants {
     public static final class CAN {
       /** The pigeon2 ID. */
       public static final int PIGEON_ID = 1;
+
+      public static final class TalonFX {
+        public static final int ELEVATOR_MAIN_MOTOR_ID = 0;
+        public static final int ELEVATOR_FOLLOWER_MOTOR_ID = 1;
+      }
     }
 
     /** Digital I/O port numbers. */

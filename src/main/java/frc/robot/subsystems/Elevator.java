@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.util.LimitSwitch;
 import frc.robot.util.MotorController;
@@ -57,11 +58,20 @@ public class Elevator extends SubsystemBase {
   private static final double KI = 0;
   private static final double KD = 0;
 
-  private MotorController motor =
-      new TalonFXAdapter(new TalonFX(0, "rio"), false, true, METERS_PER_REVOLUTION);
-  private RelativeEncoder encoder = motor.getEncoder();
-  private LimitSwitch upperLimit = motor.getForwardLimitSwitch();
-  private LimitSwitch lowerLimit = motor.getReverseLimitSwitch();
+  private MotorController mainMotor =
+      new TalonFXAdapter(
+          new TalonFX(RobotConstants.CAN.TalonFX.ELEVATOR_MAIN_MOTOR_ID, "rio"),
+          false,
+          true,
+          METERS_PER_REVOLUTION);
+  private MotorController follower =
+      new TalonFXAdapter(
+          mainMotor,
+          new TalonFX(RobotConstants.CAN.TalonFX.ELEVATOR_FOLLOWER_MOTOR_ID, "rio"),
+          false);
+  private RelativeEncoder encoder = mainMotor.getEncoder();
+  private LimitSwitch upperLimit = mainMotor.getForwardLimitSwitch();
+  private LimitSwitch lowerLimit = mainMotor.getReverseLimitSwitch();
 
   private ElevatorSim simElevator =
       new ElevatorSim(MOTOR_PARAMS, GEAR_RATIO, MASS, SPROCKET_DIAMETER / 2, 0, 1, true, 0);
@@ -116,7 +126,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void disable() {
-    motor.disable();
+    mainMotor.disable();
     isSeekingGoal = false;
     timer.stop();
     logIsSeekingGoal.append(false);
@@ -168,7 +178,7 @@ public class Elevator extends SubsystemBase {
       if ((currentVoltage < 0 && atLowerLimit)) {
         currentVoltage = 0;
       }
-      motor.setVoltage(currentVoltage);
+      mainMotor.setVoltage(currentVoltage);
       logCurrentVoltage.append(currentVoltage);
     }
   }

@@ -8,6 +8,7 @@
 package frc.robot.util;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -29,6 +30,17 @@ public class TalonFXAdapter implements MotorController {
 
     this.talonFX = talonFX;
     this.metersPerRotation = metersPerRotation;
+  }
+
+  public TalonFXAdapter(MotorController mainMotor, TalonFX follower, boolean isInvertedFromMain) {
+    TalonFX mainTalonFX = ((TalonFXAdapter) mainMotor).talonFX;
+    MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+    mainTalonFX.getConfigurator().refresh(motorOutputConfigs);
+    follower.getConfigurator().apply(motorOutputConfigs);
+    Follower followerConfig = new Follower(mainTalonFX.getDeviceID(), isInvertedFromMain);
+    follower.setControl(followerConfig);
+    talonFX = follower;
+    metersPerRotation = ((TalonFXAdapter) mainMotor).metersPerRotation;
   }
 
   @Override
