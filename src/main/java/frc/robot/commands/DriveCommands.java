@@ -22,4 +22,20 @@ public final class DriveCommands {
   public static Command resetOrientation(Subsystems subsystems) {
     return Commands.runOnce(() -> subsystems.drivetrain.resetOrientation(new Rotation2d()));
   }
+
+  public static Command alignToLeftBranch(Subsystems subsystems) {
+    return Commands.none();
+  }
+
+  public static Command alignToRightBranch(Subsystems subsystems) {
+    return Commands.none();
+  }
+
+  public static Command inputScalarDrivetrain(Subsystems subsystems) {
+    return Commands.none();
+  }
+
+  public static Command interruptAll(Subsystems subsystems) {
+    return Commands.runOnce(() -> {}, subsystems.getAll());
+  }
 }

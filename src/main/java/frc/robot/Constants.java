@@ -35,12 +35,21 @@ public final class Constants {
       /** The pigeon2 ID. */
       public static final int PIGEON_ID = 1;
     }
+
+    /** Digital I/O port numbers. */
+    public static class DigitalIO {
+      public static final int ARM_ABSOLUTE_ENCODER = 0;
+    }
   }
 
   /** Constants for the robot operator. */
   public static class OperatorConstants {
+
     /** The driver Xbox controller port. */
     public static final int DRIVER_CONTROLLER_PORT = 0;
+
+    /** The driver Xbox manipulator port. */
+    public static final int MANIPULATOR_CONTROLLER_PORT = 1;
   }
 
   public static final String CAMERA1_NAME = "948Mono001";

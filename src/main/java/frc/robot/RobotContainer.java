@@ -15,9 +15,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlgaeCommands;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ClimberCommands;
+import frc.robot.commands.CoralCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveUsingController;
+import frc.robot.commands.ElevatorCommands;
+import frc.robot.commands.ManipulatorCommands;
+import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
 
 /**
@@ -36,6 +42,9 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+
+  private final CommandXboxController m_manipulatorController =
+      new CommandXboxController(OperatorConstants.MANIPULATOR_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -73,7 +82,40 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.back().onTrue(DriveCommands.resetOrientation(subsystems));
+    m_driverController.start().onTrue(DriveCommands.resetOrientation(subsystems));
+    m_driverController.x().whileTrue(DriveCommands.alignToLeftBranch(subsystems));
+    m_driverController.b().whileTrue(DriveCommands.alignToRightBranch(subsystems));
+    m_driverController.rightBumper().whileTrue(ClimberCommands.climb(subsystems));
+
+    m_manipulatorController
+        .a()
+        .onTrue(ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L1));
+    m_manipulatorController
+        .x()
+        .onTrue(ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L2));
+    m_manipulatorController
+        .b()
+        .onTrue(ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L3));
+    m_manipulatorController
+        .y()
+        .onTrue(ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L4));
+    m_manipulatorController.rightBumper().whileTrue(AlgaeCommands.intakeAlgae(subsystems));
+    m_manipulatorController.rightBumper().onFalse(AlgaeCommands.stopAndStowIntake(subsystems));
+    m_manipulatorController.leftBumper().whileTrue(AlgaeCommands.outtakeAlgae(subsystems));
+    m_manipulatorController.leftBumper().onFalse(AlgaeCommands.stopAndStowIntake(subsystems));
+    m_manipulatorController.povLeft().whileTrue(CoralCommands.intakeCoral(subsystems));
+    m_manipulatorController.povRight().whileTrue(CoralCommands.deliverCoral(subsystems));
+    m_manipulatorController.povRight().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
+    m_manipulatorController.start().onTrue(ElevatorCommands.stowElevatorAndArm(subsystems));
+    m_manipulatorController.back().onTrue(ManipulatorCommands.interruptAll(subsystems));
+    m_manipulatorController
+        .povDown()
+        .whileTrue(AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L2));
+    m_manipulatorController.povDown().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
+    m_manipulatorController
+        .povUp()
+        .whileTrue(AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L3));
+    m_manipulatorController.povUp().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
   }
 
   /**

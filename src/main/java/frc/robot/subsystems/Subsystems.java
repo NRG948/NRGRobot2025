@@ -28,12 +28,23 @@ public class Subsystems {
           Constants.APRILTAG_ROBOT_TO_CAMERA1);
 
   ArrayList<Subsystem> all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, elevator));
+  ArrayList<Subsystem> manipulators = new ArrayList<Subsystem>(Arrays.asList(elevator));
 
   /** Constructs the robot subsystems container. */
   public Subsystems() {
     if (aprilTag.isPresent()) {
       all.add(aprilTag.get());
     }
+  }
+
+  /** Returns an array of all subsystems. */
+  public Subsystem[] getAll() {
+    return all.toArray(Subsystem[]::new);
+  }
+
+  /** Returns an array of all manipulator subsystems. */
+  public Subsystem[] getManipulators() {
+    return manipulators.toArray(Subsystem[]::new);
   }
 
   /**
