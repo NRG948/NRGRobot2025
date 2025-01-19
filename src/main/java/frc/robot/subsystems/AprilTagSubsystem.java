@@ -59,12 +59,29 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
   public static final EstimatedRobotPose NO_APRILTAG_ESTIMATE =
       new EstimatedRobotPose(NO_APRILTAG, 0, List.of(), PoseStrategy.LOWEST_AMBIGUITY);
   public static final double LAST_RESULT_TIMEOUT = 0.1;
-  protected final PhotonCamera camera;
 
+  @RobotPreferencesValue(column = 0, row = 0)
+  public static final RobotPreferences.BooleanValue ENABLED =
+      new RobotPreferences.BooleanValue("AprilTag", "Enabled", true);
+
+  @RobotPreferencesValue(column = 1, row = 0)
+  public static final RobotPreferences.BooleanValue ENABLE_TAB =
+      new RobotPreferences.BooleanValue("AprilTag", "Enable Tab", true);
+
+  private final PhotonCamera camera;
   private final Transform3d cameraToRobot;
   private final Transform3d robotToCamera;
-  private Optional<PhotonPipelineResult> result = Optional.empty();
   private final PhotonPoseEstimator estimator;
+
+  private final SendableChooser<Integer> aprilTagIdChooser = new SendableChooser<>();
+  private final AprilTagFieldLayout aprilTagFieldLayout =
+      AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+
+  private final BooleanLogEntry hasTargetLogger;
+  private final DoubleLogEntry distanceLogger;
+  private final DoubleLogEntry angleLogger;
+
+  private Optional<PhotonPipelineResult> result = Optional.empty();
   private double angleToBestTarget;
   private double distanceToBestTarget;
   private double angleToSelectedTarget;
@@ -76,22 +93,12 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
   private Optional<EstimatedRobotPose> globalEstimatedPose = Optional.empty();
   private Matrix<N3, N1> curStdDevs = SINGLE_TAG_STD_DEVS;
 
-  @RobotPreferencesValue(column = 0, row = 0)
-  public static final RobotPreferences.BooleanValue ENABLED =
-      new RobotPreferences.BooleanValue("AprilTag", "Enabled", true);
-
-  @RobotPreferencesValue(column = 1, row = 0)
-  public static final RobotPreferences.BooleanValue ENABLE_TAB =
-      new RobotPreferences.BooleanValue("AprilTag", "Enable Tab", true);
-
-  private final SendableChooser<Integer> aprilTagIdChooser = new SendableChooser<>();
-  private final AprilTagFieldLayout aprilTagFieldLayout =
-      AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
-
-  private BooleanLogEntry hasTargetLogger;
-  private DoubleLogEntry distanceLogger;
-  private DoubleLogEntry angleLogger;
-
+  /**
+   * Constructs a new AprilTagSubsystem instance.
+   *
+   * @param cameraName The name of the camera.
+   * @param robotToCamera The transform from the robot to the camera.
+   */
   public AprilTagSubsystem(String cameraName, Transform3d robotToCamera) {
     this.camera = new PhotonCamera(cameraName);
     this.robotToCamera = robotToCamera;
@@ -118,6 +125,9 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
    * The latest estimated robot pose on the field from vision data. This may be empty. This should
    * only be called once per loop.
    *
+   * <p>Also includes updates for the standard deviations, which can (optionally) be retrieved with
+   * {@link getEstimationStdDevs}
+   *
    * @return An {@link EstimatedRobotPose} with an estimated pose, estimate timestamp, and targets
    *     used for estimation.
    */
@@ -125,6 +135,15 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
     return this.globalEstimatedPose;
   }
 
+  /**
+   * Calculates new standard deviations for pose estimation.
+   *
+   * <p>This algorithm is a heuristic that creates dynamic standard deviations based on number of
+   * tags, estimation strategy, and distance from the tags.
+   *
+   * @param estimatedPose The estimated pose to guess standard deviations for.
+   * @param targets All targets in this camera frame
+   */
   private void updateEstimationStdDevs(
       Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
     if (estimatedPose.isEmpty()) {
@@ -136,7 +155,7 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
       int numTags = 0;
       double avgDist = 0;
 
-      // Precalculation - see how many tags we gound, and calculate an average-distance metric
+      // Precalculation - see how many tags we found, and calculate an average-distance metric
       for (var tgt : targets) {
         var tagPose = estimator.getFieldTags().getTagPose(tgt.getFiducialId());
         if (tagPose.isEmpty()) {
@@ -193,7 +212,8 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    // Process the latest vision results updating the estimated robot pose and
+    // current result.
     Optional<EstimatedRobotPose> visionEst = Optional.empty();
     Optional<PhotonPipelineResult> currentResult = Optional.empty();
     List<PhotonPipelineResult> allUnreadResults = camera.getAllUnreadResults();
@@ -202,11 +222,15 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
       updateEstimationStdDevs(visionEst, change.getTargets());
       currentResult = Optional.of(change);
     }
+
     globalEstimatedPose = visionEst;
-    if (this.result.orElse(NO_RESULT).hasTargets()
-        != currentResult.orElse(NO_RESULT).hasTargets()) {
-      hasTargetLogger.append(currentResult.orElse(NO_RESULT).hasTargets());
+
+    boolean hasTargets = currentResult.orElse(NO_RESULT).hasTargets();
+
+    if (this.result.orElse(NO_RESULT).hasTargets() != hasTargets) {
+      hasTargetLogger.append(hasTargets);
     }
+
     if (currentResult.isPresent()
         || (Timer.getFPGATimestamp() - this.result.orElse(NO_RESULT).getTimestampSeconds())
             > LAST_RESULT_TIMEOUT) {
@@ -264,20 +288,12 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
     return robotToCamera;
   }
 
-  /***
-   * Returns weather the result has targets
-   *
-   * @return Boolean if result has targets
-   */
+  /** Returns whether one or more AprilTags are visible. */
   public boolean hasTargets() {
     return result.orElse(NO_RESULT).hasTargets();
   }
 
-  /***
-   * Return best target
-   *
-   * @return best target
-   */
+  /** Returns the best target AprilTag. */
   public PhotonTrackedTarget getBestTarget() {
     return result.orElse(NO_RESULT).getBestTarget();
   }
@@ -292,14 +308,20 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
     return angleToBestTarget;
   }
 
+  /** Returns the pose ambiguity of the best target. */
   public double getAmibiguity() {
     return poseAmibiguity;
   }
 
+  /**
+   * Returns the timestamp of the latest vision result. This is only valid if the subsystem has
+   * targets.
+   */
   public double getTargetTimeStamp() {
     return result.orElse(NO_RESULT).getTimestampSeconds();
   }
 
+  /** Returns the visible AprilTag targets. */
   public List<PhotonTrackedTarget> getTargets() {
     return result.orElse(NO_RESULT).getTargets();
   }
@@ -330,6 +352,7 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
     return Math.hypot(bestCameraToTarget.getX(), bestCameraToTarget.getY());
   }
 
+  /** Adds the AprilTag tab to Shuffleboard if enabled. */
   public void addShuffleboardTab() {
     if (!ENABLE_TAB.getValue()) {
       return;
