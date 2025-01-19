@@ -71,4 +71,14 @@ public class SparkAdapter implements MotorController {
   public RelativeEncoder getEncoder() {
     return new SparkEncoderAdapter(spark.getEncoder());
   }
+
+  @Override
+  public LimitSwitch getForwardLimitSwitch() {
+    return new SparkLimitSwitchAdapter(spark.getForwardLimitSwitch());
+  }
+
+  @Override
+  public LimitSwitch getReverseLimitSwitch() {
+    return new SparkLimitSwitchAdapter(spark.getReverseLimitSwitch());
+  }
 }

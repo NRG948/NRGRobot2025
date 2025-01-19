@@ -9,8 +9,10 @@ package frc.robot.util;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.units.measure.Voltage;
 
 public class TalonFXAdapter implements MotorController {
@@ -67,5 +69,17 @@ public class TalonFXAdapter implements MotorController {
   @Override
   public RelativeEncoder getEncoder() {
     return new TalonFXEncoderAdapter(talonFX, metersPerRotation);
+  }
+
+  @Override
+  public LimitSwitch getForwardLimitSwitch() {
+    return new TalonFXLimitSwitchAdapter<ForwardLimitValue>(
+        talonFX.getForwardLimit(), ForwardLimitValue.ClosedToGround);
+  }
+
+  @Override
+  public LimitSwitch getReverseLimitSwitch() {
+    return new TalonFXLimitSwitchAdapter<ReverseLimitValue>(
+        talonFX.getReverseLimit(), ReverseLimitValue.ClosedToGround);
   }
 }

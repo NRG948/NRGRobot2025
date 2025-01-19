@@ -10,4 +10,10 @@ package frc.robot.util;
 public interface MotorController extends edu.wpi.first.wpilibj.motorcontrol.MotorController {
   /** Returns the motor controller's relative encoder. */
   RelativeEncoder getEncoder();
+
+  /** Returns the forward limit switch. */
+  LimitSwitch getForwardLimitSwitch();
+
+  /** Returns the reverse limit switch. */
+  LimitSwitch getReverseLimitSwitch();
 }

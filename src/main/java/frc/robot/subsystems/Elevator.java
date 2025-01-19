@@ -7,15 +7,7 @@
  
 package frc.robot.subsystems;
 
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLimitSwitch;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.LimitSwitchConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -32,6 +24,10 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.ElevatorLevel;
+import frc.robot.util.LimitSwitch;
+import frc.robot.util.MotorController;
+import frc.robot.util.RelativeEncoder;
+import frc.robot.util.TalonFXAdapter;
 
 public class Elevator extends SubsystemBase {
 
@@ -61,11 +57,11 @@ public class Elevator extends SubsystemBase {
   private static final double KI = 0;
   private static final double KD = 0;
 
-  private SparkMax motor = new SparkMax(0, MotorType.kBrushless);
+  private MotorController motor =
+      new TalonFXAdapter(new TalonFX(0, "rio"), false, true, METERS_PER_REVOLUTION);
   private RelativeEncoder encoder = motor.getEncoder();
-  private SparkLimitSwitch upperLimit = motor.getForwardLimitSwitch();
-  private SparkLimitSwitch lowerLimit = motor.getReverseLimitSwitch();
-  // SparkLimitSwitch.Type.kNormallyOpen
+  private LimitSwitch upperLimit = motor.getForwardLimitSwitch();
+  private LimitSwitch lowerLimit = motor.getReverseLimitSwitch();
 
   private ElevatorSim simElevator =
       new ElevatorSim(MOTOR_PARAMS, GEAR_RATIO, MASS, SPROCKET_DIAMETER / 2, 0, 1, true, 0);
@@ -115,20 +111,6 @@ public class Elevator extends SubsystemBase {
 
   /** Creates a new Elevator. */
   public Elevator() {
-    SparkMaxConfig sparkMaxConfig = new SparkMaxConfig();
-    sparkMaxConfig
-        .encoder
-        .positionConversionFactor(METERS_PER_REVOLUTION)
-        .velocityConversionFactor(METERS_PER_REVOLUTION);
-    sparkMaxConfig
-        .limitSwitch
-        .forwardLimitSwitchEnabled(false)
-        .forwardLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen)
-        .reverseLimitSwitchEnabled(false)
-        .reverseLimitSwitchType(LimitSwitchConfig.Type.kNormallyOpen)
-        .setSparkMaxDataPortConfig();
-    sparkMaxConfig.idleMode(IdleMode.kBrake);
-    motor.configure(sparkMaxConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     updateSensorState();
     SmartDashboard.putData("Elevator Sim", mechanism2d);
   }
