@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.075,
-        "y": 2.582
+        "x": 3.8064174107142854,
+        "y": 2.7583705357142856
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.97375,
-        "y": 1.996999999999999
+        "x": 2.7421875,
+        "y": 2.0010044642857148
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef(D)"
     },
     {
       "anchor": {
         "x": 1.16,
-        "y": 1.1
+        "y": 1.11
       },
       "prevControl": {
-        "x": 2.574,
-        "y": 1.8312499999999998
+        "x": 2.7095424107142856,
+        "y": 1.978359375
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Processor Intake"
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 54.0
+    "rotation": 52.0
   },
   "reversed": false,
   "folder": "Cycle Processor Intake",

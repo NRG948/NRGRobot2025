@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.3125,
-        "y": 4.072950819672131
+        "x": 7.808705357142856,
+        "y": 3.411272321428571
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.58125,
-        "y": 4.060963114754099
+        "x": 6.777120535714285,
+        "y": 3.6528459821428565
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Processor Center Start"
     },
     {
       "anchor": {
-        "x": 5.969877049180327,
-        "y": 4.072950819672131
+        "x": 5.895703125,
+        "y": 3.711607142857143
       },
       "prevControl": {
-        "x": 6.521311475409834,
-        "y": 4.072950819672131
+        "x": 6.796707589285713,
+        "y": 3.6071428571428568
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef(G) End"
+      "linkedName": "Reef(G)"
     }
   ],
   "rotationTargets": [],
@@ -48,7 +48,7 @@
   "folder": "From Center Start",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 179.10668705589302
   },
   "useDefaultConstraints": true
 }

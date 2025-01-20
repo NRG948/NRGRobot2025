@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.324487704918032,
-        "y": 4.036987704918033
+        "x": 7.808705357142856,
+        "y": 3.411272321428571
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.641188524590164,
-        "y": 3.7013319672131155
+        "x": 6.737946428571428,
+        "y": 3.228459821428571
       },
       "isLocked": false,
-      "linkedName": "Barge Start Center"
+      "linkedName": "Processor Center Start"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 2.7575
       },
       "prevControl": {
-        "x": 6.056188524590163,
-        "y": 3.1890573770491817
+        "x": 6.698772321428571,
+        "y": 3.2219308035714285
       },
       "nextControl": null,
       "isLocked": false,

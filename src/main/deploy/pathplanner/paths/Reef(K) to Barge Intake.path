@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.744,
-        "y": 5.302
+        "x": 4.126339285714286,
+        "y": 5.311216517857142
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8177499999999998,
-        "y": 5.96525
+        "x": 2.853180803571429,
+        "y": 6.140401785714284
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef(K)"
     },
     {
       "anchor": {
@@ -20,12 +20,12 @@
         "y": 7.0
       },
       "prevControl": {
-        "x": 2.6617499999999996,
-        "y": 6.053
+        "x": 2.840122767857143,
+        "y": 6.179575892857142
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Barge Intake"
     }
   ],
   "rotationTargets": [],

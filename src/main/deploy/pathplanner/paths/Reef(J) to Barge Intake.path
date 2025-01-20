@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.845750000000001,
-        "y": 5.49725
+        "x": 5.144866071428571,
+        "y": 5.2785714285714285
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.75375,
-        "y": 5.994500000000001
+        "x": 4.041462053571428,
+        "y": 5.866183035714285
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef(J)"
     },
     {
       "anchor": {
@@ -20,12 +20,12 @@
         "y": 7.0
       },
       "prevControl": {
-        "x": 2.36925,
-        "y": 6.47225
+        "x": 4.061049107142857,
+        "y": 5.820479910714286
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Barge Intake"
     }
   ],
   "rotationTargets": [],
@@ -48,7 +48,7 @@
   "folder": "Cycle Barge Intake",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.74488129694218
+    "rotation": -119.745
   },
   "useDefaultConstraints": true
 }

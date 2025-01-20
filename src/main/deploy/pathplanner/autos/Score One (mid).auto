@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Mid Start to Reef(G)"
+            "pathName": "Center Start to Reef(G)"
           }
         },
         {
@@ -20,6 +20,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "1 Piece Autos",
   "choreoAuto": false
 }

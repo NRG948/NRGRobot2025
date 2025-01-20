@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.420389344262295,
-        "y": 6.122848360655737
+        "x": 7.821763392857142,
+        "y": 4.684430803571428
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.617213114754098,
-        "y": 5.811168032786885
+        "x": 6.620424107142856,
+        "y": 4.899888392857143
       },
       "isLocked": false,
-      "linkedName": "Barge Start"
+      "linkedName": "Barge Start Center"
     },
     {
       "anchor": {
-        "x": 5.197,
-        "y": 5.332
+        "x": 5.471316964285714,
+        "y": 5.0500558035714285
       },
       "prevControl": {
-        "x": 6.185655737704918,
-        "y": 5.667315573770492
+        "x": 6.620424107142856,
+        "y": 4.926004464285714
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": "From Barge Start",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 178.10661415425372
+    "rotation": 179.10668705589302
   },
   "useDefaultConstraints": true
 }

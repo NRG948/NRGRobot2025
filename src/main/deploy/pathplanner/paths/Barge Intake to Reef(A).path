@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.19375,
-        "y": 5.585
+        "x": 2.402678571428572,
+        "y": 5.134933035714286
       },
       "isLocked": false,
       "linkedName": "Barge Intake"
     },
     {
       "anchor": {
-        "x": 3.07125,
-        "y": 4.2395
+        "x": 3.1926897321428567,
+        "y": 4.338392857142857
       },
       "prevControl": {
-        "x": 2.1742500000000002,
-        "y": 5.57525
+        "x": 2.454910714285714,
+        "y": 5.245926339285713
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef(A)"
     }
   ],
   "rotationTargets": [],

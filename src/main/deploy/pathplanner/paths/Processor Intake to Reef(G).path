@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.080983115186209,
-        "y": 1.8314761750532638
+        "x": 5.771651785714286,
+        "y": 2.582087053571429
       },
       "isLocked": false,
       "linkedName": "Processor Intake"
     },
     {
       "anchor": {
-        "x": 5.957889344262295,
-        "y": 4.072950819672131
+        "x": 5.895703125,
+        "y": 3.711607142857143
       },
       "prevControl": {
-        "x": 6.766500000000001,
-        "y": 2.6404999999999994
+        "x": 5.823883928571428,
+        "y": 2.8040736607142858
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef(G)"
     }
   ],
   "rotationTargets": [],

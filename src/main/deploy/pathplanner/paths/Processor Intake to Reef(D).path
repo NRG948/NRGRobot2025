@@ -4,28 +4,28 @@
     {
       "anchor": {
         "x": 1.16,
-        "y": 1.1097499999999991
+        "y": 1.11
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4277500000000005,
-        "y": 1.7434999999999992
+        "x": 2.879296875,
+        "y": 2.1383638392857156
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Processor Intake"
     },
     {
       "anchor": {
-        "x": 4.0755,
-        "y": 2.5819999999999994
+        "x": 3.8064174107142854,
+        "y": 2.7583705357142856
       },
       "prevControl": {
-        "x": 3.081,
-        "y": 2.114
+        "x": 2.905412946428571,
+        "y": 2.144642857142857
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef(D)"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 57.300538878998104
+    "rotation": 57.3
   },
   "reversed": false,
   "folder": "Cycle Processor Intake",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 54.0
+    "rotation": 52.0
   },
   "useDefaultConstraints": true
 }

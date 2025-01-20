@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.826024590163935,
-        "y": 4.348668032786886
+        "x": 5.954464285714286,
+        "y": 4.031529017857142
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.486274590163935,
-        "y": 5.754168032786886
+        "x": 5.9675223214285715,
+        "y": 5.232868303571427
       },
       "isLocked": false,
-      "linkedName": "Reef(A)"
+      "linkedName": "Reef(H)"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 7.0
       },
       "prevControl": {
-        "x": 2.2425,
-        "y": 6.72575
+        "x": 6.058928571428571,
+        "y": 5.441796875
       },
       "nextControl": null,
       "isLocked": false,
