@@ -8,6 +8,7 @@
 package frc.robot.parameters;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -22,7 +23,6 @@ public enum MotorParameters {
    * A VEX PRO <a href="https://www.vexrobotics.com/217-6515.html">Falcon 500</a> motor with
    * integrated Talon FX motor controller and encoders.
    */
-  // Falcon500(6380.0, 4.69, 2048),
   Falcon500(DCMotor.getFalcon500(1)),
 
   /**
@@ -30,11 +30,13 @@ public enum MotorParameters {
    * X60</a> motor with integrated Talon FX motor controller and encoders.
    */
   KrakenX60(DCMotor.getKrakenX60(1)),
+
   /**
    * A REV Robotics <a href="https://www.revrobotics.com/rev-21-1650/">NEO Brushless Motor V1.1</a>
    * with integrated encoder.
    */
   NeoV1_1(DCMotor.getNEO(1)),
+
   /**
    * A REV Robotics <a href="https://www.revrobotics.com/rev-21-1652/">NEO Vortex Brushless
    * Motor</a> with <a href="https://www.revrobotics.com/rev-11-2158/">SparkMax</a> motor
@@ -43,12 +45,19 @@ public enum MotorParameters {
   NeoVortexMax(DCMotor.getNeoVortex(1)),
 
   /**
+   * A REV Robotics <a href="https://www.revrobotics.com/rev-21-1652/">NEO Vortex Brushless
+   * Motor</a> with <a href="https://www.revrobotics.com/rev-11-2159/">SparkFlex</a> motor
+   * controller.
+   */
+  NeoVortexFlex(DCMotor.getNeoVortex(1)),
+
+  /**
    * A REV Robotics <a href="https://www.revrobotics.com/rev-21-1651/">NEO 550 Brushless Motor</a>
    * with integrated encoder.
    */
   Neo550(DCMotor.getNeo550(1));
 
-  private DCMotor motor;
+  private final DCMotor motor;
 
   /**
    * Constructs an instance of this enum.
@@ -89,11 +98,20 @@ public enum MotorParameters {
       case Falcon500:
       case KrakenX60:
         return new TalonFXAdapter(new TalonFX(deviceID), isInverted, brakeMode, metersPerRotation);
+
       case NeoV1_1:
       case NeoVortexMax:
       case Neo550:
         return new SparkAdapter(
             new SparkMax(deviceID, MotorType.kBrushless), isInverted, brakeMode, metersPerRotation);
+
+      case NeoVortexFlex:
+        return new SparkAdapter(
+            new SparkFlex(deviceID, MotorType.kBrushless),
+            isInverted,
+            brakeMode,
+            metersPerRotation);
+
       default:
         throw new UnsupportedOperation("Unknown Motor Type");
     }

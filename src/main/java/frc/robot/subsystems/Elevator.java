@@ -64,11 +64,11 @@ public class Elevator extends SubsystemBase {
           false,
           true,
           METERS_PER_REVOLUTION);
+
+  @SuppressWarnings("unused")
   private MotorController follower =
-      new TalonFXAdapter(
-          mainMotor,
-          new TalonFX(RobotConstants.CAN.TalonFX.ELEVATOR_FOLLOWER_MOTOR_ID, "rio"),
-          false);
+      mainMotor.createFollower(RobotConstants.CAN.TalonFX.ELEVATOR_FOLLOWER_MOTOR_ID, false);
+
   private RelativeEncoder encoder = mainMotor.getEncoder();
   private LimitSwitch upperLimit = mainMotor.getForwardLimitSwitch();
   private LimitSwitch lowerLimit = mainMotor.getReverseLimitSwitch();
