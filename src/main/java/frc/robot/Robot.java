@@ -40,7 +40,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    // calculate the scoring positions for each reef branch 
+    // calculate the scoring positions for each reef branch
     double v, h, d;
     v = Constants.RobotConstants.ROBOT_LENGTH / 2;
     h = Constants.RobotConstants.CORAL_OFFSET_Y;
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
       Constants.VisionConstants.REEF_SCORING_POSES.put(
           new Pair<Integer, ReefBranch>(i + 6, ReefBranch.RIGHT), rightTargetPoseRed);
     }
-    
+
     /**
      * Tag + Branch: Pair(21, RIGHT), TargetPose: Pose2d(Translation2d(X: 5.69, Y: 3.99),
      * Rotation2d(Rads: 3.14, Deg: 180.00)) Tag + Branch: Pair(10, LEFT), TargetPose:

@@ -45,6 +45,8 @@ public final class DriveCommands {
 
   public static Command interruptAll(Subsystems subsystems) {
     return Commands.runOnce(() -> {}, subsystems.getAll());
+  }
+
   /**
    * Returns a command to follow the path to the specified branch of the nearest reef side.
    *
