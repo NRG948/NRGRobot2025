@@ -9,9 +9,14 @@ package frc.robot;
 
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesValue;
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.commands.AlignToReef.ReefBranch;
 import frc.robot.parameters.VisionParameters;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -29,6 +34,19 @@ public final class Constants {
 
     /** The swerve drive wheel diameter. */
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
+
+    /** The length of the robot including bumpers. */
+    // TODO: GET REAL VALUE
+    public static final double ROBOT_LENGTH = 0.74;
+
+    /** The width of the robot including bumpers. */
+    // TODO: GET REAL VALUE
+    public static final double ROBOT_WIDTH = 0.74;
+
+    /**
+     * The y-offset (in the width direction) of the coral end effector from the center of the robot
+     */
+    public static final double CORAL_OFFSET_Y = 0.20; // TODO: GET REAL VALUE
 
     /** CANBus device IDs. */
     public static final class CAN {
@@ -56,6 +74,14 @@ public final class Constants {
 
     /** The driver Xbox manipulator port. */
     public static final int MANIPULATOR_CONTROLLER_PORT = 1;
+  }
+
+  public static class VisionConstants {
+    /** A mapping of the Apriltag ID and ReefBranch (LEFT or RIGHT) to the Pose2d to score coral. */
+    public static final Map<Pair<Integer, ReefBranch>, Pose2d> REEF_SCORING_POSES = new HashMap<>();
+
+    /** The distance from each reef branch from the center of the apriltag. */
+    public static final double BRANCH_TO_REEF_APRILTAG = 0.165;
   }
 
   public static final String CAMERA1_NAME = "948Mono001";

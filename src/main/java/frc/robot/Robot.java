@@ -8,9 +8,16 @@
 package frc.robot;
 
 import com.nrg948.Common;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AlignToReef.ReefBranch;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -32,6 +39,74 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    // calculate the scoring positions for each reef branch 
+    double v, h, d;
+    v = Constants.RobotConstants.ROBOT_LENGTH / 2;
+    h = Constants.RobotConstants.CORAL_OFFSET_Y;
+    d = Constants.VisionConstants.BRANCH_TO_REEF_APRILTAG;
+
+    // 6-11 Red Reef Apriltags, 17-22 Blue Reef Apriltags
+    for (int i = 0; i < 6; i++) {
+      AprilTagFieldLayout fieldLayout =
+          AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+
+      // blue
+      Pose2d tagPoseBlue = fieldLayout.getTagPose(i + 17).get().toPose2d();
+      Pose2d leftTargetPoseBlue = tagPoseBlue.plus(new Transform2d(v, -d - h, Rotation2d.k180deg));
+      Pose2d rightTargetPoseBlue = tagPoseBlue.plus(new Transform2d(v, d - h, Rotation2d.k180deg));
+
+      Constants.VisionConstants.REEF_SCORING_POSES.put(
+          new Pair<Integer, ReefBranch>(i + 17, ReefBranch.LEFT), leftTargetPoseBlue);
+      Constants.VisionConstants.REEF_SCORING_POSES.put(
+          new Pair<Integer, ReefBranch>(i + 17, ReefBranch.RIGHT), rightTargetPoseBlue);
+
+      // red
+      Pose2d tagPoseRed = fieldLayout.getTagPose(i + 6).get().toPose2d();
+      Pose2d leftTargetPoseRed = tagPoseRed.plus(new Transform2d(v, -d - h, Rotation2d.k180deg));
+      Pose2d rightTargetPoseRed = tagPoseRed.plus(new Transform2d(v, d - h, Rotation2d.k180deg));
+
+      Constants.VisionConstants.REEF_SCORING_POSES.put(
+          new Pair<Integer, ReefBranch>(i + 6, ReefBranch.LEFT), leftTargetPoseRed);
+      Constants.VisionConstants.REEF_SCORING_POSES.put(
+          new Pair<Integer, ReefBranch>(i + 6, ReefBranch.RIGHT), rightTargetPoseRed);
+    }
+    
+    /**
+     * Tag + Branch: Pair(21, RIGHT), TargetPose: Pose2d(Translation2d(X: 5.69, Y: 3.99),
+     * Rotation2d(Rads: 3.14, Deg: 180.00)) Tag + Branch: Pair(10, LEFT), TargetPose:
+     * Pose2d(Translation2d(X: 11.86, Y: 4.39), Rotation2d(Rads: -0.00, Deg: -0.00)) Tag + Branch:
+     * Pair(20, RIGHT), TargetPose: Pose2d(Translation2d(X: 5.12, Y: 5.05), Rotation2d(Rads: -2.09,
+     * Deg: -120.00)) Tag + Branch: Pair(11, LEFT), TargetPose: Pose2d(Translation2d(X: 12.14, Y:
+     * 3.17), Rotation2d(Rads: 1.05, Deg: 60.00)) Tag + Branch: Pair(22, RIGHT), TargetPose:
+     * Pose2d(Translation2d(X: 5.06, Y: 2.97), Rotation2d(Rads: 2.09, Deg: 120.00)) Tag + Branch:
+     * Pair(17, LEFT), TargetPose: Pose2d(Translation2d(X: 3.57, Y: 3.17), Rotation2d(Rads: 1.05,
+     * Deg: 60.00)) Tag + Branch: Pair(18, LEFT), TargetPose: Pose2d(Translation2d(X: 3.29, Y:
+     * 4.39), Rotation2d(Rads: -0.00, Deg: -0.00)) Tag + Branch: Pair(19, LEFT), TargetPose:
+     * Pose2d(Translation2d(X: 4.21, Y: 5.25), Rotation2d(Rads: -1.05, Deg: -60.00)) Tag + Branch:
+     * Pair(20, LEFT), TargetPose: Pose2d(Translation2d(X: 5.41, Y: 4.88), Rotation2d(Rads: -2.09,
+     * Deg: -120.00)) Tag + Branch: Pair(21, LEFT), TargetPose: Pose2d(Translation2d(X: 5.69, Y:
+     * 3.66), Rotation2d(Rads: 3.14, Deg: 180.00)) Tag + Branch: Pair(17, RIGHT), TargetPose:
+     * Pose2d(Translation2d(X: 3.86, Y: 3.00), Rotation2d(Rads: 1.05, Deg: 60.00)) Tag + Branch:
+     * Pair(22, LEFT), TargetPose: Pose2d(Translation2d(X: 4.77, Y: 2.80), Rotation2d(Rads: 2.09,
+     * Deg: 120.00)) Tag + Branch: Pair(19, RIGHT), TargetPose: Pose2d(Translation2d(X: 3.92, Y:
+     * 5.08), Rotation2d(Rads: -1.05, Deg: -60.00)) Tag + Branch: Pair(18, RIGHT), TargetPose:
+     * Pose2d(Translation2d(X: 3.29, Y: 4.06), Rotation2d(Rads: -0.00, Deg: -0.00)) Tag + Branch:
+     * Pair(7, RIGHT), TargetPose: Pose2d(Translation2d(X: 14.26, Y: 3.99), Rotation2d(Rads: 3.14,
+     * Deg: 180.00)) Tag + Branch: Pair(6, RIGHT), TargetPose: Pose2d(Translation2d(X: 13.63, Y:
+     * 2.97), Rotation2d(Rads: 2.09, Deg: 120.00)) Tag + Branch: Pair(9, RIGHT), TargetPose:
+     * Pose2d(Translation2d(X: 12.49, Y: 5.08), Rotation2d(Rads: -1.05, Deg: -60.00)) Tag + Branch:
+     * Pair(8, RIGHT), TargetPose: Pose2d(Translation2d(X: 13.69, Y: 5.05), Rotation2d(Rads: -2.09,
+     * Deg: -120.00)) Tag + Branch: Pair(11, RIGHT), TargetPose: Pose2d(Translation2d(X: 12.43, Y:
+     * 3.00), Rotation2d(Rads: 1.05, Deg: 60.00)) Tag + Branch: Pair(10, RIGHT), TargetPose:
+     * Pose2d(Translation2d(X: 11.86, Y: 4.06), Rotation2d(Rads: -0.00, Deg: -0.00)) Tag + Branch:
+     * Pair(6, LEFT), TargetPose: Pose2d(Translation2d(X: 13.34, Y: 2.80), Rotation2d(Rads: 2.09,
+     * Deg: 120.00)) Tag + Branch: Pair(7, LEFT), TargetPose: Pose2d(Translation2d(X: 14.26, Y:
+     * 3.66), Rotation2d(Rads: 3.14, Deg: 180.00)) Tag + Branch: Pair(8, LEFT), TargetPose:
+     * Pose2d(Translation2d(X: 13.98, Y: 4.88), Rotation2d(Rads: -2.09, Deg: -120.00)) Tag + Branch:
+     * Pair(9, LEFT), TargetPose: Pose2d(Translation2d(X: 12.77, Y: 5.25), Rotation2d(Rads: -1.05,
+     * Deg: -60.00))
+     */
   }
 
   /**
