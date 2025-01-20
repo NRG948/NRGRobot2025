@@ -11,10 +11,14 @@ import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlignToReef;
+import frc.robot.commands.AlignToReef.ReefBranch;
+import frc.robot.commands.AlignToReef2;
 import frc.robot.commands.AlgaeCommands;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ClimberCommands;
@@ -70,6 +74,16 @@ public class RobotContainer {
     //         .withProperties(Map.of("Number of columns", 1, "Number of rows", 1))
     //         .withPosition(6, 0)
     //         .withSize(2, 2);
+    SmartDashboard.putData("AlignToReef (left)", new AlignToReef(subsystems, ReefBranch.LEFT));
+    SmartDashboard.putData("AlignToReef (right)", new AlignToReef(subsystems, ReefBranch.RIGHT));
+    SmartDashboard.putData(
+        "AlignToReef2 (left)", new AlignToReef2(subsystems, AlignToReef2.ReefBranch.LEFT));
+    SmartDashboard.putData(
+        "AlignToReef2 (right)", new AlignToReef2(subsystems, AlignToReef2.ReefBranch.RIGHT));
+    SmartDashboard.putData(
+        "AlignToReefPP (left)", DriveCommands.alignToReefPP(subsystems, ReefBranch.LEFT));
+    SmartDashboard.putData(
+        "AlignToReefPP (right)", DriveCommands.alignToReefPP(subsystems, ReefBranch.RIGHT));
   }
 
   /**
