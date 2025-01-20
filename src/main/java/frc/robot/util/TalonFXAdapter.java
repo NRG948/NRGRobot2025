@@ -25,7 +25,7 @@ public class TalonFXAdapter implements MotorController {
    *
    * <p>This private constructor is intended for use only by delegating public constructors or
    * factory methods. It assumes the {@link TalonFX} object is already configured or will be
-   * configured approriately by the public constructors or factory methods.
+   * configured appropriately by the public constructors or factory methods.
    *
    * @param talonFX The TalonFX object to adapt.
    * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
