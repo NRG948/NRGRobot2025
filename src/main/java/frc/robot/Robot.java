@@ -46,10 +46,10 @@ public class Robot extends TimedRobot {
     h = Constants.RobotConstants.CORAL_OFFSET_Y;
     d = Constants.VisionConstants.BRANCH_TO_REEF_APRILTAG;
 
+    AprilTagFieldLayout fieldLayout =
+        AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
     // 6-11 Red Reef Apriltags, 17-22 Blue Reef Apriltags
     for (int i = 0; i < 6; i++) {
-      AprilTagFieldLayout fieldLayout =
-          AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
       // blue
       Pose2d tagPoseBlue = fieldLayout.getTagPose(i + 17).get().toPose2d();
