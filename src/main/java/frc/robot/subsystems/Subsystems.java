@@ -28,25 +28,38 @@ public class Subsystems {
           Constants.CAMERA1_NAME,
           Constants.APRILTAG_ROBOT_TO_CAMERA1);
 
-  ArrayList<Subsystem> all =
-      new ArrayList<Subsystem>(Arrays.asList(drivetrain, elevator, coralArm));
-  ArrayList<Subsystem> manipulators = new ArrayList<Subsystem>(Arrays.asList(elevator, coralArm));
+  private final Subsystem[] all;
+  private final Subsystem[] manipulators;
 
   /** Constructs the robot subsystems container. */
   public Subsystems() {
+    // Add all manipulator subsystems to the `manipulators` list.
+    var manipulators = new ArrayList<Subsystem>(Arrays.asList(elevator, coralArm));
+
+    // Add all non-manipulator subsystems to the `all` list.
+    var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain));
+
+    // Add optional subsystems to the appropriate list.
     if (aprilTag.isPresent()) {
       all.add(aprilTag.get());
     }
+
+    // Add all manipulator subsystems to the `all` list.
+    all.addAll(manipulators);
+
+    // Convert the lists to arrays.
+    this.all = all.toArray(Subsystem[]::new);
+    this.manipulators = manipulators.toArray(Subsystem[]::new);
   }
 
   /** Returns an array of all subsystems. */
   public Subsystem[] getAll() {
-    return all.toArray(Subsystem[]::new);
+    return all;
   }
 
   /** Returns an array of all manipulator subsystems. */
   public Subsystem[] getManipulators() {
-    return manipulators.toArray(Subsystem[]::new);
+    return manipulators;
   }
 
   /**
