@@ -34,7 +34,7 @@ public class AlignToReef extends Command {
   private RobotPreferences.DoubleValue Py =
       new RobotPreferences.DoubleValue("AprilTag", "Reef P Constant for Y", 0.5);
   private RobotPreferences.DoubleValue Pr =
-      new RobotPreferences.DoubleValue("AprilTag", "Reef P Constant for yaw", 0.5);
+      new RobotPreferences.DoubleValue("AprilTag", "Reef P Constant for yaw", 0.02);
 
   private PIDController xController = new PIDController(Px.getValue(), 0, 0);
   private PIDController yController = new PIDController(Py.getValue(), 0, 0);

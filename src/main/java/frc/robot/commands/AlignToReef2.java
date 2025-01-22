@@ -35,7 +35,7 @@ public class AlignToReef2 extends Command {
   private RobotPreferences.DoubleValue Py =
       new RobotPreferences.DoubleValue("AprilTag", "Reef P Constant for Y", 0.5);
   private RobotPreferences.DoubleValue Pr =
-      new RobotPreferences.DoubleValue("AprilTag", "Reef P Constant for yaw", 0.5);
+      new RobotPreferences.DoubleValue("AprilTag", "Reef P Constant for yaw", 0.02);
 
   private PIDController xController = new PIDController(Px.getValue(), 0, 0);
   private PIDController yController = new PIDController(Py.getValue(), 0, 0);
@@ -122,9 +122,9 @@ public class AlignToReef2 extends Command {
     double minDist = Double.MAX_VALUE;
     for (int id = startingId; id < startingId + 6; id++) {
       Transform2d tagToRobot = layout.getTagPose(id).get().toPose2d().minus(robotPose);
-      double distSquared = Math.pow(tagToRobot.getX(), 2) + Math.pow(tagToRobot.getY(), 2);
-      if (distSquared < minDist) {
-        minDist = distSquared;
+      double dist = Math.hypot(tagToRobot.getX(), tagToRobot.getY());
+      if (dist < minDist) {
+        minDist = dist;
         nearestId = id;
       }
     }
