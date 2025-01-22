@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
 
 /** Add your docs here. */
@@ -21,6 +22,25 @@ public class CoralCommands {
   /** Returns a command that outtakes coral. */
   public static Command outtakeCoral(Subsystems subsystems) {
     return Commands.none();
+  }
+
+  /**
+   * Returns a command that sets the arm angle of the coral arm.
+   *
+   * @param subsystems The subsystems container.
+   * @param level The reef level.
+   * @return
+   */
+  public static Command setArmAngleForReefLevel(Subsystems subsystems, ElevatorLevel level) {
+    return Commands.runOnce(() -> subsystems.coralArm.setGoalAngle(level), subsystems.coralArm);
+  }
+
+  /** Returns a command to stow the coral arm. */
+  public static Command stowArm(Subsystems subsystems) {
+    return Commands.sequence(
+        Commands.runOnce(
+            () -> subsystems.coralArm.setGoalAngle(ElevatorLevel.STOWED), subsystems.coralArm),
+        Commands.runOnce(() -> subsystems.coralArm.disable(), subsystems.coralArm));
   }
 
   /**

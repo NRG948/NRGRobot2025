@@ -16,12 +16,19 @@ import frc.robot.subsystems.Subsystems;
 public class ElevatorCommands {
 
   /** Returns a command that goes to the given elevator level. */
-  public static Command goToElevatorLevel(Subsystems subsystems, ElevatorLevel elevatorLevel) {
-    return Commands.none();
+  public static Command goToElevatorLevel(Subsystems subsystems, ElevatorLevel level) {
+    return Commands.runOnce(() -> subsystems.elevator.setGoalPosition(level), subsystems.elevator);
+  }
+
+  public static Command stowElevator(Subsystems subsystems) {
+    return Commands.sequence(
+        Commands.runOnce(
+            () -> subsystems.elevator.setGoalPosition(ElevatorLevel.STOWED), subsystems.elevator),
+        Commands.runOnce(() -> subsystems.elevator.disable(), subsystems.elevator));
   }
 
   /** Returns a command that stows the elevator and the arm. */
   public static Command stowElevatorAndArm(Subsystems subsystems) {
-    return Commands.none();
+    return Commands.parallel(stowElevator(subsystems), CoralCommands.stowArm(subsystems));
   }
 }

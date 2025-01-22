@@ -38,6 +38,7 @@ public final class Constants {
       public static final class TalonFX {
         public static final int ELEVATOR_MAIN_MOTOR_ID = 0;
         public static final int ELEVATOR_FOLLOWER_MOTOR_ID = 1;
+        public static final int ARM_MOTOR_ID = 2; // check with systems for final IDs.
       }
     }
 

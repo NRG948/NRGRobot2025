@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 public class Subsystems {
   public final SwerveSubsystem drivetrain = new SwerveSubsystem();
   public final Elevator elevator = new Elevator();
+  public final CoralArm coralArm = new CoralArm();
   public final Optional<AprilTagSubsystem> aprilTag =
       newOptionalSubsystem(
           AprilTagSubsystem.class,
@@ -27,8 +28,9 @@ public class Subsystems {
           Constants.CAMERA1_NAME,
           Constants.APRILTAG_ROBOT_TO_CAMERA1);
 
-  ArrayList<Subsystem> all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, elevator));
-  ArrayList<Subsystem> manipulators = new ArrayList<Subsystem>(Arrays.asList(elevator));
+  ArrayList<Subsystem> all =
+      new ArrayList<Subsystem>(Arrays.asList(drivetrain, elevator, coralArm));
+  ArrayList<Subsystem> manipulators = new ArrayList<Subsystem>(Arrays.asList(elevator, coralArm));
 
   /** Constructs the robot subsystems container. */
   public Subsystems() {
