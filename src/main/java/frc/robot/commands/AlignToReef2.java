@@ -26,6 +26,7 @@ import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+/** DON'T USE. Currently the pose map is broken >:( */
 public class AlignToReef2 extends Command {
   private SwerveSubsystem drivetrain;
   private AprilTagSubsystem vision;
@@ -72,6 +73,8 @@ public class AlignToReef2 extends Command {
     // figure out target pose & set setpoints
     Pose2d currentRobotPose = drivetrain.getPosition();
     int nearestTagId = findNearestReefTagID(currentRobotPose);
+    System.out.println("TARGET TAG: " + nearestTagId);
+    System.out.println("Target Branch: " + targetReefBranch);
     targetPose =
         Constants.VisionConstants.REEF_SCORING_POSES.get(
             new Pair<Integer, ReefBranch>(nearestTagId, targetReefBranch));
@@ -98,8 +101,10 @@ public class AlignToReef2 extends Command {
     yErrorLog.append(targetPose.getY() - currentY);
     rErrorLog.append(targetPose.getRotation().getDegrees() - currentR);
 
-    double xSpeed = MathUtil.clamp(xController.calculate(currentX), -0.25, 0.25);
-    double ySpeed = MathUtil.clamp(yController.calculate(currentY), -0.25, 0.25);
+    // double xSpeed = MathUtil.clamp(xController.calculate(currentX), -0.25, 0.25);
+    // double ySpeed = MathUtil.clamp(yController.calculate(currentY), -0.25, 0.25);
+    double xSpeed = 0;
+    double ySpeed = 0;
     double rSpeed = MathUtil.clamp(rController.calculate(currentR), -0.25, 0.25);
 
     drivetrain.drive(xSpeed, ySpeed, rSpeed, true);

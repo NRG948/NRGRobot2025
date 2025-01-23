@@ -85,7 +85,7 @@ public final class Constants {
 
     /** The translational tolerance value for aligning to the reef. */
     public static final double REEF_ALIGNMENT_TOLERANCE_XY = 0.0333; // in m
-    
+
     /** The rotational tolerance value for aligning to the reef. */
     public static final double REEF_ALIGNMENT_TOLERANCE_R = 1.0; // in deg
   }

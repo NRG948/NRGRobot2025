@@ -32,11 +32,11 @@ public final class DriveCommands {
   }
 
   public static Command alignToLeftBranch(Subsystems subsystems) {
-    return Commands.none();
+    return new AlignToReef(subsystems, ReefBranch.LEFT);
   }
 
   public static Command alignToRightBranch(Subsystems subsystems) {
-    return Commands.none();
+    return new AlignToReef(subsystems, ReefBranch.RIGHT);
   }
 
   public static Command inputScalarDrivetrain(Subsystems subsystems) {

@@ -26,15 +26,19 @@ import frc.robot.subsystems.SwerveSubsystem;
 import java.util.ArrayList;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AlignToReef extends Command {
+public class AlignToReef extends Command { // TODO:
+  private static final double MAX_TRANSLATIONAL_POWER = 0.30;
+  private static final double MAX_ROTATIONAL_POWER = 0.5;
+
   private SwerveSubsystem drivetrain;
 
+  // they don't seem to appear. TODO: make preferences appear in shuffleboard
   private RobotPreferences.DoubleValue Px =
       new RobotPreferences.DoubleValue("AprilTag", "Reef P Constant for X", 0.5);
   private RobotPreferences.DoubleValue Py =
       new RobotPreferences.DoubleValue("AprilTag", "Reef P Constant for Y", 0.5);
   private RobotPreferences.DoubleValue Pr =
-      new RobotPreferences.DoubleValue("AprilTag", "Reef P Constant for yaw", 0.02);
+      new RobotPreferences.DoubleValue("AprilTag", "Reef P Constant for yaw", 0.05);
 
   private PIDController xController = new PIDController(Px.getValue(), 0, 0);
   private PIDController yController = new PIDController(Py.getValue(), 0, 0);
@@ -90,7 +94,9 @@ public class AlignToReef extends Command {
     targetPose =
         nearestTagPose.plus(
             new Transform2d(
-                v, (targetReefBranch.equals(ReefBranch.LEFT) ? d : -d) - h, Rotation2d.k180deg));
+                v, (targetReefBranch.equals(ReefBranch.RIGHT) ? d : -d) - h, Rotation2d.k180deg));
+    System.out.println("TARGET pose: " + targetPose);
+    System.out.println("Target Branch: " + targetReefBranch);
 
     xController.setSetpoint(targetPose.getX());
     yController.setSetpoint(targetPose.getY());
@@ -114,9 +120,15 @@ public class AlignToReef extends Command {
     yErrorLog.append(targetPose.getY() - currentY);
     rErrorLog.append(targetPose.getRotation().getDegrees() - currentR);
 
-    double xSpeed = MathUtil.clamp(xController.calculate(currentX), -0.25, 0.25);
-    double ySpeed = MathUtil.clamp(yController.calculate(currentY), -0.25, 0.25);
-    double rSpeed = MathUtil.clamp(rController.calculate(currentR), -0.25, 0.25);
+    double xSpeed =
+        MathUtil.clamp(
+            xController.calculate(currentX), -MAX_TRANSLATIONAL_POWER, MAX_TRANSLATIONAL_POWER);
+    double ySpeed =
+        MathUtil.clamp(
+            yController.calculate(currentY), -MAX_TRANSLATIONAL_POWER, MAX_TRANSLATIONAL_POWER);
+    double rSpeed =
+        MathUtil.clamp(
+            rController.calculate(currentR), -MAX_ROTATIONAL_POWER, MAX_ROTATIONAL_POWER);
 
     drivetrain.drive(xSpeed, ySpeed, rSpeed, true);
   }
