@@ -79,6 +79,10 @@ public class AlignToReef2 extends Command {
     xController.setSetpoint(targetPose.getX());
     yController.setSetpoint(targetPose.getY());
     rController.setSetpoint(targetPose.getRotation().getDegrees());
+
+    xController.setTolerance(Constants.VisionConstants.REEF_ALIGNMENT_TOLERANCE_XY);
+    yController.setTolerance(Constants.VisionConstants.REEF_ALIGNMENT_TOLERANCE_XY);
+    rController.setTolerance(Constants.VisionConstants.REEF_ALIGNMENT_TOLERANCE_R);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

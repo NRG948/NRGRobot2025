@@ -82,6 +82,12 @@ public final class Constants {
 
     /** The distance from each reef branch from the center of the apriltag. */
     public static final double BRANCH_TO_REEF_APRILTAG = 0.165;
+
+    /** The translational tolerance value for aligning to the reef. */
+    public static final double REEF_ALIGNMENT_TOLERANCE_XY = 0.0333; // in m
+    
+    /** The rotational tolerance value for aligning to the reef. */
+    public static final double REEF_ALIGNMENT_TOLERANCE_R = 1.0; // in deg
   }
 
   public static final String CAMERA1_NAME = "948Mono001";

@@ -93,9 +93,12 @@ public class AlignToReef extends Command {
                 v, (targetReefBranch.equals(ReefBranch.LEFT) ? d : -d) - h, Rotation2d.k180deg));
 
     xController.setSetpoint(targetPose.getX());
-    yController.setSetpoint(
-        targetPose.getY()); // TODO: add branch selection by adding negative sign
+    yController.setSetpoint(targetPose.getY());
     rController.setSetpoint(targetPose.getRotation().getDegrees());
+
+    xController.setTolerance(Constants.VisionConstants.REEF_ALIGNMENT_TOLERANCE_XY);
+    yController.setTolerance(Constants.VisionConstants.REEF_ALIGNMENT_TOLERANCE_XY);
+    rController.setTolerance(Constants.VisionConstants.REEF_ALIGNMENT_TOLERANCE_R);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
