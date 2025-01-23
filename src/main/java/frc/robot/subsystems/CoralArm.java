@@ -86,6 +86,11 @@ public class CoralArm extends SubsystemBase {
     timer.start();
   }
 
+  /** Returns whether the coral arm is at goal angle. */
+  public boolean atGoalAngle() {
+    return controller.atGoal();
+  }
+
   /** Disables periodic control. */
   public void disable() {
     enabled = false;

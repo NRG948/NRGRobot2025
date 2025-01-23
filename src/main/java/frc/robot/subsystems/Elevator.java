@@ -85,7 +85,8 @@ public class Elevator extends SubsystemBase {
   private final TrapezoidProfile profile = new TrapezoidProfile(CONSTRAINTS);
   private final Timer timer = new Timer();
 
-  private final ProfiledPIDController feedBack = new ProfiledPIDController(KP, KI, KD, CONSTRAINTS);
+  private final ProfiledPIDController controller =
+      new ProfiledPIDController(KP, KI, KD, CONSTRAINTS);
 
   private boolean isSeekingGoal;
   private final TrapezoidProfile.State currentState = new TrapezoidProfile.State();
@@ -143,6 +144,11 @@ public class Elevator extends SubsystemBase {
     logGoalVelocity.append(0);
   }
 
+  /** Returns whether the elevator is at goal position. */
+  public boolean atGoalPosition() {
+    return controller.atGoal();
+  }
+
   private void updateSensorState() {
     if (RobotBase.isReal()) {
       currentState.position = encoder.getPosition();
@@ -169,7 +175,7 @@ public class Elevator extends SubsystemBase {
       logDesiredVelocity.append(desiredState.velocity);
       double feedforward = feedForward.calculate(desiredState.velocity);
       logFeedForward.append(feedforward);
-      double pidOutput = feedBack.calculate(currentState.position, desiredState);
+      double pidOutput = controller.calculate(currentState.position, desiredState);
       logPIDOutput.append(pidOutput);
       currentVoltage = feedforward + pidOutput;
       if ((currentVoltage > 0 && atUpperLimit)) {

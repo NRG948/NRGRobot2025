@@ -35,11 +35,17 @@ public class CoralCommands {
     return Commands.runOnce(() -> subsystems.coralArm.setGoalAngle(level), subsystems.coralArm);
   }
 
+  /** Returns a command that waits for coral arm to reach goal angle. */
+  public static Command waitForArmToReachGoalAngle(Subsystems subsystems) {
+    return Commands.idle(subsystems.coralArm).until(subsystems.coralArm::atGoalAngle);
+  }
+
   /** Returns a command to stow the coral arm. */
   public static Command stowArm(Subsystems subsystems) {
     return Commands.sequence(
         Commands.runOnce(
             () -> subsystems.coralArm.setGoalAngle(ElevatorLevel.STOWED), subsystems.coralArm),
+        waitForArmToReachGoalAngle(subsystems),
         Commands.runOnce(() -> subsystems.coralArm.disable(), subsystems.coralArm));
   }
 

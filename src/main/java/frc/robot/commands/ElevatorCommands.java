@@ -20,10 +20,17 @@ public class ElevatorCommands {
     return Commands.runOnce(() -> subsystems.elevator.setGoalPosition(level), subsystems.elevator);
   }
 
+  /** Returns a command that waits for elevator to reach goal position. */
+  public static Command waitForElevatorToReachGoalPosition(Subsystems subsystems) {
+    return Commands.idle(subsystems.elevator).until(subsystems.elevator::atGoalPosition);
+  }
+
+  /** Returns a command that stows elevator. */
   public static Command stowElevator(Subsystems subsystems) {
     return Commands.sequence(
         Commands.runOnce(
             () -> subsystems.elevator.setGoalPosition(ElevatorLevel.STOWED), subsystems.elevator),
+        waitForElevatorToReachGoalPosition(subsystems),
         Commands.runOnce(() -> subsystems.elevator.disable(), subsystems.elevator));
   }
 
