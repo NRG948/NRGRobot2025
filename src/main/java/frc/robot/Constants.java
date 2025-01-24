@@ -11,6 +11,7 @@ import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.parameters.VisionParameters;
 
 /**
@@ -29,6 +30,17 @@ public final class Constants {
 
     /** The swerve drive wheel diameter. */
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
+
+    public static class PWNPort {
+      public static final int LED = 1; // TODO: change value
+    }
+
+    public static class LEDSegment {
+      public static final int STATUS_FIRST_LED = 0; // TODO: change value
+      public static final int STATUS_LED_COUNT = 26; // TODO: change value
+    }   
+
+    public static final int LED_COUNT = 1; // TODO: change value
 
     /** CANBus device IDs. */
     public static final class CAN {
@@ -59,4 +71,21 @@ public final class Constants {
 
   /** Field of view of the AprilTag camera in degrees. */
   public static final double APRILTAG_CAMERA_FOV = 70;
+
+  public static class ColorConstants {
+    public static final Color8Bit BLACK = new Color8Bit(0, 0, 0);
+    public static final Color8Bit WHITE = new Color8Bit(200, 200, 200);
+    public static final Color8Bit RED = new Color8Bit(255, 0, 0);
+    public static final Color8Bit ORANGE = new Color8Bit(255, 119, 0);
+    public static final Color8Bit YELLOW = new Color8Bit(255, 165, 0);
+    public static final Color8Bit GREEN = new Color8Bit(0, 204, 0);
+    public static final Color8Bit BLUE = new Color8Bit(0, 0, 204);
+    public static final Color8Bit PURPLE = new Color8Bit(238, 80, 255);
+    public static final Color8Bit PINK = new Color8Bit(255, 5, 100);
+    public static final Color8Bit LIGHTBLUE = new Color8Bit(56, 197, 252);
+
+    public static final Color8Bit COLORS[] = {
+          BLACK, WHITE, RED, ORANGE, YELLOW, GREEN, BLUE, LIGHTBLUE, PURPLE, PINK,
+        };
+  }
 }
