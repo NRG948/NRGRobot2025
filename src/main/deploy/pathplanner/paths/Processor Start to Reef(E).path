@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.808705357142856,
-        "y": 3.411272321428571
+        "x": 7.768032786885246,
+        "y": 3.3956454918032786
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.705301339285714,
-        "y": 3.182756696428571
+        "x": 6.664628769028103,
+        "y": 3.1671298668032786
       },
       "isLocked": false,
       "linkedName": "Processor Center Start"
     },
     {
       "anchor": {
-        "x": 4.896763392857142,
-        "y": 2.680022321428571
+        "x": 4.735143442622951,
+        "y": 2.724334016393442
       },
       "prevControl": {
-        "x": 5.85,
-        "y": 2.9020089285714277
+        "x": 5.688380049765808,
+        "y": 2.9463206235362986
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 122.25
+    "rotation": 120.05244771118983
   },
   "reversed": false,
-  "folder": "From Processor Start",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 179.10668705589302

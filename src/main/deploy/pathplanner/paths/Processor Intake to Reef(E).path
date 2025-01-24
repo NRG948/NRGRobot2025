@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.16,
-        "y": 1.11
+        "x": 1.6303278688524592,
+        "y": 0.6264856557377039
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4277500000000005,
-        "y": 1.7437500000000001
+        "x": 2.280675532694382,
+        "y": 1.046117591554982
       },
       "isLocked": false,
       "linkedName": "Processor Intake"
     },
     {
       "anchor": {
-        "x": 4.896763392857142,
-        "y": 2.680022321428571
+        "x": 4.735143442622951,
+        "y": 2.724334016393442
       },
       "prevControl": {
-        "x": 3.902263392857142,
-        "y": 2.212022321428572
+        "x": 3.9153989182978615,
+        "y": 2.133578246562795
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 122.25
+    "rotation": 120.05244771118983
   },
   "reversed": false,
-  "folder": "Cycle Processor Intake",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 52.0
+    "rotation": 54.09027692082235
   },
   "useDefaultConstraints": true
 }

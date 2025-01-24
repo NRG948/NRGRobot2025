@@ -9,39 +9,153 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "parallel",
                 "data": {
-                  "pathName": "Barge Start to Reef(I)"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Blue Barge Start to Reef(I)"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Elevator L4"
+                      }
+                    }
+                  ]
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Reef(I) to Barge Intake"
+                  "name": "Coral Outtake"
                 }
               },
               {
-                "type": "path",
+                "type": "parallel",
                 "data": {
-                  "pathName": "Barge Intake to Reef(K)"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Elevator Dock"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Reef(I) to Barge Intake"
+                      }
+                    }
+                  ]
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Reef(K) to Barge Intake"
+                  "name": "Coral Intake"
                 }
               },
               {
-                "type": "path",
+                "type": "parallel",
                 "data": {
-                  "pathName": "Barge Intake to Reef(L)"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Elevator L4"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Barge Intake to Reef(K)"
+                      }
+                    }
+                  ]
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Reef(L) to Barge Intake"
+                  "name": "Coral Outtake"
+                }
+              },
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Elevator Dock"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Reef(K) to Barge Intake"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Coral Intake"
+                }
+              },
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Barge Intake to Reef(L)"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Elevator L4"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Coral Outtake"
+                }
+              },
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Reef(L) to Barge Intake"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Elevator Dock"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Coral Intake"
                 }
               },
               {
@@ -57,6 +171,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Barge Side",
+  "folder": null,
   "choreoAuto": false
 }

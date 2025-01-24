@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.809765625,
-        "y": 4.403683035714286
+        "x": 6.843891493806807,
+        "y": 4.345190428881098
       },
       "isLocked": false,
       "linkedName": "Barge Start Center"
     },
     {
       "anchor": {
-        "x": 5.954464285714286,
-        "y": 4.031529017857142
+        "x": 5.742110655737705,
+        "y": 3.9470799180327862
       },
       "prevControl": {
-        "x": 6.796707589285713,
-        "y": 4.429799107142856
+        "x": 6.569652464786624,
+        "y": 4.229318123485083
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "From Barge Start",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 179.10668705589302
