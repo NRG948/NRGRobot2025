@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import com.nrg948.preferences.RobotPreferences;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
+import frc.robot.parameters.ArmParameters;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +21,15 @@ import java.util.stream.Stream;
 public class Subsystems {
   public final SwerveSubsystem drivetrain = new SwerveSubsystem();
   public final Elevator elevator = new Elevator();
-  public final CoralArm coralArm = new CoralArm();
+
+  public static ArmParameters CORALPARAMETERS = (ArmParameters.CoralArm);
+  public final Arm coralArm = new Arm(CORALPARAMETERS);
+  public final CoralRoller coralRoller = new CoralRoller();
+
+  public static ArmParameters ALAGEPARAMETERS = (ArmParameters.AlgaeArm);
+  public final Arm algaeArm = new Arm(ALAGEPARAMETERS);
+  public final AlgaeGrabber algaeGrabber = new AlgaeGrabber();
+
   public final Optional<AprilTagSubsystem> aprilTag =
       newOptionalSubsystem(
           AprilTagSubsystem.class,
@@ -34,7 +43,9 @@ public class Subsystems {
   /** Constructs the robot subsystems container. */
   public Subsystems() {
     // Add all manipulator subsystems to the `manipulators` list.
-    var manipulators = new ArrayList<Subsystem>(Arrays.asList(elevator, coralArm));
+    var manipulators =
+        new ArrayList<Subsystem>(
+            Arrays.asList(elevator, coralArm, algaeArm, algaeGrabber, coralRoller));
 
     // Add all non-manipulator subsystems to the `all` list.
     var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain));

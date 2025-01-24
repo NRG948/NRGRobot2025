@@ -50,13 +50,17 @@ public final class Constants {
       public static final class TalonFX {
         public static final int ELEVATOR_MAIN_MOTOR_ID = 0;
         public static final int ELEVATOR_FOLLOWER_MOTOR_ID = 1;
-        public static final int ARM_MOTOR_ID = 2; // check with systems for final IDs.
+        public static final int CORAL_ARM_MOTOR_ID = 2; // TODO check with systems for final IDs.
+        public static final int ALGAE_ARM_MOTOR_ID = 3;
+        public static final int ALGAE_GRABBER_MOTOR_ID = 4;
+        public static final int CORAL_ROLLER_MOTOR_ID = 5;
       }
     }
 
     /** Digital I/O port numbers. */
     public static class DigitalIO {
-      public static final int ARM_ABSOLUTE_ENCODER = 0;
+      public static final int CORAL_ARM_ABSOLUTE_ENCODER = 0;
+      public static final int ALGAE_ARM_ABSOLUTE_ENCODER = 1;
     }
   }
 

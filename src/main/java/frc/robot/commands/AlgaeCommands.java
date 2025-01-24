@@ -16,12 +16,17 @@ import frc.robot.subsystems.Subsystems;
 public class AlgaeCommands {
   /** Returns a command to intake algae. */
   public static Command intakeAlgae(Subsystems subsystems) {
-    return Commands.none();
+    return Commands.runOnce(() -> subsystems.algaeGrabber.intake(), subsystems.algaeGrabber);
   }
 
   /** Returns a command to outtake algae. */
   public static Command outtakeAlgae(Subsystems subsystems) {
-    return Commands.none();
+    return Commands.runOnce(() -> subsystems.algaeGrabber.outtake(), subsystems.algaeGrabber);
+  }
+
+  /** Returns a command to stop the algae grabber. */
+  public static Command stopAlgeaGrabber(Subsystems subsystems) {
+    return Commands.runOnce(() -> subsystems.algaeGrabber.disable(), subsystems.algaeGrabber);
   }
 
   /** Returns a command that removes algae at the given reef level. */
@@ -31,6 +36,10 @@ public class AlgaeCommands {
 
   /** Returns a command that stops and stows the intake. */
   public static Command stopAndStowIntake(Subsystems subsystems) {
-    return Commands.none();
+    return Commands.parallel(
+        Commands.runOnce(() -> subsystems.algaeGrabber.disable(), subsystems.algaeGrabber),
+        Commands.runOnce(
+            () -> subsystems.algaeArm.setGoalAngle(0.0), // TODO: determine stowed angle
+            subsystems.algaeArm));
   }
 }
