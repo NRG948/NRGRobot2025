@@ -38,7 +38,7 @@ public final class Constants {
     public static class LEDSegment {
       public static final int STATUS_FIRST_LED = 0; // TODO: change value
       public static final int STATUS_LED_COUNT = 26; // TODO: change value
-    }   
+    }
 
     public static final int LED_COUNT = 1; // TODO: change value
 
@@ -85,7 +85,7 @@ public final class Constants {
     public static final Color8Bit LIGHTBLUE = new Color8Bit(56, 197, 252);
 
     public static final Color8Bit COLORS[] = {
-          BLACK, WHITE, RED, ORANGE, YELLOW, GREEN, BLUE, LIGHTBLUE, PURPLE, PINK,
-        };
+      BLACK, WHITE, RED, ORANGE, YELLOW, GREEN, BLUE, LIGHTBLUE, PURPLE, PINK,
+    };
   }
 }
