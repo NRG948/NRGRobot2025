@@ -166,7 +166,7 @@ public class SwerveModule {
         new FlywheelSim(
             LinearSystemId.identifyVelocitySystem(parameters.getDriveKv(), parameters.getDriveKa()),
             DCMotor.getFalcon500(1),
-            parameters.getSwerveModule().getDriveGearRation());
+            parameters.getSwerveModule().getDriveGearRatio());
     this.simSteeringMotor =
         new FlywheelSim(
             LinearSystemId.identifyVelocitySystem(

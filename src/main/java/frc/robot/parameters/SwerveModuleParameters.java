@@ -86,7 +86,7 @@ public enum SwerveModuleParameters {
    *
    * @return The drive gear ratio.
    */
-  public double getDriveGearRation() {
+  public double getDriveGearRatio() {
     return this.driveGearRatio;
   }
 

@@ -8,6 +8,7 @@
 package frc.robot.parameters;
 
 import static frc.robot.parameters.MotorParameters.Falcon500;
+import static frc.robot.parameters.MotorParameters.KrakenX60;
 import static frc.robot.parameters.MotorParameters.NeoV1_1;
 import static frc.robot.parameters.SwerveModuleParameters.MK4IFast;
 import static frc.robot.parameters.SwerveModuleParameters.MK4IFaster;
@@ -83,7 +84,7 @@ public enum SwerveDriveParameters {
       0.578,
       0.528,
       MK4IFast,
-      Falcon500,
+      KrakenX60,
       NeoV1_1,
       new int[] {6, 7, 19, 18, 8, 9, 13, 14}, // drive, steer motor controller CAN IDs
       new int[] {31, 32, 33, 34}, // CANCoder CAN IDs
@@ -468,7 +469,7 @@ public enum SwerveDriveParameters {
    * @return The drive gear ratio.
    */
   public double getDriveGearRatio() {
-    return this.swerveModule.getDriveGearRation();
+    return this.swerveModule.getDriveGearRatio();
   }
 
   /**
@@ -721,7 +722,13 @@ public enum SwerveDriveParameters {
   public RobotConfig getPathplannerConfig() {
     ModuleConfig moduleconfig =
         new ModuleConfig(
-            getWheelDiameter() / 2, getMaxDriveSpeed(), 1.0, driveMotor.getDCMotor(), 40.0, 1);
-    return new RobotConfig(getRobotMass(), getMomentOfInertia(), moduleconfig, getWheelDistanceX());
+            getWheelDiameter() / 2,
+            getMaxDriveSpeed(),
+            1.0,
+            driveMotor.getDCMotor(),
+            getDriveGearRatio(),
+            40.0,
+            1);
+    return new RobotConfig(getRobotMass(), getMomentOfInertia(), moduleconfig, this.wheelPositions);
   }
 }
