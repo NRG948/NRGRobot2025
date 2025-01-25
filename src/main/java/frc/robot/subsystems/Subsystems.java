@@ -22,12 +22,10 @@ public class Subsystems {
   public final SwerveSubsystem drivetrain = new SwerveSubsystem();
   public final Elevator elevator = new Elevator();
 
-  public static ArmParameters CORALPARAMETERS = (ArmParameters.CoralArm);
-  public final Arm coralArm = new Arm(CORALPARAMETERS);
+  public final Arm coralArm = new Arm(ArmParameters.CoralArm);
   public final CoralRoller coralRoller = new CoralRoller();
 
-  public static ArmParameters ALAGEPARAMETERS = (ArmParameters.AlgaeArm);
-  public final Arm algaeArm = new Arm(ALAGEPARAMETERS);
+  public final Arm algaeArm = new Arm(ArmParameters.AlgaeArm);
   public final AlgaeGrabber algaeGrabber = new AlgaeGrabber();
 
   public final Optional<AprilTagSubsystem> aprilTag =

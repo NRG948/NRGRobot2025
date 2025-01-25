@@ -20,11 +20,16 @@ public class AlgaeGrabber extends SubsystemBase {
   public AlgaeGrabber() {}
 
   public void intake() {
-    motorSpeed = 1.0;
+    motorSpeed = 0.8; // TODO: test & determine safe maximum speed
+  }
+
+  public void hold() {
+    motorSpeed =
+        0.2; // TODO: test & determine motor power needed to hang on to game piece while moving
   }
 
   public void outtake() {
-    motorSpeed = -1.0;
+    motorSpeed = -0.8;
   }
 
   public void disable() {

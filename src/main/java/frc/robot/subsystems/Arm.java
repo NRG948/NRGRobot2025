@@ -17,35 +17,17 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.RobotConstants;
 import frc.robot.parameters.ArmParameters;
-import frc.robot.parameters.MotorParameters;
 
 public class Arm extends SubsystemBase {
-
-  private static double MASS; // mass of the arm in Kg
-  private static double GEAR_RATIO;
-  private static MotorParameters MOTOR;
-  private static double ARM_LENGTH;
-
-  private static double EFFICIENCY;
-  private static double RADIANS_PER_REVOLUTION;
-  private static double MAX_ANGULAR_SPEED;
-  private static double MAX_ANGULAR_ACCELERATION;
-  private static TrapezoidProfile.Constraints CONSTRAINTS;
-  private static double KS;
-  private static double KV;
-  private static double KA;
-  private static double KG;
 
   private final TalonFX motor;
   private final DutyCycleEncoder absoluteEncoder;
 
-  private final TrapezoidProfile profile = new TrapezoidProfile(CONSTRAINTS);
+  private final TrapezoidProfile profile;
 
-  private final ArmFeedforward feedForward = new ArmFeedforward(KS, KG, KV, KA);
-  private final ProfiledPIDController controller =
-      new ProfiledPIDController(1.0, 0, 0, CONSTRAINTS);
+  private final ArmFeedforward feedForward;
+  private final ProfiledPIDController controller;
 
   private final TrapezoidProfile.State currentAngle = new TrapezoidProfile.State();
   private final TrapezoidProfile.State goalAngle = new TrapezoidProfile.State();
@@ -54,27 +36,14 @@ public class Arm extends SubsystemBase {
   private double currentAngleTime = 0;
 
   /** Creates a new Arm. */
-  public Arm(ArmParameters PARAMETERS) {
+  public Arm(ArmParameters parameters) {
 
-    MASS = PARAMETERS.getMass();
-    GEAR_RATIO = PARAMETERS.getGearRatio();
-    MOTOR = PARAMETERS.getMotorParameters();
+    feedForward = parameters.getArmFeedforward();
+    profile = new TrapezoidProfile(parameters.getConstraints());
+    controller = parameters.getProfiledPIDController();
 
-    EFFICIENCY = PARAMETERS.getEfficiency();
-    RADIANS_PER_REVOLUTION = PARAMETERS.getRadiansPerRevolution();
-    MAX_ANGULAR_SPEED = EFFICIENCY * MOTOR.getFreeSpeedRPM() * RADIANS_PER_REVOLUTION / 60.0;
-    ARM_LENGTH = PARAMETERS.getArmLength();
-    MAX_ANGULAR_ACCELERATION =
-        EFFICIENCY * ((2 * MOTOR.getStallTorque() * GEAR_RATIO) / (MASS * ARM_LENGTH));
-    CONSTRAINTS =
-        new TrapezoidProfile.Constraints(MAX_ANGULAR_SPEED * 0.3, MAX_ANGULAR_ACCELERATION * 0.5);
-    KS = PARAMETERS.getkS();
-    KV = RobotConstants.MAX_BATTERY_VOLTAGE / MAX_ANGULAR_SPEED;
-    KA = RobotConstants.MAX_BATTERY_VOLTAGE / MAX_ANGULAR_ACCELERATION;
-    KG = KA * 9.81;
-
-    motor = new TalonFX(PARAMETERS.getMotorID());
-    absoluteEncoder = new DutyCycleEncoder(PARAMETERS.getEncoderID());
+    motor = new TalonFX(parameters.getMotorID());
+    absoluteEncoder = new DutyCycleEncoder(parameters.getEncoderID());
 
     MotorOutputConfigs configs = new MotorOutputConfigs();
     configs.NeutralMode = NeutralModeValue.Brake;

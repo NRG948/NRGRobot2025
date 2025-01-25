@@ -14,21 +14,28 @@ import frc.robot.Constants.RobotConstants;
 public class CoralRoller extends SubsystemBase {
 
   private final TalonFX motor = new TalonFX(RobotConstants.CAN.TalonFX.CORAL_ROLLER_MOTOR_ID);
+  // TODO: add limit switch to determine hasCoral
+
   private double motorSpeed = 0;
+  private boolean hasCoral = false;
 
   /** Creates a new AlgaeGrabber. */
   public CoralRoller() {}
 
   public void intake() {
-    motorSpeed = 1.0;
+    motorSpeed = 0.8; // TODO: test & determine safe maximum speed
   }
 
   public void outtake() {
-    motorSpeed = -1.0;
+    motorSpeed = -0.8;
   }
 
   public void disable() {
     motor.stopMotor();
+  }
+
+  public boolean hasCoral() {
+    return hasCoral;
   }
 
   @Override

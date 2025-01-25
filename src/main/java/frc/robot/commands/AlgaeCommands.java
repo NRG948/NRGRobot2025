@@ -25,7 +25,7 @@ public class AlgaeCommands {
   }
 
   /** Returns a command to stop the algae grabber. */
-  public static Command stopAlgeaGrabber(Subsystems subsystems) {
+  public static Command stopAlgaeGrabber(Subsystems subsystems) {
     return Commands.runOnce(() -> subsystems.algaeGrabber.disable(), subsystems.algaeGrabber);
   }
 
