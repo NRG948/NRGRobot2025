@@ -9,9 +9,14 @@ package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
@@ -57,7 +62,7 @@ public final class DriveCommands {
   public static Command alignToReefPP(Subsystems subsystems, ReefBranch targetReefBranch) {
     SwerveSubsystem drivetrain = subsystems.drivetrain;
     Pose2d currentRobotPose = drivetrain.getPosition();
-    int nearestTagId = AlignToReef2.findNearestReefTagID(currentRobotPose);
+    int nearestTagId = findNearestReefTagID(currentRobotPose);
     Pose2d targetPose =
         Constants.VisionConstants.REEF_SCORING_POSES.get(
             new Pair<Integer, ReefBranch>(nearestTagId, targetReefBranch));
@@ -70,5 +75,24 @@ public final class DriveCommands {
             SwerveSubsystem.getMaxAcceleration(),
             currentSwerveParameters.getMaxRotationalSpeed() * 0.3,
             currentSwerveParameters.getMaxRotationalAcceleration()));
+  }
+
+  // TODO: get tag based on vision
+  public static int findNearestReefTagID(Pose2d robotPose) {
+    var layout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+    var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+    int startingId = alliance.equals(Alliance.Red) ? 6 : 17;
+    int nearestId = -1;
+    double minDist = Double.MAX_VALUE;
+    for (int id = startingId; id < startingId + 6; id++) {
+      Transform2d tagToRobot = layout.getTagPose(id).get().toPose2d().minus(robotPose);
+      double dist = Math.hypot(tagToRobot.getX(), tagToRobot.getY());
+      if (dist < minDist) {
+        minDist = dist;
+        nearestId = id;
+      }
+    }
+
+    return nearestId;
   }
 }

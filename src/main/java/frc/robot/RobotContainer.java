@@ -64,22 +64,6 @@ public class RobotContainer {
 
     ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator");
     autonomous.addShuffleboardLayout(operatorTab);
-    // ShuffleboardLayout statusLayout =
-    //     operatorTab
-    //         .getLayout("Status", BuiltInLayouts.kGrid)
-    //         .withProperties(Map.of("Number of columns", 1, "Number of rows", 1))
-    //         .withPosition(6, 0)
-    //         .withSize(2, 2);
-    // SmartDashboard.putData("AlignToReef (left)", new AlignToReef(subsystems, ReefBranch.LEFT));
-    // SmartDashboard.putData("AlignToReef (right)", new AlignToReef(subsystems, ReefBranch.RIGHT));
-    // SmartDashboard.putData(
-    //     "AlignToReef2 (left)", new AlignToReef2(subsystems, AlignToReef2.ReefBranch.LEFT));
-    // SmartDashboard.putData(
-    //     "AlignToReef2 (right)", new AlignToReef2(subsystems, AlignToReef2.ReefBranch.RIGHT));
-    // SmartDashboard.putData(
-    //     "AlignToReefPP (left)", DriveCommands.alignToReefPP(subsystems, ReefBranch.LEFT));
-    // SmartDashboard.putData(
-    //     "AlignToReefPP (right)", DriveCommands.alignToReefPP(subsystems, ReefBranch.RIGHT));
   }
 
   /**
