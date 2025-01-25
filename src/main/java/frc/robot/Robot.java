@@ -14,7 +14,9 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AlignToReef.ReefBranch;
@@ -35,6 +37,24 @@ public class Robot extends TimedRobot {
    */
   public Robot() {
     Common.init("frc.robot");
+    DriverStation.silenceJoystickConnectionWarning(true);
+
+    CommandScheduler scheduler = CommandScheduler.getInstance();
+    scheduler.onCommandInitialize(
+        (cmd) -> {
+          System.out.println("COMMAND INIT: " + cmd.getName() + " at " + Timer.getFPGATimestamp());
+        });
+    scheduler.onCommandFinish(
+        (cmd) -> {
+          System.out.println("COMMAND END: " + cmd.getName() + " at " + Timer.getFPGATimestamp());
+        });
+    scheduler.onCommandInterrupt(
+        (oldCmd, newCmd) -> {
+          System.out.println(
+              "COMMAND INTERRUPTED: "
+                  + oldCmd.getName()
+                  + (newCmd.isPresent() ? " by " + newCmd.get().getName() : ""));
+        });
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.

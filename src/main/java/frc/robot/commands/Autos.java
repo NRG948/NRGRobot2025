@@ -62,8 +62,13 @@ public final class Autos {
     NamedCommands.registerCommands(getPathplannerEventMap(subsystems, name));
 
     return Commands.sequence(
-        Commands.runOnce(() -> driveTrain.resetPosition(startPose), driveTrain),
-        Commands.defer(() -> new PathPlannerAuto(name), Set.of(driveTrain)));
+            Commands.runOnce(() -> driveTrain.resetPosition(startPose), driveTrain),
+            Commands.defer(
+                () -> {
+                  return new PathPlannerAuto(name);
+                },
+                Set.of(driveTrain)))
+        .withName(name);
   }
 
   private static Map<String, Command> getPathplannerEventMap(
