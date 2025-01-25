@@ -8,6 +8,8 @@
 package frc.robot.commands;
 
 import com.nrg948.preferences.RobotPreferences;
+import com.nrg948.preferences.RobotPreferencesLayout;
+import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.MathUtil;
@@ -25,24 +27,28 @@ import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.SwerveSubsystem;
 import java.util.ArrayList;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+@RobotPreferencesLayout(groupName = "AlignToReef", row = 0, column = 4, width = 2, height = 3)
 public class AlignToReef extends Command { // TODO:
   private static final double MAX_TRANSLATIONAL_POWER = 0.30;
   private static final double MAX_ROTATIONAL_POWER = 0.5;
 
   private SwerveSubsystem drivetrain;
 
-  // they don't seem to appear. TODO: make preferences appear in shuffleboard
-  private RobotPreferences.DoubleValue Px =
-      new RobotPreferences.DoubleValue("AprilTag", "Reef P Constant for X", 0.5);
-  private RobotPreferences.DoubleValue Py =
-      new RobotPreferences.DoubleValue("AprilTag", "Reef P Constant for Y", 0.5);
-  private RobotPreferences.DoubleValue Pr =
-      new RobotPreferences.DoubleValue("AprilTag", "Reef P Constant for yaw", 0.05);
+  @RobotPreferencesValue
+  public static RobotPreferences.DoubleValue Px =
+      new RobotPreferences.DoubleValue("AlignToReef", "X KP", 1);
 
-  private PIDController xController = new PIDController(Px.getValue(), 0, 0);
-  private PIDController yController = new PIDController(Py.getValue(), 0, 0);
-  private PIDController rController = new PIDController(Pr.getValue(), 0, 0);
+  @RobotPreferencesValue
+  public static RobotPreferences.DoubleValue Py =
+      new RobotPreferences.DoubleValue("AlignToReef", "Y KP", 1);
+
+  @RobotPreferencesValue
+  public static RobotPreferences.DoubleValue Pr =
+      new RobotPreferences.DoubleValue("AlignToReef", "Yaw KP", 0.02);
+
+  private final PIDController xController = new PIDController(Px.getValue(), 0, 0);
+  private final PIDController yController = new PIDController(Py.getValue(), 0, 0);
+  private final PIDController rController = new PIDController(Pr.getValue(), 0, 0);
 
   private DoubleLogEntry xErrorLog =
       new DoubleLogEntry(DataLogManager.getLog(), "Vision/Reef X Error");
@@ -98,6 +104,10 @@ public class AlignToReef extends Command { // TODO:
     System.out.println("TARGET pose: " + targetPose);
     System.out.println("Target Branch: " + targetReefBranch);
 
+    xController.setPID(Px.getValue(), 0, 0);
+    yController.setPID(Py.getValue(), 0, 0);
+    rController.setPID(Pr.getValue(), 0, 0);
+
     xController.setSetpoint(targetPose.getX());
     yController.setSetpoint(targetPose.getY());
     rController.setSetpoint(targetPose.getRotation().getDegrees());
@@ -105,6 +115,8 @@ public class AlignToReef extends Command { // TODO:
     xController.setTolerance(Constants.VisionConstants.REEF_ALIGNMENT_TOLERANCE_XY);
     yController.setTolerance(Constants.VisionConstants.REEF_ALIGNMENT_TOLERANCE_XY);
     rController.setTolerance(Constants.VisionConstants.REEF_ALIGNMENT_TOLERANCE_R);
+
+    rController.enableContinuousInput(-180, 180);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
