@@ -20,6 +20,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "1 Piece Autos",
+  "folder": null,
   "choreoAuto": false
 }

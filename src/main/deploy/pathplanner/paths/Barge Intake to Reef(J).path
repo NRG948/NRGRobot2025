@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3,
-        "y": 7.0
+        "x": 1.6069988052456836,
+        "y": 7.392278999979434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.6105468750000007,
-        "y": 6.048995535714286
+        "x": 3.382660810132307,
+        "y": 6.245512099074496
       },
       "isLocked": false,
       "linkedName": "Barge Intake"
     },
     {
       "anchor": {
-        "x": 5.144866071428571,
-        "y": 5.2785714285714285
+        "x": 5.190676229508196,
+        "y": 5.061936475409836
       },
       "prevControl": {
-        "x": 3.6236049107142856,
-        "y": 6.042466517857142
+        "x": 3.591117341503666,
+        "y": 6.102146997692018
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.745
+    "rotation": -119.74488129694228
   },
   "reversed": false,
-  "folder": "Cycle Barge Intake",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -54.0
+    "rotation": -52.97520117037446
   },
   "useDefaultConstraints": true
 }

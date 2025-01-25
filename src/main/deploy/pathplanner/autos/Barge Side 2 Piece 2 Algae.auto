@@ -33,6 +33,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Barge Side",
+  "folder": null,
   "choreoAuto": false
 }

@@ -14,43 +14,20 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.RobotConstants;
-import frc.robot.parameters.ElevatorLevel;
-import frc.robot.parameters.MotorParameters;
+import frc.robot.parameters.ArmParameters;
 
-public class CoralArm extends SubsystemBase {
+public class Arm extends SubsystemBase {
 
-  private static final double MASS = 1.361; // mass of the arm in Kg
-  private static final double GEAR_RATIO = 75.0;
-  private static final MotorParameters MOTOR = MotorParameters.KrakenX60;
+  private final TalonFX motor;
+  private final DutyCycleEncoder absoluteEncoder;
 
-  private static final double EFFICIENCY = 1.0;
-  private static final double RADIANS_PER_REVOLUTION = 1.0;
-  private static final double MAX_ANGULAR_SPEED =
-      EFFICIENCY * MOTOR.getFreeSpeedRPM() * RADIANS_PER_REVOLUTION / 60.0;
-  private static final double ARM_LENGTH = Units.inchesToMeters(12);
-  private static final double MAX_ANGULAR_ACCELERATION =
-      EFFICIENCY * ((2 * MOTOR.getStallTorque() * GEAR_RATIO) / (MASS * ARM_LENGTH));
-  private static final TrapezoidProfile.Constraints CONSTRAINTS =
-      new TrapezoidProfile.Constraints(MAX_ANGULAR_SPEED * 0.3, MAX_ANGULAR_ACCELERATION * 0.5);
-  private static final double KS = 0.15;
-  private static final double KV = RobotConstants.MAX_BATTERY_VOLTAGE / MAX_ANGULAR_SPEED;
-  private static final double KA = RobotConstants.MAX_BATTERY_VOLTAGE / MAX_ANGULAR_ACCELERATION;
-  private static final double KG = KA * 9.81;
+  private final TrapezoidProfile profile;
 
-  private final TalonFX motor = new TalonFX(RobotConstants.CAN.TalonFX.ARM_MOTOR_ID);
-  private final DutyCycleEncoder absoluteEncoder =
-      new DutyCycleEncoder(RobotConstants.DigitalIO.ARM_ABSOLUTE_ENCODER);
-
-  private final TrapezoidProfile profile = new TrapezoidProfile(CONSTRAINTS);
-
-  private final ArmFeedforward feedForward = new ArmFeedforward(KS, KG, KV, KA);
-  private final ProfiledPIDController controller =
-      new ProfiledPIDController(1.0, 0, 0, CONSTRAINTS);
+  private final ArmFeedforward feedForward;
+  private final ProfiledPIDController controller;
 
   private final TrapezoidProfile.State currentAngle = new TrapezoidProfile.State();
   private final TrapezoidProfile.State goalAngle = new TrapezoidProfile.State();
@@ -59,7 +36,15 @@ public class CoralArm extends SubsystemBase {
   private double currentAngleTime = 0;
 
   /** Creates a new Arm. */
-  public CoralArm() {
+  public Arm(ArmParameters parameters) {
+
+    feedForward = parameters.getArmFeedforward();
+    profile = new TrapezoidProfile(parameters.getConstraints());
+    controller = parameters.getProfiledPIDController();
+
+    motor = new TalonFX(parameters.getMotorID());
+    absoluteEncoder = new DutyCycleEncoder(parameters.getEncoderID());
+
     MotorOutputConfigs configs = new MotorOutputConfigs();
     configs.NeutralMode = NeutralModeValue.Brake;
     configs.Inverted = InvertedValue.Clockwise_Positive;
@@ -79,8 +64,8 @@ public class CoralArm extends SubsystemBase {
   }
 
   /** Sets the goal angle and enables periodic control. */
-  public void setGoalAngle(ElevatorLevel level) {
-    goalAngle.position = level.getPivotAngle();
+  public void setGoalAngle(double angle) {
+    goalAngle.position = angle;
     enabled = true;
     timer.reset();
     timer.start();

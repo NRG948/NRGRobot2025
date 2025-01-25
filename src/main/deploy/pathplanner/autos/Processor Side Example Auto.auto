@@ -38,6 +38,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Processor Side",
+  "folder": null,
   "choreoAuto": false
 }

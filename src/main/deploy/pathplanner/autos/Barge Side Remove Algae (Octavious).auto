@@ -39,6 +39,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Target Algae",
+  "folder": null,
   "choreoAuto": false
 }

@@ -15,6 +15,12 @@
                 }
               },
               {
+                "type": "named",
+                "data": {
+                  "name": "Coral Outtake"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "Reef(H) to Barge Intake"
@@ -33,6 +39,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Barge Side",
+  "folder": null,
   "choreoAuto": false
 }

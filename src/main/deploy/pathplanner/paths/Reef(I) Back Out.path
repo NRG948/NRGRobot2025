@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.471316964285714,
-        "y": 5.0500558035714285
+        "x": 5.478381147540984,
+        "y": 4.882120901639344
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.065457589285713,
-        "y": 6.12734375
+        "x": 6.006686404398584,
+        "y": 5.935783985747123
       },
       "isLocked": false,
       "linkedName": "Reef(I)"
@@ -20,8 +20,8 @@
         "y": 7.4894467213114755
       },
       "prevControl": {
-        "x": 6.176450892857142,
-        "y": 6.303627232142857
+        "x": 6.432323767426515,
+        "y": 6.593977029968987
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Back Outs",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -119.745

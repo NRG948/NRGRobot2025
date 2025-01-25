@@ -45,7 +45,7 @@
     "rotation": 55.375844920051
   },
   "reversed": false,
-  "folder": "Algae Removers",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

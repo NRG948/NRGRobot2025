@@ -16,12 +16,12 @@ import frc.robot.subsystems.Subsystems;
 public class CoralCommands {
   /** Returns a command that intakes coral. */
   public static Command intakeCoral(Subsystems subsystems) {
-    return Commands.none();
+    return Commands.runOnce(() -> subsystems.coralRoller.intake(), subsystems.coralRoller);
   }
 
   /** Returns a command that outtakes coral. */
   public static Command outtakeCoral(Subsystems subsystems) {
-    return Commands.none();
+    return Commands.runOnce(() -> subsystems.coralRoller.outtake(), subsystems.coralRoller);
   }
 
   /**
@@ -32,7 +32,8 @@ public class CoralCommands {
    * @return
    */
   public static Command setArmAngleForReefLevel(Subsystems subsystems, ElevatorLevel level) {
-    return Commands.runOnce(() -> subsystems.coralArm.setGoalAngle(level), subsystems.coralArm);
+    return Commands.runOnce(
+        () -> subsystems.coralArm.setGoalAngle(level.getPivotAngle()), subsystems.coralArm);
   }
 
   /** Returns a command that waits for coral arm to reach goal angle. */
@@ -44,7 +45,8 @@ public class CoralCommands {
   public static Command stowArm(Subsystems subsystems) {
     return Commands.sequence(
         Commands.runOnce(
-            () -> subsystems.coralArm.setGoalAngle(ElevatorLevel.STOWED), subsystems.coralArm),
+            () -> subsystems.coralArm.setGoalAngle(ElevatorLevel.STOWED.getPivotAngle()),
+            subsystems.coralArm),
         waitForArmToReachGoalAngle(subsystems),
         Commands.runOnce(() -> subsystems.coralArm.disable(), subsystems.coralArm));
   }

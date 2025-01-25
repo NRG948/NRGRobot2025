@@ -13,6 +13,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.commands.AlignToReef.ReefBranch;
 import frc.robot.parameters.VisionParameters;
 import java.util.HashMap;
@@ -48,6 +49,17 @@ public final class Constants {
      */
     public static final double CORAL_OFFSET_Y = 0.20; // TODO: GET REAL VALUE
 
+    public static class PWNPort {
+      public static final int LED = 1; // TODO: change value
+    }
+
+    public static class LEDSegment {
+      public static final int STATUS_FIRST_LED = 0; // TODO: change value
+      public static final int STATUS_LED_COUNT = 26; // TODO: change value
+    }
+
+    public static final int LED_COUNT = 1; // TODO: change value
+
     /** CANBus device IDs. */
     public static final class CAN {
       /** The pigeon2 ID. */
@@ -56,13 +68,17 @@ public final class Constants {
       public static final class TalonFX {
         public static final int ELEVATOR_MAIN_MOTOR_ID = 0;
         public static final int ELEVATOR_FOLLOWER_MOTOR_ID = 1;
-        public static final int ARM_MOTOR_ID = 2; // check with systems for final IDs.
+        public static final int CORAL_ARM_MOTOR_ID = 2; // TODO check with systems for final IDs.
+        public static final int ALGAE_ARM_MOTOR_ID = 3;
+        public static final int ALGAE_GRABBER_MOTOR_ID = 4;
+        public static final int CORAL_ROLLER_MOTOR_ID = 5;
       }
     }
 
     /** Digital I/O port numbers. */
     public static class DigitalIO {
-      public static final int ARM_ABSOLUTE_ENCODER = 0;
+      public static final int CORAL_ARM_ABSOLUTE_ENCODER = 0;
+      public static final int ALGAE_ARM_ABSOLUTE_ENCODER = 1;
     }
   }
 
@@ -106,4 +122,21 @@ public final class Constants {
 
   /** Field of view of the AprilTag camera in degrees. */
   public static final double APRILTAG_CAMERA_FOV = 70;
+
+  public static class ColorConstants {
+    public static final Color8Bit BLACK = new Color8Bit(0, 0, 0);
+    public static final Color8Bit WHITE = new Color8Bit(200, 200, 200);
+    public static final Color8Bit RED = new Color8Bit(255, 0, 0);
+    public static final Color8Bit ORANGE = new Color8Bit(255, 119, 0);
+    public static final Color8Bit YELLOW = new Color8Bit(255, 165, 0);
+    public static final Color8Bit GREEN = new Color8Bit(0, 204, 0);
+    public static final Color8Bit BLUE = new Color8Bit(0, 0, 204);
+    public static final Color8Bit PURPLE = new Color8Bit(238, 80, 255);
+    public static final Color8Bit PINK = new Color8Bit(255, 5, 100);
+    public static final Color8Bit LIGHTBLUE = new Color8Bit(56, 197, 252);
+
+    public static final Color8Bit COLORS[] = {
+      BLACK, WHITE, RED, ORANGE, YELLOW, GREEN, BLUE, LIGHTBLUE, PURPLE, PINK,
+    };
+  }
 }

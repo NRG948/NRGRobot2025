@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.74,
-  "robotLength": 0.74,
+  "robotWidth": 0.7874,
+  "robotLength": 0.787,
   "holonomicMode": true,
   "pathFolders": [
     "Algae Removers",
@@ -43,6 +43,7 @@
   "bumperOffsetX": 0.0,
   "bumperOffsetY": 0.0,
   "robotFeatures": [
-    "{\"name\":\"Rectangle\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":0.15,\"y\":-0.15},\"size\":{\"width\":0.0508,\"length\":0.305},\"borderRadius\":0.05,\"strokeWidth\":0.05,\"filled\":false}}"
+    "{\"name\":\"Elevator\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":0.216,\"y\":-0.152},\"size\":{\"width\":0.0508,\"length\":0.305},\"borderRadius\":0.05,\"strokeWidth\":0.01,\"filled\":false}}",
+    "{\"name\":\"Arm\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":0.1333,\"y\":-0.2806},\"size\":{\"width\":0.206,\"length\":0.14},\"borderRadius\":0.05,\"strokeWidth\":0.01,\"filled\":false}}"
   ]
 }

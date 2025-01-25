@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.SwerveSubsystem;
 import java.io.File;
@@ -72,19 +73,26 @@ public final class Autos {
         new HashMap<String, Command>(); // TODO: Replace placeholder parameters
 
     // TODO: Replace placeholder commands and parameters
-    eventMaps.put("Remove Algae", Commands.none() /*RemoveAlgae(subsystems {RemoveRPM}*/);
+    eventMaps.put(
+        "Remove Algae L1", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L1));
+    eventMaps.put(
+        "Remove Algae L2", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L2));
+    eventMaps.put(
+        "Remove Algae L3", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L3));
+    eventMaps.put(
+        "Remove Algae L4", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L4));
 
-    eventMaps.put("Coral Intake", Commands.none() /* Intake(subsystems, IntakeRPM)*/);
-    eventMaps.put("Coral Outtake", Commands.none() /* Outtake(subsystems, OuttakeRPM)*/);
+    eventMaps.put("Coral Intake", CoralCommands.intakeCoral(subsystems));
+    eventMaps.put("Coral Outtake", CoralCommands.outtakeCoral(subsystems));
 
-    eventMaps.put("Elevator L1", Commands.none() /* Elevator(subsystems, ElevatorL1)*/);
-    eventMaps.put("Elevator L2", Commands.none() /* Elevator(subsystems, ElevatorL2)*/);
-    eventMaps.put("Elevator L3", Commands.none() /* Elevator(subsystems, ElevatorL3)*/);
-    eventMaps.put("Elevator L4", Commands.none() /* Elevator(subsystems, ElevatorL4)*/);
-    eventMaps.put("Elevator Dock", Commands.none() /* Elevator(subsystems, Dock)*/);
+    eventMaps.put("Elevator L1", ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L1));
+    eventMaps.put("Elevator L2", ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L2));
+    eventMaps.put("Elevator L3", ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L3));
+    eventMaps.put("Elevator L4", ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L4));
+    eventMaps.put("Elevator Dock", ElevatorCommands.stowElevator(subsystems));
 
-    eventMaps.put("Pivot Intake", Commands.none() /*, Pivot(subsystems, IntakeAngle)*/);
-    eventMaps.put("Pivot Outtake", Commands.none() /* Pivot(subsystems, OuttakeAngle)*/);
+    eventMaps.put("Pivot Intake", Commands.none() /* , Pivot(subsystems, IntakeAngle) */);
+    eventMaps.put("Pivot Outtake", Commands.none() /* Pivot(subsystems, OuttakeAngle) */);
 
     return eventMaps;
   }
