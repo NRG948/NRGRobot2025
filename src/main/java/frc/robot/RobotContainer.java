@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeCommands;
-import frc.robot.commands.Autos;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.CoralCommands;
 import frc.robot.commands.DriveCommands;
@@ -118,8 +117,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.none(subsystems);
+    return autonomous.getAutonomousCommand(subsystems);
   }
 
   public void periodic() {
