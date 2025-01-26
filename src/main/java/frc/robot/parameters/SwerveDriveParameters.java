@@ -86,9 +86,9 @@ public enum SwerveDriveParameters {
       MK4IFast,
       KrakenX60,
       NeoV1_1,
-      new int[] {6, 7, 19, 18, 8, 9, 13, 14}, // drive, steer motor controller CAN IDs
-      new int[] {31, 32, 33, 34}, // CANCoder CAN IDs
-      new double[] {186.5, 69.61, 172.62, 21.27},
+      new int[] {17, 19, 18, 20, 1, 2, 9, 10}, // drive, steer motor controller CAN IDs
+      new int[] {33, 34, 31, 32}, // CANCoder CAN IDs
+      new double[] {177.45, 169.98, 166.82, 184.31},
       0.15,
       0.15,
       true,
