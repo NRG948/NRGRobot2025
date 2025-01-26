@@ -33,8 +33,8 @@ import frc.robot.util.TalonFXAdapter;
 public class Elevator extends SubsystemBase {
 
   // physical parameters of the elevator
-  private static final double GEAR_RATIO = 9.0;
-  private static final double SPROCKET_DIAMETER = 0.3; // meters
+  private static final double GEAR_RATIO = (60.0 / 12.0) * (24.0 / 15.0);
+  private static final double SPROCKET_DIAMETER = 0.0475; // 4.75 cm
   private static final double MASS = 2.0; // kilograms
   private static final double METERS_PER_REVOLUTION = (SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO;
 
