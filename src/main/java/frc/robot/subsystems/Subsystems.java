@@ -28,6 +28,8 @@ public class Subsystems {
   public final Arm algaeArm = new Arm(ArmParameters.AlgaeArm);
   public final AlgaeGrabber algaeGrabber = new AlgaeGrabber();
 
+  public final Arm climber = new Arm(ArmParameters.Climber);
+
   public final StatusLEDSubsystem statusLEDs = new StatusLEDSubsystem();
 
   public final Optional<AprilTagSubsystem> aprilTag =
@@ -45,7 +47,7 @@ public class Subsystems {
     // Add all manipulator subsystems to the `manipulators` list.
     var manipulators =
         new ArrayList<Subsystem>(
-            Arrays.asList(elevator, coralArm, algaeArm, algaeGrabber, coralRoller));
+            Arrays.asList(elevator, coralArm, algaeArm, algaeGrabber, coralRoller, climber));
 
     // Add all non-manipulator subsystems to the `all` list.
     var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain));

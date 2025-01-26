@@ -14,7 +14,10 @@ public enum ElevatorLevel {
   L1(0, 0),
   L2(0, 0),
   L3(0, 0),
-  L4(0, 0);
+  L4(0, 0),
+
+  AlgaeL2(1.5, 0), // TO-DO: Determine correct values for height and pivot angles (algae removal)
+  AlgaeL3(2.5, 0);
 
   private final double height;
   private final double pivotAngle;
