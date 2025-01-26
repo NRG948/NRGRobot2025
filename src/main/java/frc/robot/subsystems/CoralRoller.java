@@ -7,14 +7,17 @@
  
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
 
 public class CoralRoller extends SubsystemBase {
 
   private final TalonFX motor = new TalonFX(RobotConstants.CAN.TalonFX.CORAL_ROLLER_MOTOR_ID);
-  // TODO: add limit switch to determine hasCoral
+  private StatusSignal<ForwardLimitValue> beamBreak = motor.getForwardLimit();
 
   private double motorSpeed = 0;
   private boolean hasCoral = false;
@@ -41,5 +44,6 @@ public class CoralRoller extends SubsystemBase {
   @Override
   public void periodic() {
     motor.set(motorSpeed);
+    hasCoral = beamBreak.refresh().getValue() == ForwardLimitValue.Open;
   }
 }
