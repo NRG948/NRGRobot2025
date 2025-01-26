@@ -63,12 +63,13 @@ public final class Autos {
 
     return Commands.sequence(
             Commands.runOnce(() -> driveTrain.resetPosition(startPose), driveTrain),
-            Commands.defer(
-                () -> {
-                  return new PathPlannerAuto(name);
-                },
-                Set.of(driveTrain)))
+            Commands.defer(() -> newPathPlannerAuto(name), Set.of(driveTrain)))
         .withName(name);
+  }
+
+  private static Command newPathPlannerAuto(String name) {
+    PathPlannerAuto pathPlannerAuto = new PathPlannerAuto(name);
+    return pathPlannerAuto;
   }
 
   private static Map<String, Command> getPathplannerEventMap(
