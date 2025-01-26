@@ -146,6 +146,7 @@ public class Elevator extends SubsystemBase {
 
   /** Returns whether the elevator is at goal position. */
   public boolean atGoalPosition() {
+    // TODO: we should set an acceptable tolerance for .atGoal() to use 
     return controller.atGoal();
   }
 
