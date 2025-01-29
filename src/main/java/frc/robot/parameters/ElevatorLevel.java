@@ -7,8 +7,10 @@
  
 package frc.robot.parameters;
 
+import frc.robot.subsystems.Elevator;
+
 public enum ElevatorLevel {
-  STOWED(0, 0), // TO-DO: Determine correct values for height and pivot angles
+  STOWED(Elevator.MIN_HEIGHT, 0), // TO-DO: Determine correct values for height and pivot angles
   L1(0, 0),
   L2(0, 0),
   L3(0, 0),

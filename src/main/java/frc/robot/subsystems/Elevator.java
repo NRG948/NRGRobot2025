@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.commands.ElevatorCommands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.util.LimitSwitch;
 import frc.robot.util.MotorController;
@@ -48,37 +49,35 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
       new RobotPreferences.BooleanValue("Elevator", "Enable Tab", false);
 
   // physical parameters of the elevator
-  private static final double GEAR_RATIO = (60.0 / 12.0) * (24.0 / 15.0);
+  private static final double GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
   private static final double SPROCKET_DIAMETER = 0.05; // 5 cm
-  private static final double MASS = 2.0; // kilograms
-  private static final double CARRIAGE_OFFSET = 0.033; // in meters
-  private static final double METERS_PER_REVOLUTION =
-      (((SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO) * 2);
-  // The multiplication of 2 is to account for the second stage moving relative to the first stage
-  // and the first stage moving relative to the bottom
+  private static final double MASS = 1.5; // kilograms
+  private static final double METERS_PER_REVOLUTION = (SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO;
+
   private static final double MAX_HEIGHT = 1.42;
-  private static final double MIN_HEIGHT = CARRIAGE_OFFSET + 0.002;
+  public static final double MIN_HEIGHT = 0.033; // in meters
+  private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.04;
 
   // trapezoid profile values
   private static final DCMotor MOTOR_PARAMS = DCMotor.getKrakenX60(1);
   private static final double MAX_SPEED =
-      (MOTOR_PARAMS.freeSpeedRadPerSec * SPROCKET_DIAMETER) / (GEAR_RATIO * 2); // m/s
+      (MOTOR_PARAMS.freeSpeedRadPerSec / (2 * Math.PI)) * METERS_PER_REVOLUTION; // m/s
   private static final double MAX_ACCELERATION =
-      ((2 * MOTOR_PARAMS.stallTorqueNewtonMeters * GEAR_RATIO) / (SPROCKET_DIAMETER * MASS))
-          * 2; // m/s^2 for two motors
+      (2 * MOTOR_PARAMS.stallTorqueNewtonMeters * GEAR_RATIO)
+          / (SPROCKET_DIAMETER * MASS); // m/s^2 for two motors
   private static final TrapezoidProfile.Constraints CONSTRAINTS =
-      new TrapezoidProfile.Constraints(MAX_SPEED / 2, MAX_ACCELERATION / 2);
+      new TrapezoidProfile.Constraints(MAX_SPEED / 2, MAX_ACCELERATION / 8);
 
   // feedforward constants
-  private static final double KS = 0.15;
-  private static final double KV = 12 / MAX_SPEED;
-  private static final double KA = 12 / MAX_ACCELERATION;
+  private static final double KS = 0.0656;
+  private static final double KV = (12 - KS) / MAX_SPEED;
+  private static final double KA = (12 - KS) / MAX_ACCELERATION;
   private static final double KG = 9.81 * KA;
 
   // feedback constants
-  private static final double KP = 5.0;
+  private static final double KP = 5;
   private static final double KI = 0;
-  private static final double KD = 0;
+  private static final double KD = 0.5;
 
   private MotorController mainMotor =
       new TalonFXAdapter(
@@ -113,6 +112,7 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
   private boolean isSeekingGoal;
   private final TrapezoidProfile.State currentState = new TrapezoidProfile.State();
   private final TrapezoidProfile.State goalState = new TrapezoidProfile.State();
+  private TrapezoidProfile.State lastState = currentState;
   private boolean atUpperLimit;
   private boolean atLowerLimit;
   private double currentVoltage;
@@ -146,6 +146,7 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
   public Elevator() {
     updateSensorState();
     SmartDashboard.putData("Elevator Sim", mechanism2d);
+    controller.setTolerance(0.01);
   }
 
   public void disable() {
@@ -175,6 +176,7 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
     isSeekingGoal = true;
     goalState.position = height;
     goalState.velocity = 0;
+    lastState = currentState;
     logIsSeekingGoal.append(true);
     logGoalPosition.append(height);
     logGoalVelocity.append(0);
@@ -182,7 +184,6 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
 
   /** Returns whether the elevator is at goal position. */
   public boolean atGoalPosition() {
-    // TODO: we should set an acceptable tolerance for .atGoal() to use
     return controller.atGoal();
   }
 
@@ -194,10 +195,10 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
       currentState.position = simElevator.getPositionMeters();
       currentState.velocity = simElevator.getVelocityMetersPerSecond();
     }
-    currentState.position += CARRIAGE_OFFSET;
+    currentState.position += MIN_HEIGHT;
 
     atUpperLimit = currentState.position >= MAX_HEIGHT;
-    atLowerLimit = currentState.position <= MIN_HEIGHT;
+    atLowerLimit = currentState.position <= DISABLE_HEIGHT;
 
     elevatorMech2d.setLength(currentState.position);
     logCurrentPosition.append(currentState.position);
@@ -210,13 +211,11 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
   public void periodic() {
     updateSensorState();
     if (isSeekingGoal) {
-      TrapezoidProfile.State desiredState = profile.calculate(timer.get(), currentState, goalState);
-      logDesiredPosition.append(desiredState.position);
-      logDesiredVelocity.append(desiredState.velocity);
+      TrapezoidProfile.State desiredState =
+          profile.calculate(RobotConstants.PERIODIC_INTERVAL, lastState, goalState);
       double feedforward = feedForward.calculate(desiredState.velocity);
-      logFeedForward.append(feedforward);
       double pidOutput = controller.calculate(currentState.position, desiredState);
-      logPIDOutput.append(pidOutput);
+
       currentVoltage = feedforward + pidOutput;
       if ((currentVoltage > 0 && atUpperLimit)) {
         currentVoltage = KG;
@@ -224,7 +223,15 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
       if ((currentVoltage < 0 && atLowerLimit)) {
         currentVoltage = 0;
       }
+
       mainMotor.setVoltage(currentVoltage);
+
+      lastState = desiredState;
+
+      logPIDOutput.append(pidOutput);
+      logFeedForward.append(feedforward);
+      logDesiredPosition.append(desiredState.position);
+      logDesiredVelocity.append(desiredState.velocity);
       logCurrentVoltage.append(currentVoltage);
     }
   }
@@ -266,5 +273,6 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
                 Set.of(this))
             .withName("Set Height"));
     controlLayout.add(Commands.runOnce(() -> this.disable(), this).withName("Disable"));
+    controlLayout.add(ElevatorCommands.stowElevator(this));
   }
 }
