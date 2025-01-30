@@ -42,7 +42,7 @@ public class LEDSegment {
   private static final AddressableLED leds = createAddressableLED(ledBuffer);
 
   private static AddressableLED createAddressableLED(AddressableLEDBuffer buffer) {
-    AddressableLED led = new AddressableLED(RobotConstants.PWNPort.LED);
+    AddressableLED led = new AddressableLED(RobotConstants.PWMPort.LED);
     led.setLength(RobotConstants.LED_COUNT);
     led.setData(buffer);
     led.start();

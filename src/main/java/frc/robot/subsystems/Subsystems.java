@@ -28,6 +28,8 @@ public class Subsystems {
   public final Arm algaeArm = new Arm(ArmParameters.AlgaeArm);
   public final AlgaeGrabber algaeGrabber = new AlgaeGrabber();
 
+  public final StatusLEDSubsystem statusLEDs = new StatusLEDSubsystem();
+
   public final Optional<AprilTagSubsystem> aprilTag =
       newOptionalSubsystem(
           AprilTagSubsystem.class,

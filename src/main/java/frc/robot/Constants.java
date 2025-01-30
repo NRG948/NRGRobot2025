@@ -52,16 +52,16 @@ public final class Constants {
      */
     public static final double CORAL_OFFSET_Y = 0.20; // TODO: GET REAL VALUE
 
-    public static class PWNPort {
-      public static final int LED = 1; // TODO: change value
+    public static class PWMPort {
+      public static final int LED = 1;
     }
 
     public static class LEDSegment {
-      public static final int STATUS_FIRST_LED = 0; // TODO: change value
-      public static final int STATUS_LED_COUNT = 26; // TODO: change value
+      public static final int STATUS_FIRST_LED = 0;
+      public static final int STATUS_LED_COUNT = 56; // 33 on front, 23 on back
     }
 
-    public static final int LED_COUNT = 1; // TODO: change value
+    public static final int LED_COUNT = 56;
 
     /** CANBus device IDs. */
     public static final class CAN {
