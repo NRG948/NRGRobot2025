@@ -20,7 +20,6 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -33,10 +32,10 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.parameters.ElevatorLevel;
-import frc.robot.util.LimitSwitch;
 import frc.robot.util.MotorController;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
@@ -69,15 +68,29 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
       new TrapezoidProfile.Constraints(MAX_SPEED / 2, MAX_ACCELERATION / 8);
 
   // feedforward constants
+  /*
+   * The KS is calculated from the internal resistance * free speed current.
+   * We can calculate the internal resistance of the motor with battery voltage / stall current.
+   * R = 12V / 366A, KS = R * 2A for the KrakenX60.
+   */
   private static final double KS = 0.0656;
-  private static final double KV = (12 - KS) / MAX_SPEED;
-  private static final double KA = (12 - KS) / MAX_ACCELERATION;
+  private static final double KV = (Constants.RobotConstants.MAX_BATTERY_VOLTAGE - KS) / MAX_SPEED;
+  private static final double KA =
+      (Constants.RobotConstants.MAX_BATTERY_VOLTAGE - KS) / MAX_ACCELERATION;
   private static final double KG = 9.81 * KA;
 
   // feedback constants
-  private static final double KP = 5;
-  private static final double KI = 0;
-  private static final double KD = 0.5;
+  @RobotPreferencesValue
+  public static final RobotPreferences.DoubleValue KP =
+      new RobotPreferences.DoubleValue("Elevator", "KP", 5);
+
+  @RobotPreferencesValue
+  public static final RobotPreferences.DoubleValue KI =
+      new RobotPreferences.DoubleValue("Elevator", "KI", 0);
+
+  @RobotPreferencesValue
+  public static final RobotPreferences.DoubleValue KD =
+      new RobotPreferences.DoubleValue("Elevator", "KD", 0.5);
 
   private MotorController mainMotor =
       new TalonFXAdapter(
@@ -91,8 +104,6 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
       mainMotor.createFollower(RobotConstants.CAN.TalonFX.ELEVATOR_FOLLOWER_MOTOR_ID, false);
 
   private RelativeEncoder encoder = mainMotor.getEncoder();
-  private LimitSwitch upperLimit = mainMotor.getForwardLimitSwitch();
-  private LimitSwitch lowerLimit = mainMotor.getReverseLimitSwitch();
 
   private ElevatorSim simElevator =
       new ElevatorSim(MOTOR_PARAMS, GEAR_RATIO, MASS, SPROCKET_DIAMETER / 2, 0, 1, true, 0);
@@ -104,10 +115,8 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
 
   private final ElevatorFeedforward feedForward = new ElevatorFeedforward(KS, KG, KV, KA);
   private final TrapezoidProfile profile = new TrapezoidProfile(CONSTRAINTS);
-  private final Timer timer = new Timer();
-
   private final ProfiledPIDController controller =
-      new ProfiledPIDController(KP, KI, KD, CONSTRAINTS);
+      new ProfiledPIDController(KP.getValue(), KI.getValue(), KD.getValue(), CONSTRAINTS);
 
   private boolean isSeekingGoal;
   private final TrapezoidProfile.State currentState = new TrapezoidProfile.State();
@@ -152,7 +161,6 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
   public void disable() {
     mainMotor.disable();
     isSeekingGoal = false;
-    timer.stop();
     logIsSeekingGoal.append(false);
   }
 
@@ -171,12 +179,13 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
    * @param height
    */
   private void setGoalPosition(double height) {
-    timer.reset();
-    timer.start();
     isSeekingGoal = true;
     goalState.position = height;
     goalState.velocity = 0;
     lastState = currentState;
+
+    controller.setPID(KP.getValue(), KI.getValue(), KD.getValue());
+
     logIsSeekingGoal.append(true);
     logGoalPosition.append(height);
     logGoalVelocity.append(0);

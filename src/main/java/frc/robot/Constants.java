@@ -44,6 +44,7 @@ public final class Constants {
     // TODO: GET REAL VALUE
     public static final double ROBOT_WIDTH = 0.74;
 
+    /** The robot iteration period in seconds. */
     public static final double PERIODIC_INTERVAL = 0.02;
 
     /**

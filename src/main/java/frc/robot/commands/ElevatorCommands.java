@@ -31,6 +31,12 @@ public class ElevatorCommands {
     return stowElevator(subsystems.elevator);
   }
 
+  /**
+   * Returns a command that stows elevator.
+   *
+   * @param elevator The elevator subsystem.
+   * @return A command that stows elevator.
+   */
   public static Command stowElevator(Elevator elevator) {
     return Commands.sequence(
             Commands.runOnce(() -> elevator.setGoalPosition(ElevatorLevel.STOWED), elevator),
