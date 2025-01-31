@@ -19,10 +19,10 @@ public enum ArmParameters {
   CoralArm(
       MotorParameters.KrakenX60,
       1,
-      25,
-      Units.inchesToMeters(16),
+      5 * 5 * 54 / 36,
       1,
       1,
+      0.0656,
       RobotConstants.CAN.TalonFX.CORAL_ARM_MOTOR_ID,
       RobotConstants.DigitalIO.CORAL_ARM_ABSOLUTE_ENCODER),
   AlgaeArm(
@@ -80,55 +80,80 @@ public enum ArmParameters {
     this.kS = kS;
     this.motorID = motorID;
     this.encoderID = encoderID;
-    kV = RobotConstants.MAX_BATTERY_VOLTAGE / getMaxAngularSpeed();
-    kA = RobotConstants.MAX_BATTERY_VOLTAGE / getMaxAngularAcceleration();
+    kV = (RobotConstants.MAX_BATTERY_VOLTAGE - kS) / getMaxAngularSpeed();
+    kA = (RobotConstants.MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAcceleration();
     kG = kA * 9.81;
   }
 
+  /** Returns the gear ratio. */
   public double getGearRatio() {
     return gearRatio;
   }
 
+  /** Returns the radians per revolution */
   public double getRadiansPerRevolution() {
     return (2 * Math.PI) / gearRatio;
   }
 
+  /** Returns the robot motor parameters. */
   public MotorParameters getMotorParameters() {
     return motorParameters;
   }
 
+  /** Returns the robot mass. */
   public double getMass() {
     return mass;
   }
 
+  /** Returns the robot arm length. */
   public double getArmLength() {
     return armLength;
   }
 
+  /** Returns the efficiency. */
   public double getEfficiency() {
     return efficiency;
   }
 
+  /** Returns kS feedforward constant in volts. */
   public double getkS() {
     return kS;
   }
 
+  /** Returns kV feedforward constant in Vs/rad. */
+  public double getkV() {
+    return kV;
+  }
+
+  /** Returns kA feedforward constant Vs^2/rad. */
+  public double getkA() {
+    return kA;
+  }
+
+  /** Returns kG feedforward constant Vs^2/rad. */
+  public double getkG() {
+    return 9.81 * kA;
+  }
+
+  /** Returns the CAN ID of the motor. */
   public int getMotorID() {
     return motorID;
   }
 
+  /** Returns the Encoder ID. */
   public int getEncoderID() {
     return encoderID;
   }
 
+  /** Returns the max angular speed in rad/s. */
   public double getMaxAngularSpeed() {
     return (this.efficiency * this.motorParameters.getDCMotor().freeSpeedRadPerSec)
         / this.gearRatio;
   }
 
+  /** Returns the max angular acceleration in rad/s^2. */
   public double getMaxAngularAcceleration() {
     return (this.efficiency
-            * 2
             * this.motorParameters.getDCMotor().stallTorqueNewtonMeters
             * this.gearRatio)
         / (this.mass * this.armLength);
