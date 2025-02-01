@@ -8,12 +8,16 @@
 package frc.robot.subsystems;
 
 import com.nrg948.preferences.RobotPreferences;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.parameters.ArmParameters;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,6 +44,8 @@ public class Subsystems {
   private final Subsystem[] all;
   private final Subsystem[] manipulators;
 
+  private Map<String, StringLogEntry> commandLogger;
+
   /** Constructs the robot subsystems container. */
   public Subsystems() {
     // Add all manipulator subsystems to the `manipulators` list.
@@ -48,7 +54,7 @@ public class Subsystems {
             Arrays.asList(elevator, coralArm, algaeArm, algaeGrabber, coralRoller));
 
     // Add all non-manipulator subsystems to the `all` list.
-    var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain));
+    var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, statusLEDs));
 
     // Add optional subsystems to the appropriate list.
     if (aprilTag.isPresent()) {
@@ -61,6 +67,27 @@ public class Subsystems {
     // Convert the lists to arrays.
     this.all = all.toArray(Subsystem[]::new);
     this.manipulators = manipulators.toArray(Subsystem[]::new);
+
+    // Logs the active command on each subsystem.
+    commandLogger =
+        Arrays.stream(this.all)
+            .collect(
+                Collectors.toMap(
+                    Subsystem::getName,
+                    s ->
+                        new StringLogEntry(
+                            DataLogManager.getLog(),
+                            String.format("/%s/ActiveCommand", s.getName()))));
+    CommandScheduler scheduler = CommandScheduler.getInstance();
+    scheduler.onCommandInitialize(
+        (cmd) -> {
+          cmd.getRequirements().stream()
+              .forEach((s) -> commandLogger.get(s.getName()).append(cmd.getName()));
+        });
+    scheduler.onCommandFinish(
+        (cmd) -> {
+          cmd.getRequirements().stream().forEach((s) -> commandLogger.get(s.getName()).append(""));
+        });
   }
 
   /** Returns an array of all subsystems. */
