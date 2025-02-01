@@ -80,9 +80,9 @@ public enum SwerveDriveParameters {
       false,
       0),
   PracticeBase2025(
-      24.2,
-      0.578,
-      0.528,
+      41.0,
+      0.602,
+      0.602,
       MK4IFast,
       KrakenX60,
       NeoV1_1,
