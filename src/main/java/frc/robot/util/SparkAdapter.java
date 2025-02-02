@@ -195,12 +195,16 @@ public class SparkAdapter implements MotorController {
 
   @Override
   public void setInverted(boolean isInverted) {
-    spark.get().setInverted(isInverted);
+    SparkBaseConfig config = spark.newConfig();
+
+    config.inverted(isInverted);
+
+    spark.get().configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
   public boolean getInverted() {
-    return spark.get().getInverted();
+    return spark.getConfigAccessor().getInverted();
   }
 
   @Override

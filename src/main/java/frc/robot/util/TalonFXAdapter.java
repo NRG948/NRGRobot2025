@@ -49,9 +49,11 @@ public class TalonFXAdapter implements MotorController {
       TalonFX talonFX, boolean isInverted, boolean brakeMode, double metersPerRotation) {
     this(talonFX, metersPerRotation);
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+
     motorOutputConfigs.NeutralMode = brakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast;
     motorOutputConfigs.Inverted =
         isInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+
     talonFX.getConfigurator().apply(motorOutputConfigs);
   }
 
@@ -72,12 +74,21 @@ public class TalonFXAdapter implements MotorController {
 
   @Override
   public void setInverted(boolean isInverted) {
-    talonFX.setInverted(isInverted);
+    MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+
+    motorOutputConfigs.Inverted =
+        isInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+
+    talonFX.getConfigurator().apply(motorOutputConfigs);
   }
 
   @Override
   public boolean getInverted() {
-    return talonFX.getInverted();
+    MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+
+    talonFX.getConfigurator().refresh(motorOutputConfigs);
+
+    return motorOutputConfigs.Inverted == InvertedValue.Clockwise_Positive;
   }
 
   @Override
