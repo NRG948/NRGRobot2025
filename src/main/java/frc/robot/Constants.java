@@ -34,7 +34,7 @@ public final class Constants {
     public static final double MAX_BATTERY_VOLTAGE = 12.0;
 
     /** The swerve drive wheel diameter. */
-    public static final double WHEEL_DIAMETER = Units.inchesToMeters(4.0);
+    public static final double WHEEL_DIAMETER = Units.inchesToMeters(4.0); // WARNING: need to be 3.625 for crescendo bot!
 
     /** The length of the robot including bumpers. */
     // TODO: GET REAL VALUE
@@ -43,6 +43,12 @@ public final class Constants {
     /** The width of the robot including bumpers. */
     // TODO: GET REAL VALUE
     public static final double ROBOT_WIDTH = 0.74;
+
+    /**
+     * The x distance from the odometry center (center of the wheels) to the edge of the front
+     * bumper.
+     */
+    public static final double ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X = 0.42;
 
     /** The robot iteration period in seconds. */
     public static final double PERIODIC_INTERVAL = 0.02;

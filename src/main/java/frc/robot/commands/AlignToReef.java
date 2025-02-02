@@ -57,6 +57,13 @@ public class AlignToReef extends Command { // TODO:
   private DoubleLogEntry rErrorLog =
       new DoubleLogEntry(DataLogManager.getLog(), "Vision/Reef Yaw Error");
 
+  private DoubleLogEntry targetXLog =
+      new DoubleLogEntry(DataLogManager.getLog(), "Vision/Reef Target X");
+  private DoubleLogEntry targetYLog =
+      new DoubleLogEntry(DataLogManager.getLog(), "Vision/Reef Target Y");
+  private DoubleLogEntry targetDeltaLog =
+      new DoubleLogEntry(DataLogManager.getLog(), "Vision/Reef Target Delta");
+
   private ReefBranch targetReefBranch;
   private Pose2d targetPose;
 
@@ -93,7 +100,7 @@ public class AlignToReef extends Command { // TODO:
     Pose2d currentRobotPose = drivetrain.getPosition();
     Pose2d nearestTagPose = findNearestReefTag(currentRobotPose);
     double v, h, d;
-    v = Constants.RobotConstants.ROBOT_LENGTH / 2;
+    v = Constants.RobotConstants.ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X;
     h = Constants.RobotConstants.CORAL_OFFSET_Y;
     d = Constants.VisionConstants.BRANCH_TO_REEF_APRILTAG;
 
@@ -103,6 +110,10 @@ public class AlignToReef extends Command { // TODO:
                 v, (targetReefBranch.equals(ReefBranch.RIGHT) ? d : -d) - h, Rotation2d.k180deg));
     System.out.println("TARGET pose: " + targetPose);
     System.out.println("Target Branch: " + targetReefBranch);
+
+    targetXLog.append(targetPose.getX());
+    targetYLog.append(targetPose.getY());
+    targetDeltaLog.append(targetPose.getRotation().getDegrees());
 
     xController.setPID(Px.getValue(), 0, 0);
     yController.setPID(Py.getValue(), 0, 0);
