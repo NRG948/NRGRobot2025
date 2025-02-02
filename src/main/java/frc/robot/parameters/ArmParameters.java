@@ -24,7 +24,8 @@ public enum ArmParameters {
       1,
       0.0656,
       RobotConstants.CAN.TalonFX.CORAL_ARM_MOTOR_ID,
-      RobotConstants.DigitalIO.CORAL_ARM_ABSOLUTE_ENCODER),
+      RobotConstants.DigitalIO.CORAL_ARM_ABSOLUTE_ENCODER,
+      0), // TODO: get real encoder offset
   AlgaeArm(
       MotorParameters.KrakenX60,
       1,
@@ -33,7 +34,8 @@ public enum ArmParameters {
       1,
       1,
       RobotConstants.CAN.TalonFX.ALGAE_ARM_MOTOR_ID,
-      RobotConstants.DigitalIO.ALGAE_ARM_ABSOLUTE_ENCODER),
+      RobotConstants.DigitalIO.ALGAE_ARM_ABSOLUTE_ENCODER,
+      0), // TODO: get real encoder offset
   Climber(
       MotorParameters.KrakenX60,
       1,
@@ -42,7 +44,8 @@ public enum ArmParameters {
       1,
       1,
       RobotConstants.CAN.TalonFX.CLIMBER_MOTOR_ID,
-      RobotConstants.DigitalIO.CLIMBER_ABSOLUTE_ENCODER);
+      RobotConstants.DigitalIO.CLIMBER_ABSOLUTE_ENCODER,
+      0); // TODO: get real encoder offset
 
   private final MotorParameters motorParameters;
   private final double gearRatio;
@@ -51,6 +54,9 @@ public enum ArmParameters {
   private final double efficiency;
   private final int motorID;
   private final int encoderID;
+
+  /** The reading of the absolute encoder in radians at the designated 0 point of the mechanism. */
+  private final double absoluteEncoderZeroOffset;
 
   private double kS;
   private double kV;
@@ -71,7 +77,8 @@ public enum ArmParameters {
       double efficiency,
       double kS,
       int motorID,
-      int encoderID) {
+      int encoderID,
+      double absoluteEncoderZeroOffset) {
     this.gearRatio = gearRatio;
     this.motorParameters = motorParameters;
     this.mass = mass;
@@ -80,6 +87,7 @@ public enum ArmParameters {
     this.kS = kS;
     this.motorID = motorID;
     this.encoderID = encoderID;
+    this.absoluteEncoderZeroOffset = absoluteEncoderZeroOffset;
     kV = (RobotConstants.MAX_BATTERY_VOLTAGE - kS) / getMaxAngularSpeed();
     kA = (RobotConstants.MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAcceleration();
     kG = kA * 9.81;
@@ -113,6 +121,11 @@ public enum ArmParameters {
   /** Returns the efficiency. */
   public double getEfficiency() {
     return efficiency;
+  }
+
+  /** Returns the absolute encoder reading in radians at the designated 0 point of the mechanism */
+  public double getAbsoluteEncoderZeroOffset() {
+    return absoluteEncoderZeroOffset;
   }
 
   /** Returns kS feedforward constant in volts. */

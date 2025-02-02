@@ -34,9 +34,15 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("Arm", "Enable Tab", false);
 
+  /** The angle of the absolute encoder in radians from the designated zero point. */
+  private final double absoluteEncoderOffset;
+
+  private final ArmParameters parameters;
   private final TalonFX motor;
   private final DutyCycleEncoder absoluteEncoder;
   private double currentAngle = 0;
+  private double currentAbsoluteAngle = 0;
+  private double currentVelocity = 0;
   private double goalAngle = 0;
   private boolean enabled;
   private final double rotationsPerRadians;
@@ -44,6 +50,7 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
   /** Creates a new Arm. */
   public Arm(ArmParameters parameters) {
     setName(parameters.toString());
+    this.parameters = parameters;
     rotationsPerRadians = parameters.getGearRatio() / (2 * Math.PI);
 
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -73,14 +80,21 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     motor.getConfigurator().apply(talonFXConfigs);
 
     absoluteEncoder.setDutyCycleRange(1.0 / 1025.0, 1024.0 / 1025.0);
+    absoluteEncoderOffset =
+        absoluteEncoder.get() * (2 * Math.PI) - parameters.getAbsoluteEncoderZeroOffset();
   }
 
   /** Updates the sensor state. */
   private void updateSensorState() {
-    currentAngle = absoluteEncoder.get() * (2 * Math.PI);
+    currentAngle =
+        motor.getPosition().refresh().getValueAsDouble() / rotationsPerRadians
+            + absoluteEncoderOffset;
+    currentVelocity = motor.getVelocity().refresh().getValueAsDouble() / rotationsPerRadians;
+    currentAbsoluteAngle =
+        absoluteEncoder.get() * (2 * Math.PI) - parameters.getAbsoluteEncoderZeroOffset();
   }
 
-  /** Sets the goal angle and enables periodic control. */
+  /** Sets the goal angle in radians and enables periodic control. */
   public void setGoalAngle(double angle) {
     goalAngle = angle;
     enabled = true;
@@ -115,8 +129,11 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     ShuffleboardLayout statusLayout =
         armTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
     statusLayout.addBoolean("Enabled", () -> enabled);
-    statusLayout.addDouble("Current Angle", () -> Math.toDegrees(currentAngle));
+    statusLayout.addDouble("Current Angle of Motor Encoder", () -> Math.toDegrees(currentAngle));
+    statusLayout.addDouble(
+        "Current Angle of Absolute Encoder", () -> Math.toDegrees(currentAbsoluteAngle));
     statusLayout.addDouble("Goal Angle", () -> Math.toDegrees(goalAngle));
+    statusLayout.addDouble("Current Velocity", () -> Math.toDegrees(currentVelocity));
     ShuffleboardLayout controlLayout =
         armTab.getLayout("Control", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
     GenericEntry angle = controlLayout.add("Angle", 0).getEntry();
