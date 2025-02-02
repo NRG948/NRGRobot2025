@@ -16,12 +16,14 @@ import frc.robot.subsystems.Subsystems;
 public class CoralCommands {
   /** Returns a command that intakes coral. */
   public static Command intakeCoral(Subsystems subsystems) {
-    return Commands.runOnce(() -> subsystems.coralRoller.intake(), subsystems.coralRoller);
+    return Commands.runOnce(() -> subsystems.coralRoller.intake(), subsystems.coralRoller)
+        .withName("IntakeCoral");
   }
 
   /** Returns a command that outtakes coral. */
   public static Command outtakeCoral(Subsystems subsystems) {
-    return Commands.runOnce(() -> subsystems.coralRoller.outtake(), subsystems.coralRoller);
+    return Commands.runOnce(() -> subsystems.coralRoller.outtake(), subsystems.coralRoller)
+        .withName("OuttakeCoral");
   }
 
   /**
@@ -33,22 +35,26 @@ public class CoralCommands {
    */
   public static Command setArmAngleForReefLevel(Subsystems subsystems, ElevatorLevel level) {
     return Commands.runOnce(
-        () -> subsystems.coralArm.setGoalAngle(level.getPivotAngle()), subsystems.coralArm);
+            () -> subsystems.coralArm.setGoalAngle(level.getPivotAngle()), subsystems.coralArm)
+        .withName(String.format("SetArmAngleForReefLevel(%s)", level.name()));
   }
 
   /** Returns a command that waits for coral arm to reach goal angle. */
   public static Command waitForArmToReachGoalAngle(Subsystems subsystems) {
-    return Commands.idle(subsystems.coralArm).until(subsystems.coralArm::atGoalAngle);
+    return Commands.idle(subsystems.coralArm)
+        .until(subsystems.coralArm::atGoalAngle)
+        .withName("WaitForArmToReachGoalAngle");
   }
 
   /** Returns a command to stow the coral arm. */
   public static Command stowArm(Subsystems subsystems) {
     return Commands.sequence(
-        Commands.runOnce(
-            () -> subsystems.coralArm.setGoalAngle(ElevatorLevel.STOWED.getPivotAngle()),
-            subsystems.coralArm),
-        waitForArmToReachGoalAngle(subsystems),
-        Commands.runOnce(() -> subsystems.coralArm.disable(), subsystems.coralArm));
+            Commands.runOnce(
+                () -> subsystems.coralArm.setGoalAngle(ElevatorLevel.STOWED.getPivotAngle()),
+                subsystems.coralArm),
+            waitForArmToReachGoalAngle(subsystems),
+            Commands.runOnce(() -> subsystems.coralArm.disable(), subsystems.coralArm))
+        .withName("StowArm");
   }
 
   /**
@@ -59,6 +65,6 @@ public class CoralCommands {
    * @return
    */
   public static Command deliverCoral(Subsystems subsystems) {
-    return Commands.none();
+    return Commands.none(); // TODO: implement deliverCoral
   }
 }

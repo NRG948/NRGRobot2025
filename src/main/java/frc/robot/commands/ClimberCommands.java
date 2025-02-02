@@ -16,7 +16,8 @@ public class ClimberCommands {
   /** Returns a command that climbs. */
   public static Command climb(Subsystems subsystems) {
     return Commands.runOnce(
-        () -> subsystems.climber.setGoalAngle(0.0),
-        subsystems.climber); // TODO: set goal angle for climber
+            () -> subsystems.climber.setGoalAngle(0.0),
+            subsystems.climber) // TODO: set goal angle for climber
+        .withName("Climb");
   }
 }

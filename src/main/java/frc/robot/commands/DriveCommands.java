@@ -33,23 +33,38 @@ public final class DriveCommands {
    * @return
    */
   public static Command resetOrientation(Subsystems subsystems) {
-    return Commands.runOnce(() -> subsystems.drivetrain.resetOrientation(new Rotation2d()));
+    return Commands.runOnce(() -> subsystems.drivetrain.resetOrientation(new Rotation2d()))
+        .withName("ResetOrientation");
   }
 
+  /**
+   * Returns a command that aligns the robot to the left branch of the reef.
+   *
+   * @param subsystems The subsystems container.
+   * @return A command that aligns the robot to the left branch of the reef.
+   */
   public static Command alignToLeftBranch(Subsystems subsystems) {
     return new AlignToReef(subsystems, ReefBranch.LEFT);
   }
 
+  /**
+   * Returns a command that aligns the robot to the right branch of the reef.
+   *
+   * @param subsystems The subsystems container.
+   * @return A command that aligns the robot to the right branch of the reef.
+   */
   public static Command alignToRightBranch(Subsystems subsystems) {
     return new AlignToReef(subsystems, ReefBranch.RIGHT);
   }
 
-  public static Command inputScalarDrivetrain(Subsystems subsystems) {
-    return Commands.none();
-  }
-
+  /**
+   * Returns a command that interrupts all subsystems.
+   *
+   * @param subsystems The subsystems container.
+   * @return A command that interrupts all subsystems.
+   */
   public static Command interruptAll(Subsystems subsystems) {
-    return Commands.runOnce(() -> {}, subsystems.getAll());
+    return Commands.runOnce(() -> {}, subsystems.getAll()).withName("InterruptAll");
   }
 
   /**
@@ -69,16 +84,17 @@ public final class DriveCommands {
     SwerveDriveParameters currentSwerveParameters = SwerveSubsystem.PARAMETERS.getValue();
 
     return AutoBuilder.pathfindToPose(
-        targetPose,
-        new PathConstraints(
-            SwerveSubsystem.getMaxSpeed() * 0.3,
-            SwerveSubsystem.getMaxAcceleration(),
-            currentSwerveParameters.getMaxRotationalSpeed() * 0.3,
-            currentSwerveParameters.getMaxRotationalAcceleration()));
+            targetPose,
+            new PathConstraints(
+                SwerveSubsystem.getMaxSpeed() * 0.3,
+                SwerveSubsystem.getMaxAcceleration(),
+                currentSwerveParameters.getMaxRotationalSpeed() * 0.3,
+                currentSwerveParameters.getMaxRotationalAcceleration()))
+        .withName("AlignToReefPP");
   }
 
   // TODO: get tag based on vision
-  public static int findNearestReefTagID(Pose2d robotPose) {
+  private static int findNearestReefTagID(Pose2d robotPose) {
     var layout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
     var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
     int startingId = alliance.equals(Alliance.Red) ? 6 : 17;

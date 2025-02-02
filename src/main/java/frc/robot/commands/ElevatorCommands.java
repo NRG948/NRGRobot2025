@@ -18,12 +18,15 @@ public class ElevatorCommands {
 
   /** Returns a command that goes to the given elevator level. */
   public static Command goToElevatorLevel(Subsystems subsystems, ElevatorLevel level) {
-    return Commands.runOnce(() -> subsystems.elevator.setGoalPosition(level), subsystems.elevator);
+    return Commands.runOnce(() -> subsystems.elevator.setGoalPosition(level), subsystems.elevator)
+        .withName(String.format("GoToElevatorLevel(%s)", level.name()));
   }
 
   /** Returns a command that waits for elevator to reach goal position. */
   public static Command waitForElevatorToReachGoalPosition(Elevator elevator) {
-    return Commands.idle(elevator).until(elevator::atGoalPosition);
+    return Commands.idle(elevator)
+        .until(elevator::atGoalPosition)
+        .withName("WaitForElevatorToReachGoalPosition");
   }
 
   /** Returns a command that stows elevator. */
@@ -47,6 +50,7 @@ public class ElevatorCommands {
 
   /** Returns a command that stows the elevator and the arm. */
   public static Command stowElevatorAndArm(Subsystems subsystems) {
-    return Commands.parallel(stowElevator(subsystems), CoralCommands.stowArm(subsystems));
+    return Commands.parallel(stowElevator(subsystems), CoralCommands.stowArm(subsystems))
+        .withName("StowElevatorAndArm");
   }
 }

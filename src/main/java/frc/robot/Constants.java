@@ -34,7 +34,8 @@ public final class Constants {
     public static final double MAX_BATTERY_VOLTAGE = 12.0;
 
     /** The swerve drive wheel diameter. */
-    public static final double WHEEL_DIAMETER = Units.inchesToMeters(4.0); // WARNING: need to be 3.625 for crescendo bot!
+    public static final double WHEEL_DIAMETER =
+        Units.inchesToMeters(4.0); // WARNING: need to be 3.625 for crescendo bot!
 
     /** The length of the robot including bumpers. */
     // TODO: GET REAL VALUE

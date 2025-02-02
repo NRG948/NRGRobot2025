@@ -29,10 +29,14 @@ import java.util.ArrayList;
 
 @RobotPreferencesLayout(groupName = "AlignToReef", row = 0, column = 4, width = 2, height = 3)
 public class AlignToReef extends Command { // TODO:
+  /** An enum that represents the two branches of the reef as viewed face on. */
+  public enum ReefBranch {
+    LEFT,
+    RIGHT
+  }
+
   private static final double MAX_TRANSLATIONAL_POWER = 0.30;
   private static final double MAX_ROTATIONAL_POWER = 0.5;
-
-  private SwerveSubsystem drivetrain;
 
   @RobotPreferencesValue
   public static RobotPreferences.DoubleValue Px =
@@ -45,6 +49,9 @@ public class AlignToReef extends Command { // TODO:
   @RobotPreferencesValue
   public static RobotPreferences.DoubleValue Pr =
       new RobotPreferences.DoubleValue("AlignToReef", "Yaw KP", 0.02);
+
+  private final SwerveSubsystem drivetrain;
+  private final ReefBranch targetReefBranch;
 
   private final PIDController xController = new PIDController(Px.getValue(), 0, 0);
   private final PIDController yController = new PIDController(Py.getValue(), 0, 0);
@@ -64,7 +71,6 @@ public class AlignToReef extends Command { // TODO:
   private DoubleLogEntry targetDeltaLog =
       new DoubleLogEntry(DataLogManager.getLog(), "Vision/Reef Target Delta");
 
-  private ReefBranch targetReefBranch;
   private Pose2d targetPose;
 
   private static final ArrayList<Pose2d> redReefTags = new ArrayList<>(6);
@@ -72,8 +78,9 @@ public class AlignToReef extends Command { // TODO:
 
   /** Creates a new AlignToReef. */
   public AlignToReef(Subsystems subsystems, ReefBranch targetBranch) {
+    setName(String.format("AlignToReef(%s)", targetBranch.name()));
+    this.drivetrain = subsystems.drivetrain;
     this.targetReefBranch = targetBranch;
-    drivetrain = subsystems.drivetrain;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
@@ -85,12 +92,6 @@ public class AlignToReef extends Command { // TODO:
       redReefTags.add(layout.getTagPose(i + 6).get().toPose2d());
       blueReefTags.add(layout.getTagPose(i + 17).get().toPose2d());
     }
-  }
-
-  /** An enum that represents the two branches of the reef as viewed face on. */
-  public enum ReefBranch {
-    LEFT,
-    RIGHT
   }
 
   // Called when the command is initially scheduled.
