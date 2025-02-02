@@ -128,7 +128,7 @@ public class CoralRoller extends SubsystemBase implements ShuffleboardProducer {
     if (!ENABLE_TAB.getValue()) {
       return;
     }
-    
+
     ShuffleboardTab rollerTab = Shuffleboard.getTab("Coral Roller");
     ShuffleboardLayout statusLayout =
         rollerTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);

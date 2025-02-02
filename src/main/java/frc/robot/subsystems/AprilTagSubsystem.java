@@ -100,6 +100,7 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
    * @param robotToCamera The transform from the robot to the camera.
    */
   public AprilTagSubsystem(String cameraName, Transform3d robotToCamera) {
+    setName(cameraName);
     this.camera = new PhotonCamera(cameraName);
     this.robotToCamera = robotToCamera;
     this.cameraToRobot = robotToCamera.inverse();
@@ -363,7 +364,7 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
             "http://photonvision.local:1190/stream.mjpg",
             HttpCameraKind.kMJPGStreamer);
 
-    ShuffleboardTab visionTab = Shuffleboard.getTab("April Tag");
+    ShuffleboardTab visionTab = Shuffleboard.getTab(getName());
     ShuffleboardLayout targetLayout =
         visionTab.getLayout("Target Info", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 5);
     targetLayout.add("ID Selection", aprilTagIdChooser).withWidget(BuiltInWidgets.kComboBoxChooser);

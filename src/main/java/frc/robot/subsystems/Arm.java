@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.ArmParameters;
 
 public class Arm extends SubsystemBase {
-  private final String name;
   private final TalonFX motor;
   private final DutyCycleEncoder absoluteEncoder;
 
@@ -37,7 +36,7 @@ public class Arm extends SubsystemBase {
 
   /** Creates a new Arm. */
   public Arm(ArmParameters parameters) {
-    name = parameters.toString();
+    setName(parameters.toString());
 
     feedForward = parameters.getArmFeedforward();
     profile = new TrapezoidProfile(parameters.getConstraints());
@@ -51,11 +50,6 @@ public class Arm extends SubsystemBase {
     configs.Inverted = InvertedValue.Clockwise_Positive;
     motor.getConfigurator().apply(configs);
     absoluteEncoder.setDutyCycleRange(1.0 / 1025.0, 1024.0 / 1025.0);
-  }
-
-  @Override
-  public String getName() {
-    return name;
   }
 
   /** Updates the sensor state. */
