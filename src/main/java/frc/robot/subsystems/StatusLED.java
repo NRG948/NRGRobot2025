@@ -11,9 +11,9 @@ import static frc.robot.Constants.ColorConstants.RED;
 import static frc.robot.Constants.RobotConstants.LEDSegment.STATUS_FIRST_LED;
 import static frc.robot.Constants.RobotConstants.LEDSegment.STATUS_LED_COUNT;
 
-public class StatusLEDSubsystem extends LEDSubsystem {
+public class StatusLED extends LEDSubsystem {
   /** Creates a new StatusLEDSubsystem. */
-  public StatusLEDSubsystem() {
+  public StatusLED() {
     super(STATUS_FIRST_LED, STATUS_LED_COUNT);
     leds.fill(RED);
     leds.commitColor();

@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Subsystems;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Swerve;
 import java.util.ArrayList;
 
 @RobotPreferencesLayout(groupName = "AlignToReef", row = 0, column = 4, width = 2, height = 3)
@@ -50,7 +50,7 @@ public class AlignToReef extends Command { // TODO:
   public static RobotPreferences.DoubleValue Pr =
       new RobotPreferences.DoubleValue("AlignToReef", "Yaw KP", 0.02);
 
-  private final SwerveSubsystem drivetrain;
+  private final Swerve drivetrain;
   private final ReefBranch targetReefBranch;
 
   private final PIDController xController = new PIDController(Px.getValue(), 0, 0);

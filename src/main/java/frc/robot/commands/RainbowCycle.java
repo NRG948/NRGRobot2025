@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ColorConstants;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.subsystems.StatusLEDSubsystem;
+import frc.robot.subsystems.StatusLED;
 
 public class RainbowCycle extends Command {
-  private final StatusLEDSubsystem led;
+  private final StatusLED led;
   private int step;
 
   /** Creates a new RainbowCycle. */
-  public RainbowCycle(StatusLEDSubsystem led) {
+  public RainbowCycle(StatusLED led) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.led = led;
     addRequirements(led);

@@ -25,7 +25,6 @@ import frc.robot.commands.DriveUsingController;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.FlameCycle;
 import frc.robot.commands.ManipulatorCommands;
-import frc.robot.commands.RainbowCycle;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
 

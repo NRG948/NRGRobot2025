@@ -316,16 +316,16 @@ public class SwerveModule {
   }
 
   /**
-   * This method is called periodically by the {@link SwerveSubsystem}. It is used to update
-   * module-specific state.
+   * This method is called periodically by the {@link Swerve}. It is used to update module-specific
+   * state.
    */
   public void periodic() {
     updateSuppliedState();
   }
 
   /**
-   * This method is called periodically by the {@link SwerveSubsystem}. It is used to update
-   * module-specific simulation state.
+   * This method is called periodically by the {@link Swerve}. It is used to update module-specific
+   * simulation state.
    */
   public void simulationPeriodic() {
     simDriveMotor.setInputVoltage(driveVoltage);

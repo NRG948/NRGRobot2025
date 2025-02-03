@@ -52,7 +52,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
     type = "Grid Layout",
     gridColumns = 2,
     gridRows = 2)
-public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProducer {
+public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   public static final Matrix<N3, N1> SINGLE_TAG_STD_DEVS = VecBuilder.fill(4, 4, 8);
   public static final Matrix<N3, N1> MULTI_TAG_STD_DEVS = VecBuilder.fill(0.5, 0.5, 1);
   public static final PhotonPipelineResult NO_RESULT = new PhotonPipelineResult();
@@ -105,7 +105,7 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
    * @param cameraName The name of the camera.
    * @param robotToCamera The transform from the robot to the camera.
    */
-  public AprilTagSubsystem(String cameraName, Transform3d robotToCamera) {
+  public AprilTag(String cameraName, Transform3d robotToCamera) {
     setName(cameraName);
     this.camera = new PhotonCamera(cameraName);
     this.robotToCamera = robotToCamera;

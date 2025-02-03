@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Subsystems {
-  public final SwerveSubsystem drivetrain = new SwerveSubsystem();
+  public final Swerve drivetrain = new Swerve();
   public final Elevator elevator = new Elevator();
 
   public final Arm coralArm = new Arm(ArmParameters.CoralArm);
@@ -33,10 +33,10 @@ public class Subsystems {
 
   public final Arm climber = new Arm(ArmParameters.Climber);
 
-  public final StatusLEDSubsystem statusLEDs = new StatusLEDSubsystem();
+  public final StatusLED statusLEDs = new StatusLED();
 
-  public final Optional<AprilTagSubsystem> frontCamera;
-  public final Optional<AprilTagSubsystem> backCamera;
+  public final Optional<AprilTag> frontCamera;
+  public final Optional<AprilTag> backCamera;
 
   private final Subsystem[] all;
   private final Subsystem[] manipulators;
@@ -55,24 +55,20 @@ public class Subsystems {
 
     // Add optional subsystems to the appropriate list.
     frontCamera =
-        AprilTagSubsystem.PARAMETERS
+        AprilTag.PARAMETERS
             .getValue()
             .getRobotToFrontCamera()
             .flatMap(
-                (t) ->
-                    newOptionalSubsystem(
-                        AprilTagSubsystem.class, AprilTagSubsystem.ENABLED, "FrontCamera", t));
+                (t) -> newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "FrontCamera", t));
 
     frontCamera.ifPresent((s) -> all.add(s));
 
     backCamera =
-        AprilTagSubsystem.PARAMETERS
+        AprilTag.PARAMETERS
             .getValue()
             .getRobotToBackCamera()
             .flatMap(
-                (t) ->
-                    newOptionalSubsystem(
-                        AprilTagSubsystem.class, AprilTagSubsystem.ENABLED, "BackCamera", t));
+                (t) -> newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "BackCamera", t));
 
     backCamera.ifPresent((s) -> all.add(s));
 
@@ -176,7 +172,7 @@ public class Subsystems {
     backCamera.ifPresent(this::updateEstimatedPose);
   }
 
-  private void updateEstimatedPose(AprilTagSubsystem aprilTag) {
+  private void updateEstimatedPose(AprilTag aprilTag) {
     var visionEst = aprilTag.getEstimateGlobalPose();
 
     visionEst.ifPresent(

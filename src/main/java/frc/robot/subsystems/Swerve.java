@@ -67,7 +67,7 @@ import java.util.function.Supplier;
     type = "Grid Layout",
     gridColumns = 3,
     gridRows = 2)
-public class SwerveSubsystem extends SubsystemBase implements ShuffleboardProducer {
+public class Swerve extends SubsystemBase implements ShuffleboardProducer {
   private static final Rotation2d ROTATE_180_DEGREES = Rotation2d.fromDegrees(180);
 
   @RobotPreferencesValue(column = 0, row = 0)
@@ -142,15 +142,13 @@ public class SwerveSubsystem extends SubsystemBase implements ShuffleboardProduc
       () -> Optional.empty(); // absolute location to keep the robot oriented to tag
 
   private DoubleLogEntry rawOrientationLog =
-      new DoubleLogEntry(DataLogManager.getLog(), "/SwerveSubsystem/rawOrientation");
+      new DoubleLogEntry(DataLogManager.getLog(), "/Swerve/rawOrientation");
   private DoubleLogEntry rawOrientationOffsetLog =
-      new DoubleLogEntry(DataLogManager.getLog(), "/SwerveSubsystem/rawOrientationOffset");
-  private DoubleLogEntry poseXLog =
-      new DoubleLogEntry(DataLogManager.getLog(), "/SwerveSubsystem/Pose X");
-  private DoubleLogEntry poseYLog =
-      new DoubleLogEntry(DataLogManager.getLog(), "/SwerveSubsystem/Pose Y");
+      new DoubleLogEntry(DataLogManager.getLog(), "/Swerve/rawOrientationOffset");
+  private DoubleLogEntry poseXLog = new DoubleLogEntry(DataLogManager.getLog(), "/Swerve/Pose X");
+  private DoubleLogEntry poseYLog = new DoubleLogEntry(DataLogManager.getLog(), "/Swerve/Pose Y");
   private DoubleLogEntry poseAngleLog =
-      new DoubleLogEntry(DataLogManager.getLog(), "/SwerveSubsystem/Pose Angle");
+      new DoubleLogEntry(DataLogManager.getLog(), "/Swerve/Pose Angle");
 
   /**
    * Creates a {@link SwerveModule} object and intiailizes its motor controllers.
@@ -179,8 +177,8 @@ public class SwerveSubsystem extends SubsystemBase implements ShuffleboardProduc
         name);
   }
 
-  /** Creates a new SwerveSubsystem. */
-  public SwerveSubsystem() {
+  /** Creates a new Swerve. */
+  public Swerve() {
     initializeSensorState();
 
     drivetrain = new SwerveDrive(PARAMETERS.getValue(), modules, () -> getOrientation());

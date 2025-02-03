@@ -23,7 +23,7 @@ import frc.robot.Constants;
 import frc.robot.commands.AlignToReef.ReefBranch;
 import frc.robot.parameters.SwerveDriveParameters;
 import frc.robot.subsystems.Subsystems;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Swerve;
 
 public final class DriveCommands {
   /**
@@ -75,19 +75,19 @@ public final class DriveCommands {
    * @return A command to follow the path to the specified branch of the nearest reef side.
    */
   public static Command alignToReefPP(Subsystems subsystems, ReefBranch targetReefBranch) {
-    SwerveSubsystem drivetrain = subsystems.drivetrain;
+    Swerve drivetrain = subsystems.drivetrain;
     Pose2d currentRobotPose = drivetrain.getPosition();
     int nearestTagId = findNearestReefTagID(currentRobotPose);
     Pose2d targetPose =
         Constants.VisionConstants.REEF_SCORING_POSES.get(
             new Pair<Integer, ReefBranch>(nearestTagId, targetReefBranch));
-    SwerveDriveParameters currentSwerveParameters = SwerveSubsystem.PARAMETERS.getValue();
+    SwerveDriveParameters currentSwerveParameters = Swerve.PARAMETERS.getValue();
 
     return AutoBuilder.pathfindToPose(
             targetPose,
             new PathConstraints(
-                SwerveSubsystem.getMaxSpeed() * 0.3,
-                SwerveSubsystem.getMaxAcceleration(),
+                Swerve.getMaxSpeed() * 0.3,
+                Swerve.getMaxAcceleration(),
                 currentSwerveParameters.getMaxRotationalSpeed() * 0.3,
                 currentSwerveParameters.getMaxRotationalAcceleration()))
         .withName("AlignToReefPP");

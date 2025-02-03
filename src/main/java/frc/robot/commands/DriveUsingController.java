@@ -11,12 +11,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Subsystems;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Swerve;
 
 public class DriveUsingController extends Command {
   private static final double DEADBAND = 0.08;
 
-  private final SwerveSubsystem drivetrain;
+  private final Swerve drivetrain;
   private final CommandXboxController xboxController;
 
   /** Creates a new DriveUsingController. */

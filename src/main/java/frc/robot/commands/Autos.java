@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Swerve;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,7 +55,7 @@ public final class Autos {
    * @return The PathPlanner auto command.
    */
   public static Command getPathPlannerAuto(Subsystems subsystems, String name) {
-    SwerveSubsystem driveTrain = subsystems.drivetrain;
+    Swerve driveTrain = subsystems.drivetrain;
 
     NamedCommands.registerCommands(getPathplannerEventMap(subsystems, name));
 

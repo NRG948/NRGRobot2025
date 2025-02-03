@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ColorConstants;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.subsystems.StatusLEDSubsystem;
+import frc.robot.subsystems.StatusLED;
 
 public class FlameCycle extends Command {
-  private final StatusLEDSubsystem led;
+  private final StatusLED led;
   private final int redDiff = ColorConstants.RED.red - ColorConstants.YELLOW.red;
   private final int greenDiff = ColorConstants.RED.green - ColorConstants.YELLOW.green;
   private final int blueDiff = ColorConstants.RED.blue - ColorConstants.YELLOW.blue;
@@ -22,7 +22,7 @@ public class FlameCycle extends Command {
   private int step;
 
   /** Creates a new FlameCycle. */
-  public FlameCycle(StatusLEDSubsystem led) {
+  public FlameCycle(StatusLED led) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.led = led;
     addRequirements(led);
