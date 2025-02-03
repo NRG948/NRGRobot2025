@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.parameters.VisionParameters;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -59,6 +60,11 @@ public class AprilTagSubsystem extends SubsystemBase implements ShuffleboardProd
   public static final EstimatedRobotPose NO_APRILTAG_ESTIMATE =
       new EstimatedRobotPose(NO_APRILTAG, 0, List.of(), PoseStrategy.LOWEST_AMBIGUITY);
   public static final double LAST_RESULT_TIMEOUT = 0.1;
+
+  @RobotPreferencesValue
+  public static RobotPreferences.EnumValue<VisionParameters> PARAMETERS =
+      new RobotPreferences.EnumValue<VisionParameters>(
+          "AprilTag", "Robot Vision", VisionParameters.PracticeBase2025);
 
   @RobotPreferencesValue(column = 0, row = 0)
   public static final RobotPreferences.BooleanValue ENABLED =

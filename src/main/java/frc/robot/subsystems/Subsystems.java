@@ -12,7 +12,6 @@ import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.Constants;
 import frc.robot.parameters.ArmParameters;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -36,12 +35,8 @@ public class Subsystems {
 
   public final StatusLEDSubsystem statusLEDs = new StatusLEDSubsystem();
 
-  public final Optional<AprilTagSubsystem> aprilTag =
-      newOptionalSubsystem(
-          AprilTagSubsystem.class,
-          AprilTagSubsystem.ENABLED,
-          Constants.CAMERA1_NAME,
-          Constants.APRILTAG_ROBOT_TO_CAMERA1);
+  public final Optional<AprilTagSubsystem> frontCamera;
+  public final Optional<AprilTagSubsystem> backCamera;
 
   private final Subsystem[] all;
   private final Subsystem[] manipulators;
@@ -59,9 +54,27 @@ public class Subsystems {
     var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, statusLEDs));
 
     // Add optional subsystems to the appropriate list.
-    if (aprilTag.isPresent()) {
-      all.add(aprilTag.get());
-    }
+    frontCamera =
+        AprilTagSubsystem.PARAMETERS
+            .getValue()
+            .getRobotToFrontCamera()
+            .flatMap(
+                (t) ->
+                    newOptionalSubsystem(
+                        AprilTagSubsystem.class, AprilTagSubsystem.ENABLED, "FrontCamera", t));
+
+    frontCamera.ifPresent((s) -> all.add(s));
+
+    backCamera =
+        AprilTagSubsystem.PARAMETERS
+            .getValue()
+            .getRobotToBackCamera()
+            .flatMap(
+                (t) ->
+                    newOptionalSubsystem(
+                        AprilTagSubsystem.class, AprilTagSubsystem.ENABLED, "BackCamera", t));
+
+    backCamera.ifPresent((s) -> all.add(s));
 
     // Add all manipulator subsystems to the `all` list.
     all.addAll(manipulators);
@@ -151,17 +164,19 @@ public class Subsystems {
   }
 
   public void periodic() {
-    if (aprilTag.isPresent()) {
-      AprilTagSubsystem aprilTag = this.aprilTag.get();
-      var visionEst = aprilTag.getEstimateGlobalPose();
+    frontCamera.ifPresent(this::updateEstimatedPose);
+    backCamera.ifPresent(this::updateEstimatedPose);
+  }
 
-      visionEst.ifPresent(
-          (est) -> {
-            var estPose = est.estimatedPose.toPose2d();
-            var estStdDevs = aprilTag.getEstimationStdDevs();
+  private void updateEstimatedPose(AprilTagSubsystem aprilTag) {
+    var visionEst = aprilTag.getEstimateGlobalPose();
 
-            drivetrain.addVisionMeasurement(estPose, est.timestampSeconds, estStdDevs);
-          });
-    }
+    visionEst.ifPresent(
+        (est) -> {
+          var estPose = est.estimatedPose.toPose2d();
+          var estStdDevs = aprilTag.getEstimationStdDevs();
+
+          drivetrain.addVisionMeasurement(estPose, est.timestampSeconds, estStdDevs);
+        });
   }
 }

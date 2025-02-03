@@ -7,15 +7,11 @@
  
 package frc.robot;
 
-import com.nrg948.preferences.RobotPreferences;
-import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.commands.AlignToReef.ReefBranch;
-import frc.robot.parameters.VisionParameters;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,23 +113,6 @@ public final class Constants {
     /** The rotational tolerance value for aligning to the reef. */
     public static final double REEF_ALIGNMENT_TOLERANCE_R = 1.0; // in deg
   }
-
-  public static final String CAMERA1_NAME = "948Mono001";
-
-  @RobotPreferencesValue
-  public static RobotPreferences.EnumValue<VisionParameters> PARAMETERS =
-      new RobotPreferences.EnumValue<VisionParameters>(
-          "AprilTag", "Robot Vision", VisionParameters.CompetitionBase2024);
-
-  /** Used to transform the center of robot position to the camera position. */
-  public static final Transform3d APRILTAG_ROBOT_TO_CAMERA1 =
-      PARAMETERS.getValue().getRobotToCamera();
-
-  /** Used to transform the camera position to the center of robot position. */
-  public static final Transform3d APRILTAG_CAMERA_TO_ROBOT = APRILTAG_ROBOT_TO_CAMERA1.inverse();
-
-  /** Field of view of the AprilTag camera in degrees. */
-  public static final double APRILTAG_CAMERA_FOV = 70;
 
   public static class ColorConstants {
     public static final Color8Bit BLACK = new Color8Bit(0, 0, 0);

@@ -11,44 +11,47 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import java.util.Optional;
 
 /** Add your docs here. */
 public enum VisionParameters {
-  PracticeBase2024(0, 0, 0, 0, 0, 180), // TODO: Get real values
   CompetitionBase2024(
-      11.375, 0, 23.625, 0, 21.5,
-      0); // test robot, flipping front/back of the robot compared to 2024
+      Optional.of(
+          new Transform3d(
+              new Translation3d(Units.inchesToMeters(11.375), 0, Units.inchesToMeters(23.625)),
+              new Rotation3d(0, Math.toRadians(21.5), 0))),
+      Optional.empty()),
+  PracticeBase2025(
+      Optional.empty(),
+      Optional.of(
+          new Transform3d(
+              new Translation3d(
+                  Units.inchesToMeters(0.75),
+                  Units.inchesToMeters(-5),
+                  Units.inchesToMeters(36.875)),
+              new Rotation3d(0, 0, Math.toRadians(180)))));
 
-  private double x;
-  private double y;
-  private double z;
-  private double roll;
-  private double pitch;
-  private double yaw;
+  private final Optional<Transform3d> frontCamera;
+  private final Optional<Transform3d> backCamera;
 
   /**
    * The constructor for robot vision parameters.
    *
-   * @param x The x offset in inches.
-   * @param y The y offset in inches.
-   * @param z The z offset in inches.
-   * @param roll The roll in degrees.
-   * @param pitch The pitch in degrees.
-   * @param yaw The yaw in degrees.
+   * @param frontCamera The transform of the front camera from the center of the robot.
+   * @param backCamera The transform of the back camera from the center of the robot.
    */
-  private VisionParameters(double x, double y, double z, double roll, double pitch, double yaw) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.roll = roll;
-    this.pitch = pitch;
-    this.yaw = yaw;
+  private VisionParameters(Optional<Transform3d> frontCamera, Optional<Transform3d> backCamera) {
+    this.frontCamera = frontCamera;
+    this.backCamera = backCamera;
   }
 
-  public Transform3d getRobotToCamera() {
-    return new Transform3d(
-        new Translation3d(
-            Units.inchesToMeters(x), Units.inchesToMeters(y), Units.inchesToMeters(z)),
-        new Rotation3d(Math.toRadians(roll), Math.toRadians(pitch), Math.toRadians(yaw)));
+  /** Returns the transform of the front camera from the center of the robot. */
+  public Optional<Transform3d> getRobotToFrontCamera() {
+    return frontCamera;
+  }
+
+  /** Returns the transform of the back camera from the center of the robot. */
+  public Optional<Transform3d> getRobotToBackCamera() {
+    return backCamera;
   }
 }
