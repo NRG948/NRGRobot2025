@@ -9,9 +9,11 @@ package frc.robot;
 
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -21,7 +23,9 @@ import frc.robot.commands.CoralCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveUsingController;
 import frc.robot.commands.ElevatorCommands;
+import frc.robot.commands.FlameCycle;
 import frc.robot.commands.ManipulatorCommands;
+import frc.robot.commands.RainbowCycle;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
 
@@ -54,6 +58,9 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     configureBindings();
+
+    CommandScheduler.getInstance().schedule(new FlameCycle(subsystems.statusLEDs));
+    ;
   }
 
   public void disabledInit() {
@@ -113,6 +120,8 @@ public class RobotContainer {
         .povUp()
         .whileTrue(AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L3));
     m_manipulatorController.povUp().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
+
+    new Trigger(RobotState::isDisabled).onTrue(new FlameCycle(subsystems.statusLEDs));
   }
 
   /**
