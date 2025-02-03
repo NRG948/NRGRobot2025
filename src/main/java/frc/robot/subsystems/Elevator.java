@@ -42,7 +42,7 @@ import frc.robot.util.TalonFXAdapter;
 import java.util.Set;
 
 @RobotPreferencesLayout(groupName = "Elevator", row = 1, column = 0, width = 1, height = 2)
-public class Elevator extends SubsystemBase implements ShuffleboardProducer {
+public class Elevator extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   @RobotPreferencesValue
   public static RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("Elevator", "Enable Tab", false);
@@ -158,6 +158,7 @@ public class Elevator extends SubsystemBase implements ShuffleboardProducer {
     controller.setTolerance(0.01);
   }
 
+  @Override
   public void disable() {
     mainMotor.disable();
     isSeekingGoal = false;

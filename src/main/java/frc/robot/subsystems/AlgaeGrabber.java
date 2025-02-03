@@ -11,7 +11,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
 
-public class AlgaeGrabber extends SubsystemBase {
+public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem {
 
   private final TalonFX motor = new TalonFX(RobotConstants.CAN.TalonFX.ALGAE_GRABBER_MOTOR_ID);
   private double motorSpeed = 0;
@@ -32,6 +32,7 @@ public class AlgaeGrabber extends SubsystemBase {
     motorSpeed = -0.8;
   }
 
+  @Override
   public void disable() {
     motor.stopMotor();
   }

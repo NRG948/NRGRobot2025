@@ -30,7 +30,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.parameters.MotorParameters;
 
 @RobotPreferencesLayout(groupName = "CoralRoller", row = 0, column = 6, width = 1, height = 1)
-public class CoralRoller extends SubsystemBase implements ShuffleboardProducer {
+public class CoralRoller extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
 
   @RobotPreferencesValue
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
@@ -89,6 +89,7 @@ public class CoralRoller extends SubsystemBase implements ShuffleboardProducer {
   }
 
   /** Disables the subsystem. */
+  @Override
   public void disable() {
     goalVelocity = 0;
     logGoalVelocity.append(0);

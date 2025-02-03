@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.ArmParameters;
 
-public class Arm extends SubsystemBase {
+public class Arm extends SubsystemBase implements ActiveSubsystem {
   private final TalonFX motor;
   private final DutyCycleEncoder absoluteEncoder;
 
@@ -77,6 +77,7 @@ public class Arm extends SubsystemBase {
   }
 
   /** Disables periodic control. */
+  @Override
   public void disable() {
     enabled = false;
     timer.stop();

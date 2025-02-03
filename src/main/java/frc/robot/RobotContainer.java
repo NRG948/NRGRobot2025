@@ -56,6 +56,10 @@ public class RobotContainer {
     configureBindings();
   }
 
+  public void disabledInit() {
+    subsystems.disable();
+  }
+
   private void initShuffleboard() {
     RobotPreferences.addShuffleBoardTab();
 

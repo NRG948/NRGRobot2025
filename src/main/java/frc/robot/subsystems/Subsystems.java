@@ -155,6 +155,14 @@ public class Subsystems {
     }
   }
 
+  public void disable() {
+    for (Subsystem subsystem : all) {
+      if (subsystem instanceof ActiveSubsystem) {
+        ActiveSubsystem.class.cast(subsystem).disable();
+      }
+    }
+  }
+
   public void initShuffleboard() {
     for (Subsystem subsystem : all) {
       if (subsystem instanceof ShuffleboardProducer) {
