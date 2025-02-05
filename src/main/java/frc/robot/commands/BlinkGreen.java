@@ -17,10 +17,12 @@ public class BlinkGreen extends Command {
   private final LEDSubsystem led;
   private final Timer timer = new Timer();
   private boolean isGreen;
+  private final double duration;
 
   /** Creates a new BlinkingGreen. */
-  public BlinkGreen(LEDSubsystem led) {
+  public BlinkGreen(LEDSubsystem led, double duration) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.duration = duration;
     this.led = led;
     addRequirements(led);
   }
@@ -57,6 +59,6 @@ public class BlinkGreen extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return timer.hasElapsed(duration);
   }
 }
