@@ -38,7 +38,7 @@ public class CoralCommands {
   public static Command outtakeUntilCoralNotDetected(Subsystems subsystems) {
     return Commands.sequence(
         outtakeCoral(subsystems),
-        Commands.idle(subsystems.coralRoller).until(() -> subsystems.coralRoller.hasCoral()),
+        Commands.idle(subsystems.coralRoller).until(() -> !subsystems.coralRoller.hasCoral()),
         Commands.runOnce(subsystems.coralRoller::disable, subsystems.coralRoller));
   }
 
