@@ -26,6 +26,14 @@ public class CoralCommands {
         .withName("OuttakeCoral");
   }
 
+  /** Returns a command that outtakes coral until it is not detected. */
+  public static Command outtakeUntilCoralNotDetected(Subsystems subsystems) {
+    return Commands.sequence(
+        outtakeCoral(subsystems),
+        Commands.idle(subsystems.coralRoller).until(() -> !subsystems.coralRoller.hasCoral()),
+        Commands.runOnce(subsystems.coralRoller::disable, subsystems.coralRoller));
+  }
+
   /**
    * Returns a command that sets the arm angle of the coral arm.
    *
@@ -55,16 +63,5 @@ public class CoralCommands {
             waitForArmToReachGoalAngle(subsystems),
             Commands.runOnce(() -> subsystems.coralArm.disable(), subsystems.coralArm))
         .withName("StowArm");
-  }
-
-  /**
-   * Returns the command sequence that outtakes the coral until not detected and then stows the
-   * elevator and arm.
-   *
-   * @param subsystems
-   * @return
-   */
-  public static Command deliverCoral(Subsystems subsystems) {
-    return Commands.none(); // TODO: implement deliverCoral
   }
 }

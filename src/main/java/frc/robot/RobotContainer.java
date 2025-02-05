@@ -107,7 +107,9 @@ public class RobotContainer {
     m_manipulatorController.leftBumper().whileTrue(AlgaeCommands.outtakeAlgae(subsystems));
     m_manipulatorController.leftBumper().onFalse(AlgaeCommands.stopAndStowIntake(subsystems));
     m_manipulatorController.povLeft().whileTrue(CoralCommands.intakeCoral(subsystems));
-    m_manipulatorController.povRight().whileTrue(CoralCommands.deliverCoral(subsystems));
+    m_manipulatorController
+        .povRight()
+        .whileTrue(CoralCommands.outtakeUntilCoralNotDetected(subsystems));
     m_manipulatorController.povRight().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
     m_manipulatorController.start().onTrue(ElevatorCommands.stowElevatorAndArm(subsystems));
     m_manipulatorController.back().onTrue(ManipulatorCommands.interruptAll(subsystems));
