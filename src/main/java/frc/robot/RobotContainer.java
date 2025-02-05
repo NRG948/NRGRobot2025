@@ -106,7 +106,7 @@ public class RobotContainer {
     m_manipulatorController.rightBumper().onFalse(AlgaeCommands.stopAndStowIntake(subsystems));
     m_manipulatorController.leftBumper().whileTrue(AlgaeCommands.outtakeAlgae(subsystems));
     m_manipulatorController.leftBumper().onFalse(AlgaeCommands.stopAndStowIntake(subsystems));
-    m_manipulatorController.povLeft().whileTrue(CoralCommands.intakeCoral(subsystems));
+    m_manipulatorController.povLeft().whileTrue(CoralCommands.intakeUntilCoralDetected(subsystems));
     m_manipulatorController
         .povRight()
         .whileTrue(CoralCommands.outtakeUntilCoralNotDetected(subsystems));

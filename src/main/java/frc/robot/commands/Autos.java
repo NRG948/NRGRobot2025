@@ -83,8 +83,8 @@ public final class Autos {
     eventMaps.put(
         "Remove Algae L4", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L4));
 
-    eventMaps.put("Coral Intake", CoralCommands.intakeCoral(subsystems));
-    eventMaps.put("Coral Outtake", CoralCommands.outtakeCoral(subsystems));
+    eventMaps.put("Coral Intake", CoralCommands.intakeUntilCoralDetected(subsystems));
+    eventMaps.put("Coral Outtake", CoralCommands.outtakeUntilCoralNotDetected(subsystems));
 
     eventMaps.put("Elevator L1", ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L1));
     eventMaps.put("Elevator L2", ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L2));
