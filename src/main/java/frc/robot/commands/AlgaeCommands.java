@@ -34,7 +34,14 @@ public class AlgaeCommands {
 
   /** Returns a command that removes algae at the given reef level. */
   public static Command removeAlgaeAtLevel(Subsystems subsystems, ElevatorLevel elevatorLevel) {
-    return Commands.none(); // TODO: implement removeAlgaeAtLevel
+    return Commands.sequence(
+        Commands.runOnce(
+            () -> ElevatorCommands.goToElevatorLevel(subsystems, elevatorLevel),
+            subsystems.elevator),
+        Commands.runOnce(
+            () -> subsystems.coralArm.setGoalAngle(elevatorLevel.getPivotAngle()),
+            subsystems.coralArm),
+        Commands.runOnce(() -> CoralCommands.outtakeCoral(subsystems), subsystems.coralRoller));
   }
 
   /** Returns a command that stops and stows the intake. */
