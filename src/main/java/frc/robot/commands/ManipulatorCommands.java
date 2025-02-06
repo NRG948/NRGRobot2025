@@ -11,7 +11,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Subsystems;
 
-public class ManipulatorCommands {
+/** A namespace for manipulator command factory methods. */
+public final class ManipulatorCommands {
   /** Returns a command that interrupts all manipulator subsystems. */
   public static Command interruptAll(Subsystems subsystems) {
     return Commands.runOnce(() -> {}, subsystems.getManipulators())

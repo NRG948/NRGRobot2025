@@ -25,17 +25,22 @@ import java.util.Map;
 import java.util.Set;
 import org.javatuples.LabelValue;
 
+/** A namespace for autonomous command factory methods. */
 public final class Autos {
-  /** Example static factory for an autonomous command. */
+  private Autos() {
+    throw new UnsupportedOperationException("This is a utility class!");
+  }
+
+  /** Returns an autonomous command that does nothing. */
   @AutonomousCommandMethod(name = "None", isDefault = true)
   public static Command none(Subsystems subsystem) {
     return Commands.none();
   }
 
-  private Autos() {
-    throw new UnsupportedOperationException("This is a utility class!");
-  }
-
+  /**
+   * Returns a collection of label-value pairs mapping autonomous routine names to autonomous
+   * commands define using PPPathplannner.
+   */
   @AutonomousCommandGenerator
   public static Collection<LabelValue<String, Command>> generatePathPlannerAutos(
       Subsystems subsystems) {
@@ -62,11 +67,21 @@ public final class Autos {
     return Commands.defer(() -> newPathPlannerAuto(name), Set.of(driveTrain)).withName(name);
   }
 
+  /**
+   * Returns a {@link PathPlannnerAuto} instance for the given Pathplanner autonomous routine name.
+   */
   private static Command newPathPlannerAuto(String name) {
     PathPlannerAuto pathPlannerAuto = new PathPlannerAuto(name);
     return pathPlannerAuto;
   }
 
+  /**
+   * Returns a map of event names to commands for the given Pathplanner autonomous routine name.
+   *
+   * @param subsystems Subsystems container.
+   * @param pathGroupName Name of the pathplanner autonomous routine.
+   * @return A map of event names to commands.
+   */
   private static Map<String, Command> getPathplannerEventMap(
       Subsystems subsystems, String pathGroupName) {
 

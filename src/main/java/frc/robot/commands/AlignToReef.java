@@ -27,6 +27,10 @@ import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
 import java.util.ArrayList;
 
+/**
+ * A command that autonomous drives and aligns the robot to the specified branch of the nearest reef
+ * side.
+ */
 @RobotPreferencesLayout(groupName = "AlignToReef", row = 0, column = 4, width = 2, height = 3)
 public class AlignToReef extends Command { // TODO:
   /** An enum that represents the two branches of the reef as viewed face on. */

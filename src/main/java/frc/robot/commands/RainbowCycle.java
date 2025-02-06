@@ -14,6 +14,7 @@ import frc.robot.Constants.ColorConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.StatusLED;
 
+/** A command to display an animated rainbow cycle pattern on the status LEDs. */
 public class RainbowCycle extends Command {
   private final StatusLED led;
   private int step;

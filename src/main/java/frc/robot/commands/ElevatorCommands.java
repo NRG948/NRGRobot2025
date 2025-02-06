@@ -13,8 +13,8 @@ import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Subsystems;
 
-/** Add your docs here. */
-public class ElevatorCommands {
+/** A namespace for elevator command factory methods. */
+public final class ElevatorCommands {
 
   /** Returns a command that goes to the given elevator level. */
   public static Command goToElevatorLevel(Subsystems subsystems, ElevatorLevel level) {

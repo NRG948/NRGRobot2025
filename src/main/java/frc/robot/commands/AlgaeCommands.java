@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
 
-/** Add your docs here. */
-public class AlgaeCommands {
+/** A namespace for algae command factory methods. */
+public final class AlgaeCommands {
   /** Returns a command to intake algae. */
   public static Command intakeAlgae(Subsystems subsystems) {
     return Commands.runOnce(() -> subsystems.algaeGrabber.intake(), subsystems.algaeGrabber)

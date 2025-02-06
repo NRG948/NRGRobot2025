@@ -13,6 +13,7 @@ import frc.robot.Constants.ColorConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.StatusLED;
 
+/** A command to display an animated flame pattern on the status LEDs. */
 public class FlameCycle extends Command {
   private final StatusLED led;
   private final int redDiff = ColorConstants.RED.red - ColorConstants.YELLOW.red;

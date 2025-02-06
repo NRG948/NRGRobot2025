@@ -25,6 +25,7 @@ import frc.robot.parameters.SwerveDriveParameters;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
 
+/** A namespace for driver command factory methods. */
 public final class DriveCommands {
   /**
    * Returns a command that resets the orientation of the drivetrain.

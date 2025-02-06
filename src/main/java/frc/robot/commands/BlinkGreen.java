@@ -12,18 +12,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.LEDSubsystem;
 
+/** A command to blink the status LEDs green. */
 public class BlinkGreen extends Command {
+  private static final double BLINK_TIME = 0.2;
 
   private final LEDSubsystem led;
+  private final double duration;
   private final Timer timer = new Timer();
   private boolean isGreen;
-  private final double duration;
 
-  /** Creates a new BlinkingGreen. */
+  /** Creates a new BlinkGreen. */
   public BlinkGreen(LEDSubsystem led, double duration) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.duration = duration;
     this.led = led;
+    this.duration = duration;
     addRequirements(led);
   }
 
@@ -40,7 +42,7 @@ public class BlinkGreen extends Command {
   @Override
   public void execute() {
 
-    if (timer.advanceIfElapsed(0.2)) {
+    if (timer.advanceIfElapsed(BLINK_TIME)) {
       if (isGreen) {
         led.fillAndCommitColor(Constants.ColorConstants.BLACK);
       } else {

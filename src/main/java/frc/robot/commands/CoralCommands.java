@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
 
-/** Add your docs here. */
-public class CoralCommands {
+/** A namespace for coral command factory methods. */
+public final class CoralCommands {
   /** Returns a command that intakes coral. */
   public static Command intakeCoral(Subsystems subsystems) {
     return Commands.runOnce(() -> subsystems.coralRoller.intake(), subsystems.coralRoller)

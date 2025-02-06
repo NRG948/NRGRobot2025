@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
 
+/** A command that enables the driver to drive the robot using an Xbox controller. */
 public class DriveUsingController extends Command {
   private static final double DEADBAND = 0.08;
 
