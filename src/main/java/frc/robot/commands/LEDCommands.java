@@ -18,13 +18,23 @@ import frc.robot.subsystems.Subsystems;
 public class LEDCommands {
 
   public static Command setColor(StatusLED statusLED, Color8Bit color) {
-    return Commands.runOnce(() -> statusLED.fillAndCommitColor(color), statusLED);
+    return Commands.runOnce(() -> statusLED.fillAndCommitColor(color), statusLED)
+        .withName("SetColor");
   }
 
   public static Command indicateCoralAcquired(Subsystems subsystem) {
     return Commands.sequence(
-        new BlinkGreen(subsystem.statusLEDs, 1.0),
-        setColor(subsystem.statusLEDs, ColorConstants.GREEN),
-        Commands.idle(subsystem.statusLEDs).until(() -> !subsystem.coralRoller.hasCoral()));
+            new BlinkGreen(subsystem.statusLEDs, 1.0),
+            setColor(subsystem.statusLEDs, ColorConstants.GREEN),
+            Commands.idle(subsystem.statusLEDs).until(() -> !subsystem.coralRoller.hasCoral()))
+        .withName("IndicateCoralAcquired");
+  }
+
+  public static Command indicateAlgaeAcquired(Subsystems subsystem) {
+    return Commands.sequence(
+            new BlinkGreen(subsystem.statusLEDs, 1.0),
+            setColor(subsystem.statusLEDs, ColorConstants.GREEN),
+            Commands.idle(subsystem.statusLEDs).until(() -> !subsystem.algaeGrabber.hasAlgae()))
+        .withName("IndicateAlgaeAcquired");
   }
 }
