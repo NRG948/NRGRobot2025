@@ -11,9 +11,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Remove Algae L3"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Algae(E-F) to Algae(C-D)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Remove Algae L2"
           }
         },
         {
@@ -23,9 +35,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Remove Algae L3"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Algae(A-B) to Algae(K-L)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Remove Algae L2"
           }
         }
       ]

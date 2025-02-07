@@ -5,9 +5,28 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Processor Start to Reef(F)"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Processor Start to Reef(F)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator L4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Outtake"
           }
         },
         {

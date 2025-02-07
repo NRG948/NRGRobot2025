@@ -5,15 +5,41 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Center Start to Reef(G)"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator L3"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Center Start to Reef(G)"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Reef(G) Back Out"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Reef(G) Back Out"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator Dock"
+                }
+              }
+            ]
           }
         }
       ]
