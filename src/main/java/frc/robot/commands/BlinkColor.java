@@ -8,23 +8,26 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.LEDSubsystem;
 
 /** A command to blink the status LEDs green. */
-public class BlinkGreen extends Command {
+public class BlinkColor extends Command {
   private static final double BLINK_TIME = 0.2;
 
   private final LEDSubsystem led;
+  private final Color8Bit color;
   private final double duration;
   private final Timer timer = new Timer();
-  private boolean isGreen;
+  private boolean isOn;
 
-  /** Creates a new BlinkGreen. */
-  public BlinkGreen(LEDSubsystem led, double duration) {
+  /** Creates a new BlinkColor. */
+  public BlinkColor(LEDSubsystem led, Color8Bit color, double duration) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.led = led;
+    this.color = color;
     this.duration = duration;
     addRequirements(led);
   }
@@ -32,8 +35,8 @@ public class BlinkGreen extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    led.fillAndCommitColor(Constants.ColorConstants.GREEN);
-    isGreen = true;
+    led.fillAndCommitColor(color);
+    isOn = true;
     timer.reset();
     timer.start();
   }
@@ -43,12 +46,12 @@ public class BlinkGreen extends Command {
   public void execute() {
 
     if (timer.advanceIfElapsed(BLINK_TIME)) {
-      if (isGreen) {
+      if (isOn) {
         led.fillAndCommitColor(Constants.ColorConstants.BLACK);
       } else {
-        led.fillAndCommitColor(Constants.ColorConstants.GREEN);
+        led.fillAndCommitColor(color);
       }
-      isGreen = !isGreen;
+      isOn = !isOn;
     }
   }
 

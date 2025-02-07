@@ -40,7 +40,7 @@ public final class LEDCommands {
    */
   public static Command indicateCoralAcquired(Subsystems subsystem) {
     return Commands.sequence(
-            new BlinkGreen(subsystem.statusLEDs, BLINK_DURATION),
+            new BlinkColor(subsystem.statusLEDs, ColorConstants.GREEN, BLINK_DURATION),
             setColor(subsystem.statusLEDs, ColorConstants.GREEN),
             Commands.idle(subsystem.statusLEDs).until(() -> !subsystem.coralRoller.hasCoral()))
         .withName("IndicateCoralAcquired");
@@ -56,7 +56,7 @@ public final class LEDCommands {
    */
   public static Command indicateAlgaeAcquired(Subsystems subsystem) {
     return Commands.sequence(
-            new BlinkGreen(subsystem.statusLEDs, BLINK_DURATION),
+            new BlinkColor(subsystem.statusLEDs, ColorConstants.GREEN, BLINK_DURATION),
             setColor(subsystem.statusLEDs, ColorConstants.GREEN),
             Commands.idle(subsystem.statusLEDs).until(() -> !subsystem.algaeGrabber.hasAlgae()))
         .withName("IndicateAlgaeAcquired");

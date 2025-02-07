@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
+import frc.robot.Constants.ColorConstants;
 import frc.robot.commands.AlignToReef.ReefBranch;
 import frc.robot.parameters.SwerveDriveParameters;
 import frc.robot.subsystems.Subsystems;
@@ -39,23 +40,17 @@ public final class DriveCommands {
   }
 
   /**
-   * Returns a command that aligns the robot to the left branch of the reef.
+   * Returns a command that aligns the robot to the specified branch of the reef.
    *
    * @param subsystems The subsystems container.
-   * @return A command that aligns the robot to the left branch of the reef.
+   * @param branch The specified branch.
+   * @return A command that aligns the robot to the specified branch of the reef.
    */
-  public static Command alignToLeftBranch(Subsystems subsystems) {
-    return new AlignToReef(subsystems, ReefBranch.LEFT);
-  }
-
-  /**
-   * Returns a command that aligns the robot to the right branch of the reef.
-   *
-   * @param subsystems The subsystems container.
-   * @return A command that aligns the robot to the right branch of the reef.
-   */
-  public static Command alignToRightBranch(Subsystems subsystems) {
-    return new AlignToReef(subsystems, ReefBranch.RIGHT);
+  public static Command alignToBranch(Subsystems subsystems, ReefBranch branch) {
+    return Commands.sequence(
+            new AlignToReef(subsystems, branch),
+            new BlinkColor(subsystems.statusLEDs, ColorConstants.WHITE, 1).repeatedly())
+        .withName(String.format("AlignToReef(%s)", branch.name()));
   }
 
   /**

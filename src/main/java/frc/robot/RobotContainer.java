@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeCommands;
+import frc.robot.commands.AlignToReef.ReefBranch;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.CoralAndElevatorCommands;
 import frc.robot.commands.CoralCommands;
@@ -85,8 +86,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
     m_driverController.start().onTrue(DriveCommands.resetOrientation(subsystems));
-    m_driverController.x().whileTrue(DriveCommands.alignToLeftBranch(subsystems));
-    m_driverController.b().whileTrue(DriveCommands.alignToRightBranch(subsystems));
+    m_driverController.x().whileTrue(DriveCommands.alignToBranch(subsystems, ReefBranch.LEFT));
+    m_driverController.b().whileTrue(DriveCommands.alignToBranch(subsystems, ReefBranch.RIGHT));
     m_driverController.rightBumper().whileTrue(ClimberCommands.climb(subsystems));
 
     m_manipulatorController
