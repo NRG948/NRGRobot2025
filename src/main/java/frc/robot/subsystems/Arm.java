@@ -18,6 +18,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -33,6 +35,9 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
   @RobotPreferencesValue
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("Arm", "Enable Tab", false);
+
+  private final double MIN_ANGLE;
+  private final double MAX_ANGLE;
 
   /** The angle of the absolute encoder in radians from the designated zero point. */
   private final double absoluteEncoderOffset;
@@ -52,6 +57,8 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     setName(parameters.toString());
     this.parameters = parameters;
     rotationsPerRadians = parameters.getGearRatio() / (2 * Math.PI);
+    MIN_ANGLE = parameters.getMinAngleRad();
+    MAX_ANGLE = parameters.getMaxAngleRad();
 
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
 
@@ -96,6 +103,7 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
 
   /** Sets the goal angle in radians and enables periodic control. */
   public void setGoalAngle(double angle) {
+    angle = MathUtil.clamp(angle, MIN_ANGLE, MAX_ANGLE);
     goalAngle = angle;
     enabled = true;
     // create a Motion Magic request, voltage output
@@ -110,7 +118,6 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
   }
 
   /** Disables periodic control. */
-  @Override
   public void disable() {
     enabled = false;
   }

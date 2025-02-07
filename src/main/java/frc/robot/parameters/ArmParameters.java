@@ -25,7 +25,9 @@ public enum ArmParameters {
       0.0656,
       RobotConstants.CAN.TalonFX.CORAL_ARM_MOTOR_ID,
       RobotConstants.DigitalIO.CORAL_ARM_ABSOLUTE_ENCODER,
-      0), // TODO: get real encoder offset
+      0, // TODO: get real encoder offset
+      Math.toRadians(10),
+      Math.toRadians(90)),
   AlgaeArm(
       MotorParameters.KrakenX60,
       1,
@@ -35,7 +37,9 @@ public enum ArmParameters {
       1,
       RobotConstants.CAN.TalonFX.ALGAE_ARM_MOTOR_ID,
       RobotConstants.DigitalIO.ALGAE_ARM_ABSOLUTE_ENCODER,
-      0), // TODO: get real encoder offset
+      0, // TODO: get real encoder offset
+      Math.toRadians(45),
+      Math.toRadians(90)),
   Climber(
       MotorParameters.KrakenX60,
       1,
@@ -45,7 +49,9 @@ public enum ArmParameters {
       1,
       RobotConstants.CAN.TalonFX.CLIMBER_MOTOR_ID,
       RobotConstants.DigitalIO.CLIMBER_ABSOLUTE_ENCODER,
-      0); // TODO: get real encoder offset
+      0, // TODO: get real encoder offset
+      Math.toRadians(-90),
+      Math.toRadians(90));
 
   private final MotorParameters motorParameters;
   private final double gearRatio;
@@ -54,15 +60,17 @@ public enum ArmParameters {
   private final double efficiency;
   private final int motorID;
   private final int encoderID;
+  private final double minAngleRad;
+  private final double maxAngleRad;
 
   /** The reading of the absolute encoder in radians at the designated 0 point of the mechanism. */
   private final double absoluteEncoderZeroOffset;
-
+  
   private double kS;
   private double kV;
   private double kA;
   private double kG;
-
+  
   /**
    * removed:
    *
@@ -70,15 +78,17 @@ public enum ArmParameters {
    * CGAngleOffset;
    */
   private ArmParameters(
-      MotorParameters motorParameters,
-      double mass,
-      double gearRatio,
+    MotorParameters motorParameters,
+    double mass,
+    double gearRatio,
       double armLength,
       double efficiency,
       double kS,
       int motorID,
       int encoderID,
-      double absoluteEncoderZeroOffset) {
+      double absoluteEncoderZeroOffset,
+      double minAngleRad,
+      double maxAngleRad) {
     this.gearRatio = gearRatio;
     this.motorParameters = motorParameters;
     this.mass = mass;
@@ -88,16 +98,28 @@ public enum ArmParameters {
     this.motorID = motorID;
     this.encoderID = encoderID;
     this.absoluteEncoderZeroOffset = absoluteEncoderZeroOffset;
+    this.minAngleRad = minAngleRad;
+    this.maxAngleRad = maxAngleRad;
     kV = (RobotConstants.MAX_BATTERY_VOLTAGE - kS) / getMaxAngularSpeed();
     kA = (RobotConstants.MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAcceleration();
     kG = kA * 9.81;
+  }
+  
+  /** Returns the min angle of the arm in radians. */
+  public double getMinAngleRad() {
+    return minAngleRad;
+  }
+
+  /** Returns the max angle of the arm in radians. */
+  public double getMaxAngleRad() {
+    return maxAngleRad;
   }
 
   /** Returns the gear ratio. */
   public double getGearRatio() {
     return gearRatio;
   }
-
+  
   /** Returns the radians per revolution */
   public double getRadiansPerRevolution() {
     return (2 * Math.PI) / gearRatio;
