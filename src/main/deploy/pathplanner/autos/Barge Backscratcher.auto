@@ -9,59 +9,9 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
-                  "pathName": "Processor Start to Reef(H)"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Coral Outtake"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Reef(H) to Outer Processor Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator Dock"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Coral Intake"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Processor Intake to Reef(G)"
+                  "pathName": "Barge Start to Reef(G)"
                 }
               },
               {
@@ -86,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(G) to Processor Intake"
+                  "pathName": "Reef(G) to Outer Barge Intake"
                 }
               },
               {
@@ -111,7 +61,57 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Processor Intake to Reef(F)"
+                  "pathName": "Outer Barge Intake to Reef(H)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator L4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Outtake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Reef(H) to Outer Barge Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator Dock"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Outer Barge Intake to Reef(I)"
                 }
               },
               {

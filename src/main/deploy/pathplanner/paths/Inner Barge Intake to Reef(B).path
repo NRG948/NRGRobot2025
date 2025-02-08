@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4332499999999997,
-        "y": 6.1114999999999995
+        "x": 2.028,
+        "y": 6.9597500000000005
       },
       "isLocked": false,
       "linkedName": "Inner Barge Intake"
@@ -20,8 +20,8 @@
         "y": 4.13225
       },
       "prevControl": {
-        "x": 2.3790000000000004,
-        "y": 4.931749999999999
+        "x": 2.50575,
+        "y": 5.399749999999999
       },
       "nextControl": null,
       "isLocked": false,

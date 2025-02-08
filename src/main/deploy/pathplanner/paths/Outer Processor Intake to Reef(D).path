@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3629668243447473,
-        "y": 1.1054042516980798
+        "x": 2.8447601892144254,
+        "y": 1.914862851589332
       },
       "isLocked": false,
-      "linkedName": "Processor Intake"
+      "linkedName": "Outer Processor Intake"
     },
     {
       "anchor": {
-        "x": 5.03483606557377,
-        "y": 2.8801741803278684
+        "x": 3.788114754098361,
+        "y": 2.976075819672131
       },
       "prevControl": {
-        "x": 4.05411568623454,
-        "y": 2.2453163084630114
+        "x": 3.378550393996589,
+        "y": 2.541909747445307
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef(F)"
+      "linkedName": "Reef(D)"
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 120.96375653207346
+    "rotation": 61.025914987511996
   },
   "reversed": false,
   "folder": null,

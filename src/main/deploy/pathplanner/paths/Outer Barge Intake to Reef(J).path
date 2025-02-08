@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.399632733817112,
-        "y": 6.19317185712229
+        "x": 3.382660810132307,
+        "y": 6.245512099074496
       },
       "isLocked": false,
-      "linkedName": "Barge Intake"
+      "linkedName": "Outer Barge Intake"
     },
     {
       "anchor": {
-        "x": 5.742110655737705,
-        "y": 3.9470799180327862
+        "x": 5.215865179338752,
+        "y": 5.038556580997893
       },
       "prevControl": {
-        "x": 5.702936548594847,
-        "y": 5.4161089358899295
+        "x": 3.6163062913342214,
+        "y": 6.078767103280075
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef(H)"
+      "linkedName": "Reef(J)"
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -119.74488129694228
   },
   "reversed": false,
   "folder": null,

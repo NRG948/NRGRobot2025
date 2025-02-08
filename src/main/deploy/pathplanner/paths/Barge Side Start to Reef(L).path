@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.56175,
-        "y": 6.86225
+        "x": 6.44475,
+        "y": 7.008500000000001
       },
       "isLocked": false,
       "linkedName": "Barge Side Start"
@@ -20,8 +20,8 @@
         "y": 5.1698258196721305
       },
       "prevControl": {
-        "x": 5.29425,
-        "y": 6.013999999999999
+        "x": 5.23575,
+        "y": 6.16025
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -0.1727372163685857
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

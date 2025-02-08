@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Barge Start to Reef(I)"
+                  "pathName": "Processor Start to Reef(F)"
                 }
               },
               {
@@ -36,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(I) to Outer Barge Intake"
+                  "pathName": "Reef(F) to Outer Processor Intake"
                 }
               },
               {
@@ -61,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Barge Intake to Reef(J)"
+                  "pathName": "Outer Processor Intake to Reef(E)"
                 }
               },
               {
@@ -86,7 +86,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(J) to Outer Barge Intake"
+                  "pathName": "Reef(E) to Outer Processor Intake"
                 }
               },
               {
@@ -111,7 +111,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Barge Intake to Reef(K)"
+                  "pathName": "Outer Processor Intake to Reef(D)"
                 }
               },
               {
