@@ -2,22 +2,8 @@
   "robotWidth": 0.7874,
   "robotLength": 0.787,
   "holonomicMode": true,
-  "pathFolders": [
-    "Algae Removers",
-    "Back Outs",
-    "Cycle Barge Intake",
-    "Cycle Processor Intake",
-    "From Barge Start",
-    "From Center Start",
-    "From Processor Start"
-  ],
-  "autoFolders": [
-    "Barge Side",
-    "Move Out",
-    "1 Piece Autos",
-    "Processor Side",
-    "Target Algae"
-  ],
+  "pathFolders": [],
+  "autoFolders": [],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
