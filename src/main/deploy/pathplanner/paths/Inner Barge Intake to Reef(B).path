@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7507499999973338,
-        "y": 6.754999999994379
+        "x": 0.69224999999435,
+        "y": 6.745249999996049
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.028,
-        "y": 6.9597500000000005
+        "x": 2.583749999997017,
+        "y": 6.66725000000167
       },
       "isLocked": false,
       "linkedName": "Inner Barge Intake"
@@ -20,8 +20,8 @@
         "y": 4.13225
       },
       "prevControl": {
-        "x": 2.50575,
-        "y": 5.399749999999999
+        "x": 1.72575,
+        "y": 5.468
       },
       "nextControl": null,
       "isLocked": false,

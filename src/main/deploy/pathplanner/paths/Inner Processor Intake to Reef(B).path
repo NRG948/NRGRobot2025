@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.33025,
-        "y": 1.0902499999999997
+        "x": 2.7202499999999996,
+        "y": 1.1292499999999996
       },
       "isLocked": false,
       "linkedName": "Inner Processor Intake"
@@ -20,8 +20,8 @@
         "y": 4.13225
       },
       "prevControl": {
-        "x": 2.6520000000000006,
-        "y": 3.3912499999999994
+        "x": 1.95,
+        "y": 3.9177499999999994
       },
       "nextControl": null,
       "isLocked": false,
