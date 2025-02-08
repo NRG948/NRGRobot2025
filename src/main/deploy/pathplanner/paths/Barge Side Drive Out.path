@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.02,
-        "y": 7.58375
+        "x": 7.029971590909091,
+        "y": 7.5100710227272724
       },
       "isLocked": false,
       "linkedName": "Barge Side Start"
     },
     {
       "anchor": {
-        "x": 6.3723214285714285,
-        "y": 7.595440051020407
+        "x": 6.2521875,
+        "y": 7.37046875
       },
       "prevControl": {
-        "x": 7.234500000000001,
-        "y": 7.574
+        "x": 6.860454545454546,
+        "y": 7.48015625
       },
       "nextControl": null,
       "isLocked": false,
