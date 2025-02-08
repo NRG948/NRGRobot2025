@@ -12,7 +12,7 @@
         "y": 2.098572709309133
       },
       "isLocked": false,
-      "linkedName": "Processor Intake"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 54.09027692082235
+    "rotation": 54.090276920822355
   },
   "useDefaultConstraints": true
 }

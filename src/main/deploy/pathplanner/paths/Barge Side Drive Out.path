@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.8124362244897965,
+        "x": 7.7805,
         "y": 7.595440051020407
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.286467014417976,
+        "x": 8.254530789928179,
         "y": 7.602058009435772
       },
       "isLocked": false,
-      "linkedName": "Barge Start"
+      "linkedName": "Barge Side Start"
     },
     {
       "anchor": {
-        "x": 6.3723214285714285,
+        "x": 6.46425,
         "y": 7.595440051020407
       },
       "prevControl": {
-        "x": 6.1223525504416205,
-        "y": 7.591495438678815
+        "x": 6.95175,
+        "y": 7.5642499999999995
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Drive Out Barge Side"
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 179.23948122286916
+    "rotation": -179.7673341192718
   },
   "reversed": false,
   "folder": null,
