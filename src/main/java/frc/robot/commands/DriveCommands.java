@@ -11,14 +11,9 @@ import static frc.robot.parameters.Colors.WHITE;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
@@ -26,6 +21,7 @@ import frc.robot.commands.AlignToReef.ReefBranch;
 import frc.robot.parameters.SwerveDriveParameters;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
+import frc.robot.util.FieldUtils;
 
 /** A namespace for driver command factory methods. */
 public final class DriveCommands {
@@ -73,11 +69,21 @@ public final class DriveCommands {
    */
   public static Command alignToReefPP(Subsystems subsystems, ReefBranch targetReefBranch) {
     Swerve drivetrain = subsystems.drivetrain;
+
     Pose2d currentRobotPose = drivetrain.getPosition();
-    int nearestTagId = findNearestReefTagID(currentRobotPose);
-    Pose2d targetPose =
-        Constants.VisionConstants.REEF_SCORING_POSES.get(
-            new Pair<Integer, ReefBranch>(nearestTagId, targetReefBranch));
+    Pose2d nearestTagPose = currentRobotPose.nearest(FieldUtils.getReefAprilTags());
+    double v, h, d;
+    v = Constants.RobotConstants.ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X;
+    h = Constants.RobotConstants.CORAL_OFFSET_Y;
+    d = Constants.VisionConstants.BRANCH_TO_REEF_APRILTAG;
+
+    var targetPose =
+        nearestTagPose.plus(
+            new Transform2d(
+                v, (targetReefBranch.equals(ReefBranch.RIGHT) ? d : -d) - h, Rotation2d.k180deg));
+    System.out.println("TARGET pose: " + targetPose);
+    System.out.println("Target Branch: " + targetReefBranch);
+
     SwerveDriveParameters currentSwerveParameters = Swerve.PARAMETERS.getValue();
 
     return AutoBuilder.pathfindToPose(
@@ -88,24 +94,5 @@ public final class DriveCommands {
                 currentSwerveParameters.getMaxRotationalSpeed() * 0.3,
                 currentSwerveParameters.getMaxRotationalAcceleration()))
         .withName("AlignToReefPP");
-  }
-
-  // TODO: get tag based on vision
-  private static int findNearestReefTagID(Pose2d robotPose) {
-    var layout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
-    var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-    int startingId = alliance.equals(Alliance.Red) ? 6 : 17;
-    int nearestId = -1;
-    double minDist = Double.MAX_VALUE;
-    for (int id = startingId; id < startingId + 6; id++) {
-      Transform2d tagToRobot = layout.getTagPose(id).get().toPose2d().minus(robotPose);
-      double dist = Math.hypot(tagToRobot.getX(), tagToRobot.getY());
-      if (dist < minDist) {
-        minDist = dist;
-        nearestId = id;
-      }
-    }
-
-    return nearestId;
   }
 }
