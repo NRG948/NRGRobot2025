@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6069988052456836,
-        "y": 7.392278999979434
+        "x": 0.7507499999973338,
+        "y": 6.754999999994379
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.669353384556681,
-        "y": 5.476337923091281
+        "x": 1.4332499999999997,
+        "y": 6.1114999999999995
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Inner Barge Intake"
     },
     {
       "anchor": {
-        "x": 3.2366803278688523,
-        "y": 4.43857581967213
+        "x": 3.22725,
+        "y": 4.13225
       },
       "prevControl": {
-        "x": 2.218690964805016,
-        "y": 6.267490591682511
+        "x": 2.3790000000000004,
+        "y": 4.931749999999999
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef(A)"
+      "linkedName": "Reef(B)"
     }
   ],
   "rotationTargets": [],

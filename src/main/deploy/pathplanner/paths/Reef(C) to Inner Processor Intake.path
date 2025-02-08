@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.9679303278688525,
-        "y": 5.1698258196721305
+        "x": 3.4701136363636365,
+        "y": 3.1524857954545458
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8088894153397117,
-        "y": 6.274515884370006
+        "x": 2.8618465909109965,
+        "y": 1.8063210227303137
       },
       "isLocked": false,
-      "linkedName": "Reef(L)"
+      "linkedName": "Reef(C)"
     },
     {
       "anchor": {
-        "x": 1.6069988052456836,
-        "y": 7.392278999979434
+        "x": 0.6825,
+        "y": 1.295
       },
       "prevControl": {
-        "x": 2.7262684118379523,
-        "y": 6.407509788417782
+        "x": 1.9245170454564509,
+        "y": 1.4074573863666773
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Inner Processor Intake"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -52.97520117037446
+    "rotation": 54.090276920822355
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.62087398863166
+    "rotation": 57.01147838636548
   },
   "useDefaultConstraints": true
 }
