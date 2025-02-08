@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.9679303278688525,
-        "y": 5.1698258196721305
+        "x": 0.7507499999973338,
+        "y": 6.754999999994379
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8088894153397117,
-        "y": 6.274515884370006
+        "x": 1.4332499999999997,
+        "y": 6.1114999999999995
       },
       "isLocked": false,
-      "linkedName": "Reef(L)"
+      "linkedName": "Inner Barge Intake"
     },
     {
       "anchor": {
-        "x": 1.6069988052456836,
-        "y": 7.392278999979434
+        "x": 3.22725,
+        "y": 4.13225
       },
       "prevControl": {
-        "x": 2.7262684118379523,
-        "y": 6.407509788417782
+        "x": 2.3790000000000004,
+        "y": 4.931749999999999
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef(B)"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -52.97520117037446
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.62087398863166
+    "rotation": -52.97520117037446
   },
   "useDefaultConstraints": true
 }
