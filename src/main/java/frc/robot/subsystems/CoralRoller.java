@@ -7,9 +7,9 @@
  
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.StatusSignal;
+import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_ROLLER_BEAM_BREAK;
+
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
@@ -20,6 +20,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -47,7 +48,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private static final double KV = (RobotConstants.MAX_BATTERY_VOLTAGE - KS) / MAX_VELOCITY;
 
   private final TalonFX motor = new TalonFX(RobotConstants.CAN.TalonFX.CORAL_ROLLER_MOTOR_ID);
-  private StatusSignal<ForwardLimitValue> beamBreak = motor.getForwardLimit();
+  private DigitalInput beamBreak = new DigitalInput(CORAL_ROLLER_BEAM_BREAK);
 
   private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(KS, KV);
   private final PIDController pidController = new PIDController(1, 0, 0);
@@ -117,7 +118,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
   /** Updates and logs the current sensors states. */
   private void updateTelemetry() {
-    hasCoral = beamBreak.refresh().getValue() == ForwardLimitValue.Open;
+    hasCoral = beamBreak.get();
     currentVelocity = motor.getVelocity().refresh().getValueAsDouble() * METERS_PER_REVOLUTION;
 
     logHasCoral.update(hasCoral);
