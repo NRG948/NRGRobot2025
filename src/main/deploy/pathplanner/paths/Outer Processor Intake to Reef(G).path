@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.2419796545667445,
-        "y": 2.098572709309133
+        "x": 5.514344262295082,
+        "y": 2.784272540983607
       },
       "isLocked": false,
       "linkedName": "Outer Processor Intake"
@@ -20,8 +20,8 @@
         "y": 3.6114241803278686
       },
       "prevControl": {
-        "x": 5.670291459309134,
-        "y": 2.7038906981850115
+        "x": 6.113729508196721,
+        "y": 2.8801741803278684
       },
       "nextControl": null,
       "isLocked": false,
