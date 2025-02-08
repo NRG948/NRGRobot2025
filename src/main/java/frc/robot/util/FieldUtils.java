@@ -20,14 +20,23 @@ public final class FieldUtils {
 
   private static final AprilTagFieldLayout FIELD_LAYOUT =
       AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+
   private static final ArrayList<Pose2d> redReefTags = new ArrayList<>(6);
   private static final ArrayList<Pose2d> blueReefTags = new ArrayList<>(6);
+
+  private static final ArrayList<Pose2d> redCoralStationTags = new ArrayList<>(2);
+  private static final ArrayList<Pose2d> blueCoralStationTags = new ArrayList<>(2);
 
   static {
     // Red reef Apriltags are IDs 6-11; Blue reef Apriltags are IDs 17-22.
     for (int i = 0; i < 6; i++) {
       redReefTags.add(getAprilTagPose2d(i + 6));
       blueReefTags.add(getAprilTagPose2d(i + 17));
+    }
+
+    for (int i = 0; i < 2; i++) {
+      redCoralStationTags.add(getAprilTagPose2d(i + 1));
+      blueCoralStationTags.add(getAprilTagPose2d(i + 12));
     }
   }
 
@@ -54,5 +63,10 @@ public final class FieldUtils {
   /** Returns a list of AprilTag poses for our alliance's reef. */
   public static ArrayList<Pose2d> getReefAprilTags() {
     return isRedAlliance() ? redReefTags : blueReefTags;
+  }
+
+  /** Returns a list of AprilTag poses for our alliance's coral stations. */
+  public static ArrayList<Pose2d> getCoralStationAprilTags() {
+    return isRedAlliance() ? redCoralStationTags : blueCoralStationTags;
   }
 }

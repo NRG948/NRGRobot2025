@@ -29,17 +29,23 @@ public final class Constants {
 
     /** The length of the robot including bumpers. */
     // TODO: GET REAL VALUE
-    public static final double ROBOT_LENGTH = 0.74;
+    public static final double ROBOT_LENGTH = 0.928;
 
     /** The width of the robot including bumpers. */
     // TODO: GET REAL VALUE
-    public static final double ROBOT_WIDTH = 0.74;
+    public static final double ROBOT_WIDTH = 0.9;
 
     /**
      * The x distance from the odometry center (center of the wheels) to the edge of the front
      * bumper.
      */
-    public static final double ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X = 0.42;
+    public static final double ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X = ROBOT_LENGTH / 2;
+
+    /**
+     * The x distance from the odometry center (center of the wheels) to the edge of the rear
+     * bumper.
+     */
+    public static final double ODOMETRY_CENTER_TO_REAR_BUMPER_DELTA_X = ROBOT_LENGTH / 2;
 
     /** The robot iteration period in seconds. */
     public static final double PERIODIC_INTERVAL = 0.02;
@@ -98,9 +104,9 @@ public final class Constants {
     public static final double BRANCH_TO_REEF_APRILTAG = 0.165;
 
     /** The translational tolerance value for aligning to the reef. */
-    public static final double REEF_ALIGNMENT_TOLERANCE_XY = 0.0333; // in m
+    public static final double POSE_ALIGNMENT_TOLERANCE_XY = 0.0333; // in m
 
     /** The rotational tolerance value for aligning to the reef. */
-    public static final double REEF_ALIGNMENT_TOLERANCE_R = 1.0; // in deg
+    public static final double POSE_ALIGNMENT_TOLERANCE_R = 1.0; // in deg
   }
 }
