@@ -8,27 +8,52 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.181788696812914,
-        "y": 5.007959941174282
+        "x": 6.475747677509949,
+        "y": 4.88330186260084
       },
       "isLocked": false,
       "linkedName": "Barge Center Start"
     },
     {
       "anchor": {
-        "x": 5.215865179338752,
-        "y": 5.038556580997893
+        "x": 5.478381147540984,
+        "y": 4.882120901639344
       },
       "prevControl": {
-        "x": 6.314010565298383,
-        "y": 4.865975066122031
+        "x": 6.565506870279453,
+        "y": 4.767635356180457
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef(J)"
+      "linkedName": "Reef(I)"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,7 +67,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.74488129694228
+    "rotation": -119.745
   },
   "reversed": false,
   "folder": null,
