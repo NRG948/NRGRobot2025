@@ -115,11 +115,11 @@ public class RobotContainer {
     m_manipulatorController.back().onTrue(ManipulatorCommands.interruptAll(subsystems));
     m_manipulatorController
         .povDown()
-        .whileTrue(AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L2));
+        .whileTrue(AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.AlgaeL2));
     m_manipulatorController.povDown().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
     m_manipulatorController
         .povUp()
-        .whileTrue(AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L3));
+        .whileTrue(AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.AlgaeL3));
     m_manipulatorController.povUp().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
 
     new Trigger(subsystems.coralRoller::hasCoral)
