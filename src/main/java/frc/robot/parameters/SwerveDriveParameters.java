@@ -59,7 +59,7 @@ public enum SwerveDriveParameters {
       0.15,
       0.15,
       true,
-      2);
+      21);
 
   public static class Constants {
     /**
