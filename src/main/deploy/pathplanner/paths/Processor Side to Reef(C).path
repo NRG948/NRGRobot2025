@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.797512755102041,
+        "y": 0.45455994897959046
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.950198863636363,
+        "y": 0.8989062499999998
+      },
+      "isLocked": false,
+      "linkedName": "Processor Side Start"
+    },
+    {
+      "anchor": {
+        "x": 3.4701136363636365,
+        "y": 3.1524857954545458
+      },
+      "prevControl": {
+        "x": 4.327670454545454,
+        "y": 2.334815340909091
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef(C)"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 57.01147838636548
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 179.52649194126502
+  },
+  "useDefaultConstraints": true
+}
