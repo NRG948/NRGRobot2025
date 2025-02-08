@@ -30,9 +30,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Reef(F) to Processor Intake"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Reef(F) to Processor Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator Dock"
+                }
+              }
+            ]
           }
         },
         {
@@ -42,9 +55,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Processor Intake to Reef(E)"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Processor Intake to Reef(E)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator L4"
+                }
+              }
+            ]
           }
         },
         {
@@ -54,9 +80,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Reef(E) to Processor Intake"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Reef(E) to Processor Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator Dock"
+                }
+              }
+            ]
           }
         },
         {
@@ -66,9 +105,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Processor Intake to Reef(D)"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Processor Intake to Reef(D)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator L4"
+                }
+              }
+            ]
           }
         },
         {

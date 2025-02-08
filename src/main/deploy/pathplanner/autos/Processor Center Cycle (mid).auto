@@ -9,9 +9,59 @@
           "data": {
             "commands": [
               {
+                "type": "named",
+                "data": {
+                  "name": "Elevator L4"
+                }
+              },
+              {
                 "type": "path",
                 "data": {
                   "pathName": "Processor Start to Reef(H)"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Outtake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Reef(H) to Outer Processor Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator Dock"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Intake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Processor Intake to Reef(G)"
                 }
               },
               {
@@ -30,9 +80,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Reef(H) to Outer Processor Intake"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Reef(G) to Processor Intake"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator Dock"
+                }
+              }
+            ]
           }
         },
         {
@@ -42,33 +105,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Processor Intake to Reef(G)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Coral Outtake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Reef(G) to Processor Intake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Coral Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Processor Intake to Reef(F)"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Processor Intake to Reef(F)"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator L4"
+                }
+              }
+            ]
           }
         },
         {
