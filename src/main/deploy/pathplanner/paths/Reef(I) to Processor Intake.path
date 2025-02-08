@@ -21,11 +21,11 @@
       },
       "prevControl": {
         "x": 6.876077868852459,
-        "y": 1.269735655737703
+        "y": 1.2697356557377033
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Outer Processor Intake"
+      "linkedName": "Processor Intake"
     }
   ],
   "rotationTargets": [],

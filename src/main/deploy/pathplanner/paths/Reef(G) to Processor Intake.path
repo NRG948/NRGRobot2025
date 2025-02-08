@@ -21,11 +21,11 @@
       },
       "prevControl": {
         "x": 4.844769833138173,
-        "y": 1.2367423521662748
+        "y": 1.2367423521662746
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Processor Intake"
     }
   ],
   "rotationTargets": [],
