@@ -74,5 +74,5 @@ To deploy the robot code, use the "WPILib: Deploy Robot Code" command from the !
 * Linux/MacOS
 
     ```sh
-    ./gradlew deploy -Dorg.gradle.java.home="~/wpilib/2024/jdk" 
+    ./gradlew deploy -Dorg.gradle.java.home="~/wpilib/2025/jdk" 
     ```
