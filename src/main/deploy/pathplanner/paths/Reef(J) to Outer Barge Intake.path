@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.152284301674788,
-        "y": 5.655108218351526
+        "x": 5.3048863636363635,
+        "y": 6.143963068181818
       },
       "isLocked": false,
       "linkedName": "Reef(J)"
@@ -20,8 +20,8 @@
         "y": 7.392278999979434
       },
       "prevControl": {
-        "x": 3.803945526562872,
-        "y": 5.973014655718216
+        "x": 2.163835227272727,
+        "y": 6.991548295454545
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.74488129694228
+    "rotation": -120.80562775075731
   },
   "useDefaultConstraints": true
 }

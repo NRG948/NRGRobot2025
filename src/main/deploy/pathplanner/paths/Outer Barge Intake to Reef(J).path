@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.382660810132307,
-        "y": 6.245512099074496
+        "x": 1.9344886363636364,
+        "y": 7.709502840909091
       },
       "isLocked": false,
       "linkedName": "Outer Barge Intake"
@@ -20,8 +20,8 @@
         "y": 5.038556580997893
       },
       "prevControl": {
-        "x": 3.6163062913342214,
-        "y": 6.078767103280075
+        "x": 5.045624999999999,
+        "y": 5.655355113636364
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.74488129694228
+    "rotation": -120.80562775075731
   },
   "reversed": false,
   "folder": null,
