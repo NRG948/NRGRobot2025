@@ -12,7 +12,6 @@ import static frc.robot.parameters.MotorParameters.KrakenX60;
 import static frc.robot.parameters.MotorParameters.NeoV1_1;
 import static frc.robot.parameters.SwerveModuleParameters.MK4IFast;
 import static frc.robot.parameters.SwerveModuleParameters.MK4IFaster;
-import static frc.robot.parameters.SwerveModuleParameters.MK4Standard;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
@@ -32,40 +31,8 @@ import frc.robot.util.Pigeon2Gyro;
 
 /** An enum representing the properties for the swerve drive base of a specific robot instance. */
 public enum SwerveDriveParameters {
-
-  /**
-   * The 2022 competition robot using feedforward constants calculated from theoretical maximums.
-   */
-  RookieBase2023(
-      67.5853,
-      Units.inchesToMeters(22.729),
-      Units.inchesToMeters(19.39),
-      MK4Standard,
-      Falcon500,
-      NeoV1_1,
-      new int[] {2, 3, 4, 5, 6, 7, 8, 9}, // drive, steer motor controller CAN IDs
-      new int[] {12, 14, 16, 18}, // CANCoder CAN IDs
-      new double[] {144.23, 26.02, 201.18, 202.59},
-      0.15,
-      0.15,
-      false,
-      0),
-  PracticeBase2024(
-      24.2,
-      0.578,
-      0.528,
-      MK4IFast,
-      Falcon500,
-      NeoV1_1,
-      new int[] {6, 7, 19, 18, 8, 9, 13, 14}, // drive, steer motor controller CAN IDs
-      new int[] {31, 32, 33, 34}, // CANCoder CAN IDs
-      new double[] {186.5, 69.61, 172.62, 21.27},
-      0.15,
-      0.15,
-      false,
-      0),
   CompetitionBase2024(
-      58.5, // TODO: Find out real mass
+      58.5,
       Units.inchesToMeters(22.755), // .578m  (22.755)
       Units.inchesToMeters(20.59), // .523m (20.59)
       MK4IFaster,
