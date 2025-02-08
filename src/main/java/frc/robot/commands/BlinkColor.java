@@ -7,28 +7,31 @@
  
 package frc.robot.commands;
 
+import static frc.robot.parameters.Colors.BLACK;
+
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.parameters.Colors;
 import frc.robot.subsystems.LEDSubsystem;
 
-/** A command to blink the status LEDs green. */
-public class BlinkColor extends Command {
+/** A command to blink the status LEDs a specified color. */
+public final class BlinkColor extends Command {
   private static final double BLINK_TIME = 0.2;
 
   private final LEDSubsystem led;
-  private final Color8Bit color;
+  private final Colors color;
   private final double duration;
   private final Timer timer = new Timer();
   private boolean isOn;
 
   /** Creates a new BlinkColor. */
-  public BlinkColor(LEDSubsystem led, Color8Bit color, double duration) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public BlinkColor(LEDSubsystem led, Colors color, double duration) {
+    setName(String.format("BlinkColor(%s)", color.name()));
+
     this.led = led;
     this.color = color;
     this.duration = duration;
+
     addRequirements(led);
   }
 
@@ -47,7 +50,7 @@ public class BlinkColor extends Command {
 
     if (timer.advanceIfElapsed(BLINK_TIME)) {
       if (isOn) {
-        led.fillAndCommitColor(Constants.ColorConstants.BLACK);
+        led.fillAndCommitColor(BLACK);
       } else {
         led.fillAndCommitColor(color);
       }

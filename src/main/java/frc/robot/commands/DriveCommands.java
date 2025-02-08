@@ -7,6 +7,8 @@
  
 package frc.robot.commands;
 
+import static frc.robot.parameters.Colors.WHITE;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -20,7 +22,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
-import frc.robot.Constants.ColorConstants;
 import frc.robot.commands.AlignToReef.ReefBranch;
 import frc.robot.parameters.SwerveDriveParameters;
 import frc.robot.subsystems.Subsystems;
@@ -49,7 +50,7 @@ public final class DriveCommands {
   public static Command alignToBranch(Subsystems subsystems, ReefBranch branch) {
     return Commands.sequence(
             new AlignToReef(subsystems, branch),
-            new BlinkColor(subsystems.statusLEDs, ColorConstants.WHITE, 1).repeatedly())
+            new BlinkColor(subsystems.statusLEDs, WHITE, 1).repeatedly())
         .withName(String.format("AlignToReef(%s)", branch.name()));
   }
 

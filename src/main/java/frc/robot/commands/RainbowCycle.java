@@ -7,22 +7,24 @@
  
 package frc.robot.commands;
 
+import static frc.robot.parameters.Colors.BLACK;
+
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ColorConstants;
-import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.StatusLED;
 
 /** A command to display an animated rainbow cycle pattern on the status LEDs. */
-public class RainbowCycle extends Command {
+public final class RainbowCycle extends Command {
   private final StatusLED led;
+  private final int ledCount;
   private int step;
 
   /** Creates a new RainbowCycle. */
   public RainbowCycle(StatusLED led) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.led = led;
+    this.ledCount = led.getLEDCount();
     addRequirements(led);
   }
 
@@ -30,7 +32,7 @@ public class RainbowCycle extends Command {
   @Override
   public void initialize() {
     step = 0;
-    led.fillColor(ColorConstants.BLACK);
+    led.fillColor(BLACK);
     led.commitColor();
   }
 
@@ -38,7 +40,7 @@ public class RainbowCycle extends Command {
   @Override
   public void execute() {
     int firstPixelHue = step++ * 3;
-    for (int i = 0; i < RobotConstants.LED_COUNT; i++) {
+    for (int i = 0; i < ledCount; i++) {
       Color8Bit color =
           new Color8Bit(Color.fromHSV((firstPixelHue + ((180 * (i + 1)) / 21)) % 180, 255, 255));
       led.setColor(color, i);

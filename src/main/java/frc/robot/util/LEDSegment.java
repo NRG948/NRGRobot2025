@@ -11,13 +11,20 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.parameters.Colors;
 
-/** Add your docs here. */
-public class LEDSegment {
+/** A class representing a subsegment of an LED strip. */
+public final class LEDSegment {
 
-  private final int firstLED;
-  private final int ledCount;
-
+  /**
+   * Gamma Correction Table
+   *
+   * <p>Because humans do not perceive brightness linearly, this table is used to adjust the RGB
+   * color data output to the LEDs. It results in improved color perception.
+   *
+   * <p>See the article at https://www.cambridgeincolour.com/tutorials/gamma-correction.htm for more
+   * information.
+   */
   public static final int GAMMA_TABLE[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01,
@@ -41,6 +48,10 @@ public class LEDSegment {
       new AddressableLEDBuffer(RobotConstants.LED_COUNT);
   private static final AddressableLED leds = createAddressableLED(ledBuffer);
 
+  private final int firstLED;
+  private final int ledCount;
+
+  /** Creates and initializes the shared {@link AddressableLED} object. */
   private static AddressableLED createAddressableLED(AddressableLEDBuffer buffer) {
     AddressableLED led = new AddressableLED(RobotConstants.PWMPort.LED);
     led.setLength(RobotConstants.LED_COUNT);
@@ -49,23 +60,69 @@ public class LEDSegment {
     return led;
   }
 
+  /**
+   * Creates a new LEDSegment.
+   *
+   * @param firstLED the index of the first LED in the segment
+   * @param ledCount the number of LEDs in the segment
+   */
   public LEDSegment(int firstLED, int ledCount) {
     this.firstLED = firstLED;
     this.ledCount = ledCount;
   }
 
+  /**
+   * Gets the number of LEDs in the segment.
+   *
+   * @return The number of LEDs in the segment.
+   */
+  public int getLEDCount() {
+    return ledCount;
+  }
+
+  /**
+   * Fills the segment with the specified color.
+   *
+   * @param color The color to fill the segment with.
+   */
+  public void fill(Colors color) {
+    fill(color.getColor());
+  }
+
+  /**
+   * Fills the segment with the specified color.
+   *
+   * @param color The color to fill the segment with.
+   */
   public void fill(Color8Bit color) {
     for (int i = 0; i < ledCount; i++) {
       setColor(color, i + firstLED);
     }
   }
 
-  public void commitColor() {
-    leds.setData(ledBuffer);
+  /**
+   * Sets the color of the specified LED.
+   *
+   * @param color The color to set the LED to.
+   * @param index The index of the LED to set.
+   */
+  public void setColor(Colors color, int index) {
+    setColor(color.getColor(), index);
   }
 
+  /**
+   * Sets the color of the specified LED.
+   *
+   * @param color The color to set the LED to.
+   * @param index The index of the LED to set.
+   */
   public void setColor(Color8Bit color, int index) {
     ledBuffer.setRGB(
         index, GAMMA_TABLE[color.red], GAMMA_TABLE[color.green], GAMMA_TABLE[color.blue]);
+  }
+
+  /** Displays the current color data on the LED strip. */
+  public void commitColor() {
+    leds.setData(ledBuffer);
   }
 }

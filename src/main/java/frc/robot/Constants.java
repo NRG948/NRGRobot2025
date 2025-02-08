@@ -10,7 +10,6 @@ package frc.robot;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.commands.AlignToReef.ReefBranch;
 import java.util.HashMap;
 import java.util.Map;
@@ -112,22 +111,5 @@ public final class Constants {
 
     /** The rotational tolerance value for aligning to the reef. */
     public static final double REEF_ALIGNMENT_TOLERANCE_R = 1.0; // in deg
-  }
-
-  public static class ColorConstants {
-    public static final Color8Bit BLACK = new Color8Bit(0, 0, 0);
-    public static final Color8Bit WHITE = new Color8Bit(200, 200, 200);
-    public static final Color8Bit RED = new Color8Bit(255, 0, 0);
-    public static final Color8Bit ORANGE = new Color8Bit(255, 119, 0);
-    public static final Color8Bit YELLOW = new Color8Bit(255, 165, 0);
-    public static final Color8Bit GREEN = new Color8Bit(0, 204, 0);
-    public static final Color8Bit BLUE = new Color8Bit(0, 0, 204);
-    public static final Color8Bit PURPLE = new Color8Bit(238, 80, 255);
-    public static final Color8Bit PINK = new Color8Bit(255, 5, 100);
-    public static final Color8Bit LIGHTBLUE = new Color8Bit(56, 197, 252);
-
-    public static final Color8Bit COLORS[] = {
-      BLACK, WHITE, RED, ORANGE, YELLOW, GREEN, BLUE, LIGHTBLUE, PURPLE, PINK,
-    };
   }
 }

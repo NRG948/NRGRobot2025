@@ -7,11 +7,12 @@
  
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.ColorConstants.RED;
 import static frc.robot.Constants.RobotConstants.LEDSegment.STATUS_FIRST_LED;
 import static frc.robot.Constants.RobotConstants.LEDSegment.STATUS_LED_COUNT;
+import static frc.robot.parameters.Colors.RED;
 
-public class StatusLED extends LEDSubsystem {
+/** A subsystem to control the status LEDs. */
+public final class StatusLED extends LEDSubsystem {
   /** Creates a new StatusLEDSubsystem. */
   public StatusLED() {
     super(STATUS_FIRST_LED, STATUS_LED_COUNT);
@@ -22,6 +23,5 @@ public class StatusLED extends LEDSubsystem {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
   }
 }

@@ -7,10 +7,11 @@
  
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.util.Color8Bit;
+import static frc.robot.parameters.Colors.GREEN;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.ColorConstants;
+import frc.robot.parameters.Colors;
 import frc.robot.subsystems.StatusLED;
 import frc.robot.subsystems.Subsystems;
 
@@ -25,9 +26,9 @@ public final class LEDCommands {
    * @param color The color to set.
    * @return A command that sets the color of the status LED.
    */
-  public static Command setColor(StatusLED statusLED, Color8Bit color) {
+  public static Command setColor(StatusLED statusLED, Colors color) {
     return Commands.runOnce(() -> statusLED.fillAndCommitColor(color), statusLED)
-        .withName("SetColor");
+        .withName(String.format("SetColor(%s)", color.name()));
   }
 
   /**
@@ -40,8 +41,8 @@ public final class LEDCommands {
    */
   public static Command indicateCoralAcquired(Subsystems subsystem) {
     return Commands.sequence(
-            new BlinkColor(subsystem.statusLEDs, ColorConstants.GREEN, BLINK_DURATION),
-            setColor(subsystem.statusLEDs, ColorConstants.GREEN),
+            new BlinkColor(subsystem.statusLEDs, GREEN, BLINK_DURATION),
+            setColor(subsystem.statusLEDs, GREEN),
             Commands.idle(subsystem.statusLEDs).until(() -> !subsystem.coralRoller.hasCoral()))
         .withName("IndicateCoralAcquired");
   }
@@ -56,8 +57,8 @@ public final class LEDCommands {
    */
   public static Command indicateAlgaeAcquired(Subsystems subsystem) {
     return Commands.sequence(
-            new BlinkColor(subsystem.statusLEDs, ColorConstants.GREEN, BLINK_DURATION),
-            setColor(subsystem.statusLEDs, ColorConstants.GREEN),
+            new BlinkColor(subsystem.statusLEDs, GREEN, BLINK_DURATION),
+            setColor(subsystem.statusLEDs, GREEN),
             Commands.idle(subsystem.statusLEDs).until(() -> !subsystem.algaeGrabber.hasAlgae()))
         .withName("IndicateAlgaeAcquired");
   }

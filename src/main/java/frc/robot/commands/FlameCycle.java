@@ -7,18 +7,22 @@
  
 package frc.robot.commands;
 
+import static frc.robot.parameters.Colors.BLACK;
+import static frc.robot.parameters.Colors.RED;
+import static frc.robot.parameters.Colors.YELLOW;
+
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ColorConstants;
-import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.StatusLED;
 
 /** A command to display an animated flame pattern on the status LEDs. */
-public class FlameCycle extends Command {
+public final class FlameCycle extends Command {
+  private static final int RED_DIFF = RED.getRed() - YELLOW.getRed();
+  private static final int GREEN_DIFF = RED.getGreen() - YELLOW.getGreen();
+  private static final int BLUE_DIFF = RED.getBlue() - YELLOW.getBlue();
+
   private final StatusLED led;
-  private final int redDiff = ColorConstants.RED.red - ColorConstants.YELLOW.red;
-  private final int greenDiff = ColorConstants.RED.green - ColorConstants.YELLOW.green;
-  private final int blueDiff = ColorConstants.RED.blue - ColorConstants.YELLOW.blue;
+  private final int ledCount;
 
   private int step;
 
@@ -26,6 +30,7 @@ public class FlameCycle extends Command {
   public FlameCycle(StatusLED led) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.led = led;
+    this.ledCount = led.getLEDCount();
     addRequirements(led);
   }
 
@@ -33,25 +38,25 @@ public class FlameCycle extends Command {
   @Override
   public void initialize() {
     step = 0;
-    led.fillColor(ColorConstants.BLACK);
+    led.fillColor(BLACK);
     led.commitColor();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double multiplier = Math.sin(step++ * Math.toRadians(6)) * 0.5 + .5;
+    double multiplier = Math.sin(step++ * Math.toRadians(6)) * 0.5 + 0.5;
     Color8Bit color0 =
         new Color8Bit(
-            (int) (-(redDiff * multiplier) + ColorConstants.RED.red),
-            (int) (-(greenDiff * multiplier) + ColorConstants.RED.green),
-            (int) (-(blueDiff * multiplier) + ColorConstants.RED.blue));
+            (int) (-(RED_DIFF * multiplier) + RED.getRed()),
+            (int) (-(GREEN_DIFF * multiplier) + RED.getGreen()),
+            (int) (-(BLUE_DIFF * multiplier) + RED.getBlue()));
     Color8Bit color1 =
         new Color8Bit(
-            (int) (redDiff * multiplier + ColorConstants.YELLOW.red),
-            (int) (greenDiff * multiplier + ColorConstants.YELLOW.green),
-            (int) (blueDiff * multiplier + ColorConstants.YELLOW.blue));
-    for (int i = 0; i < RobotConstants.LED_COUNT; i++) {
+            (int) (RED_DIFF * multiplier + YELLOW.getRed()),
+            (int) (GREEN_DIFF * multiplier + YELLOW.getGreen()),
+            (int) (BLUE_DIFF * multiplier + YELLOW.getBlue()));
+    for (int i = 0; i < ledCount; i++) {
       Color8Bit color = ((i / 3) % 2) == 0 ? color0 : color1;
       led.setColor(color, i);
     }
