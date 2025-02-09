@@ -118,7 +118,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
   /** Updates and logs the current sensors states. */
   private void updateTelemetry() {
-    hasCoral = beamBreak.get();
+    hasCoral = !beamBreak.get();
     currentVelocity = motor.getVelocity().refresh().getValueAsDouble() * METERS_PER_REVOLUTION;
 
     logHasCoral.update(hasCoral);

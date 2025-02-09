@@ -148,7 +148,8 @@ public class Swerve extends SubsystemBase implements ShuffleboardProducer {
   private DoubleLogEntry poseYLog = new DoubleLogEntry(LOG, "/Swerve/Pose Y");
   private DoubleLogEntry poseAngleLog = new DoubleLogEntry(LOG, "/Swerve/Pose Angle");
   private DoubleLogEntry rawOrientationLog = new DoubleLogEntry(LOG, "/Swerve/rawOrientation");
-  private DoubleLogEntry rawOrientationOffsetLog = new DoubleLogEntry(LOG, "/Swerve/rawOrientationOffset");
+  private DoubleLogEntry rawOrientationOffsetLog =
+      new DoubleLogEntry(LOG, "/Swerve/rawOrientationOffset");
 
   /**
    * Creates a {@link SwerveModule} object and intiailizes its motor controllers.

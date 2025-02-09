@@ -127,8 +127,7 @@ public class SwerveModule {
 
     this.driveSpeedLog =
         new DoubleLogEntry(LOG, String.format("/SwerveModule/%s/driveSpeed", name));
-    this.positionLog =
-        new DoubleLogEntry(LOG, String.format("/SwerveModule/%s/position", name));
+    this.positionLog = new DoubleLogEntry(LOG, String.format("/SwerveModule/%s/position", name));
     this.wheelAngleLog =
         new DoubleLogEntry(LOG, String.format("/SwerveModule/%s/wheelAngle", name));
     this.wheelAngleVelocityLog =
