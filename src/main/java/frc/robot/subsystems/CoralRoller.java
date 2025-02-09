@@ -136,6 +136,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
         rollerTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
     statusLayout.addDouble("Goal Velocity", () -> goalVelocity);
     statusLayout.addDouble("Current Velocity", () -> currentVelocity);
+    statusLayout.addBoolean("Has Coral", () -> hasCoral);
 
     ShuffleboardLayout controlLayout =
         rollerTab.getLayout("Control", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
