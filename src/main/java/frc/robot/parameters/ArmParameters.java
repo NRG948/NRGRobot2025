@@ -19,8 +19,8 @@ public enum ArmParameters {
   CoralArm(
       MotorParameters.KrakenX60,
       1,
-      5 * 5 * 54 / 36,
-      1,
+      3 * 9 * 54 / 36,
+      1, // TODO: measure
       1,
       0.0656,
       RobotConstants.CAN.TalonFX.CORAL_ARM_MOTOR_ID,
@@ -65,12 +65,12 @@ public enum ArmParameters {
 
   /** The reading of the absolute encoder in radians at the designated 0 point of the mechanism. */
   private final double absoluteEncoderZeroOffset;
-  
+
   private double kS;
   private double kV;
   private double kA;
   private double kG;
-  
+
   /**
    * removed:
    *
@@ -78,9 +78,9 @@ public enum ArmParameters {
    * CGAngleOffset;
    */
   private ArmParameters(
-    MotorParameters motorParameters,
-    double mass,
-    double gearRatio,
+      MotorParameters motorParameters,
+      double mass,
+      double gearRatio,
       double armLength,
       double efficiency,
       double kS,
@@ -104,7 +104,7 @@ public enum ArmParameters {
     kA = (RobotConstants.MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAcceleration();
     kG = kA * 9.81;
   }
-  
+
   /** Returns the min angle of the arm in radians. */
   public double getMinAngleRad() {
     return minAngleRad;
@@ -119,7 +119,7 @@ public enum ArmParameters {
   public double getGearRatio() {
     return gearRatio;
   }
-  
+
   /** Returns the radians per revolution */
   public double getRadiansPerRevolution() {
     return (2 * Math.PI) / gearRatio;
