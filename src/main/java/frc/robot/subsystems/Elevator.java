@@ -17,6 +17,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -43,6 +44,8 @@ import java.util.Set;
 
 @RobotPreferencesLayout(groupName = "Elevator", row = 1, column = 0, width = 1, height = 2)
 public class Elevator extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
+  private static final DataLog LOG = DataLogManager.getLog();
+
   @RobotPreferencesValue
   public static RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("Elevator", "Enable Tab", false);
@@ -129,30 +132,18 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   /** pivotOffset starts from the goal height down. */
   private double pivotOffset = 0;
 
-  private BooleanLogEntry logIsSeekingGoal =
-      new BooleanLogEntry(DataLogManager.getLog(), "Elevator/isSeekingGoal");
-  private DoubleLogEntry logCurrentVelocity =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/currentVelocity");
-  private DoubleLogEntry logCurrentPosition =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/currentPosition");
-  private DoubleLogEntry logGoalVelocity =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/goalVelocity");
-  private DoubleLogEntry logGoalPosition =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/goalPosition");
-  private DoubleLogEntry logCurrentVoltage =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/currentVoltage");
-  private DoubleLogEntry logFeedForward =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/FeedForward");
-  private DoubleLogEntry logPIDOutput =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/pidOutput");
-  private BooleanLogEntry logAtUpperLimit =
-      new BooleanLogEntry(DataLogManager.getLog(), "Elevator/atUpperLimit");
-  private BooleanLogEntry logAtLowerLimit =
-      new BooleanLogEntry(DataLogManager.getLog(), "Elevator/atLowerLimit");
-  private DoubleLogEntry logDesiredPosition =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/desiredPosition");
-  private DoubleLogEntry logDesiredVelocity =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/desiredVelocity");
+  private BooleanLogEntry logIsSeekingGoal = new BooleanLogEntry(LOG, "Elevator/isSeekingGoal");
+  private DoubleLogEntry logCurrentVelocity = new DoubleLogEntry(LOG, "Elevator/currentVelocity");
+  private DoubleLogEntry logCurrentPosition = new DoubleLogEntry(LOG, "Elevator/currentPosition");
+  private DoubleLogEntry logGoalVelocity = new DoubleLogEntry(LOG, "Elevator/goalVelocity");
+  private DoubleLogEntry logGoalPosition = new DoubleLogEntry(LOG, "Elevator/goalPosition");
+  private DoubleLogEntry logCurrentVoltage = new DoubleLogEntry(LOG, "Elevator/currentVoltage");
+  private DoubleLogEntry logFeedForward = new DoubleLogEntry(LOG, "Elevator/FeedForward");
+  private DoubleLogEntry logPIDOutput = new DoubleLogEntry(LOG, "Elevator/pidOutput");
+  private BooleanLogEntry logAtUpperLimit = new BooleanLogEntry(LOG, "Elevator/atUpperLimit");
+  private BooleanLogEntry logAtLowerLimit = new BooleanLogEntry(LOG, "Elevator/atLowerLimit");
+  private DoubleLogEntry logDesiredPosition = new DoubleLogEntry(LOG, "Elevator/desiredPosition");
+  private DoubleLogEntry logDesiredVelocity = new DoubleLogEntry(LOG, "Elevator/desiredVelocity");
 
   /** Creates a new Elevator. */
   public Elevator() {

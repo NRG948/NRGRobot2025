@@ -34,6 +34,7 @@ import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -68,6 +69,8 @@ import java.util.function.Supplier;
     gridColumns = 3,
     gridRows = 2)
 public class Swerve extends SubsystemBase implements ShuffleboardProducer {
+  private static final DataLog LOG = DataLogManager.getLog();
+
   private static final Rotation2d ROTATE_180_DEGREES = Rotation2d.fromDegrees(180);
 
   @RobotPreferencesValue(column = 0, row = 0)
@@ -141,14 +144,11 @@ public class Swerve extends SubsystemBase implements ShuffleboardProducer {
   private Supplier<Optional<Rotation2d>> targetOrientationSupplier =
       () -> Optional.empty(); // absolute location to keep the robot oriented to tag
 
-  private DoubleLogEntry rawOrientationLog =
-      new DoubleLogEntry(DataLogManager.getLog(), "/Swerve/rawOrientation");
-  private DoubleLogEntry rawOrientationOffsetLog =
-      new DoubleLogEntry(DataLogManager.getLog(), "/Swerve/rawOrientationOffset");
-  private DoubleLogEntry poseXLog = new DoubleLogEntry(DataLogManager.getLog(), "/Swerve/Pose X");
-  private DoubleLogEntry poseYLog = new DoubleLogEntry(DataLogManager.getLog(), "/Swerve/Pose Y");
-  private DoubleLogEntry poseAngleLog =
-      new DoubleLogEntry(DataLogManager.getLog(), "/Swerve/Pose Angle");
+  private DoubleLogEntry poseXLog = new DoubleLogEntry(LOG, "/Swerve/Pose X");
+  private DoubleLogEntry poseYLog = new DoubleLogEntry(LOG, "/Swerve/Pose Y");
+  private DoubleLogEntry poseAngleLog = new DoubleLogEntry(LOG, "/Swerve/Pose Angle");
+  private DoubleLogEntry rawOrientationLog = new DoubleLogEntry(LOG, "/Swerve/rawOrientation");
+  private DoubleLogEntry rawOrientationOffsetLog = new DoubleLogEntry(LOG, "/Swerve/rawOrientationOffset");
 
   /**
    * Creates a {@link SwerveModule} object and intiailizes its motor controllers.

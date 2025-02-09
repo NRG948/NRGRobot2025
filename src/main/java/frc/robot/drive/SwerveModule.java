@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -46,6 +47,8 @@ import java.util.function.Supplier;
  * Introduction to DC Motor Feedforward</a> articles of the WPILib documentation.
  */
 public class SwerveModule {
+  private static final DataLog LOG = DataLogManager.getLog();
+
   private final MotorController driveMotor;
   private final DoubleSupplier positionSupplier;
   private final DoubleSupplier velocitySupplier;
@@ -123,29 +126,22 @@ public class SwerveModule {
     this.wheelDiameter = parameters.getSwerveModule().getWheelDiameter();
 
     this.driveSpeedLog =
-        new DoubleLogEntry(
-            DataLogManager.getLog(), String.format("/SwerveModule/%s/driveSpeed", name));
+        new DoubleLogEntry(LOG, String.format("/SwerveModule/%s/driveSpeed", name));
     this.positionLog =
-        new DoubleLogEntry(
-            DataLogManager.getLog(), String.format("/SwerveModule/%s/position", name));
+        new DoubleLogEntry(LOG, String.format("/SwerveModule/%s/position", name));
     this.wheelAngleLog =
-        new DoubleLogEntry(
-            DataLogManager.getLog(), String.format("/SwerveModule/%s/wheelAngle", name));
+        new DoubleLogEntry(LOG, String.format("/SwerveModule/%s/wheelAngle", name));
     this.wheelAngleVelocityLog =
-        new DoubleLogEntry(
-            DataLogManager.getLog(), String.format("/SwerveModule/%s/wheelAngleVelocity", name));
+        new DoubleLogEntry(LOG, String.format("/SwerveModule/%s/wheelAngleVelocity", name));
     this.stateVelocityLog =
-        new DoubleLogEntry(
-            DataLogManager.getLog(), String.format("/SwerveModule/%s/stateVelocity", name));
+        new DoubleLogEntry(LOG, String.format("/SwerveModule/%s/stateVelocity", name));
     this.stateWheelAngleLog =
-        new DoubleLogEntry(
-            DataLogManager.getLog(), String.format("/SwerveModule/%s/stateWheelAngle", name));
+        new DoubleLogEntry(LOG, String.format("/SwerveModule/%s/stateWheelAngle", name));
     this.driveVoltageLog =
-        new DoubleLogEntry(
-            DataLogManager.getLog(), String.format("/SwerveModule/%s/driveVoltage", name));
+        new DoubleLogEntry(LOG, String.format("/SwerveModule/%s/driveVoltage", name));
     this.steeringVoltageLog =
-        new DoubleLogEntry(
-            DataLogManager.getLog(), String.format("SwerveModule/%s/steeringVoltage", name));
+        new DoubleLogEntry(LOG, String.format("SwerveModule/%s/steeringVoltage", name));
+
     initializeSuppliedState();
 
     this.driveFeedForward =
