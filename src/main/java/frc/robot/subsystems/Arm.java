@@ -20,8 +20,6 @@ import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -40,13 +38,8 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
   private final double MIN_ANGLE;
   private final double MAX_ANGLE;
 
-  /** The angle of the absolute encoder in radians from the designated zero point. */
-  private final double absoluteEncoderOffset;
-
-  private final ArmParameters parameters;
   private final TalonFX motor;
   private final DutyCycleEncoder absoluteEncoder;
-  private final DutyCycle dutyCycle;
   private double currentAngle = 0;
   private double currentAbsoluteAngle = 0;
   private double currentVelocity = 0;
@@ -58,21 +51,19 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
   /** Creates a new Arm. */
   public Arm(ArmParameters parameters) {
     setName(parameters.toString());
-    this.parameters = parameters;
     rotationsPerRadians = parameters.getGearRatio() / (2 * Math.PI);
     MIN_ANGLE = parameters.getMinAngleRad();
     MAX_ANGLE = parameters.getMaxAngleRad();
 
-    TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
+    absoluteEncoder =
+        new DutyCycleEncoder(
+            parameters.getEncoderID(), 2 * Math.PI, parameters.getAbsoluteEncoderZeroOffset());
+    // to make the right side of robot to be positive z axis (right hand rule thumb)
+    absoluteEncoder.setInverted(true);
+    absoluteEncoder.setDutyCycleRange(1.0 / 1025.0, 1024.0 / 1025.0);
 
     motor = new TalonFX(parameters.getMotorID());
-    // absoluteEncoder = new DutyCycleEncoder(parameters.getEncoderID());
-    dutyCycle = new DutyCycle(new DigitalInput(parameters.getEncoderID()));
-    absoluteEncoder = new DutyCycleEncoder(dutyCycle);
-
-    absoluteEncoder.setInverted(
-        true); // to make the right side of robot to be positive z axis (right hand rule thumb)
-
+    TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
     MotorOutputConfigs motorOutputConfigs = talonFXConfigs.MotorOutput;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
     motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -94,26 +85,17 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
 
     motor.getConfigurator().apply(talonFXConfigs);
 
-    absoluteEncoder.setDutyCycleRange(1.0 / 1025.0, 1024.0 / 1025.0);
-    double currentDutyCycleReading = rawDutyCycle - parameters.getAbsoluteEncoderZeroOffset();
-    // adjust for rollover
-    absoluteEncoderOffset =
-        (2 * Math.PI)
-            * (currentDutyCycleReading < 0 ? 1 - currentDutyCycleReading : currentDutyCycleReading);
+    motor
+        .getConfigurator()
+        .setPosition((absoluteEncoder.get() * parameters.getGearRatio()) / (2 * Math.PI));
   }
 
   /** Updates the sensor state. */
   private void updateSensorState() {
-    currentAngle =
-        motor.getPosition().refresh().getValueAsDouble() / rotationsPerRadians
-            + absoluteEncoderOffset;
+    currentAngle = motor.getPosition().refresh().getValueAsDouble() / rotationsPerRadians;
     currentVelocity = motor.getVelocity().refresh().getValueAsDouble() / rotationsPerRadians;
     rawDutyCycle = absoluteEncoder.get();
-    double currentDutyCycleReading = rawDutyCycle - parameters.getAbsoluteEncoderZeroOffset();
-    // adjust for rollover
-    currentAbsoluteAngle =
-        (2 * Math.PI)
-            * (currentDutyCycleReading < 0 ? 1 - currentDutyCycleReading : currentDutyCycleReading);
+    currentAbsoluteAngle = rawDutyCycle;
   }
 
   /** Sets the goal angle in radians and enables periodic control. */
