@@ -7,6 +7,7 @@
  
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -22,6 +23,10 @@ import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.util.datalog.BooleanLogEntry;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -32,10 +37,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.ArmParameters;
 
 @RobotPreferencesLayout(groupName = "Arm", row = 0, column = 5, width = 1, height = 1)
-public class Arm extends SubsystemBase implements ShuffleboardProducer {
+public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   @RobotPreferencesValue
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("Arm", "Enable Tab", false);
+
+  private static final DataLog LOG = DataLogManager.getLog();
 
   private final double MIN_ANGLE;
   private final double MAX_ANGLE;
@@ -45,17 +52,20 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
   private double currentAngle = 0;
   private double currentAbsoluteAngle = 0;
   private double currentVelocity = 0;
-  private double rawDutyCycle = 0;
   private double goalAngle = 0;
   private boolean enabled;
-  private final double rotationsPerRadians;
 
   private MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
+
+  private DoubleLogEntry logCurrentAngle;
+  private DoubleLogEntry logCurrentAbsoluteAngle;
+  private DoubleLogEntry logCurrentVelocity;
+  private DoubleLogEntry logGoalAngle;
+  private BooleanLogEntry logEnabled;
 
   /** Creates a new Arm. */
   public Arm(ArmParameters parameters) {
     setName(parameters.toString());
-    rotationsPerRadians = parameters.getGearRatio() / (2 * Math.PI);
     MIN_ANGLE = parameters.getMinAngleRad();
     MAX_ANGLE = parameters.getMaxAngleRad();
 
@@ -71,36 +81,51 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     MotorOutputConfigs motorOutputConfigs = talonFXConfigs.MotorOutput;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
     motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    FeedbackConfigs feedbackConfigs = talonFXConfigs.Feedback;
+    feedbackConfigs.SensorToMechanismRatio = parameters.getGearRatio();
     // set slot 0 gains
     Slot0Configs slot0Configs = talonFXConfigs.Slot0;
     slot0Configs.kS = parameters.getkS();
     // Need to convert kV and kA from radians to rotations.
     slot0Configs.kV = parameters.getkV() * 2 * Math.PI;
     slot0Configs.kA = parameters.getkA() * 2 * Math.PI;
-    slot0Configs.kG = slot0Configs.kA * 9.81;
+    slot0Configs.kG = 0.9;
     slot0Configs.GravityType = GravityTypeValue.Arm_Cosine;
-    slot0Configs.kP = 0;
+    slot0Configs.kP = 80.0;
     slot0Configs.kI = 0;
     slot0Configs.kD = 0;
 
     // set Motion Magic Expo settings
     MotionMagicConfigs motionMagicConfigs = talonFXConfigs.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = 0;
-    motionMagicConfigs.MotionMagicExpo_kV = slot0Configs.kV;
-    motionMagicConfigs.MotionMagicExpo_kA = slot0Configs.kA;
+    motionMagicConfigs.MotionMagicCruiseVelocity =
+        0.3 * parameters.getMaxAngularSpeed() / (2 * Math.PI);
+    motionMagicConfigs.MotionMagicAcceleration =
+        0.3 * parameters.getMaxAngularAcceleration() / (2 * Math.PI);
 
     TalonFXConfigurator configurator = motor.getConfigurator();
 
     configurator.apply(talonFXConfigs);
-    configurator.setPosition(absoluteEncoder.get() * rotationsPerRadians);
+    configurator.setPosition(absoluteEncoder.get() / (2 * Math.PI));
+
+    logCurrentAngle =
+        new DoubleLogEntry(LOG, String.format("/%s/Current Angle", parameters.name()));
+    logCurrentAbsoluteAngle =
+        new DoubleLogEntry(LOG, String.format("/%s/Current Absolute Angle", parameters.name()));
+    logCurrentVelocity =
+        new DoubleLogEntry(LOG, String.format("/%s/Current Velocity", parameters.name()));
+    logGoalAngle = new DoubleLogEntry(LOG, String.format("/%s/Goal Angle", parameters.name()));
+    logEnabled = new BooleanLogEntry(LOG, String.format("/%s/Enabled", parameters.name()));
   }
 
   /** Updates the sensor state. */
   private void updateSensorState() {
-    currentAngle = motor.getPosition().refresh().getValueAsDouble() / rotationsPerRadians;
-    currentVelocity = motor.getVelocity().refresh().getValueAsDouble() / rotationsPerRadians;
-    rawDutyCycle = absoluteEncoder.get();
-    currentAbsoluteAngle = rawDutyCycle;
+    currentAngle = motor.getPosition().refresh().getValueAsDouble() * 2 * Math.PI;
+    currentVelocity = motor.getVelocity().refresh().getValueAsDouble() * 2 * Math.PI;
+    currentAbsoluteAngle = absoluteEncoder.get();
+
+    logCurrentAngle.append(currentAngle);
+    logCurrentVelocity.append(currentVelocity);
+    logCurrentAbsoluteAngle.append(currentAbsoluteAngle);
   }
 
   /** Sets the goal angle in radians and enables periodic control. */
@@ -109,7 +134,9 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     goalAngle = angle;
     enabled = true;
     // set target position to 100 rotations
-    motor.setControl(motionMagicRequest.withPosition(angle * rotationsPerRadians));
+    motor.setControl(motionMagicRequest.withPosition(angle / (2 * Math.PI)));
+    logGoalAngle.append(angle);
+    logEnabled.update(enabled);
   }
 
   /** Returns whether the coral arm is at goal angle. */
@@ -118,8 +145,10 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
   }
 
   /** Disables periodic control. */
+  @Override
   public void disable() {
     enabled = false;
+    logEnabled.update(enabled);
   }
 
   @Override
@@ -140,7 +169,6 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     statusLayout.addDouble("Current Angle of Motor Encoder", () -> Math.toDegrees(currentAngle));
     statusLayout.addDouble(
         "Current Angle of Absolute Encoder", () -> Math.toDegrees(currentAbsoluteAngle));
-    statusLayout.addDouble("Raw Duty Cycle Encoder Reading", () -> rawDutyCycle);
     statusLayout.addDouble("Goal Angle", () -> Math.toDegrees(goalAngle));
     statusLayout.addDouble("Current Velocity", () -> Math.toDegrees(currentVelocity));
 

@@ -18,9 +18,9 @@ public enum ArmParameters {
   // TODO: Update algae arm + coral arm enum values
   CoralArm(
       MotorParameters.KrakenX60,
-      1,
+      1.25,
       3 * 9 * 54 / 36,
-      1, // TODO: measure
+      0.315, // TODO: measure
       1,
       0.0656,
       RobotConstants.CAN.TalonFX.CORAL_ARM_MOTOR_ID,
