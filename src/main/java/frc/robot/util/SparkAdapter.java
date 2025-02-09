@@ -208,6 +208,15 @@ public class SparkAdapter implements MotorController {
   }
 
   @Override
+  public void setBrakeMode(boolean brakeMode) {
+    SparkBaseConfig config = spark.newConfig();
+
+    config.idleMode(brakeMode ? IdleMode.kBrake : IdleMode.kCoast);
+
+    spark.get().configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+  }
+
+  @Override
   public void disable() {
     spark.get().disable();
   }

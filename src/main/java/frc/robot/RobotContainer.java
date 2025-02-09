@@ -9,6 +9,8 @@ package frc.robot;
 
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
+
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,6 +30,7 @@ import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
+import javassist.compiler.ast.Symbol;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -48,6 +51,7 @@ public class RobotContainer {
 
   private final CommandXboxController m_manipulatorController =
       new CommandXboxController(OperatorConstants.MANIPULATOR_CONTROLLER_PORT);
+  private Timer coastModeTimer = new Timer();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -64,6 +68,20 @@ public class RobotContainer {
 
   public void disabledInit() {
     subsystems.disable();
+    coastModeTimer.restart();
+    subsystems.algaeArm.disable();
+    subsystems.algaeGrabber.disable();
+    subsystems.climber.disable();
+    subsystems.coralArm.disable();
+    subsystems.drivetrain.disableAutoOrientation();
+    subsystems.elevator.disable();
+  }
+  
+  public void disabledPeriodic() {
+    if (coastModeTimer.advanceIfElapsed(3)) {
+      subsystems.drivetrain.setBrakeMode(false);
+      coastModeTimer.stop();
+    }
   }
 
   private void initShuffleboard() {

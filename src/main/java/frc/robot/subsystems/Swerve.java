@@ -9,9 +9,12 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.HolonomicDriveController;
@@ -492,6 +495,18 @@ public class Swerve extends SubsystemBase implements ShuffleboardProducer {
     poseXLog.append(robotPose.getX());
     poseYLog.append(robotPose.getY());
     poseAngleLog.append(robotPose.getRotation().getDegrees());
+  }
+  
+  public void setBrakeMode(boolean brakeMode) {
+    frontLeftDriveMotor.setBrakeMode(brakeMode);
+    frontRightDriveMotor.setBrakeMode(brakeMode);
+    backLeftDriveMotor.setBrakeMode(brakeMode);
+    backRightDriveMotor.setBrakeMode(brakeMode);
+
+    frontLeftSteeringMotor.setBrakeMode(brakeMode);
+    frontRightSteeringMotor.setBrakeMode(brakeMode);
+    backLeftSteeringMotor.setBrakeMode(brakeMode);
+    backRightSteeringMotor.setBrakeMode(brakeMode);
   }
 
   /** Adds a tab for swerve drive in Shuffleboard. */
