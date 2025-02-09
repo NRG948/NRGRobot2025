@@ -50,7 +50,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   // physical parameters of the elevator
   private static final double GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
   private static final double SPROCKET_DIAMETER = 0.05; // 5 cm
-  private static final double MASS = 1.5; // kilograms
+  private static final double MASS = 3; // kilograms
   private static final double METERS_PER_REVOLUTION = (SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO;
 
   private static final double MAX_HEIGHT = 1.42;
@@ -65,7 +65,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       (2 * MOTOR_PARAMS.stallTorqueNewtonMeters * GEAR_RATIO)
           / (SPROCKET_DIAMETER * MASS); // m/s^2 for two motors
   private static final TrapezoidProfile.Constraints CONSTRAINTS =
-      new TrapezoidProfile.Constraints(MAX_SPEED / 2, MAX_ACCELERATION / 8);
+      new TrapezoidProfile.Constraints(MAX_SPEED / 2, MAX_ACCELERATION / 16);
 
   // feedforward constants
   /*
