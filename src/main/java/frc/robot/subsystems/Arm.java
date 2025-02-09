@@ -18,9 +18,10 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -30,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.ArmParameters;
 
-@RobotPreferencesLayout(groupName = "Arm", row = 5, column = 0, width = 1, height = 1)
+@RobotPreferencesLayout(groupName = "Arm", row = 0, column = 5, width = 1, height = 1)
 public class Arm extends SubsystemBase implements ShuffleboardProducer {
   @RobotPreferencesValue
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
@@ -45,9 +46,11 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
   private final ArmParameters parameters;
   private final TalonFX motor;
   private final DutyCycleEncoder absoluteEncoder;
+  private final DutyCycle dutyCycle;
   private double currentAngle = 0;
   private double currentAbsoluteAngle = 0;
   private double currentVelocity = 0;
+  private double rawDutyCycle = 0;
   private double goalAngle = 0;
   private boolean enabled;
   private final double rotationsPerRadians;
@@ -63,11 +66,16 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
 
     motor = new TalonFX(parameters.getMotorID());
-    absoluteEncoder = new DutyCycleEncoder(parameters.getEncoderID());
+    // absoluteEncoder = new DutyCycleEncoder(parameters.getEncoderID());
+    dutyCycle = new DutyCycle(new DigitalInput(parameters.getEncoderID()));
+    absoluteEncoder = new DutyCycleEncoder(dutyCycle);
+
+    absoluteEncoder.setInverted(
+        true); // to make the right side of robot to be positive z axis (right hand rule thumb)
 
     MotorOutputConfigs motorOutputConfigs = talonFXConfigs.MotorOutput;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+    motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
     // set slot 0 gains
     Slot0Configs slot0Configs = talonFXConfigs.Slot0;
     slot0Configs.kS = parameters.getkS();
@@ -87,8 +95,11 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     motor.getConfigurator().apply(talonFXConfigs);
 
     absoluteEncoder.setDutyCycleRange(1.0 / 1025.0, 1024.0 / 1025.0);
+    double currentDutyCycleReading = rawDutyCycle - parameters.getAbsoluteEncoderZeroOffset();
+    // adjust for rollover
     absoluteEncoderOffset =
-        absoluteEncoder.get() * (2 * Math.PI) - parameters.getAbsoluteEncoderZeroOffset();
+        (2 * Math.PI)
+            * (currentDutyCycleReading < 0 ? 1 - currentDutyCycleReading : currentDutyCycleReading);
   }
 
   /** Updates the sensor state. */
@@ -97,8 +108,12 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
         motor.getPosition().refresh().getValueAsDouble() / rotationsPerRadians
             + absoluteEncoderOffset;
     currentVelocity = motor.getVelocity().refresh().getValueAsDouble() / rotationsPerRadians;
+    rawDutyCycle = absoluteEncoder.get();
+    double currentDutyCycleReading = rawDutyCycle - parameters.getAbsoluteEncoderZeroOffset();
+    // adjust for rollover
     currentAbsoluteAngle =
-        absoluteEncoder.get() * (2 * Math.PI) - parameters.getAbsoluteEncoderZeroOffset();
+        (2 * Math.PI)
+            * (currentDutyCycleReading < 0 ? 1 - currentDutyCycleReading : currentDutyCycleReading);
   }
 
   /** Sets the goal angle in radians and enables periodic control. */
@@ -139,6 +154,7 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     statusLayout.addDouble("Current Angle of Motor Encoder", () -> Math.toDegrees(currentAngle));
     statusLayout.addDouble(
         "Current Angle of Absolute Encoder", () -> Math.toDegrees(currentAbsoluteAngle));
+    statusLayout.addDouble("Raw Duty Cycle Encoder Reading", () -> rawDutyCycle);
     statusLayout.addDouble("Goal Angle", () -> Math.toDegrees(goalAngle));
     statusLayout.addDouble("Current Velocity", () -> Math.toDegrees(currentVelocity));
     ShuffleboardLayout controlLayout =

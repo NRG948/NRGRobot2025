@@ -25,7 +25,7 @@ public enum ArmParameters {
       0.0656,
       RobotConstants.CAN.TalonFX.CORAL_ARM_MOTOR_ID,
       RobotConstants.DigitalIO.CORAL_ARM_ABSOLUTE_ENCODER,
-      0, // TODO: get real encoder offset
+      0.904, // TODO: get real encoder offset
       Math.toRadians(10),
       Math.toRadians(90)),
   AlgaeArm(
@@ -63,7 +63,10 @@ public enum ArmParameters {
   private final double minAngleRad;
   private final double maxAngleRad;
 
-  /** The reading of the absolute encoder in radians at the designated 0 point of the mechanism. */
+  /**
+   * The reading of the absolute encoder in rotations (duty cycle input; 0-1) at the designated 0
+   * point of the mechanism.
+   */
   private final double absoluteEncoderZeroOffset;
 
   private double kS;
