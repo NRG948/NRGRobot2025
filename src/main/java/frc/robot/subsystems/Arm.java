@@ -11,8 +11,10 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.nrg948.preferences.RobotPreferences;
@@ -48,6 +50,8 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
   private boolean enabled;
   private final double rotationsPerRadians;
 
+  private MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
+
   /** Creates a new Arm. */
   public Arm(ArmParameters parameters) {
     setName(parameters.toString());
@@ -62,7 +66,7 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     absoluteEncoder.setInverted(true);
     absoluteEncoder.setDutyCycleRange(1.0 / 1025.0, 1024.0 / 1025.0);
 
-    motor = new TalonFX(parameters.getMotorID());
+    motor = new TalonFX(parameters.getMotorID(), "rio");
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
     MotorOutputConfigs motorOutputConfigs = talonFXConfigs.MotorOutput;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
@@ -70,9 +74,11 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     // set slot 0 gains
     Slot0Configs slot0Configs = talonFXConfigs.Slot0;
     slot0Configs.kS = parameters.getkS();
-    /** Need to convert kV and kA from radians to rotations. */
+    // Need to convert kV and kA from radians to rotations.
     slot0Configs.kV = parameters.getkV() * 2 * Math.PI;
     slot0Configs.kA = parameters.getkA() * 2 * Math.PI;
+    slot0Configs.kG = slot0Configs.kA * 9.81;
+    slot0Configs.GravityType = GravityTypeValue.Arm_Cosine;
     slot0Configs.kP = 0;
     slot0Configs.kI = 0;
     slot0Configs.kD = 0;
@@ -83,11 +89,10 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     motionMagicConfigs.MotionMagicExpo_kV = slot0Configs.kV;
     motionMagicConfigs.MotionMagicExpo_kA = slot0Configs.kA;
 
-    motor.getConfigurator().apply(talonFXConfigs);
+    TalonFXConfigurator configurator = motor.getConfigurator();
 
-    motor
-        .getConfigurator()
-        .setPosition((absoluteEncoder.get() * parameters.getGearRatio()) / (2 * Math.PI));
+    configurator.apply(talonFXConfigs);
+    configurator.setPosition(absoluteEncoder.get() * rotationsPerRadians);
   }
 
   /** Updates the sensor state. */
@@ -103,10 +108,8 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     angle = MathUtil.clamp(angle, MIN_ANGLE, MAX_ANGLE);
     goalAngle = angle;
     enabled = true;
-    // create a Motion Magic request, voltage output
-    final MotionMagicVoltage request = new MotionMagicVoltage(0);
     // set target position to 100 rotations
-    motor.setControl(request.withPosition(angle * rotationsPerRadians));
+    motor.setControl(motionMagicRequest.withPosition(angle * rotationsPerRadians));
   }
 
   /** Returns whether the coral arm is at goal angle. */
@@ -130,6 +133,7 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
       return;
     }
     ShuffleboardTab armTab = Shuffleboard.getTab(getName());
+
     ShuffleboardLayout statusLayout =
         armTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
     statusLayout.addBoolean("Enabled", () -> enabled);
@@ -139,6 +143,7 @@ public class Arm extends SubsystemBase implements ShuffleboardProducer {
     statusLayout.addDouble("Raw Duty Cycle Encoder Reading", () -> rawDutyCycle);
     statusLayout.addDouble("Goal Angle", () -> Math.toDegrees(goalAngle));
     statusLayout.addDouble("Current Velocity", () -> Math.toDegrees(currentVelocity));
+
     ShuffleboardLayout controlLayout =
         armTab.getLayout("Control", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
     GenericEntry angle = controlLayout.add("Angle", 0).getEntry();
