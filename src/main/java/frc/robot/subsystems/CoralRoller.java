@@ -87,12 +87,12 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
   /** Intakes the coral. */
   public void intake() {
-    setGoalVelocity(0.05); // TODO: test & determine safe maximum speed
+    setGoalVelocity(0.6);
   }
 
   /** Outakes the coral. */
   public void outtake() {
-    setGoalVelocity(-0.05);
+    setGoalVelocity(2.0);
   }
 
   /** Disables the subsystem. */
