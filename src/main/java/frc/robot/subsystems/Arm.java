@@ -72,8 +72,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     absoluteEncoder =
         new DutyCycleEncoder(
             parameters.getEncoderID(), 2 * Math.PI, parameters.getAbsoluteEncoderZeroOffset());
-    // to make the right side of robot to be positive z axis (right hand rule thumb)
-    absoluteEncoder.setInverted(true);
+    absoluteEncoder.setInverted(parameters.isAbsoluteEncoderInverted());
     absoluteEncoder.setDutyCycleRange(1.0 / 1025.0, 1024.0 / 1025.0);
 
     motor = new TalonFX(parameters.getMotorID(), "rio");
@@ -95,7 +94,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     slot0Configs.kI = 0;
     slot0Configs.kD = 0;
 
-    // set Motion Magic Expo settings
+    // set Motion Magic settings
     MotionMagicConfigs motionMagicConfigs = talonFXConfigs.MotionMagic;
     motionMagicConfigs.MotionMagicCruiseVelocity =
         0.3 * parameters.getMaxAngularSpeed() / (2 * Math.PI);
