@@ -9,7 +9,9 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_ROLLER_BEAM_BREAK;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
@@ -70,8 +72,12 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private DoubleLogEntry logVoltage =
       new DoubleLogEntry(DataLogManager.getLog(), "/CoralRoller/voltage");
 
-  /** Creates a new AlgaeGrabber. */
-  public CoralRoller() {}
+  /** Creates a new CoralRoller. */
+  public CoralRoller() {
+    MotorOutputConfigs motorConfig = new MotorOutputConfigs();
+    motorConfig.Inverted = InvertedValue.Clockwise_Positive;
+    motor.getConfigurator().apply(motorConfig);
+  }
 
   /** Sets the goal velocity in meters per second. */
   private void setGoalVelocity(double velocity) {
@@ -146,7 +152,13 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
                 Commands.runOnce(() -> goalVelocity = speed.getDouble(0), this),
                 Commands.idle(this).until(this::hasCoral),
                 Commands.runOnce(this::disable, this))
-            .withName("Set Speed"));
+            .withName("Intake"));
+    controlLayout.add(
+        Commands.sequence(
+                Commands.runOnce(() -> goalVelocity = speed.getDouble(0), this),
+                Commands.idle(this).until(() -> !hasCoral),
+                Commands.runOnce(this::disable, this))
+            .withName("Deliver"));
     controlLayout.add(Commands.runOnce(this::disable, this).withName("Disable"));
   }
 }
