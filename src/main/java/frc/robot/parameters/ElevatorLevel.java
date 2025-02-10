@@ -11,11 +11,14 @@ import frc.robot.subsystems.Elevator;
 
 public enum ElevatorLevel {
   // TODO change pivotOffsets
-  STOWED(Elevator.MIN_HEIGHT, 0, 0), // TO-DO: Determine correct values for height and pivot angles
-  L1(0, 0, .2),
+  STOWED(
+      Elevator.MIN_HEIGHT,
+      Math.toRadians(90),
+      0), // TO-DO: Determine correct values for height and pivot angles
+  L1(0.375, Math.toRadians(60), .2),
   L2(0, 0, .2),
   L3(0, 0, .2),
-  L4(0, 0, .2),
+  L4(1.4, Math.toRadians(60), .2),
 
   AlgaeL2(
       1.5, 0, .2), // TO-DO: Determine correct values for height and pivot angles (algae removal)
