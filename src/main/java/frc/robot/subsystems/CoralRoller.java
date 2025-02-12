@@ -7,8 +7,10 @@
  
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_ROLLER_BEAM_BREAK;
+import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_ROLLER_LASERCAN;
 
+import au.grapplerobotics.ConfigurationFailedException;
+import au.grapplerobotics.LaserCan;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -22,7 +24,6 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -50,7 +51,10 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private static final double KV = (RobotConstants.MAX_BATTERY_VOLTAGE - KS) / MAX_VELOCITY;
 
   private final TalonFX motor = new TalonFX(RobotConstants.CAN.TalonFX.CORAL_ROLLER_MOTOR_ID);
-  private DigitalInput beamBreak = new DigitalInput(CORAL_ROLLER_BEAM_BREAK);
+  private LaserCan laserCAN = new LaserCan(CORAL_ROLLER_LASERCAN);
+
+  /** Distance measure in millimeters of CoralRoller when its empty. */
+  private int clearRollerDistance = 50; // TODO Fix distance
 
   private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(KS, KV);
   private final PIDController pidController = new PIDController(1, 0, 0);
@@ -77,6 +81,15 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
     MotorOutputConfigs motorConfig = new MotorOutputConfigs();
     motorConfig.Inverted = InvertedValue.Clockwise_Positive;
     motor.getConfigurator().apply(motorConfig);
+
+    try {
+      laserCAN.setRangingMode(LaserCan.RangingMode.SHORT);
+      laserCAN.setRegionOfInterest(
+          new LaserCan.RegionOfInterest(8, 8, 16, 16)); // Makes detection region a box
+      laserCAN.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
+    } catch (ConfigurationFailedException e) {
+      System.out.println("Configuration failed! " + e);
+    }
   }
 
   /** Sets the goal velocity in meters per second. */
@@ -124,7 +137,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
   /** Updates and logs the current sensors states. */
   private void updateTelemetry() {
-    hasCoral = !beamBreak.get();
+    hasCoral = laserCAN.getMeasurement().distance_mm < clearRollerDistance ? true : false;
     currentVelocity = motor.getVelocity().refresh().getValueAsDouble() * METERS_PER_REVOLUTION;
 
     logHasCoral.update(hasCoral);
