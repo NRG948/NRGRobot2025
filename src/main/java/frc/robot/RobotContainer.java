@@ -7,6 +7,7 @@
  
 package frc.robot;
 
+import au.grapplerobotics.CanBridge;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -51,6 +52,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    CanBridge.runTCP();
     initShuffleboard();
 
     subsystems.drivetrain.setDefaultCommand(

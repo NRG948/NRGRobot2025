@@ -82,6 +82,7 @@ public final class Constants {
     /** Digital I/O port numbers. */
     public static class DigitalIO {
       public static final int CORAL_ROLLER_BEAM_BREAK = 9;
+      public static final int CORAL_ROLLER_LASERCAN = 0;
       public static final int CORAL_ARM_ABSOLUTE_ENCODER = 0;
       public static final int ALGAE_ARM_ABSOLUTE_ENCODER = 2;
       public static final int CLIMBER_ABSOLUTE_ENCODER = 3;
