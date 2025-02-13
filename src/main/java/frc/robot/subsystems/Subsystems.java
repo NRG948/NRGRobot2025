@@ -31,7 +31,7 @@ public class Subsystems {
   public final Arm algaeArm = new Arm(ArmParameters.AlgaeArm);
   public final AlgaeGrabber algaeGrabber = new AlgaeGrabber();
 
-  public final Arm climber = new Arm(ArmParameters.Climber);
+  public final Climber climber = new Climber();
 
   public final StatusLED statusLEDs = new StatusLED();
 
