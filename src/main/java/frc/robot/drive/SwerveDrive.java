@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -26,6 +27,8 @@ import java.util.function.Supplier;
 
 /** SwerveDrive implements swerve drive control. */
 public class SwerveDrive extends RobotDriveBase {
+  private static final DataLog LOG = DataLogManager.getLog();
+
   private static final ChassisSpeeds ZERO_SPEEDS = new ChassisSpeeds();
 
   private final SwerveModule[] modules;
@@ -38,12 +41,9 @@ public class SwerveDrive extends RobotDriveBase {
   // The current supplied state updated by the periodic method.
   private Rotation2d orientation;
 
-  private DoubleLogEntry xSpeedLog =
-      new DoubleLogEntry(DataLogManager.getLog(), "/SwerveDrive/xSpeed");
-  private DoubleLogEntry ySpeedLog =
-      new DoubleLogEntry(DataLogManager.getLog(), "/SwerveDrive/ySpeed");
-  private DoubleLogEntry omegaSpeedLog =
-      new DoubleLogEntry(DataLogManager.getLog(), "/SwerveDrive/omegaSpeed");
+  private final DoubleLogEntry xSpeedLog = new DoubleLogEntry(LOG, "/SwerveDrive/xSpeed");
+  private final DoubleLogEntry ySpeedLog = new DoubleLogEntry(LOG, "/SwerveDrive/ySpeed");
+  private final DoubleLogEntry omegaSpeedLog = new DoubleLogEntry(LOG, "/SwerveDrive/omegaSpeed");
 
   private final SwerveModuleState[] moduleStates = new SwerveModuleState[4];
   private final SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];

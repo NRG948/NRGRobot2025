@@ -20,6 +20,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -38,6 +39,8 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   @RobotPreferencesValue
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("CoralRoller", "Enable Tab", false);
+
+  private static final DataLog LOG = DataLogManager.getLog();
 
   private static final double WHEEL_DIAMETER = Units.inchesToMeters(3);
   private static final double GEAR_RATIO = 27;
@@ -59,18 +62,13 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private double currentVelocity = 0;
   private boolean hasCoral = false;
 
-  private DoubleLogEntry logGoalVelocity =
-      new DoubleLogEntry(DataLogManager.getLog(), "/CoralRoller/goalVelocity");
   private DoubleLogEntry logCurrentVelocity =
-      new DoubleLogEntry(DataLogManager.getLog(), "/CoralRoller/currentVelocity");
-  private BooleanLogEntry logHasCoral =
-      new BooleanLogEntry(DataLogManager.getLog(), "/CoralRoller/hasCoral");
-  private DoubleLogEntry logFeedForward =
-      new DoubleLogEntry(DataLogManager.getLog(), "/CoralRoller/feedforward");
-  private DoubleLogEntry logFeedBack =
-      new DoubleLogEntry(DataLogManager.getLog(), "/CoralRoller/feedback");
-  private DoubleLogEntry logVoltage =
-      new DoubleLogEntry(DataLogManager.getLog(), "/CoralRoller/voltage");
+      new DoubleLogEntry(LOG, "/CoralRoller/currentVelocity");
+  private DoubleLogEntry logGoalVelocity = new DoubleLogEntry(LOG, "/CoralRoller/goalVelocity");
+  private BooleanLogEntry logHasCoral = new BooleanLogEntry(LOG, "/CoralRoller/hasCoral");
+  private DoubleLogEntry logFeedForward = new DoubleLogEntry(LOG, "/CoralRoller/feedforward");
+  private DoubleLogEntry logFeedBack = new DoubleLogEntry(LOG, "/CoralRoller/feedback");
+  private DoubleLogEntry logVoltage = new DoubleLogEntry(LOG, "/CoralRoller/voltage");
 
   /** Creates a new CoralRoller. */
   public CoralRoller() {
