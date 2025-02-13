@@ -31,6 +31,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -44,7 +45,9 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.DriveStraight;
 import frc.robot.drive.SwerveDrive;
 import frc.robot.drive.SwerveModule;
 import frc.robot.parameters.SwerveAngleEncoder;
@@ -57,6 +60,7 @@ import frc.robot.util.SwerveModuleVelocities;
 import frc.robot.util.SwerveModuleVoltages;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 @RobotPreferencesLayout(
@@ -569,6 +573,17 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
           .addDouble("est. angle", () -> lastVisionMeasurement.getRotation().getDegrees())
           .withPosition(2, 1)
           .withWidget(BuiltInWidgets.kTextView);
+      ShuffleboardLayout driveStraight =
+          swerveDriveTab
+              .getLayout("Drive Straight", BuiltInLayouts.kList)
+              .withPosition(0, 4)
+              .withSize(4, 2);
+      GenericEntry distance = driveStraight.add("Distance", 0).getEntry();
+      driveStraight.add(
+          Commands.defer(
+                  () -> new DriveStraight(this, distance.getDouble(0), Swerve.getMaxSpeed() / 2),
+                  Set.of(this))
+              .withName("Drive Straight"));
     }
   }
 }

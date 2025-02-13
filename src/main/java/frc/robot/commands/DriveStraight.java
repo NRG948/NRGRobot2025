@@ -18,7 +18,6 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
 import java.util.function.Supplier;
 
@@ -58,12 +57,12 @@ public class DriveStraight extends Command {
    * @param translation A {@link Translation2d} instance describing the line on which to travel.
    *     This is a vector relative to the current position.
    */
-  public DriveStraight(Subsystems subsystems, Translation2d translation) {
+  public DriveStraight(Swerve drivetrain, Translation2d translation) {
     this(
-        subsystems.drivetrain,
+        drivetrain,
         () -> translation,
         Swerve.getMaxSpeed(),
-        () -> subsystems.drivetrain.getPosition().getRotation());
+        () -> drivetrain.getPosition().getRotation());
   }
 
   /**
@@ -109,6 +108,10 @@ public class DriveStraight extends Command {
         () -> position.getTranslation().minus(drivetrain.getPosition().getTranslation()),
         maxSpeed,
         () -> position.getRotation());
+  }
+
+  public DriveStraight(Swerve drivetrain, double distance, double maxSpeed) {
+    this(drivetrain, new Translation2d(distance, 0), maxSpeed, drivetrain.getOrientation());
   }
 
   /**
