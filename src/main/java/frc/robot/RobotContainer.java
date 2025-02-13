@@ -71,10 +71,18 @@ public class RobotContainer {
   }
 
   public void disabledPeriodic() {
-    if (coastModeTimer.advanceIfElapsed(3)) {
+    if (coastModeTimer.hasElapsed(3)) {
       subsystems.drivetrain.setBrakeMode(false);
       coastModeTimer.stop();
     }
+  }
+
+  public void autonomousInit() {
+    subsystems.drivetrain.setBrakeMode(true);
+  }
+
+  public void teleopInit() {
+    subsystems.drivetrain.setBrakeMode(true);
   }
 
   private void initShuffleboard() {
