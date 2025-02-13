@@ -22,7 +22,13 @@ public enum VisionParameters {
               new Rotation3d(0, Math.toRadians(21.5), 0))),
       Optional.empty()),
   PracticeBase2025(
-      Optional.empty(),
+      Optional.of(
+          new Transform3d(
+              new Translation3d(
+                  Units.inchesToMeters(14.25),
+                  Units.inchesToMeters(-9.5625),
+                  Units.inchesToMeters(12)),
+              new Rotation3d())),
       Optional.of(
           new Transform3d(
               new Translation3d(

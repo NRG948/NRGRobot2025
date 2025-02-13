@@ -8,11 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.639889765043909,
-        "y": 4.891518701971364
+        "x": 6.401303047739043,
+        "y": 5.078305803286339
       },
       "isLocked": false,
-      "linkedName": "Blue Barge Start"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 4.882120901639344
       },
       "prevControl": {
-        "x": 6.546633574894687,
-        "y": 4.781487229823713
+        "x": 6.024175708912036,
+        "y": 5.144802517361111
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.10668705589302
+    "rotation": 179.91859963230868
   },
   "useDefaultConstraints": true
 }

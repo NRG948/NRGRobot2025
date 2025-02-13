@@ -9,7 +9,9 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_ROLLER_BEAM_BREAK;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
@@ -70,8 +72,12 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private DoubleLogEntry logVoltage =
       new DoubleLogEntry(DataLogManager.getLog(), "/CoralRoller/voltage");
 
-  /** Creates a new AlgaeGrabber. */
-  public CoralRoller() {}
+  /** Creates a new CoralRoller. */
+  public CoralRoller() {
+    MotorOutputConfigs motorConfig = new MotorOutputConfigs();
+    motorConfig.Inverted = InvertedValue.Clockwise_Positive;
+    motor.getConfigurator().apply(motorConfig);
+  }
 
   /** Sets the goal velocity in meters per second. */
   private void setGoalVelocity(double velocity) {
@@ -81,12 +87,12 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
   /** Intakes the coral. */
   public void intake() {
-    setGoalVelocity(0.05); // TODO: test & determine safe maximum speed
+    setGoalVelocity(0.6);
   }
 
   /** Outakes the coral. */
   public void outtake() {
-    setGoalVelocity(-0.05);
+    setGoalVelocity(2.0);
   }
 
   /** Disables the subsystem. */
@@ -118,7 +124,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
   /** Updates and logs the current sensors states. */
   private void updateTelemetry() {
-    hasCoral = beamBreak.get();
+    hasCoral = !beamBreak.get();
     currentVelocity = motor.getVelocity().refresh().getValueAsDouble() * METERS_PER_REVOLUTION;
 
     logHasCoral.update(hasCoral);
@@ -136,6 +142,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
         rollerTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
     statusLayout.addDouble("Goal Velocity", () -> goalVelocity);
     statusLayout.addDouble("Current Velocity", () -> currentVelocity);
+    statusLayout.addBoolean("Has Coral", () -> hasCoral);
 
     ShuffleboardLayout controlLayout =
         rollerTab.getLayout("Control", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
@@ -145,7 +152,13 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
                 Commands.runOnce(() -> goalVelocity = speed.getDouble(0), this),
                 Commands.idle(this).until(this::hasCoral),
                 Commands.runOnce(this::disable, this))
-            .withName("Set Speed"));
+            .withName("Intake"));
+    controlLayout.add(
+        Commands.sequence(
+                Commands.runOnce(() -> goalVelocity = speed.getDouble(0), this),
+                Commands.idle(this).until(() -> !hasCoral),
+                Commands.runOnce(this::disable, this))
+            .withName("Deliver"));
     controlLayout.add(Commands.runOnce(this::disable, this).withName("Disable"));
   }
 }

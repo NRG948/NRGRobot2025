@@ -17,6 +17,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -43,6 +44,8 @@ import java.util.Set;
 
 @RobotPreferencesLayout(groupName = "Elevator", row = 1, column = 0, width = 1, height = 2)
 public class Elevator extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
+  private static final DataLog LOG = DataLogManager.getLog();
+
   @RobotPreferencesValue
   public static RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("Elevator", "Enable Tab", false);
@@ -50,7 +53,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   // physical parameters of the elevator
   private static final double GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
   private static final double SPROCKET_DIAMETER = 0.05; // 5 cm
-  private static final double MASS = 1.5; // kilograms
+  private static final double MASS = 3; // kilograms
   private static final double METERS_PER_REVOLUTION = (SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO;
 
   private static final double MAX_HEIGHT = 1.42;
@@ -65,7 +68,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       (2 * MOTOR_PARAMS.stallTorqueNewtonMeters * GEAR_RATIO)
           / (SPROCKET_DIAMETER * MASS); // m/s^2 for two motors
   private static final TrapezoidProfile.Constraints CONSTRAINTS =
-      new TrapezoidProfile.Constraints(MAX_SPEED / 2, MAX_ACCELERATION / 8);
+      new TrapezoidProfile.Constraints(MAX_SPEED / 2, MAX_ACCELERATION / 16);
 
   // feedforward constants
   /*
@@ -129,30 +132,18 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   /** pivotOffset starts from the goal height down. */
   private double pivotOffset = 0;
 
-  private BooleanLogEntry logIsSeekingGoal =
-      new BooleanLogEntry(DataLogManager.getLog(), "Elevator/isSeekingGoal");
-  private DoubleLogEntry logCurrentVelocity =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/currentVelocity");
-  private DoubleLogEntry logCurrentPosition =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/currentPosition");
-  private DoubleLogEntry logGoalVelocity =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/goalVelocity");
-  private DoubleLogEntry logGoalPosition =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/goalPosition");
-  private DoubleLogEntry logCurrentVoltage =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/currentVoltage");
-  private DoubleLogEntry logFeedForward =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/FeedForward");
-  private DoubleLogEntry logPIDOutput =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/pidOutput");
-  private BooleanLogEntry logAtUpperLimit =
-      new BooleanLogEntry(DataLogManager.getLog(), "Elevator/atUpperLimit");
-  private BooleanLogEntry logAtLowerLimit =
-      new BooleanLogEntry(DataLogManager.getLog(), "Elevator/atLowerLimit");
-  private DoubleLogEntry logDesiredPosition =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/desiredPosition");
-  private DoubleLogEntry logDesiredVelocity =
-      new DoubleLogEntry(DataLogManager.getLog(), "Elevator/desiredVelocity");
+  private BooleanLogEntry logIsSeekingGoal = new BooleanLogEntry(LOG, "Elevator/isSeekingGoal");
+  private DoubleLogEntry logCurrentVelocity = new DoubleLogEntry(LOG, "Elevator/currentVelocity");
+  private DoubleLogEntry logCurrentPosition = new DoubleLogEntry(LOG, "Elevator/currentPosition");
+  private DoubleLogEntry logGoalVelocity = new DoubleLogEntry(LOG, "Elevator/goalVelocity");
+  private DoubleLogEntry logGoalPosition = new DoubleLogEntry(LOG, "Elevator/goalPosition");
+  private DoubleLogEntry logCurrentVoltage = new DoubleLogEntry(LOG, "Elevator/currentVoltage");
+  private DoubleLogEntry logFeedForward = new DoubleLogEntry(LOG, "Elevator/FeedForward");
+  private DoubleLogEntry logPIDOutput = new DoubleLogEntry(LOG, "Elevator/pidOutput");
+  private BooleanLogEntry logAtUpperLimit = new BooleanLogEntry(LOG, "Elevator/atUpperLimit");
+  private BooleanLogEntry logAtLowerLimit = new BooleanLogEntry(LOG, "Elevator/atLowerLimit");
+  private DoubleLogEntry logDesiredPosition = new DoubleLogEntry(LOG, "Elevator/desiredPosition");
+  private DoubleLogEntry logDesiredVelocity = new DoubleLogEntry(LOG, "Elevator/desiredVelocity");
 
   /** Creates a new Elevator. */
   public Elevator() {

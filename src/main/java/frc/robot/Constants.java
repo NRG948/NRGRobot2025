@@ -29,17 +29,23 @@ public final class Constants {
 
     /** The length of the robot including bumpers. */
     // TODO: GET REAL VALUE
-    public static final double ROBOT_LENGTH = 0.74;
+    public static final double ROBOT_LENGTH = 0.928;
 
     /** The width of the robot including bumpers. */
     // TODO: GET REAL VALUE
-    public static final double ROBOT_WIDTH = 0.74;
+    public static final double ROBOT_WIDTH = 0.9;
 
     /**
      * The x distance from the odometry center (center of the wheels) to the edge of the front
      * bumper.
      */
-    public static final double ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X = 0.42;
+    public static final double ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X = ROBOT_LENGTH / 2;
+
+    /**
+     * The x distance from the odometry center (center of the wheels) to the edge of the rear
+     * bumper.
+     */
+    public static final double ODOMETRY_CENTER_TO_REAR_BUMPER_DELTA_X = ROBOT_LENGTH / 2;
 
     /** The robot iteration period in seconds. */
     public static final double PERIODIC_INTERVAL = 0.02;
@@ -65,7 +71,7 @@ public final class Constants {
       public static final class TalonFX {
         public static final int ELEVATOR_MAIN_MOTOR_ID = 14; // Back
         public static final int ELEVATOR_FOLLOWER_MOTOR_ID = 8; // Front
-        public static final int CORAL_ARM_MOTOR_ID = 6; // TODO check with systems for final IDs.
+        public static final int CORAL_ARM_MOTOR_ID = 6;
         public static final int CORAL_ROLLER_MOTOR_ID = 5;
         public static final int ALGAE_ARM_MOTOR_ID = 3;
         public static final int ALGAE_GRABBER_MOTOR_ID = 4;
@@ -75,8 +81,8 @@ public final class Constants {
 
     /** Digital I/O port numbers. */
     public static class DigitalIO {
-      public static final int CORAL_ROLLER_BEAM_BREAK = 0;
-      public static final int CORAL_ARM_ABSOLUTE_ENCODER = 1;
+      public static final int CORAL_ROLLER_BEAM_BREAK = 9;
+      public static final int CORAL_ARM_ABSOLUTE_ENCODER = 0;
       public static final int ALGAE_ARM_ABSOLUTE_ENCODER = 2;
       public static final int CLIMBER_ABSOLUTE_ENCODER = 3;
     }
@@ -98,9 +104,9 @@ public final class Constants {
     public static final double BRANCH_TO_REEF_APRILTAG = 0.165;
 
     /** The translational tolerance value for aligning to the reef. */
-    public static final double REEF_ALIGNMENT_TOLERANCE_XY = 0.0333; // in m
+    public static final double POSE_ALIGNMENT_TOLERANCE_XY = 0.0333; // in m
 
     /** The rotational tolerance value for aligning to the reef. */
-    public static final double REEF_ALIGNMENT_TOLERANCE_R = 1.0; // in deg
+    public static final double POSE_ALIGNMENT_TOLERANCE_R = 1.0; // in deg
   }
 }

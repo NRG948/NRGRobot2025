@@ -16,12 +16,14 @@ import frc.robot.subsystems.LEDSubsystem;
 
 /** A command to blink the status LEDs a specified color. */
 public final class BlinkColor extends Command {
-  private static final double BLINK_TIME = 0.2;
+  // Using 0.2 results in the LEDs to end up as no color
+  private static final double BLINK_TIME = 0.19;
 
   private final LEDSubsystem led;
   private final Colors color;
   private final double duration;
-  private final Timer timer = new Timer();
+  private final Timer blinkTimer = new Timer();
+  private final Timer endTimer = new Timer();
   private boolean isOn;
 
   /** Creates a new BlinkColor. */
@@ -40,15 +42,17 @@ public final class BlinkColor extends Command {
   public void initialize() {
     led.fillAndCommitColor(color);
     isOn = true;
-    timer.reset();
-    timer.start();
+    blinkTimer.reset();
+    blinkTimer.start();
+    endTimer.reset();
+    endTimer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    if (timer.advanceIfElapsed(BLINK_TIME)) {
+    if (blinkTimer.advanceIfElapsed(BLINK_TIME)) {
       if (isOn) {
         led.fillAndCommitColor(BLACK);
       } else {
@@ -61,12 +65,13 @@ public final class BlinkColor extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    timer.stop();
+    blinkTimer.stop();
+    endTimer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(duration);
+    return endTimer.hasElapsed(duration);
   }
 }

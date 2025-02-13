@@ -17,7 +17,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
-import frc.robot.commands.AlignToReef.ReefBranch;
+import frc.robot.commands.AlignToReef.ReefPosition;
 import frc.robot.parameters.SwerveDriveParameters;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
@@ -37,17 +37,17 @@ public final class DriveCommands {
   }
 
   /**
-   * Returns a command that aligns the robot to the specified branch of the reef.
+   * Returns a command that aligns the robot to the specified reef position.
    *
    * @param subsystems The subsystems container.
-   * @param branch The specified branch.
-   * @return A command that aligns the robot to the specified branch of the reef.
+   * @param reefPosition The specified reef position.
+   * @return A command that aligns the robot to the specified reef position.
    */
-  public static Command alignToBranch(Subsystems subsystems, ReefBranch branch) {
+  public static Command alignToReefPosition(Subsystems subsystems, ReefPosition reefPosition) {
     return Commands.sequence(
-            new AlignToReef(subsystems, branch),
+            new AlignToReef(subsystems, reefPosition),
             new BlinkColor(subsystems.statusLEDs, WHITE, 1).repeatedly())
-        .withName(String.format("AlignToReef(%s)", branch.name()));
+        .withName(String.format("AlignToReef(%s)", reefPosition.name()));
   }
 
   /**
@@ -64,10 +64,10 @@ public final class DriveCommands {
    * Returns a command to follow the path to the specified branch of the nearest reef side.
    *
    * @param subsystems The Subsystems container.
-   * @param targetReefBranch The target reef branch (left or right).
+   * @param targetReefPosition The target reef branch (left or right).
    * @return A command to follow the path to the specified branch of the nearest reef side.
    */
-  public static Command alignToReefPP(Subsystems subsystems, ReefBranch targetReefBranch) {
+  public static Command alignToReefPP(Subsystems subsystems, ReefPosition targetReefPosition) {
     Swerve drivetrain = subsystems.drivetrain;
 
     Pose2d currentRobotPose = drivetrain.getPosition();
@@ -80,9 +80,11 @@ public final class DriveCommands {
     var targetPose =
         nearestTagPose.plus(
             new Transform2d(
-                v, (targetReefBranch.equals(ReefBranch.RIGHT) ? d : -d) - h, Rotation2d.k180deg));
+                v,
+                (targetReefPosition.equals(ReefPosition.RIGHT_BRANCH) ? d : -d) - h,
+                Rotation2d.k180deg));
     System.out.println("TARGET pose: " + targetPose);
-    System.out.println("Target Branch: " + targetReefBranch);
+    System.out.println("Target Branch: " + targetReefPosition);
 
     SwerveDriveParameters currentSwerveParameters = Swerve.PARAMETERS.getValue();
 

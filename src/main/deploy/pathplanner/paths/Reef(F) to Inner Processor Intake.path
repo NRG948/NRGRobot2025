@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.03483606557377,
+        "y": 2.8801741803278684
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.953,
+        "y": 1.8897499999999992
+      },
+      "isLocked": false,
+      "linkedName": "Reef(F)"
+    },
+    {
+      "anchor": {
+        "x": 0.6825,
+        "y": 1.295
+      },
+      "prevControl": {
+        "x": 1.911,
+        "y": 1.4509999999999992
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Inner Processor Intake"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 54.090276920822355
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 120.96375653207346
+  },
+  "useDefaultConstraints": true
+}

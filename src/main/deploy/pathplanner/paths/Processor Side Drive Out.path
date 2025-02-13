@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.150178280559574,
-        "y": 0.4655352842555217
+        "x": 7.418863636363636,
+        "y": 0.4900710227272725
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Processor Side Start"
     },
     {
       "anchor": {
-        "x": 6.939413265306123,
-        "y": 0.45455994897959046
+        "x": 6.441647727272727,
+        "y": 0.6197017045454549
       },
       "prevControl": {
-        "x": 6.590275718911555,
-        "y": 0.44273958449211037
+        "x": 6.960170454545455,
+        "y": 0.5897869318181812
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Processor Side Drive Out"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 179.67259910915558
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.52649194126502
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

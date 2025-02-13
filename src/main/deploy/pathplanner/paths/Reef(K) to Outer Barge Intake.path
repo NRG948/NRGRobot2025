@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.267622950819672,
+        "y": 5.33765368852459
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.94875,
+        "y": 5.545667613636364
+      },
+      "isLocked": false,
+      "linkedName": "Reef(K)"
+    },
+    {
+      "anchor": {
+        "x": 1.6069988052456836,
+        "y": 7.392278999979434
+      },
+      "prevControl": {
+        "x": 2.004289772727273,
+        "y": 7.121178977272727
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Outer Barge Intake"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -52.97520117037446
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -59.99999999999999
+  },
+  "useDefaultConstraints": true
+}
