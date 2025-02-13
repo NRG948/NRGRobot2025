@@ -99,7 +99,6 @@ public class TalonFXAdapter implements MotorController {
     talonFX.getConfigurator().refresh(motorOutputConfigs);
     motorOutputConfigs.NeutralMode = brakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast;
 
-    // TODO: Check to see if this will override the inverted mode.
     talonFX.getConfigurator().apply(motorOutputConfigs);
   }
 

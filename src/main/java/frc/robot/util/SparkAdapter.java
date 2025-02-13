@@ -61,7 +61,7 @@ public class SparkAdapter implements MotorController {
 
     @Override
     public SparkBaseConfig getConfig() {
-      return this.config;
+      return config;
     }
 
     @Override
