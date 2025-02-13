@@ -58,5 +58,7 @@
     "edu.wpi.first.math.**.struct.*",
   ],
   "java.compile.nullAnalysis.mode": "disabled",
-  "sarif-viewer.connectToGithubCodeScanning": "off"
+  "sarif-viewer.connectToGithubCodeScanning": "off",
+  "rewrap.autoWrap.enabled": true,
+  "rewrap.wrappingColumn": 100
 }
