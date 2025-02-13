@@ -50,6 +50,11 @@ public final class FieldUtils {
     return alliance == Alliance.Red;
   }
 
+  /** Returns the {@link AprilTagFieldLayout} for the current competition year. */
+  public static AprilTagFieldLayout getFieldLayout() {
+    return FIELD_LAYOUT;
+  }
+
   /** Returns the {@link Pose3d} of the specified April Tag ID. */
   public static Pose3d getAprilTagPose3d(int tagId) {
     return FIELD_LAYOUT.getTagPose(tagId).get();

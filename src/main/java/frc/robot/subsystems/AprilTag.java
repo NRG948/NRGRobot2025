@@ -10,8 +10,6 @@ package frc.robot.subsystems;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
 import edu.wpi.first.cscore.VideoSource;
@@ -22,6 +20,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
+import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
@@ -33,6 +32,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.VisionParameters;
+import frc.robot.util.FieldUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -53,13 +53,14 @@ import org.photonvision.targeting.PhotonTrackedTarget;
     gridColumns = 2,
     gridRows = 2)
 public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
-  public static final Matrix<N3, N1> SINGLE_TAG_STD_DEVS = VecBuilder.fill(4, 4, 8);
-  public static final Matrix<N3, N1> MULTI_TAG_STD_DEVS = VecBuilder.fill(0.5, 0.5, 1);
-  public static final PhotonPipelineResult NO_RESULT = new PhotonPipelineResult();
-  public static final Pose3d NO_APRILTAG = new Pose3d();
-  public static final EstimatedRobotPose NO_APRILTAG_ESTIMATE =
-      new EstimatedRobotPose(NO_APRILTAG, 0, List.of(), PoseStrategy.LOWEST_AMBIGUITY);
-  public static final double LAST_RESULT_TIMEOUT = 0.1;
+  private static final DataLog LOG = DataLogManager.getLog();
+
+  private static final Matrix<N3, N1> SINGLE_TAG_STD_DEVS = VecBuilder.fill(4, 4, 8);
+  private static final Matrix<N3, N1> MULTI_TAG_STD_DEVS = VecBuilder.fill(0.5, 0.5, 1);
+  private static final PhotonPipelineResult NO_RESULT = new PhotonPipelineResult();
+  private static final EstimatedRobotPose NO_APRILTAG_ESTIMATE =
+      new EstimatedRobotPose(new Pose3d(), 0, List.of(), PoseStrategy.LOWEST_AMBIGUITY);
+  private static final double LAST_RESULT_TIMEOUT = 0.1;
 
   @RobotPreferencesValue
   public static RobotPreferences.EnumValue<VisionParameters> PARAMETERS =
@@ -80,8 +81,6 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   private final PhotonPoseEstimator estimator;
 
   private final SendableChooser<Integer> aprilTagIdChooser = new SendableChooser<>();
-  private final AprilTagFieldLayout aprilTagFieldLayout =
-      AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 
   private final BooleanLogEntry hasTargetLogger;
   private final DoubleLogEntry distanceLogger;
@@ -113,19 +112,16 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
 
     estimator =
         new PhotonPoseEstimator(
-            aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCamera);
+            FieldUtils.getFieldLayout(), PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCamera);
 
     for (int i = 1; i <= 22; i++) {
       aprilTagIdChooser.addOption(String.valueOf(i), i);
     }
     aprilTagIdChooser.setDefaultOption("1", 1);
 
-    hasTargetLogger =
-        new BooleanLogEntry(DataLogManager.getLog(), String.format("/%s/Has Target", cameraName));
-    distanceLogger =
-        new DoubleLogEntry(DataLogManager.getLog(), String.format("/%s/Distance", cameraName));
-    angleLogger =
-        new DoubleLogEntry(DataLogManager.getLog(), String.format("/%s/Angle", cameraName));
+    hasTargetLogger = new BooleanLogEntry(LOG, String.format("/%s/Has Target", cameraName));
+    distanceLogger = new DoubleLogEntry(LOG, String.format("/%s/Distance", cameraName));
+    angleLogger = new DoubleLogEntry(LOG, String.format("/%s/Angle", cameraName));
   }
 
   /**
@@ -207,16 +203,6 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     return curStdDevs;
   }
 
-  /**
-   * Return the pose of the specified AprilTag.
-   *
-   * @param id The ID of the AprilTag.
-   * @return The pose of the AprilTag.
-   */
-  public Pose3d getAprilTagPose(int id) {
-    return aprilTagFieldLayout.getTagPose(id).orElse(NO_APRILTAG);
-  }
-
   @Override
   public void periodic() {
     // Process the latest vision results updating the estimated robot pose and
@@ -257,7 +243,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
 
     if (ENABLE_TAB.getValue()) {
       selectedAprilTag = aprilTagIdChooser.getSelected().intValue();
-      selectedAprilTagPose = getAprilTagPose(selectedAprilTag);
+      selectedAprilTagPose = FieldUtils.getAprilTagPose3d(selectedAprilTag);
 
       Optional<PhotonTrackedTarget> target = getTarget(selectedAprilTag);
       if (target.isPresent()) {
