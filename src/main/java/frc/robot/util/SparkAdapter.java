@@ -30,6 +30,9 @@ public class SparkAdapter implements MotorController {
     /** Returns a new controller-specific configuration. */
     SparkBaseConfig newConfig();
 
+    /** Gets the controller-specific configuration. */
+    SparkBaseConfig getConfig();
+
     /**
      * Returns a new adapter of the same controller type.
      *
@@ -40,6 +43,7 @@ public class SparkAdapter implements MotorController {
 
   private static final class SparkMaxAccessor implements Accessor {
     private final SparkMax spark;
+    private final SparkMaxConfig config = new SparkMaxConfig();
 
     private SparkMaxAccessor(SparkMax spark) {
       this.spark = spark;
@@ -56,6 +60,11 @@ public class SparkAdapter implements MotorController {
     }
 
     @Override
+    public SparkBaseConfig getConfig() {
+      return this.config;
+    }
+
+    @Override
     public SparkBaseConfig newConfig() {
       return new SparkMaxConfig();
     }
@@ -68,6 +77,7 @@ public class SparkAdapter implements MotorController {
 
   private static final class SparkFlexAccessor implements Accessor {
     private final SparkFlex spark;
+    private final SparkFlexConfig config = new SparkFlexConfig();
 
     private SparkFlexAccessor(SparkFlex spark) {
       this.spark = spark;
@@ -81,6 +91,11 @@ public class SparkAdapter implements MotorController {
     @Override
     public SparkBaseConfigAccessor getConfigAccessor() {
       return spark.configAccessor;
+    }
+
+    @Override
+    public SparkBaseConfig getConfig() {
+      return config;
     }
 
     @Override
@@ -163,7 +178,7 @@ public class SparkAdapter implements MotorController {
    *     the output shaft.
    */
   private void configure(boolean isInverted, boolean brakeMode, double metersPerRotation) {
-    SparkBaseConfig driveMotorConfig = spark.newConfig();
+    SparkBaseConfig driveMotorConfig = spark.getConfig();
 
     driveMotorConfig.inverted(isInverted).idleMode(brakeMode ? IdleMode.kBrake : IdleMode.kCoast);
 
@@ -195,7 +210,7 @@ public class SparkAdapter implements MotorController {
 
   @Override
   public void setInverted(boolean isInverted) {
-    SparkBaseConfig config = spark.newConfig();
+    SparkBaseConfig config = spark.getConfig();
 
     config.inverted(isInverted);
 
@@ -209,11 +224,13 @@ public class SparkAdapter implements MotorController {
 
   @Override
   public void setBrakeMode(boolean brakeMode) {
-    SparkBaseConfig config = spark.newConfig();
+    SparkBaseConfig config = spark.getConfig();
 
     config.idleMode(brakeMode ? IdleMode.kBrake : IdleMode.kCoast);
 
-    spark.get().configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    spark
+        .get()
+        .configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
   }
 
   @Override
@@ -232,7 +249,8 @@ public class SparkAdapter implements MotorController {
     SparkBaseConfigAccessor configAccessor = spark.getConfigAccessor();
     SparkBaseConfig motorOutputConfigs = spark.newConfig();
 
-    // Get the motor output configuration from the leader and apply it to the follower.
+    // Get the motor output configuration from the leader and apply it to the
+    // follower.
     motorOutputConfigs
         .inverted(configAccessor.getInverted())
         .idleMode(configAccessor.getIdleMode());

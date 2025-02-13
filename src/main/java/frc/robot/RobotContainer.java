@@ -4,12 +4,11 @@
  * Open Source Software; you can modify and/or share it under the terms of
  * the license file in the root directory of this project.
  */
-
+ 
 package frc.robot;
 
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -30,35 +29,30 @@ import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
-import javassist.compiler.ast.Symbol;
 
 /**
- * This class is where the bulk of the robot should be declared. Since
- * Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in
- * the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of
- * the robot (including
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 @RobotPreferencesLayout(groupName = "Preferences", column = 0, row = 0, width = 1, height = 1)
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Subsystems subsystems = new Subsystems();
-  private final RobotAutonomous autonomous = new RobotAutonomous(subsystems, null); // TODO: figure out what rotaion
-                                                                                    // feedback override.
+  private final RobotAutonomous autonomous =
+      new RobotAutonomous(subsystems, null); // TODO: figure out what rotaion
+  // feedback override.
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController = new CommandXboxController(
-      OperatorConstants.DRIVER_CONTROLLER_PORT);
+  private final CommandXboxController m_driverController =
+      new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
 
-  private final CommandXboxController m_manipulatorController = new CommandXboxController(
-      OperatorConstants.MANIPULATOR_CONTROLLER_PORT);
+  private final CommandXboxController m_manipulatorController =
+      new CommandXboxController(OperatorConstants.MANIPULATOR_CONTROLLER_PORT);
   private final Timer coastModeTimer = new Timer();
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     initShuffleboard();
 
@@ -93,17 +87,12 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be
-   * created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
-   * an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link
-   * CommandXboxController
-   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or
-   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {

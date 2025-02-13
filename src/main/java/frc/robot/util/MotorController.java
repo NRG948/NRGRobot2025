@@ -29,5 +29,4 @@ public interface MotorController extends edu.wpi.first.wpilibj.motorcontrol.Moto
 
   /** Sets Brake Mode. */
   void setBrakeMode(boolean brakeMode);
-
 }

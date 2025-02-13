@@ -76,6 +76,7 @@ public class TalonFXAdapter implements MotorController {
   public void setInverted(boolean isInverted) {
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
 
+    talonFX.getConfigurator().refresh(motorOutputConfigs);
     motorOutputConfigs.Inverted =
         isInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
@@ -92,13 +93,13 @@ public class TalonFXAdapter implements MotorController {
   }
 
   @Override
-  public void setBrakeMode(boolean brakeMode){
+  public void setBrakeMode(boolean brakeMode) {
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
 
-    motorOutputConfigs.NeutralMode =
-        brakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+    talonFX.getConfigurator().refresh(motorOutputConfigs);
+    motorOutputConfigs.NeutralMode = brakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast;
 
-    //TODO: Check to see if this will override the inverted mode.
+    // TODO: Check to see if this will override the inverted mode.
     talonFX.getConfigurator().apply(motorOutputConfigs);
   }
 
