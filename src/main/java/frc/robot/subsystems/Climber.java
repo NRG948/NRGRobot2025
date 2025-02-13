@@ -29,7 +29,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.util.MotorController;
 import frc.robot.util.TalonFXAdapter;
 
-@RobotPreferencesLayout(groupName = "Climber", row = 0, column = 5, width = 1, height = 1)
+@RobotPreferencesLayout(groupName = "Climber", row = 0, column = 7, width = 1, height = 1)
 public class Climber extends SubsystemBase implements ShuffleboardProducer, ActiveSubsystem {
   @RobotPreferencesValue
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
@@ -51,12 +51,11 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   public static DoubleValue NO_LOAD_POWER = new DoubleValue("Climber", "No Load Power", 0.3);
 
   @RobotPreferencesValue
-  public static DoubleValue TOLERANCE =
-      new DoubleValue("Climber", "Tolerance (rad)", Math.toRadians(3));
+  public static DoubleValue TOLERANCE_DEG = new DoubleValue("Climber", "Tolerance (deg)", 3);
 
   @RobotPreferencesValue
-  public static DoubleValue CLIMB_GOAL_ANGLE =
-      new DoubleValue("Climber", "Climb Goal Angle (rad)", Math.toRadians(-88));
+  public static DoubleValue CLIMB_GOAL_ANGLE_DEG =
+      new DoubleValue("Climber", "Climb Goal Angle (deg)", -88);
 
   private double currentAngle;
   private double goalAngle;
@@ -100,8 +99,8 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
       isClimbing = false;
     }
 
-    /* TODO: suggestion from Leo: to prevent the climber from digging 
-      into ground when the cage is not completely in, we could check 
+    /* TODO: suggestion from Leo: to prevent the climber from digging
+      into ground when the cage is not completely in, we could check
       whether we have load at a specific angle that we expect to contact
       the cage it it was properly aligned. If not, we stop climb.
     */
@@ -129,7 +128,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   /** Sets the goal angle to preprogrammed angle and supply climbing power to motors. */
   public void climb() {
-    setGoalAngle(CLIMB_GOAL_ANGLE.getValue());
+    setGoalAngle(Math.toRadians(CLIMB_GOAL_ANGLE_DEG.getValue()));
     isClimbing = true;
   }
 
@@ -139,11 +138,11 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   }
 
   public boolean atGoalAngle() {
-    return Math.abs(currentAngle - goalAngle) < TOLERANCE.getValue();
+    return Math.abs(currentAngle - goalAngle) < Math.toRadians(TOLERANCE_DEG.getValue());
   }
 
   private void updateSensorState() {
-    currentAngle = MathUtil.angleModulus(absoluteEncoder.get());
+    currentAngle = MathUtil.angleModulus(absoluteEncoder.get()); // in rad
 
     logCurrentAbsoluteAngle.append(currentAngle);
   }
