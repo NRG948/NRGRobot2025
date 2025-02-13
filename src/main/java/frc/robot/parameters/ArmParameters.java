@@ -45,19 +45,6 @@ public enum ArmParameters {
       false, // TODO: determine inversion
       0, // TODO: get real encoder offset
       Math.toRadians(45),
-      Math.toRadians(90)),
-  Climber(
-      MotorParameters.KrakenX60,
-      1,
-      1,
-      1,
-      1,
-      1,
-      RobotConstants.CAN.TalonFX.CLIMBER_MOTOR_ID,
-      RobotConstants.DigitalIO.CLIMBER_ABSOLUTE_ENCODER,
-      false, // TODO: determine inversion
-      0, // TODO: get real encoder offset
-      Math.toRadians(-90),
       Math.toRadians(90));
 
   private final MotorParameters motorParameters;
