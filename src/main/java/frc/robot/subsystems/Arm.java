@@ -79,6 +79,9 @@ public class Arm extends SubsystemBase implements ActiveSubsystem {
   /** Disables periodic control. */
   @Override
   public void disable() {
+    MotorOutputConfigs configs = new MotorOutputConfigs();
+    configs.NeutralMode = NeutralModeValue.Coast;
+    motor.getConfigurator().apply(configs);
     enabled = false;
     timer.stop();
   }

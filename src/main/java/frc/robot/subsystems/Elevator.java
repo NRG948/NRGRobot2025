@@ -169,6 +169,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   @Override
   public void disable() {
     mainMotor.disable();
+    mainMotor.setBrakeMode(false);
     isSeekingGoal = false;
     logIsSeekingGoal.append(false);
   }
