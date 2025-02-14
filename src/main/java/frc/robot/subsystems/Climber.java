@@ -37,23 +37,17 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   private static final DataLog LOG = DataLogManager.getLog();
 
-  private final double MIN_ANGLE = -89;
-  private final double MAX_ANGLE = 150; // TODO: verify real max angle
+  private final double MIN_ANGLE = Math.toRadians(-100);
+  private final double MAX_ANGLE = Math.toRadians(135); // TODO: verify real max angle
   private final double GEAR_RATIO = 5.0 * 5.0 * 66.0 / 18.0;
-  private final double ABSOLUTE_ENCODER_ZERO_OFFSET =
-      Math.toRadians(
-          360 - 173.1); // 360 - needed bcs abs encoder inversion is applied before offset
+  // 360 - needed because abs encoder inversion is applied before offset
+  private final double ABSOLUTE_ENCODER_ZERO_OFFSET = Math.toRadians(360 - 173.1); 
 
   @RobotPreferencesValue
-  public static DoubleValue CLIMB_POWER =
-      new DoubleValue("Climber", "Climb Power", 0.3); // TODO: get real values
+  public static DoubleValue CLIMB_POWER = new DoubleValue("Climber", "Motor Power", 0.4);
 
   @RobotPreferencesValue
-  public static DoubleValue TESTING_POWER =
-      new DoubleValue("Climber", "No Load Power", 0.3); // TODO: get real values
-
-  @RobotPreferencesValue
-  public static DoubleValue TOLERANCE_DEG = new DoubleValue("Climber", "Tolerance (deg)", 3);
+  public static DoubleValue TOLERANCE_DEG = new DoubleValue("Climber", "Tolerance (deg)", 1);
 
   @RobotPreferencesValue
   public static DoubleValue CLIMB_GOAL_ANGLE_DEG =
@@ -62,7 +56,6 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   private double currentAngle;
   private double goalAngle; // in radians
   private boolean enabled;
-  private boolean isClimbing = false;
 
   private final DutyCycleEncoder absoluteEncoder;
 
@@ -97,19 +90,17 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   @Override
   public void periodic() {
     updateSensorState();
-    if (!enabled) {
-      isClimbing = false;
-    }
 
     /* TODO: suggestion from Leo: to prevent the climber from digging
       into ground when the cage is not completely in, we could check
       whether we have load at a specific angle that we expect to contact
       the cage it it was properly aligned. If not, we stop climb.
     */
+    double angleError = goalAngle - currentAngle;
     double motorPower;
     if (enabled && !atGoalAngle()) {
-      motorPower = isClimbing ? CLIMB_POWER.getValue() : TESTING_POWER.getValue();
-      motorPower *= currentAngle < goalAngle ? 1 : -1;
+      double kP = CLIMB_POWER.getValue() / Math.toRadians(10);
+      motorPower = MathUtil.clamp(kP * angleError, -CLIMB_POWER.getValue(), CLIMB_POWER.getValue());
     } else {
       motorPower = 0;
     }
@@ -130,7 +121,6 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   /** Sets the goal angle to preprogrammed angle and supply climbing power to motors. */
   public void climb() {
     setGoalAngle(Math.toRadians(CLIMB_GOAL_ANGLE_DEG.getValue()));
-    isClimbing = true;
   }
 
   public void disable() {
