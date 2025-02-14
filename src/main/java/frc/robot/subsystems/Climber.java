@@ -58,7 +58,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
       new DoubleValue("Climber", "Climb Goal Angle (deg)", -88);
 
   private double currentAngle;
-  private double goalAngle;
+  private double goalAngle;  // in radians
   private boolean enabled;
   private boolean isClimbing = false;
 
