@@ -45,10 +45,12 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
           360 - 173.1); // 360 - needed bcs abs encoder inversion is applied before offset
 
   @RobotPreferencesValue
-  public static DoubleValue CLIMB_POWER = new DoubleValue("Climber", "Climb Power", 0.3); //TODO: get real values
+  public static DoubleValue CLIMB_POWER =
+      new DoubleValue("Climber", "Climb Power", 0.3); // TODO: get real values
 
   @RobotPreferencesValue
-  public static DoubleValue TESTING_POWER = new DoubleValue("Climber", "No Load Power", 0.3); //TODO: get real values
+  public static DoubleValue TESTING_POWER =
+      new DoubleValue("Climber", "No Load Power", 0.3); // TODO: get real values
 
   @RobotPreferencesValue
   public static DoubleValue TOLERANCE_DEG = new DoubleValue("Climber", "Tolerance (deg)", 3);
@@ -58,7 +60,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
       new DoubleValue("Climber", "Climb Goal Angle (deg)", -88);
 
   private double currentAngle;
-  private double goalAngle;  // in radians
+  private double goalAngle; // in radians
   private boolean enabled;
   private boolean isClimbing = false;
 
@@ -137,7 +139,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   }
 
   public boolean atGoalAngle() {
-    return MathUtil.isNear(goalAngle, currentAngle, Math.toRadians(TOLERANCE_DEG.getValue());
+    return MathUtil.isNear(goalAngle, currentAngle, Math.toRadians(TOLERANCE_DEG.getValue()));
   }
 
   private void updateSensorState() {
