@@ -23,6 +23,7 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -58,6 +59,9 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private double goalVelocity = 0;
   private double currentVelocity = 0;
   private boolean hasCoral = false;
+  private final double CORAL_INTAKE_INTERVAL = 0; // TODO: Find coral intake interval.
+
+  private Timer coralIntakeTime = new Timer();
 
   private DoubleLogEntry logGoalVelocity =
       new DoubleLogEntry(DataLogManager.getLog(), "/CoralRoller/goalVelocity");
@@ -71,12 +75,20 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
       new DoubleLogEntry(DataLogManager.getLog(), "/CoralRoller/feedback");
   private DoubleLogEntry logVoltage =
       new DoubleLogEntry(DataLogManager.getLog(), "/CoralRoller/voltage");
+  private DoubleLogEntry logStatorCurrent =
+      new DoubleLogEntry(DataLogManager.getLog(), "/CoralRoller/staterCurrent");    
+  private DoubleLogEntry logTorqueCurrent =
+      new DoubleLogEntry(DataLogManager.getLog(), "/CoralRoller/torqueCurrent");
+  private DoubleLogEntry logSupplyCurrent =
+      new DoubleLogEntry(DataLogManager.getLog(), "/CoralRoller/supplyCurrent");
 
   /** Creates a new CoralRoller. */
   public CoralRoller() {
     MotorOutputConfigs motorConfig = new MotorOutputConfigs();
     motorConfig.Inverted = InvertedValue.Clockwise_Positive;
     motor.getConfigurator().apply(motorConfig);
+
+    coralIntakeTime.reset();
   }
 
   /** Sets the goal velocity in meters per second. */
@@ -124,11 +136,25 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
   /** Updates and logs the current sensors states. */
   private void updateTelemetry() {
-    hasCoral = !beamBreak.get();
+    // hasCoral = !beamBreak.get();
     currentVelocity = motor.getVelocity().refresh().getValueAsDouble() * METERS_PER_REVOLUTION;
+
+    if (currentVelocity != 0) {
+      coralIntakeTime.start();
+    } else {
+      hasCoral = false;
+    }
+    if (coralIntakeTime.hasElapsed(CORAL_INTAKE_INTERVAL)) { // TODO: Find coral intake interval.
+      coralIntakeTime.stop();
+      coralIntakeTime.reset();
+      hasCoral = true;
+    }
 
     logHasCoral.update(hasCoral);
     logCurrentVelocity.append(currentVelocity);
+    logStatorCurrent.append(motor.getStatorCurrent().refresh().getValueAsDouble());
+    logTorqueCurrent.append(motor.getTorqueCurrent().refresh().getValueAsDouble());
+    logSupplyCurrent.append(motor.getSupplyCurrent().refresh().getValueAsDouble());
   }
 
   @Override
