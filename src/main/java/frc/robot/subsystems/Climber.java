@@ -39,7 +39,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   private final double MIN_ANGLE = -89;
   private final double MAX_ANGLE = 150; // TODO: verify real max angle
-  private final double GEAR_RATIO = 5 * 5 * 66 / 18;
+  private final double GEAR_RATIO = 5.0 * 5.0 * 66.0 / 18.0;
   private final double ABSOLUTE_ENCODER_ZERO_OFFSET =
       Math.toRadians(
           360 - 173.1); // 360 - needed bcs abs encoder inversion is applied before offset
