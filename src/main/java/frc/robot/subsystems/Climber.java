@@ -163,7 +163,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
     ShuffleboardLayout controlLayout =
         climberTab.getLayout("Control", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
-    GenericEntry angle = controlLayout.add("Angle", 0).getEntry();
+    GenericEntry angle = controlLayout.add("Angle (deg)", 0).getEntry();
     controlLayout.add(
         Commands.sequence(
                 Commands.runOnce(() -> setGoalAngle(Math.toRadians(angle.getDouble(0))), this),
