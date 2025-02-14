@@ -45,10 +45,10 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
           360 - 173.1); // 360 - needed bcs abs encoder inversion is applied before offset
 
   @RobotPreferencesValue
-  public static DoubleValue CLIMB_POWER = new DoubleValue("Climber", "Climb Power", 0.3);
+  public static DoubleValue CLIMB_POWER = new DoubleValue("Climber", "Climb Power", 0.3); //TODO: get real values
 
   @RobotPreferencesValue
-  public static DoubleValue NO_LOAD_POWER = new DoubleValue("Climber", "No Load Power", 0.3);
+  public static DoubleValue TESTING_POWER = new DoubleValue("Climber", "No Load Power", 0.3); //TODO: get real values
 
   @RobotPreferencesValue
   public static DoubleValue TOLERANCE_DEG = new DoubleValue("Climber", "Tolerance (deg)", 3);
@@ -76,7 +76,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
       mainMotor.createFollower(RobotConstants.CAN.TalonFX.CLIMBER_FOLLOWER_MOTOR_ID, false);
 
   private DoubleLogEntry logCurrentAbsoluteAngle =
-      new DoubleLogEntry(LOG, "Climber/Current Absolute Angle");
+      new DoubleLogEntry(LOG, "Climber/Absolute Angle");
   private DoubleLogEntry logGoalAngle = new DoubleLogEntry(LOG, "Climber/Goal Angle");
   private BooleanLogEntry logEnabled = new BooleanLogEntry(LOG, "Climber/Is Enabled");
   private DoubleLogEntry logMotorPower = new DoubleLogEntry(LOG, "Climber/Motor Power");
@@ -104,16 +104,15 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
       whether we have load at a specific angle that we expect to contact
       the cage it it was properly aligned. If not, we stop climb.
     */
+    double motorPower;
     if (enabled && !atGoalAngle()) {
-      double motorPower = isClimbing ? CLIMB_POWER.getValue() : NO_LOAD_POWER.getValue();
+      motorPower = isClimbing ? CLIMB_POWER.getValue() : TESTING_POWER.getValue();
       motorPower *= currentAngle < goalAngle ? 1 : -1;
-
-      mainMotor.set(motorPower);
-      logMotorPower.append(motorPower);
     } else {
-      mainMotor.set(0);
-      logMotorPower.append(0);
+      motorPower = 0;
     }
+    mainMotor.set(motorPower);
+    logMotorPower.append(motorPower);
   }
 
   /** Sets the goal angle in radians and enables periodic control. */
