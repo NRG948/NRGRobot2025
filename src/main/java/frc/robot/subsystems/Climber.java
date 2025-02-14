@@ -138,7 +138,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   }
 
   public boolean atGoalAngle() {
-    return Math.abs(currentAngle - goalAngle) < Math.toRadians(TOLERANCE_DEG.getValue());
+    return MathUtil.isNear(goalAngle, currentAngle, Math.toRadians(TOLERANCE_DEG.getValue());
   }
 
   private void updateSensorState() {
