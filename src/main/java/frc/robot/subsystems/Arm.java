@@ -36,7 +36,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.ArmParameters;
 
-@RobotPreferencesLayout(groupName = "Arm", row = 0, column = 5, width = 1, height = 1)
+@RobotPreferencesLayout(groupName = "Arm", row = 1, column = 0, width = 1, height = 1)
 public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   @RobotPreferencesValue
   public static final RobotPreferences.BooleanValue ENABLE_TAB =

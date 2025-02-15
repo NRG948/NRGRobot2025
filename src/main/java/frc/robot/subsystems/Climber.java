@@ -29,7 +29,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.util.MotorController;
 import frc.robot.util.TalonFXAdapter;
 
-@RobotPreferencesLayout(groupName = "Climber", row = 0, column = 7, width = 1, height = 1)
+@RobotPreferencesLayout(groupName = "Climber", row = 0, column = 6, width = 1, height = 3)
 public class Climber extends SubsystemBase implements ShuffleboardProducer, ActiveSubsystem {
   @RobotPreferencesValue
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
@@ -38,8 +38,11 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   private static final DataLog LOG = DataLogManager.getLog();
 
   private final double MIN_ANGLE = Math.toRadians(-100);
-  private final double MAX_ANGLE = Math.toRadians(135); // TODO: verify real max angle
+  private final double MAX_ANGLE = Math.toRadians(135);
+
+  @SuppressWarnings("unused")
   private final double GEAR_RATIO = 5.0 * 5.0 * 66.0 / 18.0;
+
   // "360 - offset" needed because absolute encoder inversion is applied before the offset.
   private final double ABSOLUTE_ENCODER_ZERO_OFFSET = Math.toRadians(360 - 173.1);
 
@@ -57,7 +60,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   public static DoubleValue PROPORTIONAL_CONTROL_THRESHOLD_DEG =
       new DoubleValue("Climber", "Proportional Control Threshold", 10);
 
-  private double currentAngle;  // in radians
+  private double currentAngle; // in radians
   private double goalAngle; // in radians
   private boolean enabled;
 
@@ -110,8 +113,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
     if (enabled && !atGoalAngle()) {
       // Runs at max power until within small angle of goal, then ramps power down linearly.
       double maxPower = CLIMB_MAX_POWER.getValue();
-      double kP =
-          maxPower / Math.toRadians(PROPORTIONAL_CONTROL_THRESHOLD_DEG.getValue());
+      double kP = maxPower / Math.toRadians(PROPORTIONAL_CONTROL_THRESHOLD_DEG.getValue());
       motorPower = MathUtil.clamp(kP * angleError, -maxPower, maxPower);
     } else {
       motorPower = 0;
