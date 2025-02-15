@@ -82,7 +82,7 @@ dependencies {
     annotationProcessor wpi.java.deps.wpilibAnnotations()
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
-    implementation 'com.nrg948:nrgcommon:2025.2.1-SNAPSHOT'
+    implementation 'com.nrg948:nrgcommon:2025.3.1-SNAPSHOT'
 
     roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
     roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
