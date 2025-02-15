@@ -41,7 +41,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   private final double MAX_ANGLE = Math.toRadians(135); // TODO: verify real max angle
   private final double GEAR_RATIO = 5.0 * 5.0 * 66.0 / 18.0;
   // 360 - needed because abs encoder inversion is applied before offset
-  private final double ABSOLUTE_ENCODER_ZERO_OFFSET = Math.toRadians(360 - 173.1); 
+  private final double ABSOLUTE_ENCODER_ZERO_OFFSET = Math.toRadians(360 - 173.1);
 
   @RobotPreferencesValue
   public static DoubleValue CLIMB_POWER = new DoubleValue("Climber", "Motor Power", 0.4);
@@ -52,9 +52,10 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   @RobotPreferencesValue
   public static DoubleValue CLIMB_GOAL_ANGLE_DEG =
       new DoubleValue("Climber", "Climb Goal Angle (deg)", -88);
-  
+
   @RobotPreferencesValue
-  public static DoubleValue PROPORTIONAL_CONTROL_THRESHOLD_DEG = new DoubleValue("Climber", "Proportional Control Threshold", 10);
+  public static DoubleValue PROPORTIONAL_CONTROL_THRESHOLD_DEG =
+      new DoubleValue("Climber", "Proportional Control Threshold", 10);
 
   private double currentAngle;
   private double goalAngle; // in radians
@@ -78,8 +79,10 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   private DoubleLogEntry logGoalAngle = new DoubleLogEntry(LOG, "Climber/Goal Angle");
   private BooleanLogEntry logEnabled = new BooleanLogEntry(LOG, "Climber/Is Enabled");
   private DoubleLogEntry logMotorPower = new DoubleLogEntry(LOG, "Climber/Motor Power");
-  private DoubleLogEntry logMotorStatorCurent = new DoubleLogEntry(LOG, "Climber/Motor Stator Current");
-  private DoubleLogEntry logMotorTorqueCurent = new DoubleLogEntry(LOG, "Climber/Motor Torque Current");
+  private DoubleLogEntry logMotorStatorCurent =
+      new DoubleLogEntry(LOG, "Climber/Motor Stator Current");
+  private DoubleLogEntry logMotorTorqueCurent =
+      new DoubleLogEntry(LOG, "Climber/Motor Torque Current");
   private DoubleLogEntry logMotorAngularVelocity = new DoubleLogEntry(LOG, "Climber/Motor Rot/s");
 
   /** Creates a new Climber. */
@@ -106,7 +109,8 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
     double motorPower;
     if (enabled && !atGoalAngle()) {
       // Runs at climb power until within small angle of goal and then ramps power down linearly.
-      double kP = CLIMB_POWER.getValue() / Math.toRadians(PROPORTIONAL_CONTROL_THRESHOLD_DEG.getValue());
+      double kP =
+          CLIMB_POWER.getValue() / Math.toRadians(PROPORTIONAL_CONTROL_THRESHOLD_DEG.getValue());
       motorPower = MathUtil.clamp(kP * angleError, -CLIMB_POWER.getValue(), CLIMB_POWER.getValue());
     } else {
       motorPower = 0;
