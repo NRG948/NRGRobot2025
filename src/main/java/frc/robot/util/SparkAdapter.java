@@ -287,4 +287,8 @@ public final class SparkAdapter implements MotorController {
   public LimitSwitch getReverseLimitSwitch() {
     return new SparkLimitSwitchAdapter(spark.get().getReverseLimitSwitch());
   }
+
+  public double getOutputCurrent() {
+    return spark.get().getOutputCurrent();
+  }
 }
