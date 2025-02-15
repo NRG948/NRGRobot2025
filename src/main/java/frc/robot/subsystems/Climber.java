@@ -57,7 +57,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   public static DoubleValue PROPORTIONAL_CONTROL_THRESHOLD_DEG =
       new DoubleValue("Climber", "Proportional Control Threshold", 10);
 
-  private double currentAngle;
+  private double currentAngle;  // in radians
   private double goalAngle; // in radians
   private boolean enabled;
 
