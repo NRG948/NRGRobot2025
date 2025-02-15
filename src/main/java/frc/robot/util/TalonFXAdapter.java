@@ -148,4 +148,12 @@ public final class TalonFXAdapter implements MotorController {
     return new TalonFXLimitSwitchAdapter<ReverseLimitValue>(
         talonFX.getReverseLimit(), ReverseLimitValue.ClosedToGround);
   }
+
+  public double getStatorCurrent() {
+    return talonFX.getStatorCurrent().refresh().getValueAsDouble();
+  }
+
+  public double getTorqueCurrent() {
+    return talonFX.getTorqueCurrent().refresh().getValueAsDouble();
+  }
 }

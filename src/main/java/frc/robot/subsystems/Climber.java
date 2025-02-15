@@ -52,6 +52,9 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   @RobotPreferencesValue
   public static DoubleValue CLIMB_GOAL_ANGLE_DEG =
       new DoubleValue("Climber", "Climb Goal Angle (deg)", -88);
+  
+  @RobotPreferencesValue
+  public static DoubleValue PROPORTIONAL_CONTROL_THRESHOLD_DEG = new DoubleValue("Climber", "Proportional Control Threshold", 10);
 
   private double currentAngle;
   private double goalAngle; // in radians
@@ -59,7 +62,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   private final DutyCycleEncoder absoluteEncoder;
 
-  private MotorController mainMotor =
+  private TalonFXAdapter mainMotor =
       new TalonFXAdapter(
           new TalonFX(RobotConstants.CAN.TalonFX.CLIMBER_MAIN_MOTOR_ID, "rio"),
           false,
@@ -75,6 +78,9 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   private DoubleLogEntry logGoalAngle = new DoubleLogEntry(LOG, "Climber/Goal Angle");
   private BooleanLogEntry logEnabled = new BooleanLogEntry(LOG, "Climber/Is Enabled");
   private DoubleLogEntry logMotorPower = new DoubleLogEntry(LOG, "Climber/Motor Power");
+  private DoubleLogEntry logMotorStatorCurent = new DoubleLogEntry(LOG, "Climber/Motor Stator Current");
+  private DoubleLogEntry logMotorTorqueCurent = new DoubleLogEntry(LOG, "Climber/Motor Torque Current");
+  private DoubleLogEntry logMotorAngularVelocity = new DoubleLogEntry(LOG, "Climber/Motor Rot/s");
 
   /** Creates a new Climber. */
   public Climber() {
@@ -99,7 +105,8 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
     double angleError = goalAngle - currentAngle;
     double motorPower;
     if (enabled && !atGoalAngle()) {
-      double kP = CLIMB_POWER.getValue() / Math.toRadians(10);
+      // Runs at climb power until within small angle of goal and then ramps power down linearly.
+      double kP = CLIMB_POWER.getValue() / Math.toRadians(PROPORTIONAL_CONTROL_THRESHOLD_DEG.getValue());
       motorPower = MathUtil.clamp(kP * angleError, -CLIMB_POWER.getValue(), CLIMB_POWER.getValue());
     } else {
       motorPower = 0;
@@ -136,6 +143,9 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
     currentAngle = MathUtil.angleModulus(absoluteEncoder.get()); // in rad
 
     logCurrentAbsoluteAngle.append(currentAngle);
+    logMotorAngularVelocity.append(mainMotor.getEncoder().getVelocity()); // we set meter/rot = 1
+    logMotorStatorCurent.append(mainMotor.getStatorCurrent());
+    logMotorTorqueCurent.append(mainMotor.getTorqueCurrent());
   }
 
   @Override
