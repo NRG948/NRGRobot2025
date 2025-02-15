@@ -48,6 +48,7 @@ import frc.robot.subsystems.Subsystems;
  */
 @RobotPreferencesLayout(groupName = "Preferences", column = 0, row = 0, width = 1, height = 1)
 public class RobotContainer {
+  private static final int COAST_MODE_DELAY = 10;
   // The robot's subsystems and commands are defined here...
   private final Subsystems subsystems = new Subsystems();
   private final RobotAutonomous autonomous = new RobotAutonomous(subsystems, null);
@@ -79,18 +80,18 @@ public class RobotContainer {
   }
 
   public void disabledPeriodic() {
-    if (coastModeTimer.hasElapsed(3)) {
-      subsystems.drivetrain.setBrakeMode(false);
+    if (coastModeTimer.hasElapsed(COAST_MODE_DELAY)) {
+      subsystems.setBrakeMode(false);
       coastModeTimer.stop();
     }
   }
 
   public void autonomousInit() {
-    subsystems.drivetrain.setBrakeMode(true);
+    subsystems.setBrakeMode(true);
   }
 
   public void teleopInit() {
-    subsystems.drivetrain.setBrakeMode(true);
+    subsystems.setBrakeMode(true);
   }
 
   private void initShuffleboard() {

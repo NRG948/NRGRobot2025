@@ -159,6 +159,14 @@ public class Subsystems {
     }
   }
 
+  public void setBrakeMode(boolean brakeMode) {
+    for (Subsystem subsystem : all) {
+      if (subsystem instanceof ActiveSubsystem) {
+        ActiveSubsystem.class.cast(subsystem).setBrakeMode(brakeMode);
+      }
+    }
+  }
+
   public void initShuffleboard() {
     for (Subsystem subsystem : all) {
       if (subsystem instanceof ShuffleboardProducer) {

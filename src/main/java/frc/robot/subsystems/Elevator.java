@@ -102,7 +102,6 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
           true,
           METERS_PER_REVOLUTION);
 
-  @SuppressWarnings("unused")
   private MotorController follower =
       mainMotor.createFollower(RobotConstants.CAN.TalonFX.ELEVATOR_FOLLOWER_MOTOR_ID, false);
 
@@ -220,6 +219,12 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     logCurrentVelocity.append(currentState.velocity);
     logAtLowerLimit.append(atLowerLimit);
     logAtUpperLimit.append(atUpperLimit);
+  }
+
+  @Override
+  public void setBrakeMode(boolean brakeMode) {
+    mainMotor.setBrakeMode(brakeMode);
+    follower.setBrakeMode(brakeMode);
   }
 
   @Override

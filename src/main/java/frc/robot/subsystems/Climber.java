@@ -73,7 +73,6 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
           true,
           1); // filler value; motor encoder value is not used.
 
-  @SuppressWarnings("unused")
   private MotorController follower =
       mainMotor.createFollower(RobotConstants.CAN.TalonFX.CLIMBER_FOLLOWER_MOTOR_ID, false);
 
@@ -153,6 +152,12 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
     logMotorAngularVelocity.append(mainMotor.getEncoder().getVelocity()); // we set meter/rot = 1
     logMotorStatorCurent.append(mainMotor.getStatorCurrent());
     logMotorTorqueCurent.append(mainMotor.getTorqueCurrent());
+  }
+
+  @Override
+  public void setBrakeMode(boolean brakeMode) {
+    mainMotor.setBrakeMode(brakeMode);
+    follower.setBrakeMode(brakeMode);
   }
 
   @Override

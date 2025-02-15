@@ -11,4 +11,7 @@ package frc.robot.subsystems;
 public interface ActiveSubsystem {
   /** Disables the subsystem. */
   void disable();
+
+  /** Sets idle mode of motor(s) to either brake mode if true or coast mode if false. */
+  void setBrakeMode(boolean brakeMode);
 }
