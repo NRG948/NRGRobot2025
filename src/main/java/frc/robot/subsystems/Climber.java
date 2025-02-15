@@ -44,7 +44,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   private final double ABSOLUTE_ENCODER_ZERO_OFFSET = Math.toRadians(360 - 173.1);
 
   @RobotPreferencesValue
-  public static DoubleValue CLIMB_POWER = new DoubleValue("Climber", "Motor Power", 0.4);
+  public static DoubleValue CLIMB_MAX_POWER = new DoubleValue("Climber", "Max Power", 0.4);
 
   @RobotPreferencesValue
   public static DoubleValue TOLERANCE_DEG = new DoubleValue("Climber", "Tolerance (deg)", 1);
@@ -108,10 +108,11 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
     double angleError = goalAngle - currentAngle;
     double motorPower;
     if (enabled && !atGoalAngle()) {
-      // Runs at climb power until within small angle of goal and then ramps power down linearly.
+      // Runs at max power until within small angle of goal, then ramps power down linearly.
+      double maxPower = CLIMB_MAX_POWER.getValue();
       double kP =
-          CLIMB_POWER.getValue() / Math.toRadians(PROPORTIONAL_CONTROL_THRESHOLD_DEG.getValue());
-      motorPower = MathUtil.clamp(kP * angleError, -CLIMB_POWER.getValue(), CLIMB_POWER.getValue());
+          maxPower / Math.toRadians(PROPORTIONAL_CONTROL_THRESHOLD_DEG.getValue());
+      motorPower = MathUtil.clamp(kP * angleError, -maxPower, maxPower);
     } else {
       motorPower = 0;
     }
