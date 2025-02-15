@@ -37,7 +37,7 @@ public final class AlgaeCommands {
     return Commands.sequence(
             ElevatorCommands.goToElevatorLevel(subsystems, elevatorLevel),
             Commands.runOnce(
-                () -> subsystems.coralArm.setGoalAngle(elevatorLevel.getPivotAngle()),
+                () -> subsystems.coralArm.setGoalAngle(elevatorLevel.getArmAngle()),
                 subsystems.coralArm),
             CoralCommands.outtakeCoral(subsystems))
         .withName(String.format("RemoveAlgaeAtLevel(%s)", elevatorLevel.name()));

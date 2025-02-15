@@ -18,7 +18,7 @@ public final class CoralAndElevatorCommands {
     return Commands.parallel(
             ElevatorCommands.goToElevatorLevel(subsystems, level),
             Commands.sequence(
-                CoralCommands.waitForElevatorToReachPivotHeight(subsystems),
+                CoralCommands.waitForElevatorToReachArmHeight(subsystems),
                 CoralCommands.setArmAngleForReefLevel(subsystems, level)))
         .withName("RaiseElevatorAndCoralArm");
   }

@@ -128,8 +128,8 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private boolean atLowerLimit;
   private double currentVoltage;
 
-  /** pivotOffset starts from the goal height down. */
-  private double pivotOffset = 0;
+  /** armOffset starts from the goal height down. */
+  private double armOffset = 0;
 
   private BooleanLogEntry logIsSeekingGoal = new BooleanLogEntry(LOG, "Elevator/isSeekingGoal");
   private DoubleLogEntry logCurrentVelocity = new DoubleLogEntry(LOG, "Elevator/currentVelocity");
@@ -169,7 +169,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
    * @param level
    */
   public void setGoalPosition(ElevatorLevel level) {
-    setGoalPosition(level.getHeight(), level.getPivotOffset());
+    setGoalPosition(level.getElevatorHeight(), level.getArmOffset());
   }
 
   /**
@@ -177,11 +177,11 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
    *
    * @param height
    */
-  private void setGoalPosition(double height, double pivotOffset) {
+  private void setGoalPosition(double height, double armOffset) {
     isSeekingGoal = true;
     goalState.position = height;
     goalState.velocity = 0;
-    this.pivotOffset = pivotOffset;
+    this.armOffset = armOffset;
     lastState = currentState;
 
     controller.setPID(KP.getValue(), KI.getValue(), KD.getValue());
@@ -196,9 +196,9 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     return controller.atGoal();
   }
 
-  /** Returns whether the elevator is above the pivot position. */
-  public boolean abovePivotPosition() {
-    return goalState.position - pivotOffset <= currentState.position;
+  /** Returns whether the elevator is above the arm position. */
+  public boolean aboveArmPosition() {
+    return goalState.position - armOffset <= currentState.position;
   }
 
   private void updateSensorState() {

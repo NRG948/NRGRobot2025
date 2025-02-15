@@ -51,7 +51,7 @@ public final class CoralCommands {
    */
   public static Command setArmAngleForReefLevel(Subsystems subsystems, ElevatorLevel level) {
     return Commands.runOnce(
-            () -> subsystems.coralArm.setGoalAngle(level.getPivotAngle()), subsystems.coralArm)
+            () -> subsystems.coralArm.setGoalAngle(level.getArmAngle()), subsystems.coralArm)
         .withName(String.format("SetArmAngleForReefLevel(%s)", level.name()));
   }
 
@@ -66,16 +66,16 @@ public final class CoralCommands {
   public static Command stowArm(Subsystems subsystems) {
     return Commands.sequence(
             Commands.runOnce(
-                () -> subsystems.coralArm.setGoalAngle(ElevatorLevel.STOWED.getPivotAngle()),
+                () -> subsystems.coralArm.setGoalAngle(ElevatorLevel.STOWED.getArmAngle()),
                 subsystems.coralArm),
             waitForArmToReachGoalAngle(subsystems),
             Commands.runOnce(() -> subsystems.coralArm.disable(), subsystems.coralArm))
         .withName("StowArm");
   }
 
-  public static Command waitForElevatorToReachPivotHeight(Subsystems subsystems) {
+  public static Command waitForElevatorToReachArmHeight(Subsystems subsystems) {
     return Commands.idle(subsystems.coralArm)
-        .until(subsystems.elevator::abovePivotPosition)
-        .withName("waitForElevatorToReachPivotHeight");
+        .until(subsystems.elevator::aboveArmPosition)
+        .withName("waitForElevatorToReachArmHeight");
   }
 }
