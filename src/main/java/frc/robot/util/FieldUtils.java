@@ -7,20 +7,29 @@
  
 package frc.robot.util;
 
+import com.nrg948.preferences.RobotPreferences;
+import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.parameters.AprilTagFieldParameters;
 import java.util.ArrayList;
 
 /** Helper methods related to the 2025 FRC ReefScape field. */
 public final class FieldUtils {
-
   // TODO: Make field layout selectable.
-  private static final AprilTagFieldLayout FIELD_LAYOUT =
-      AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+  // private static final AprilTagFieldLayout FIELD_LAYOUT =
+  //     AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
+
+  @RobotPreferencesValue
+  public static RobotPreferences.EnumValue<AprilTagFieldParameters> FIELD_LAYOUT_PREFERENCE =
+      new RobotPreferences.EnumValue<AprilTagFieldParameters>(
+          "AprilTag", "Field Layout", AprilTagFieldParameters.k2025ReefscapeWelded);
+
+  private static AprilTagFieldLayout FIELD_LAYOUT =
+      AprilTagFieldLayout.loadField(FIELD_LAYOUT_PREFERENCE.getValue().getAprilTagFieldLayout());
 
   private static final ArrayList<Pose2d> redReefTags = new ArrayList<>(6);
   private static final ArrayList<Pose2d> blueReefTags = new ArrayList<>(6);
