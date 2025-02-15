@@ -18,8 +18,9 @@ import java.util.ArrayList;
 /** Helper methods related to the 2025 FRC ReefScape field. */
 public final class FieldUtils {
 
+  // TODO: Make field layout selectable.
   private static final AprilTagFieldLayout FIELD_LAYOUT =
-      AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+      AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
 
   private static final ArrayList<Pose2d> redReefTags = new ArrayList<>(6);
   private static final ArrayList<Pose2d> blueReefTags = new ArrayList<>(6);
