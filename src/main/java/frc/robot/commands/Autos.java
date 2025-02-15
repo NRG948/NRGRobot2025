@@ -90,13 +90,9 @@ public final class Autos {
 
     // TODO: Replace placeholder commands and parameters
     eventMaps.put(
-        "Remove Algae L1", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L1));
+        "Remove Algae L2", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.AlgaeL2));
     eventMaps.put(
-        "Remove Algae L2", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L2));
-    eventMaps.put(
-        "Remove Algae L3", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L3));
-    eventMaps.put(
-        "Remove Algae L4", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.L4));
+        "Remove Algae L3", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.AlgaeL3));
 
     eventMaps.put("Coral Intake", CoralCommands.intakeUntilCoralDetected(subsystems));
     eventMaps.put("Coral Outtake", CoralCommands.outtakeUntilCoralNotDetected(subsystems));
@@ -106,9 +102,6 @@ public final class Autos {
     eventMaps.put("Elevator L3", ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L3));
     eventMaps.put("Elevator L4", ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L4));
     eventMaps.put("Elevator Dock", ElevatorCommands.stowElevator(subsystems));
-
-    eventMaps.put("Pivot Intake", Commands.none() /* , Pivot(subsystems, IntakeAngle) */);
-    eventMaps.put("Pivot Outtake", Commands.none() /* Pivot(subsystems, OuttakeAngle) */);
 
     return eventMaps;
   }
