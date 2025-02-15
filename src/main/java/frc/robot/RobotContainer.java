@@ -8,7 +8,7 @@
 package frc.robot;
 
 import static frc.robot.commands.AlgaeCommands.removeAlgaeAtLevel;
-import static frc.robot.commands.AlignToReef.ReefPosition.CENTER;
+import static frc.robot.commands.AlignToReef.ReefPosition.CENTER_REEF;
 import static frc.robot.commands.AlignToReef.ReefPosition.LEFT_BRANCH;
 import static frc.robot.commands.AlignToReef.ReefPosition.RIGHT_BRANCH;
 import static frc.robot.commands.CoralAndElevatorCommands.raiseElevatorAndCoralArm;
@@ -115,7 +115,7 @@ public class RobotContainer {
   private void configureBindings() {
     m_driverController.start().onTrue(DriveCommands.resetOrientation(subsystems));
     m_driverController.x().whileTrue(DriveCommands.alignToReefPosition(subsystems, LEFT_BRANCH));
-    m_driverController.y().whileTrue(DriveCommands.alignToReefPosition(subsystems, CENTER));
+    m_driverController.y().whileTrue(DriveCommands.alignToReefPosition(subsystems, CENTER_REEF));
     m_driverController.b().whileTrue(DriveCommands.alignToReefPosition(subsystems, RIGHT_BRANCH));
     m_driverController.rightBumper().whileTrue(ClimberCommands.climb(subsystems));
 

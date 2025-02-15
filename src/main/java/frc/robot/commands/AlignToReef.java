@@ -27,7 +27,7 @@ public class AlignToReef extends AlignToPose {
   /** An enum that represents the reef alignment positions as viewed face on. */
   public enum ReefPosition {
     LEFT_BRANCH,
-    CENTER,
+    CENTER_REEF,
     RIGHT_BRANCH
   }
 
@@ -55,7 +55,7 @@ public class AlignToReef extends AlignToPose {
       case LEFT_BRANCH:
         yOffset -= BRANCH_TO_REEF_APRILTAG;
         break;
-      case CENTER:
+      case CENTER_REEF:
         break;
     }
 
