@@ -152,6 +152,13 @@ public class RobotContainer {
         .onTrue(LEDCommands.indicateCoralAcquired(subsystems));
     new Trigger(subsystems.algaeGrabber::hasAlgae)
         .onTrue(LEDCommands.indicateAlgaeAcquired(subsystems));
+
+    new Trigger(subsystems.coralArm::hasError)
+        .whileTrue(LEDCommands.indicateErrorWithBlink(subsystems));
+    new Trigger(subsystems.elevator::hasError)
+        .whileTrue(LEDCommands.indicateErrorWithBlink(subsystems));
+    new Trigger(subsystems.coralRoller::hasError)
+        .whileTrue(LEDCommands.indicateErrorWithSolid(subsystems));
   }
 
   /**

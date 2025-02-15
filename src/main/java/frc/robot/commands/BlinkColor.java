@@ -37,6 +37,11 @@ public final class BlinkColor extends Command {
     addRequirements(led);
   }
 
+  /** Creates a new BlinkColor that runs until interrupted. */
+  public BlinkColor(LEDSubsystem led, Colors color) {
+    this(led, color, Double.MAX_VALUE);
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -53,11 +58,7 @@ public final class BlinkColor extends Command {
   public void execute() {
 
     if (blinkTimer.advanceIfElapsed(BLINK_TIME)) {
-      if (isOn) {
-        led.fillAndCommitColor(BLACK);
-      } else {
-        led.fillAndCommitColor(color);
-      }
+      led.fillAndCommitColor(isOn ? BLACK : color);
       isOn = !isOn;
     }
   }

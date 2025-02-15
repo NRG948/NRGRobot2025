@@ -24,6 +24,7 @@ import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -52,15 +53,19 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private static final double KS = 0.0656;
   private static final double KV = (RobotConstants.MAX_BATTERY_VOLTAGE - KS) / MAX_VELOCITY;
 
+  private static final double ERROR_TIME = 3.0;
+
   private final TalonFX motor = new TalonFX(RobotConstants.CAN.TalonFX.CORAL_ROLLER_MOTOR_ID);
   private DigitalInput beamBreak = new DigitalInput(CORAL_ROLLER_BEAM_BREAK);
 
   private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(KS, KV);
   private final PIDController pidController = new PIDController(1, 0, 0);
+  private final Timer outtakeTimer = new Timer();
 
   private double goalVelocity = 0;
   private double currentVelocity = 0;
   private boolean hasCoral = false;
+  private boolean hasError = false;
 
   private DoubleLogEntry logCurrentVelocity =
       new DoubleLogEntry(LOG, "/CoralRoller/currentVelocity");
@@ -91,6 +96,12 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   /** Outakes the coral. */
   public void outtake() {
     setGoalVelocity(2.0);
+    outtakeTimer.restart();
+  }
+
+  /** Updates hasError if stuckTimer exceeds 3 seconds. */
+  public void checkError() {
+    hasError = outtakeTimer.hasElapsed(ERROR_TIME);
   }
 
   /** Disables the subsystem. */
@@ -98,12 +109,18 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   public void disable() {
     goalVelocity = 0;
     logGoalVelocity.append(0);
+    outtakeTimer.stop();
     motor.stopMotor();
   }
 
   /** Returns whether we have coral. */
   public boolean hasCoral() {
     return hasCoral;
+  }
+
+  /** Returns hasError. */
+  public boolean hasError() {
+    return hasError;
   }
 
   @Override
@@ -114,6 +131,8 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
       double feedback = pidController.calculate(currentVelocity, goalVelocity);
       double motorVoltage = feedforward + feedback;
       motor.setVoltage(motorVoltage);
+      checkError();
+
       logFeedForward.append(feedforward);
       logFeedBack.append(feedback);
       logVoltage.append(motorVoltage);

@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import static frc.robot.parameters.Colors.GREEN;
+import static frc.robot.parameters.Colors.RED;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -61,5 +62,28 @@ public final class LEDCommands {
             setColor(subsystem.statusLEDs, GREEN),
             Commands.idle(subsystem.statusLEDs).until(() -> !subsystem.algaeGrabber.hasAlgae()))
         .withName("IndicateAlgaeAcquired");
+  }
+
+  /**
+   * Returns a command that blinks the status LEDs red while a condition is true.
+   *
+   * @param subsystem The subsystems.
+   * @return A command that blinks the status LEDs red.
+   */
+  public static Command indicateErrorWithBlink(Subsystems subsystem) {
+    return new BlinkColor(subsystem.statusLEDs, RED).withName("IndicateErrorWithBlink");
+  }
+
+  /**
+   * Returns a command that turns the status LEDs red while a condition is true.
+   *
+   * @param subsystem The subsystems.
+   * @param condition The condition for the command to run.
+   * @return A command that turns the status LEDs red.
+   */
+  public static Command indicateErrorWithSolid(Subsystems subsystem) {
+    return Commands.sequence(
+            setColor(subsystem.statusLEDs, RED), Commands.idle(subsystem.statusLEDs))
+        .withName("IndicateErrorWithSolid");
   }
 }
