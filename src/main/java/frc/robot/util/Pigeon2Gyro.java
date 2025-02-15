@@ -11,7 +11,8 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.units.measure.Angle;
 
-public class Pigeon2Gyro implements Gyro {
+/** A gyro implementation based on the Pigeon 2. */
+public final class Pigeon2Gyro implements Gyro {
   private final Pigeon2 pigeon;
   private final StatusSignal<Angle> angle;
 

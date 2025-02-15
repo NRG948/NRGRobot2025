@@ -7,7 +7,8 @@
  
 package frc.robot.util;
 
-public class SparkEncoderAdapter implements RelativeEncoder {
+/** An relative encoder implementation based on the REV Robotics Spark motor controllers. */
+public final class SparkEncoderAdapter implements RelativeEncoder {
   private final com.revrobotics.RelativeEncoder encoder;
 
   public SparkEncoderAdapter(com.revrobotics.RelativeEncoder encoder) {

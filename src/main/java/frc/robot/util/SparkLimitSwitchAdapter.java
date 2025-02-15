@@ -9,8 +9,8 @@ package frc.robot.util;
 
 import com.revrobotics.spark.SparkLimitSwitch;
 
-public class SparkLimitSwitchAdapter implements LimitSwitch {
-
+/** A limit switch implementation based on the REV Robotics Spark motor controllers. */
+public final class SparkLimitSwitchAdapter implements LimitSwitch {
   private final SparkLimitSwitch limitSwitch;
 
   public SparkLimitSwitchAdapter(SparkLimitSwitch limitSwitch) {

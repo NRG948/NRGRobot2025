@@ -8,7 +8,7 @@
 package frc.robot.util;
 
 /** Represents swerve module velocities. */
-public class SwerveModuleVelocities {
+public final class SwerveModuleVelocities {
   /** The translational velocity of the wheel in m/s. */
   public double driveVelocity;
 

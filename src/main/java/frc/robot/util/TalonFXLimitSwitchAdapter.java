@@ -9,8 +9,8 @@ package frc.robot.util;
 
 import com.ctre.phoenix6.StatusSignal;
 
-public class TalonFXLimitSwitchAdapter<T extends Enum<T>> implements LimitSwitch {
-
+/** A relative encoder implementation based on the CTR Electronics TalonFX motor controller. */
+public final class TalonFXLimitSwitchAdapter<T extends Enum<T>> implements LimitSwitch {
   private final StatusSignal<T> limitSwitch;
   private final T pressedState;
 

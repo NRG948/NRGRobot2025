@@ -12,7 +12,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 
-public class TalonFXEncoderAdapter implements RelativeEncoder {
+/** A relative encoder implementation based on the CTR Electronics TalonFX motor controller. */
+public final class TalonFXEncoderAdapter implements RelativeEncoder {
   private final StatusSignal<Angle> position;
   private final StatusSignal<AngularVelocity> velocity;
   private final double metersPerRotation;

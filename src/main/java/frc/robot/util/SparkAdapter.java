@@ -19,7 +19,8 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.units.measure.Voltage;
 
-public class SparkAdapter implements MotorController {
+/** A motor controller implementation based on the REV Robotics Spark controllers. */
+public final class SparkAdapter implements MotorController {
   private interface Accessor {
     /** Returns the motor controller. */
     SparkBase get();

@@ -11,7 +11,8 @@ import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 import com.studica.frc.AHRS.NavXUpdateRate;
 
-public class NavXGyro implements Gyro {
+/** A gyro implementation based on the NavX MXP. */
+public final class NavXGyro implements Gyro {
   private final AHRS ahrs = new AHRS(NavXComType.kMXP_SPI, NavXUpdateRate.k50Hz);
 
   @Override

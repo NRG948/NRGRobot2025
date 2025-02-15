@@ -16,7 +16,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.units.measure.Voltage;
 
-public class TalonFXAdapter implements MotorController {
+/** A motor controller implementation based on the CTR Electronics TalonFX controller. */
+public final class TalonFXAdapter implements MotorController {
   private final TalonFX talonFX;
   private final double metersPerRotation;
 

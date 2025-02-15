@@ -8,7 +8,7 @@
 package frc.robot.util;
 
 /** Represents motor voltages for one swerve module. */
-public class SwerveModuleVoltages {
+public final class SwerveModuleVoltages {
   /** The drive motor voltage. */
   public final double driveVoltage;
 
