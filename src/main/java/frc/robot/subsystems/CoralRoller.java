@@ -110,6 +110,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
     goalVelocity = 0;
     logGoalVelocity.append(0);
     outtakeTimer.stop();
+    outtakeTimer.reset();
     motor.stopMotor();
   }
 

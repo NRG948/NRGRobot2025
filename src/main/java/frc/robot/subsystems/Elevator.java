@@ -237,6 +237,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       }
     } else {
       stuckTimer.stop();
+      stuckTimer.reset();
     }
 
     hasError = stuckTimer.hasElapsed(POSITION_ERROR_TIME);

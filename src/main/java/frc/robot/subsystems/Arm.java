@@ -145,6 +145,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
       }
     } else {
       stuckTimer.stop();
+      stuckTimer.reset();
     }
 
     hasError =

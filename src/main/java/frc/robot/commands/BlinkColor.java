@@ -58,7 +58,7 @@ public final class BlinkColor extends Command {
   public void execute() {
 
     if (blinkTimer.advanceIfElapsed(BLINK_TIME)) {
-      led.fillAndCommitColor(isOn ? BLACK : color);
+      led.fillAndCommitColor(isOn ? color : BLACK);
       isOn = !isOn;
     }
   }
