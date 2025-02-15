@@ -103,7 +103,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
     /* TODO: suggestion from Leo: to prevent the climber from digging
       into ground when the cage is not completely in, we could check
       whether we have load at a specific angle that we expect to contact
-      the cage it it was properly aligned. If not, we stop climb.
+      the cage if it was properly aligned. If not, we stop climb.
     */
     double angleError = goalAngle - currentAngle;
     double motorPower;
