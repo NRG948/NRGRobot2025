@@ -81,7 +81,6 @@ def includeDesktopSupport = false
 dependencies {
     annotationProcessor wpi.java.deps.wpilibAnnotations()
     implementation wpi.java.deps.wpilib()
-    
     implementation wpi.java.vendor.java()
     implementation 'com.nrg948:nrgcommon:2025.3.1-SNAPSHOT'
 
