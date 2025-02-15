@@ -38,6 +38,7 @@ import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -80,6 +81,10 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   @RobotPreferencesValue(column = 1, row = 0)
   public static RobotPreferences.BooleanValue ENABLE_DRIVE_TAB =
       new RobotPreferences.BooleanValue("Drive", "Enable Tab", false);
+
+  @RobotPreferencesValue(column = 0, row = 1)
+  public static RobotPreferences.BooleanValue ENABLE_RUMBLE =
+      new RobotPreferences.BooleanValue("Drive", "Enable Rumble", true);
 
   public static final double DRIVE_KP = 1.0;
 
@@ -129,6 +134,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   };
 
   private final Gyro gyro = PARAMETERS.getValue().getGyro();
+  private final BuiltInAccelerometer accelerometer = new BuiltInAccelerometer();
 
   private final SwerveDriveKinematics kinematics = PARAMETERS.getValue().getKinematics();
 
@@ -140,10 +146,8 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   private double rawOrientationOffset; // The offset to the corrected orientation in radians.
   private Rotation2d orientation = new Rotation2d();
   private Pose2d lastVisionMeasurement = new Pose2d();
-  private Supplier<Optional<Rotation2d>> targetOrientationSupplier =
-      () -> Optional.empty(); // absolute location to
-  // keep the robot oriented
-  // to tag
+  private Supplier<Optional<Rotation2d>> targetOrientationSupplier = () -> Optional.empty();
+  private double acceleration = 0;
 
   private DoubleLogEntry poseXLog = new DoubleLogEntry(LOG, "/Swerve/Pose X");
   private DoubleLogEntry poseYLog = new DoubleLogEntry(LOG, "/Swerve/Pose Y");
@@ -151,6 +155,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   private DoubleLogEntry rawOrientationLog = new DoubleLogEntry(LOG, "/Swerve/rawOrientation");
   private DoubleLogEntry rawOrientationOffsetLog =
       new DoubleLogEntry(LOG, "/Swerve/rawOrientationOffset");
+  private DoubleLogEntry accelerationLog = new DoubleLogEntry(LOG, "/Swerve/acceleration");
 
   /**
    * Creates a {@link SwerveModule} object and intiailizes its motor controllers.
@@ -206,6 +211,11 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
     rawOrientation = rawGyro;
     rawOrientationLog.append(Math.toDegrees(rawGyro));
     orientation = new Rotation2d(MathUtil.angleModulus(rawOrientation + rawOrientationOffset));
+
+    double accelerationX = accelerometer.getX();
+    double accelerationY = accelerometer.getY();
+    acceleration = Math.hypot(accelerationX, accelerationY);
+    accelerationLog.append(acceleration);
   }
 
   /** See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double)} */
@@ -283,6 +293,11 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
    */
   public static double getMaxAcceleration() {
     return PARAMETERS.getValue().getMaxDriveAcceleration();
+  }
+
+  /** Gets acceleration in g with an range of +/- 8 g's */
+  public double getAcceleration() {
+    return acceleration;
   }
 
   /**
