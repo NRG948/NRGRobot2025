@@ -19,9 +19,6 @@ import java.util.ArrayList;
 
 /** Helper methods related to the 2025 FRC ReefScape field. */
 public final class FieldUtils {
-  // TODO: Make field layout selectable.
-  // private static final AprilTagFieldLayout FIELD_LAYOUT =
-  //     AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
 
   @RobotPreferencesValue
   public static RobotPreferences.EnumValue<AprilTagFieldParameters> FIELD_LAYOUT_PREFERENCE =
