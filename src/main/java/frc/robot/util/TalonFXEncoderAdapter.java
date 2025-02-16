@@ -17,13 +17,13 @@ public final class TalonFXEncoderAdapter implements RelativeEncoder {
   private final StatusSignal<Angle> position;
   private final StatusSignal<AngularVelocity> velocity;
   private final double metersPerRotation;
-  private final double initPosition;
+  private double initPosition;
 
   public TalonFXEncoderAdapter(TalonFX controller, double metersPerRotation) {
     position = controller.getPosition();
-    initPosition = position.refresh().getValueAsDouble() * metersPerRotation;
     velocity = controller.getVelocity();
     this.metersPerRotation = metersPerRotation;
+    reset();
   }
 
   @Override
@@ -34,5 +34,10 @@ public final class TalonFXEncoderAdapter implements RelativeEncoder {
   @Override
   public double getVelocity() {
     return velocity.refresh().getValueAsDouble() * metersPerRotation;
+  }
+
+  @Override
+  public void reset() {
+    initPosition = position.refresh().getValueAsDouble() * metersPerRotation;
   }
 }

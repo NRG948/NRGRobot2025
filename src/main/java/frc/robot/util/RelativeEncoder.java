@@ -13,4 +13,7 @@ public interface RelativeEncoder {
 
   /** Returns the current velocity in meters per second. */
   double getVelocity();
+
+  /** Resets the encoder. */
+  void reset();
 }
