@@ -25,7 +25,7 @@ import frc.robot.subsystems.Swerve;
  * A {@link Command} that autonomous drives and aligns the robot to the specified branch of the
  * nearest reef side.
  */
-@RobotPreferencesLayout(groupName = "AlignToPose", row = 0, column = 4, width = 2, height = 3)
+@RobotPreferencesLayout(groupName = "AlignToPose", row = 0, column = 4, width = 1, height = 3)
 public class AlignToPose extends Command {
   private static final DataLog LOG = DataLogManager.getLog();
   private static final double MAX_TRANSLATIONAL_POWER = 0.30;
