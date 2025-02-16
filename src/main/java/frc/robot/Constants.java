@@ -69,8 +69,6 @@ public final class Constants {
     /** CANBus device IDs. */
     public static final class CAN {
       public static final class TalonFX {
-        public static final int ELEVATOR_MAIN_MOTOR_ID = 14; // Back
-        public static final int ELEVATOR_FOLLOWER_MOTOR_ID = 8; // Front
         public static final int CORAL_ARM_MOTOR_ID = 6;
         public static final int CORAL_ROLLER_MOTOR_ID = 5;
         public static final int ALGAE_ARM_MOTOR_ID = 3;

@@ -37,15 +37,21 @@ import frc.robot.Constants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.parameters.ElevatorLevel;
+import frc.robot.parameters.ElevatorParameters;
 import frc.robot.util.MotorController;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
 import java.util.Set;
 
-@RobotPreferencesLayout(groupName = "Elevator", row = 0, column = 5, width = 1, height = 3)
+@RobotPreferencesLayout(groupName = "Elevator", row = 0, column = 5, width = 2, height = 3)
 public class Elevator extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   private static final DataLog LOG = DataLogManager.getLog();
+
+  @RobotPreferencesValue
+  public static RobotPreferences.EnumValue<ElevatorParameters> PARAMETERS =
+      new RobotPreferences.EnumValue<ElevatorParameters>(
+          "Elevator", "Robot Base", ElevatorParameters.CompetitionBase2025);
 
   @RobotPreferencesValue
   public static RobotPreferences.BooleanValue ENABLE_TAB =
@@ -54,11 +60,11 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   // physical parameters of the elevator
   private static final double GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
   private static final double SPROCKET_DIAMETER = 0.05; // 5 cm
-  private static final double MASS = 3; // kilograms
+  private static final double MASS = PARAMETERS.getValue().getMass(); // kilograms
   private static final double METERS_PER_REVOLUTION = (SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO;
 
-  private static final double MAX_HEIGHT = 1.42;
-  public static final double MIN_HEIGHT = 0.033; // in meters
+  private static final double MAX_HEIGHT = PARAMETERS.getValue().getMaxHeight();
+  public static final double MIN_HEIGHT = PARAMETERS.getValue().getMinHeight(); // in meters
   private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.04;
 
   // trapezoid profile values
@@ -98,13 +104,13 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   private MotorController mainMotor =
       new TalonFXAdapter(
-          new TalonFX(RobotConstants.CAN.TalonFX.ELEVATOR_MAIN_MOTOR_ID, "rio"),
+          new TalonFX(PARAMETERS.getValue().getMainDeviceID(), "rio"),
           false,
           MotorIdleMode.BRAKE,
           METERS_PER_REVOLUTION);
 
   private MotorController follower =
-      mainMotor.createFollower(RobotConstants.CAN.TalonFX.ELEVATOR_FOLLOWER_MOTOR_ID, false);
+      mainMotor.createFollower(PARAMETERS.getValue().getFollowerDeviceID(), false);
 
   private RelativeEncoder encoder = mainMotor.getEncoder();
 

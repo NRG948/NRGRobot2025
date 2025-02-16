@@ -30,7 +30,7 @@ import frc.robot.util.MotorController;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.TalonFXAdapter;
 
-@RobotPreferencesLayout(groupName = "Climber", row = 0, column = 6, width = 1, height = 3)
+@RobotPreferencesLayout(groupName = "Climber", row = 0, column = 7, width = 1, height = 3)
 public class Climber extends SubsystemBase implements ShuffleboardProducer, ActiveSubsystem {
   @RobotPreferencesValue
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
