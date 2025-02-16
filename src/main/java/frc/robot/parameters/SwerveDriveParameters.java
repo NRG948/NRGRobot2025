@@ -59,6 +59,20 @@ public enum SwerveDriveParameters {
       0.15,
       0.15,
       true,
+      21),
+  CompetitionBase2025(
+      41.0, // TODO Correct robot mass
+      0.602,
+      0.602,
+      MK4IFast,
+      KrakenX60,
+      NeoV1_1,
+      new int[] {15, 14, 13, 6, 2, 1, 8, 7}, // drive, steer motor controller CAN IDs
+      new int[] {31, 32, 33, 34}, // CANCoder CAN IDs
+      new double[] {159.79, 109.25, 170.95, 4.66},
+      0.15,
+      0.15,
+      true,
       21);
 
   public static class Constants {

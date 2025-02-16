@@ -80,7 +80,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   @RobotPreferencesValue(column = 0, row = 0)
   public static RobotPreferences.EnumValue<SwerveDriveParameters> PARAMETERS =
       new RobotPreferences.EnumValue<SwerveDriveParameters>(
-          "Drive", "Robot Base", SwerveDriveParameters.PracticeBase2025);
+          "Drive", "Robot Base", SwerveDriveParameters.CompetitionBase2025);
 
   @RobotPreferencesValue(column = 1, row = 0)
   public static RobotPreferences.BooleanValue ENABLE_DRIVE_TAB =
