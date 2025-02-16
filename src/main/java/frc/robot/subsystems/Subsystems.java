@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/** Contains all robot subsystems. */
 public class Subsystems {
   public final Swerve drivetrain = new Swerve();
   public final Elevator elevator = new Elevator();
@@ -152,6 +153,7 @@ public class Subsystems {
     }
   }
 
+  /** Disables all subsystems implementing the {@link ActiveSubsystem} interface. */
   public void disable() {
     for (Subsystem subsystem : all) {
       if (subsystem instanceof ActiveSubsystem) {
@@ -160,6 +162,10 @@ public class Subsystems {
     }
   }
 
+  /**
+   * Sets the idle mode of the motor's for all subsystems implementing the {@link ActiveSubsystem}
+   * interface.
+   */
   public void setIdleMode(MotorIdleMode idleMode) {
     for (Subsystem subsystem : all) {
       if (subsystem instanceof ActiveSubsystem) {
@@ -168,6 +174,10 @@ public class Subsystems {
     }
   }
 
+  /**
+   * Adds Shuffleboard tabs for all subsystems implementing the {@link ShuffleboardProducer}
+   * interface.
+   */
   public void initShuffleboard() {
     for (Subsystem subsystem : all) {
       if (subsystem instanceof ShuffleboardProducer) {
@@ -176,18 +186,25 @@ public class Subsystems {
     }
   }
 
+  /** Called to perform periodic actions. */
   public void periodic() {
     frontCamera.ifPresent(this::updateEstimatedPose);
     backCamera.ifPresent(this::updateEstimatedPose);
   }
 
-  private void updateEstimatedPose(AprilTag aprilTag) {
-    var visionEst = aprilTag.getEstimateGlobalPose();
+  /**
+   * Updates the estimated pose of the robot based on the given camera.
+   *
+   * @param camera The {@link AprilTag} subsystem managing the camera to use for updating the
+   *     estimated pose.
+   */
+  private void updateEstimatedPose(AprilTag camera) {
+    var visionEst = camera.getEstimateGlobalPose();
 
     visionEst.ifPresent(
         (est) -> {
           var estPose = est.estimatedPose.toPose2d();
-          var estStdDevs = aprilTag.getEstimationStdDevs();
+          var estStdDevs = camera.getEstimationStdDevs();
 
           drivetrain.addVisionMeasurement(estPose, est.timestampSeconds, estStdDevs);
         });
