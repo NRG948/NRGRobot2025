@@ -163,7 +163,7 @@ public class Subsystems {
   }
 
   /**
-   * Sets the idle mode of the motor's for all subsystems implementing the {@link ActiveSubsystem}
+   * Sets the idle mode of the motors for all subsystems implementing the {@link ActiveSubsystem}
    * interface.
    */
   public void setIdleMode(MotorIdleMode idleMode) {
