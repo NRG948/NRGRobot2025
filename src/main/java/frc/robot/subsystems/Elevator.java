@@ -46,7 +46,7 @@ import java.util.Set;
 @RobotPreferencesLayout(groupName = "Elevator", row = 1, column = 0, width = 1, height = 2)
 public class Elevator extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   private static final double POSITION_TOLERANCE = 0.01;
-  private static final double POSITION_ERROR_MARGIN = 0.1; // meters
+  private static final double POSITION_ERROR_MARGIN = 0.05; // meters
   private static final double POSITION_ERROR_TIME = 2.0;
 
   private static final DataLog LOG = DataLogManager.getLog();
