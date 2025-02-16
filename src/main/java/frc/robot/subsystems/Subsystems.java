@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.parameters.ArmParameters;
+import frc.robot.util.MotorIdleMode;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -159,10 +160,10 @@ public class Subsystems {
     }
   }
 
-  public void setBrakeMode(boolean brakeMode) {
+  public void setIdleMode(MotorIdleMode idleMode) {
     for (Subsystem subsystem : all) {
       if (subsystem instanceof ActiveSubsystem) {
-        ActiveSubsystem.class.cast(subsystem).setBrakeMode(brakeMode);
+        ActiveSubsystem.class.cast(subsystem).setIdleMode(idleMode);
       }
     }
   }

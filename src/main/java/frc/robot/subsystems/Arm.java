@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.ArmParameters;
+import frc.robot.util.MotorIdleMode;
 import frc.robot.util.MotorUtils;
 
 @RobotPreferencesLayout(groupName = "Arm", row = 1, column = 0, width = 1, height = 1)
@@ -152,8 +153,8 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   }
 
   @Override
-  public void setBrakeMode(boolean brakeMode) {
-    MotorUtils.setBrakeMode(motor, brakeMode);
+  public void setIdleMode(MotorIdleMode idleMode) {
+    MotorUtils.setIdleMode(motor, idleMode);
   }
 
   @Override

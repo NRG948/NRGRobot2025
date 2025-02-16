@@ -56,6 +56,7 @@ import frc.robot.parameters.SwerveDriveParameters;
 import frc.robot.parameters.SwerveMotors;
 import frc.robot.util.Gyro;
 import frc.robot.util.MotorController;
+import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.SwerveModuleVelocities;
 import frc.robot.util.SwerveModuleVoltages;
@@ -523,16 +524,16 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
     poseAngleLog.append(robotPose.getRotation().getDegrees());
   }
 
-  public void setBrakeMode(boolean brakeMode) {
-    frontLeftDriveMotor.setBrakeMode(brakeMode);
-    frontRightDriveMotor.setBrakeMode(brakeMode);
-    backLeftDriveMotor.setBrakeMode(brakeMode);
-    backRightDriveMotor.setBrakeMode(brakeMode);
+  public void setIdleMode(MotorIdleMode idleMode) {
+    frontLeftDriveMotor.setIdleMode(idleMode);
+    frontRightDriveMotor.setIdleMode(idleMode);
+    backLeftDriveMotor.setIdleMode(idleMode);
+    backRightDriveMotor.setIdleMode(idleMode);
 
-    frontLeftSteeringMotor.setBrakeMode(brakeMode);
-    frontRightSteeringMotor.setBrakeMode(brakeMode);
-    backLeftSteeringMotor.setBrakeMode(brakeMode);
-    backRightSteeringMotor.setBrakeMode(brakeMode);
+    frontLeftSteeringMotor.setIdleMode(idleMode);
+    frontRightSteeringMotor.setIdleMode(idleMode);
+    backLeftSteeringMotor.setIdleMode(idleMode);
+    backRightSteeringMotor.setIdleMode(idleMode);
   }
 
   /** Adds a tab for swerve drive in Shuffleboard. */

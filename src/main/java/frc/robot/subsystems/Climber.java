@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.util.MotorController;
+import frc.robot.util.MotorIdleMode;
 import frc.robot.util.TalonFXAdapter;
 
 @RobotPreferencesLayout(groupName = "Climber", row = 0, column = 6, width = 1, height = 3)
@@ -70,7 +71,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
       new TalonFXAdapter(
           new TalonFX(RobotConstants.CAN.TalonFX.CLIMBER_MAIN_MOTOR_ID, "rio"),
           false,
-          true,
+          MotorIdleMode.BRAKE,
           1); // filler value; motor encoder value is not used.
 
   private MotorController follower =
@@ -155,9 +156,9 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   }
 
   @Override
-  public void setBrakeMode(boolean brakeMode) {
-    mainMotor.setBrakeMode(brakeMode);
-    follower.setBrakeMode(brakeMode);
+  public void setIdleMode(MotorIdleMode idleMode) {
+    mainMotor.setIdleMode(idleMode);
+    follower.setIdleMode(idleMode);
   }
 
   @Override

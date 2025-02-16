@@ -12,6 +12,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.util.MotorIdleMode;
 import frc.robot.util.MotorUtils;
 
 public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem {
@@ -48,8 +49,8 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem {
   }
 
   @Override
-  public void setBrakeMode(boolean brakeMode) {
-    MotorUtils.setBrakeMode(motor, brakeMode);
+  public void setIdleMode(MotorIdleMode idleMode) {
+    MotorUtils.setIdleMode(motor, idleMode);
   }
 
   @Override

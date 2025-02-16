@@ -39,6 +39,7 @@ import frc.robot.commands.FlameCycle;
 import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.Subsystems;
+import frc.robot.util.MotorIdleMode;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -81,17 +82,18 @@ public class RobotContainer {
 
   public void disabledPeriodic() {
     if (coastModeTimer.hasElapsed(COAST_MODE_DELAY)) {
-      subsystems.setBrakeMode(false);
+      subsystems.setIdleMode(MotorIdleMode.COAST);
       coastModeTimer.stop();
+      coastModeTimer.reset();
     }
   }
 
   public void autonomousInit() {
-    subsystems.setBrakeMode(true);
+    subsystems.setIdleMode(MotorIdleMode.BRAKE);
   }
 
   public void teleopInit() {
-    subsystems.setBrakeMode(true);
+    subsystems.setIdleMode(MotorIdleMode.BRAKE);
   }
 
   private void initShuffleboard() {

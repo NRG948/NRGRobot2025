@@ -9,15 +9,14 @@ package frc.robot.util;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class MotorUtils {
   /** Sets brake mode for TalonFX motors */
-  public static void setBrakeMode(TalonFX motor, boolean brakeMode) {
+  public static void setIdleMode(TalonFX motor, MotorIdleMode idleMode) {
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
 
     motor.getConfigurator().refresh(motorOutputConfigs);
-    motorOutputConfigs.NeutralMode = brakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+    motorOutputConfigs.NeutralMode = idleMode.forTalonFX();
 
     motor.getConfigurator().apply(motorOutputConfigs);
   }

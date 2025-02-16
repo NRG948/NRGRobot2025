@@ -12,7 +12,6 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
 import edu.wpi.first.units.measure.Voltage;
 
@@ -42,16 +41,16 @@ public final class TalonFXAdapter implements MotorController {
    *
    * @param talonFX The TalonFX object to adapt.
    * @param isInverted Whether the motor should be inverted.
-   * @param brakeMode Whether the motor should brake when stopped.
+   * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
    * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
    *     the output shaft.
    */
   public TalonFXAdapter(
-      TalonFX talonFX, boolean isInverted, boolean brakeMode, double metersPerRotation) {
+      TalonFX talonFX, boolean isInverted, MotorIdleMode idleMode, double metersPerRotation) {
     this(talonFX, metersPerRotation);
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
 
-    motorOutputConfigs.NeutralMode = brakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+    motorOutputConfigs.NeutralMode = idleMode.forTalonFX();
     motorOutputConfigs.Inverted =
         isInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
@@ -94,13 +93,8 @@ public final class TalonFXAdapter implements MotorController {
   }
 
   @Override
-  public void setBrakeMode(boolean brakeMode) {
-    MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
-
-    talonFX.getConfigurator().refresh(motorOutputConfigs);
-    motorOutputConfigs.NeutralMode = brakeMode ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-
-    talonFX.getConfigurator().apply(motorOutputConfigs);
+  public void setIdleMode(MotorIdleMode idleMode) {
+    MotorUtils.setIdleMode(talonFX, idleMode);
   }
 
   @Override

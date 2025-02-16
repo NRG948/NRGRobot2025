@@ -7,7 +7,6 @@
  
 package frc.robot.parameters;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 
 public enum AprilTagFieldParameters {

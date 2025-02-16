@@ -13,7 +13,6 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkBaseConfigAccessor;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -130,15 +129,15 @@ public final class SparkAdapter implements MotorController {
    *
    * @param spark The SparkMax object to adapt.
    * @param isInverted Whether the motor should be inverted.
-   * @param brakeMode Whether the motor should brake when stopped.
+   * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
    * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
    *     the output shaft.
    */
   public SparkAdapter(
-      SparkMax sparkMax, boolean isInverted, boolean brakeMode, double metersPerRotation) {
+      SparkMax sparkMax, boolean isInverted, MotorIdleMode idleMode, double metersPerRotation) {
     this(sparkMax);
 
-    configure(isInverted, brakeMode, metersPerRotation);
+    configure(isInverted, idleMode, metersPerRotation);
   }
 
   /**
@@ -159,29 +158,29 @@ public final class SparkAdapter implements MotorController {
    *
    * @param spark The SparkFlex object to adapt.
    * @param isInverted Whether the motor should be inverted.
-   * @param brakeMode Whether the motor should brake when stopped.
+   * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
    * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
    *     the output shaft.
    */
   public SparkAdapter(
-      SparkFlex sparkFlex, boolean isInverted, boolean brakeMode, double metersPerRotation) {
+      SparkFlex sparkFlex, boolean isInverted, MotorIdleMode idleMode, double metersPerRotation) {
     this(sparkFlex);
 
-    configure(isInverted, brakeMode, metersPerRotation);
+    configure(isInverted, idleMode, metersPerRotation);
   }
 
   /**
    * Configures the motor controller.
    *
    * @param isInverted Whether the motor should be inverted.
-   * @param brakeMode Whether the motor should brake when stopped.
+   * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
    * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
    *     the output shaft.
    */
-  private void configure(boolean isInverted, boolean brakeMode, double metersPerRotation) {
+  private void configure(boolean isInverted, MotorIdleMode idleMode, double metersPerRotation) {
     SparkBaseConfig driveMotorConfig = spark.getConfig();
 
-    driveMotorConfig.inverted(isInverted).idleMode(brakeMode ? IdleMode.kBrake : IdleMode.kCoast);
+    driveMotorConfig.inverted(isInverted).idleMode(idleMode.forSpark());
 
     driveMotorConfig
         .encoder
@@ -224,10 +223,10 @@ public final class SparkAdapter implements MotorController {
   }
 
   @Override
-  public void setBrakeMode(boolean brakeMode) {
+  public void setIdleMode(MotorIdleMode idleMode) {
     SparkBaseConfig config = spark.getConfig();
 
-    config.idleMode(brakeMode ? IdleMode.kBrake : IdleMode.kCoast);
+    config.idleMode(idleMode.forSpark());
 
     spark
         .get()
