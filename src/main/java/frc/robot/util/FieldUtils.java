@@ -19,6 +19,13 @@ import java.util.ArrayList;
 
 /** Helper methods related to the 2025 FRC ReefScape field. */
 public final class FieldUtils {
+  private static final int REEF_APRILTAG_COUNT = 6;
+  private static final int FIRST_RED_REEF_APRILTAG_ID = 6;
+  private static final int FIRST_BLUE_REEF_APRILTAG_ID = 17;
+  
+  private static final int CORAL_STATION_APRIL_TAG_COUNT = 2;
+  private static final int FIRST_RED_CORAL_STATION_APRILTAG_ID = 1;
+  private static final int FIRST_BLUE_CORAL_STATION_APRILTAG_ID = 12;
 
   @RobotPreferencesValue
   public static RobotPreferences.EnumValue<AprilTagFieldParameters> FIELD_LAYOUT_PREFERENCE =
@@ -26,7 +33,7 @@ public final class FieldUtils {
           "AprilTag", "Field Layout", AprilTagFieldParameters.k2025ReefscapeWelded);
 
   private static AprilTagFieldLayout FIELD_LAYOUT =
-      AprilTagFieldLayout.loadField(FIELD_LAYOUT_PREFERENCE.getValue().getAprilTagFieldLayout());
+      FIELD_LAYOUT_PREFERENCE.getValue().loadAprilTagFieldLayout();
 
   private static final ArrayList<Pose2d> redReefTags = new ArrayList<>(6);
   private static final ArrayList<Pose2d> blueReefTags = new ArrayList<>(6);
@@ -35,15 +42,16 @@ public final class FieldUtils {
   private static final ArrayList<Pose2d> blueCoralStationTags = new ArrayList<>(2);
 
   static {
-    // Red reef Apriltags are IDs 6-11; Blue reef Apriltags are IDs 17-22.
-    for (int i = 0; i < 6; i++) {
-      redReefTags.add(getAprilTagPose2d(i + 6));
-      blueReefTags.add(getAprilTagPose2d(i + 17));
+    // Red reef AprilTags are IDs 6-11; Blue reef AprilTags are IDs 17-22.
+    for (int i = 0; i < REEF_APRILTAG_COUNT; i++) {
+      redReefTags.add(getAprilTagPose2d(i + FIRST_RED_REEF_APRILTAG_ID));
+      blueReefTags.add(getAprilTagPose2d(i + FIRST_BLUE_REEF_APRILTAG_ID));
     }
 
-    for (int i = 0; i < 2; i++) {
-      redCoralStationTags.add(getAprilTagPose2d(i + 1));
-      blueCoralStationTags.add(getAprilTagPose2d(i + 12));
+    // Red coral station AprilTags are IDs 1-2; Blue coral station AprilTags are IDs 12-13.
+    for (int i = 0; i < CORAL_STATION_APRIL_TAG_COUNT; i++) {
+      redCoralStationTags.add(getAprilTagPose2d(i + FIRST_RED_CORAL_STATION_APRILTAG_ID));
+      blueCoralStationTags.add(getAprilTagPose2d(i + FIRST_BLUE_CORAL_STATION_APRILTAG_ID));
     }
   }
 
