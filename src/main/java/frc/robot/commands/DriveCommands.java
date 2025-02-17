@@ -45,8 +45,7 @@ public final class DriveCommands {
    */
   public static Command alignToReefPosition(Subsystems subsystems, ReefPosition reefPosition) {
     return Commands.sequence(
-            new AlignToReef(subsystems, reefPosition),
-            new BlinkColor(subsystems.statusLEDs, WHITE, 1).repeatedly())
+            new AlignToReef(subsystems, reefPosition), new BlinkColor(subsystems.statusLEDs, WHITE))
         .withName(String.format("AlignToReef(%s)", reefPosition.name()));
   }
 
