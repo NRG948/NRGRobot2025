@@ -231,7 +231,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   }
 
   private void checkError() {
-    if (MathUtil.isNear(goalState.position, currentState.position), POSITION_ERROR_MARGIN) {
+    if (MathUtil.isNear(goalState.position, currentState.position, POSITION_ERROR_MARGIN)) {
       stuckTimer.stop();
       stuckTimer.reset();
     } else {
