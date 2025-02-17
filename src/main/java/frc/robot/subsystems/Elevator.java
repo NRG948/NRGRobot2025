@@ -51,6 +51,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private static final double GOAL_POSITION_TOLERANCE = 0.01;
   private static final double POSITION_ERROR_MARGIN = 0.05; // meters
   private static final double POSITION_ERROR_TIME = 2.0;
+  private static final double STOWED_POSITION_TOLERANCE = 0.001;
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -100,7 +101,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   // feedback constants
   @RobotPreferencesValue
   public static final RobotPreferences.DoubleValue KP =
-      new RobotPreferences.DoubleValue("Elevator", "KP", 5);
+      new RobotPreferences.DoubleValue("Elevator", "KP", 40);
 
   @RobotPreferencesValue
   public static final RobotPreferences.DoubleValue KI =
@@ -283,7 +284,6 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
           collisionTimer.restart();
         } else if (collisionTimer.hasElapsed(COLLISION_DURATION)) {
           disable();
-          encoder.reset();
           return;
         }
       }
@@ -308,6 +308,12 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       logDesiredPosition.append(desiredState.position);
       logDesiredVelocity.append(desiredState.velocity);
       logCurrentVoltage.append(currentVoltage);
+    } else {
+      if (goalState.position == MIN_HEIGHT
+          && !MathUtil.isNear(MIN_HEIGHT, currentState.position, STOWED_POSITION_TOLERANCE)
+          && currentState.velocity == 0) {
+        encoder.reset(); 
+      }
     }
   }
 
