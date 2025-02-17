@@ -7,8 +7,13 @@
  
 package frc.robot.subsystems;
 
+import frc.robot.util.MotorIdleMode;
+
 /** Interface representing an active subsystem. */
 public interface ActiveSubsystem {
   /** Disables the subsystem. */
   void disable();
+
+  /** Sets idle mode of motor(s) to either brake mode or coast mode. */
+  void setIdleMode(MotorIdleMode idleMode);
 }

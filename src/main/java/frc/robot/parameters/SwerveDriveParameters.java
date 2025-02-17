@@ -26,6 +26,7 @@ import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.Gyro;
 import frc.robot.util.MotorController;
+import frc.robot.util.MotorIdleMode;
 import frc.robot.util.NavXGyro;
 import frc.robot.util.Pigeon2Gyro;
 
@@ -56,6 +57,20 @@ public enum SwerveDriveParameters {
       new int[] {17, 19, 18, 20, 1, 2, 9, 10}, // drive, steer motor controller CAN IDs
       new int[] {33, 34, 31, 32}, // CANCoder CAN IDs
       new double[] {177.45, 169.98, 166.82, 184.31},
+      0.15,
+      0.15,
+      true,
+      21),
+  CompetitionBase2025(
+      41.0, // TODO Correct robot mass
+      0.602,
+      0.602,
+      MK4IFast,
+      KrakenX60,
+      NeoV1_1,
+      new int[] {15, 14, 13, 6, 2, 1, 8, 7}, // drive, steer motor controller CAN IDs
+      new int[] {31, 32, 33, 34}, // CANCoder CAN IDs
+      new double[] {159.79, 109.25, 170.95, 4.66},
       0.15,
       0.15,
       true,
@@ -482,10 +497,12 @@ public enum SwerveDriveParameters {
       case BackLeftDrive:
       case BackRightDrive:
         final double metersPerRotation = (getWheelDiameter() * Math.PI) / getDriveGearRatio();
-        return this.driveMotor.getController(motorID, false, true, metersPerRotation);
+        return this.driveMotor.newController(
+            motorID, false, MotorIdleMode.BRAKE, metersPerRotation);
 
       default:
-        return this.steeringMotor.getController(motorID, isSteeringInverted(), true, 1.0);
+        return this.steeringMotor.newController(
+            motorID, isSteeringInverted(), MotorIdleMode.BRAKE, 1.0);
     }
   }
 

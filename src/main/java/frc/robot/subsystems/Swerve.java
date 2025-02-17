@@ -31,6 +31,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -38,13 +39,16 @@ import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.DriveStraight;
 import frc.robot.drive.SwerveDrive;
 import frc.robot.drive.SwerveModule;
 import frc.robot.parameters.SwerveAngleEncoder;
@@ -52,11 +56,13 @@ import frc.robot.parameters.SwerveDriveParameters;
 import frc.robot.parameters.SwerveMotors;
 import frc.robot.util.Gyro;
 import frc.robot.util.MotorController;
+import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.SwerveModuleVelocities;
 import frc.robot.util.SwerveModuleVoltages;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 @RobotPreferencesLayout(
@@ -75,11 +81,15 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   @RobotPreferencesValue(column = 0, row = 0)
   public static RobotPreferences.EnumValue<SwerveDriveParameters> PARAMETERS =
       new RobotPreferences.EnumValue<SwerveDriveParameters>(
-          "Drive", "Robot Base", SwerveDriveParameters.PracticeBase2025);
+          "Drive", "Robot Base", SwerveDriveParameters.CompetitionBase2025);
 
   @RobotPreferencesValue(column = 1, row = 0)
   public static RobotPreferences.BooleanValue ENABLE_DRIVE_TAB =
       new RobotPreferences.BooleanValue("Drive", "Enable Tab", false);
+
+  @RobotPreferencesValue(column = 0, row = 1)
+  public static RobotPreferences.BooleanValue ENABLE_RUMBLE =
+      new RobotPreferences.BooleanValue("Drive", "Enable Rumble", true);
 
   public static final double DRIVE_KP = 1.0;
 
@@ -129,6 +139,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   };
 
   private final Gyro gyro = PARAMETERS.getValue().getGyro();
+  private final BuiltInAccelerometer accelerometer = new BuiltInAccelerometer();
 
   private final SwerveDriveKinematics kinematics = PARAMETERS.getValue().getKinematics();
 
@@ -140,10 +151,8 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   private double rawOrientationOffset; // The offset to the corrected orientation in radians.
   private Rotation2d orientation = new Rotation2d();
   private Pose2d lastVisionMeasurement = new Pose2d();
-  private Supplier<Optional<Rotation2d>> targetOrientationSupplier =
-      () -> Optional.empty(); // absolute location to
-  // keep the robot oriented
-  // to tag
+  private Supplier<Optional<Rotation2d>> targetOrientationSupplier = () -> Optional.empty();
+  private double acceleration = 0;
 
   private DoubleLogEntry poseXLog = new DoubleLogEntry(LOG, "/Swerve/Pose X");
   private DoubleLogEntry poseYLog = new DoubleLogEntry(LOG, "/Swerve/Pose Y");
@@ -151,6 +160,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   private DoubleLogEntry rawOrientationLog = new DoubleLogEntry(LOG, "/Swerve/rawOrientation");
   private DoubleLogEntry rawOrientationOffsetLog =
       new DoubleLogEntry(LOG, "/Swerve/rawOrientationOffset");
+  private DoubleLogEntry accelerationLog = new DoubleLogEntry(LOG, "/Swerve/acceleration");
 
   /**
    * Creates a {@link SwerveModule} object and intiailizes its motor controllers.
@@ -206,6 +216,11 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
     rawOrientation = rawGyro;
     rawOrientationLog.append(Math.toDegrees(rawGyro));
     orientation = new Rotation2d(MathUtil.angleModulus(rawOrientation + rawOrientationOffset));
+
+    double accelerationX = accelerometer.getX();
+    double accelerationY = accelerometer.getY();
+    acceleration = Math.hypot(accelerationX, accelerationY);
+    accelerationLog.append(acceleration);
   }
 
   /** See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double)} */
@@ -283,6 +298,11 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
    */
   public static double getMaxAcceleration() {
     return PARAMETERS.getValue().getMaxDriveAcceleration();
+  }
+
+  /** Gets acceleration in g with an range of +/- 8 g's */
+  public double getAcceleration() {
+    return acceleration;
   }
 
   /**
@@ -504,16 +524,16 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
     poseAngleLog.append(robotPose.getRotation().getDegrees());
   }
 
-  public void setBrakeMode(boolean brakeMode) {
-    frontLeftDriveMotor.setBrakeMode(brakeMode);
-    frontRightDriveMotor.setBrakeMode(brakeMode);
-    backLeftDriveMotor.setBrakeMode(brakeMode);
-    backRightDriveMotor.setBrakeMode(brakeMode);
+  public void setIdleMode(MotorIdleMode idleMode) {
+    frontLeftDriveMotor.setIdleMode(idleMode);
+    frontRightDriveMotor.setIdleMode(idleMode);
+    backLeftDriveMotor.setIdleMode(idleMode);
+    backRightDriveMotor.setIdleMode(idleMode);
 
-    frontLeftSteeringMotor.setBrakeMode(brakeMode);
-    frontRightSteeringMotor.setBrakeMode(brakeMode);
-    backLeftSteeringMotor.setBrakeMode(brakeMode);
-    backRightSteeringMotor.setBrakeMode(brakeMode);
+    frontLeftSteeringMotor.setIdleMode(idleMode);
+    frontRightSteeringMotor.setIdleMode(idleMode);
+    backLeftSteeringMotor.setIdleMode(idleMode);
+    backRightSteeringMotor.setIdleMode(idleMode);
   }
 
   /** Adds a tab for swerve drive in Shuffleboard. */
@@ -569,6 +589,17 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
           .addDouble("est. angle", () -> lastVisionMeasurement.getRotation().getDegrees())
           .withPosition(2, 1)
           .withWidget(BuiltInWidgets.kTextView);
+      ShuffleboardLayout driveStraight =
+          swerveDriveTab
+              .getLayout("Drive Straight", BuiltInLayouts.kList)
+              .withPosition(0, 4)
+              .withSize(4, 2);
+      GenericEntry distance = driveStraight.add("Distance", 0).getEntry();
+      driveStraight.add(
+          Commands.defer(
+                  () -> new DriveStraight(this, distance.getDouble(0), Swerve.getMaxSpeed() / 2),
+                  Set.of(this))
+              .withName("Drive Straight"));
     }
   }
 }

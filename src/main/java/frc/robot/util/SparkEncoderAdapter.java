@@ -24,4 +24,9 @@ public final class SparkEncoderAdapter implements RelativeEncoder {
   public double getVelocity() {
     return encoder.getVelocity();
   }
+
+  @Override
+  public void reset() {
+    encoder.setPosition(0);
+  }
 }

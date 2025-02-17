@@ -36,8 +36,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.ArmParameters;
+import frc.robot.util.MotorIdleMode;
+import frc.robot.util.MotorUtils;
 
-@RobotPreferencesLayout(groupName = "Arm", row = 0, column = 5, width = 1, height = 1)
+@RobotPreferencesLayout(groupName = "Arm", row = 1, column = 0, width = 1, height = 1)
 public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   private static final double ERROR_MARGIN = Math.toRadians(2);
   private static final double ERROR_TIME = 1.0;
@@ -180,6 +182,11 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   public void disable() {
     enabled = false;
     logEnabled.update(enabled);
+  }
+
+  @Override
+  public void setIdleMode(MotorIdleMode idleMode) {
+    MotorUtils.setIdleMode(motor, idleMode);
   }
 
   @Override

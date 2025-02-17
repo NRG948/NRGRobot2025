@@ -38,12 +38,14 @@ import frc.robot.Constants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.parameters.ElevatorLevel;
+import frc.robot.parameters.ElevatorParameters;
 import frc.robot.util.MotorController;
+import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
 import java.util.Set;
 
-@RobotPreferencesLayout(groupName = "Elevator", row = 1, column = 0, width = 1, height = 2)
+@RobotPreferencesLayout(groupName = "Elevator", row = 0, column = 5, width = 2, height = 3)
 public class Elevator extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   private static final double POSITION_TOLERANCE = 0.01;
   private static final double POSITION_ERROR_MARGIN = 0.05; // meters
@@ -52,18 +54,25 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private static final DataLog LOG = DataLogManager.getLog();
 
   @RobotPreferencesValue
+  public static RobotPreferences.EnumValue<ElevatorParameters> PARAMETERS =
+      new RobotPreferences.EnumValue<ElevatorParameters>(
+          "Elevator", "Robot Base", ElevatorParameters.CompetitionBase2025);
+
+  @RobotPreferencesValue
   public static RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("Elevator", "Enable Tab", false);
 
   // physical parameters of the elevator
   private static final double GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
   private static final double SPROCKET_DIAMETER = 0.05; // 5 cm
-  private static final double MASS = 3; // kilograms
+  private static final double MASS = PARAMETERS.getValue().getMass(); // kilograms
   private static final double METERS_PER_REVOLUTION = (SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO;
 
-  private static final double MAX_HEIGHT = 1.42;
-  public static final double MIN_HEIGHT = 0.033; // in meters
+  private static final double MAX_HEIGHT = PARAMETERS.getValue().getMaxHeight();
+  public static final double MIN_HEIGHT = PARAMETERS.getValue().getMinHeight(); // in meters
   private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.04;
+  private static final double COLLISION_VELOCITY_THRESHOLD = 0.001; // in m/s
+  private static final double COLLISION_DURATION = 0.25;
 
   // trapezoid profile values
   private static final DCMotor MOTOR_PARAMS = DCMotor.getKrakenX60(1);
@@ -73,7 +82,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       (2 * MOTOR_PARAMS.stallTorqueNewtonMeters * GEAR_RATIO)
           / (SPROCKET_DIAMETER * MASS); // m/s^2 for two motors
   private static final TrapezoidProfile.Constraints CONSTRAINTS =
-      new TrapezoidProfile.Constraints(MAX_SPEED / 2, MAX_ACCELERATION / 16);
+      new TrapezoidProfile.Constraints(MAX_SPEED, MAX_ACCELERATION / 64);
 
   // feedforward constants
   /*
@@ -100,16 +109,15 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   public static final RobotPreferences.DoubleValue KD =
       new RobotPreferences.DoubleValue("Elevator", "KD", 0.5);
 
-  private MotorController mainMotor =
+  private TalonFXAdapter mainMotor =
       new TalonFXAdapter(
-          new TalonFX(RobotConstants.CAN.TalonFX.ELEVATOR_MAIN_MOTOR_ID, "rio"),
+          new TalonFX(PARAMETERS.getValue().getMainDeviceID(), "rio"),
           false,
-          true,
+          MotorIdleMode.BRAKE,
           METERS_PER_REVOLUTION);
 
-  @SuppressWarnings("unused")
   private MotorController follower =
-      mainMotor.createFollower(RobotConstants.CAN.TalonFX.ELEVATOR_FOLLOWER_MOTOR_ID, false);
+      mainMotor.createFollower(PARAMETERS.getValue().getFollowerDeviceID(), false);
 
   private RelativeEncoder encoder = mainMotor.getEncoder();
 
@@ -135,16 +143,19 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private boolean atUpperLimit;
   private boolean atLowerLimit;
   private double currentVoltage;
+  private final Timer collisionTimer = new Timer();
 
-  /** pivotOffset starts from the goal height down. */
-  private double pivotOffset = 0;
+  /** armOffset starts from the goal height down. */
+  private double armOffset = 0;
 
   private BooleanLogEntry logIsSeekingGoal = new BooleanLogEntry(LOG, "Elevator/isSeekingGoal");
-  private DoubleLogEntry logCurrentVelocity = new DoubleLogEntry(LOG, "Elevator/currentVelocity");
-  private DoubleLogEntry logCurrentPosition = new DoubleLogEntry(LOG, "Elevator/currentPosition");
+  private DoubleLogEntry logCurrentVelocity = new DoubleLogEntry(LOG, "Elevator/velocity");
+  private DoubleLogEntry logCurrentPosition = new DoubleLogEntry(LOG, "Elevator/position");
   private DoubleLogEntry logGoalVelocity = new DoubleLogEntry(LOG, "Elevator/goalVelocity");
   private DoubleLogEntry logGoalPosition = new DoubleLogEntry(LOG, "Elevator/goalPosition");
-  private DoubleLogEntry logCurrentVoltage = new DoubleLogEntry(LOG, "Elevator/currentVoltage");
+  private DoubleLogEntry logCurrentVoltage = new DoubleLogEntry(LOG, "Elevator/voltage");
+  private DoubleLogEntry logStatorCurrent = new DoubleLogEntry(LOG, "Elevator/statorCurrent");
+  private DoubleLogEntry logTorqueCurrent = new DoubleLogEntry(LOG, "Elevator/torqueCurrent");
   private DoubleLogEntry logFeedForward = new DoubleLogEntry(LOG, "Elevator/FeedForward");
   private DoubleLogEntry logPIDOutput = new DoubleLogEntry(LOG, "Elevator/pidOutput");
   private BooleanLogEntry logAtUpperLimit = new BooleanLogEntry(LOG, "Elevator/atUpperLimit");
@@ -167,6 +178,9 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   @Override
   public void disable() {
     mainMotor.disable();
+    lastState = new TrapezoidProfile.State();
+    collisionTimer.stop();
+    collisionTimer.reset();
     isSeekingGoal = false;
     logIsSeekingGoal.append(false);
   }
@@ -177,7 +191,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
    * @param level
    */
   public void setGoalPosition(ElevatorLevel level) {
-    setGoalPosition(level.getHeight(), level.getPivotOffset());
+    setGoalPosition(level.getElevatorHeight(), level.getArmOffset());
   }
 
   /**
@@ -185,11 +199,11 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
    *
    * @param height
    */
-  private void setGoalPosition(double height, double pivotOffset) {
+  private void setGoalPosition(double height, double armOffset) {
     isSeekingGoal = true;
     goalState.position = height;
     goalState.velocity = 0;
-    this.pivotOffset = pivotOffset;
+    this.armOffset = armOffset;
     lastState = currentState;
 
     controller.setPID(KP.getValue(), KI.getValue(), KD.getValue());
@@ -204,9 +218,9 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     return controller.atGoal();
   }
 
-  /** Returns whether the elevator is above the pivot position. */
-  public boolean abovePivotPosition() {
-    return goalState.position - pivotOffset <= currentState.position;
+  /** Returns whether the elevator is above the arm position. */
+  public boolean aboveArmPosition() {
+    return goalState.position - armOffset <= currentState.position;
   }
 
   private void updateSensorState() {
@@ -228,6 +242,14 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     logCurrentVelocity.append(currentState.velocity);
     logAtLowerLimit.append(atLowerLimit);
     logAtUpperLimit.append(atUpperLimit);
+    logStatorCurrent.append(mainMotor.getStatorCurrent());
+    logTorqueCurrent.append(mainMotor.getTorqueCurrent());
+  }
+
+  @Override
+  public void setIdleMode(MotorIdleMode idleMode) {
+    mainMotor.setIdleMode(idleMode);
+    follower.setIdleMode(idleMode);
   }
 
   private void checkError() {
@@ -253,6 +275,18 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     if (isSeekingGoal) {
       TrapezoidProfile.State desiredState =
           profile.calculate(RobotConstants.PERIODIC_INTERVAL, lastState, goalState);
+
+      if (goalState.position == MIN_HEIGHT
+          && Math.abs(currentState.velocity) < COLLISION_VELOCITY_THRESHOLD) {
+        if (!collisionTimer.isRunning()) {
+          collisionTimer.restart();
+        } else if (collisionTimer.hasElapsed(COLLISION_DURATION)) {
+          disable();
+          encoder.reset();
+          return;
+        }
+      }
+
       double feedforward = feedForward.calculate(desiredState.velocity);
       double pidOutput = controller.calculate(currentState.position, desiredState);
 
@@ -313,6 +347,10 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
                 Set.of(this))
             .withName("Set Height"));
     controlLayout.add(Commands.runOnce(() -> this.disable(), this).withName("Disable"));
+    controlLayout.add(
+        Commands.runOnce(() -> encoder.reset(), this)
+            .ignoringDisable(true)
+            .withName("Reset Encoder"));
     controlLayout.add(ElevatorCommands.stowElevator(this));
   }
 }

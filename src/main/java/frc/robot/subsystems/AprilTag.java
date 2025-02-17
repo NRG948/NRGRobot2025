@@ -45,9 +45,9 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 @RobotPreferencesLayout(
     groupName = "AprilTag",
-    column = 2,
+    column = 1,
     row = 2,
-    width = 2,
+    width = 3,
     height = 2,
     type = "Grid Layout",
     gridColumns = 2,

@@ -33,8 +33,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.parameters.MotorParameters;
+import frc.robot.util.MotorIdleMode;
+import frc.robot.util.MotorUtils;
 
-@RobotPreferencesLayout(groupName = "CoralRoller", row = 0, column = 6, width = 1, height = 1)
+@RobotPreferencesLayout(groupName = "CoralRoller", row = 2, column = 0, width = 1, height = 1)
 public class CoralRoller extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
 
   @RobotPreferencesValue
@@ -122,6 +124,11 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   /** Returns hasError. */
   public boolean hasError() {
     return hasError;
+  }
+
+  @Override
+  public void setIdleMode(MotorIdleMode idleMode) {
+    MotorUtils.setIdleMode(motor, idleMode);
   }
 
   @Override
