@@ -29,20 +29,20 @@ public enum AprilTagFieldParameters {
   /** The field layout using the AndyMark perimeter. */
   k2025ReefscapeAndyMark(AprilTagFields.k2025ReefscapeAndyMark);
 
-  private AprilTagFields fieldLayout;
+  private AprilTagFields aprilTagField;
 
   /** Constructs a variant of this enum. */
-  private AprilTagFieldParameters(AprilTagFields AprilTagFieldLayout) {
-    this.fieldLayout = AprilTagFieldLayout;
+  private AprilTagFieldParameters(AprilTagFields aprilTagField) {
+    this.aprilTagField = aprilTagField;
   }
 
   /** Gets the {@link AprilTagFields} variant that can be used to load the correct field layout. */
   public AprilTagFields getAprilTagField() {
-    return fieldLayout;
+    return aprilTagField;
   }
 
   /** Gets the {@link AprilTagFieldLayout} for this variant. */
   public AprilTagFieldLayout loadAprilTagFieldLayout() {
-    return AprilTagFieldLayout.loadField(fieldLayout);
+    return AprilTagFieldLayout.loadField(aprilTagField);
   }
 }

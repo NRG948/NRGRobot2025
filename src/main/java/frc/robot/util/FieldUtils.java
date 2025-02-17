@@ -22,7 +22,7 @@ public final class FieldUtils {
   private static final int REEF_APRILTAG_COUNT = 6;
   private static final int FIRST_RED_REEF_APRILTAG_ID = 6;
   private static final int FIRST_BLUE_REEF_APRILTAG_ID = 17;
-  
+
   private static final int CORAL_STATION_APRIL_TAG_COUNT = 2;
   private static final int FIRST_RED_CORAL_STATION_APRILTAG_ID = 1;
   private static final int FIRST_BLUE_CORAL_STATION_APRILTAG_ID = 12;
