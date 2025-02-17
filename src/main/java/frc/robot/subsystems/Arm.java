@@ -107,12 +107,12 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     motionMagicConfigs.MotionMagicCruiseVelocity =
         0.3 * parameters.getMaxAngularSpeed() / (2 * Math.PI);
     motionMagicConfigs.MotionMagicAcceleration =
-        0.3 * parameters.getMaxAngularAcceleration() / (2 * Math.PI);
+        0.015625 * parameters.getMaxAngularAcceleration() / (2 * Math.PI);
 
     TalonFXConfigurator configurator = motor.getConfigurator();
 
     configurator.apply(talonFXConfigs);
-    configurator.setPosition(absoluteEncoder.get() / (2 * Math.PI));
+    configurator.setPosition(MathUtil.angleModulus(absoluteEncoder.get()) / (2 * Math.PI));
 
     logCurrentAngle =
         new DoubleLogEntry(LOG, String.format("/%s/Current Angle", parameters.name()));
@@ -128,7 +128,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   private void updateSensorState() {
     currentAngle = motor.getPosition().refresh().getValueAsDouble() * 2 * Math.PI;
     currentVelocity = motor.getVelocity().refresh().getValueAsDouble() * 2 * Math.PI;
-    currentAbsoluteAngle = absoluteEncoder.get();
+    currentAbsoluteAngle = MathUtil.angleModulus(absoluteEncoder.get());
     checkError();
 
     logCurrentAngle.append(currentAngle);
