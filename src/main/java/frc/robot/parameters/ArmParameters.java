@@ -25,12 +25,12 @@ public enum ArmParameters {
       0.0656,
       RobotConstants.CAN.TalonFX.CORAL_ARM_MOTOR_ID,
       RobotConstants.DigitalIO.CORAL_ARM_ABSOLUTE_ENCODER,
-      true, // The abolsute encoder is inverted.
+      true, // The absolute encoder is inverted.
       // The absolute encoder zero point is applied before inversion. When
       // reading the raw value of the absolute encoder to obtain the zero point,
       // we must invert the value by subtracting it from 1 before converting it
       // to radians.
-      (1.0 - 0.904) * (2 * Math.PI),
+      Math.toRadians(360 - 10.55),
       Math.toRadians(10),
       Math.toRadians(90)),
   AlgaeArm(
