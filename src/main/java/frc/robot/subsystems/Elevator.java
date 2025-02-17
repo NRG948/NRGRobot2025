@@ -11,6 +11,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -47,7 +48,7 @@ import java.util.Set;
 
 @RobotPreferencesLayout(groupName = "Elevator", row = 0, column = 5, width = 2, height = 3)
 public class Elevator extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
-  private static final double POSITION_TOLERANCE = 0.01;
+  private static final double GOAL_POSITION_TOLERANCE = 0.01;
   private static final double POSITION_ERROR_MARGIN = 0.05; // meters
   private static final double POSITION_ERROR_TIME = 2.0;
 
@@ -167,7 +168,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   public Elevator() {
     updateSensorState();
     SmartDashboard.putData("Elevator Sim", mechanism2d);
-    controller.setTolerance(POSITION_TOLERANCE);
+    controller.setTolerance(GOAL_POSITION_TOLERANCE);
   }
 
   /** Returns elevator height. */

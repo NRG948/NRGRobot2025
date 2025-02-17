@@ -141,7 +141,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
    * than 1.0 second to be within 2.0 degrees of the goal angle.
    */
   private void checkError() {
-    if (MathUtil.isNear(goalAngle,  currentAngle, ERROR_MARGIN)) {
+    if (MathUtil.isNear(goalAngle, currentAngle, ERROR_MARGIN)) {
       stuckTimer.stop();
       stuckTimer.reset();
     } else {
