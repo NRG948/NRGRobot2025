@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Newport Robotics Group. All Rights Reserved.
+ * Copyright (c) 2025 Newport Robotics Group. All Rights Reserved.
  *
  * Open Source Software; you can modify and/or share it under the terms of
  * the license file in the root directory of this project.
@@ -7,7 +7,11 @@
  
 package frc.robot.parameters;
 
-import frc.robot.Constants;
+import static frc.robot.Constants.RobotConstants.WHEEL_DIAMETER;
+import static frc.robot.util.MotorDirection.CLOCKWISE_POSITIVE;
+import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
+
+import frc.robot.util.MotorDirection;
 
 /**
  * A enum representing the properties on a specific swerve drive module.
@@ -24,35 +28,35 @@ import frc.robot.Constants;
 public enum SwerveModuleParameters {
 
   /** An MK4 Swerve Module in the L1 - Standard configuration. */
-  MK4Standard(Constants.RobotConstants.WHEEL_DIAMETER, 8.14, 12.8, false),
+  MK4Standard(WHEEL_DIAMETER, 8.14, 12.8, COUNTER_CLOCKWISE_POSITIVE),
 
   /** An MK4 Swerve Module in the L2 - Fast configuration. */
-  MK4Fast(Constants.RobotConstants.WHEEL_DIAMETER, 6.75, 12.8, false),
+  MK4Fast(WHEEL_DIAMETER, 6.75, 12.8, COUNTER_CLOCKWISE_POSITIVE),
 
   /** An MK4 Swerve Module in the L3 - Very Fast configuration. */
-  MK4VeryFast(Constants.RobotConstants.WHEEL_DIAMETER, 6.12, 12.8, false),
+  MK4VeryFast(WHEEL_DIAMETER, 6.12, 12.8, COUNTER_CLOCKWISE_POSITIVE),
 
   /** An MK4 Swerve Module in the L4 - Too Fast configuration. */
-  MK4TooFast(Constants.RobotConstants.WHEEL_DIAMETER, 5.14, 12.8, false),
+  MK4TooFast(WHEEL_DIAMETER, 5.14, 12.8, COUNTER_CLOCKWISE_POSITIVE),
 
   /** An MK4I Swerve Module in the L1 - Standard configuration. */
-  MK4IStandard(Constants.RobotConstants.WHEEL_DIAMETER, 8.14, 150.0 / 7.0, true),
+  MK4IStandard(WHEEL_DIAMETER, 8.14, 150.0 / 7.0, CLOCKWISE_POSITIVE),
 
   /** An MK4I Swerve Module in the L2 - Fast configuration. */
-  MK4IFast(Constants.RobotConstants.WHEEL_DIAMETER, 6.75, 150.0 / 7.0, true),
+  MK4IFast(WHEEL_DIAMETER, 6.75, 150.0 / 7.0, CLOCKWISE_POSITIVE),
 
   /** An MK4I Swerve Module in the L2+ - Faster configuration. */
-  MK4IFaster(Constants.RobotConstants.WHEEL_DIAMETER, 5.9, 150.0 / 7.0, true),
+  MK4IFaster(WHEEL_DIAMETER, 5.9, 150.0 / 7.0, CLOCKWISE_POSITIVE),
 
   /** An MK4I Swerve Module in the L3 - Very Fast configuration. */
-  MK4IVeryFast(Constants.RobotConstants.WHEEL_DIAMETER, 6.12, 150.0 / 7.0, true);
+  MK4IVeryFast(WHEEL_DIAMETER, 6.12, 150.0 / 7.0, CLOCKWISE_POSITIVE);
 
   /** */
   private final double wheelDiameter;
 
   private final double driveGearRatio;
   private final double steeringGearRatio;
-  private final boolean steeringInverted;
+  private final MotorDirection steeringDirection;
 
   /**
    * Constructs an instance of this enum.
@@ -60,16 +64,18 @@ public enum SwerveModuleParameters {
    * @param wheelDiameter The wheel diameter in meters.
    * @param driveGearRatio The drive gear ratio.
    * @param steeringGearRatio The steering gear ratio.
+   * @param steeringDirection The direction the steering motor must rotate when a positive voltage
+   *     is applied to rotate the wheel in the counter-clockwise direction.
    */
   SwerveModuleParameters(
       double wheelDiameter,
       double driveGearRatio,
       double steeringGearRatio,
-      boolean steeringInverted) {
+      MotorDirection steeringDirection) {
     this.wheelDiameter = wheelDiameter;
     this.driveGearRatio = driveGearRatio;
     this.steeringGearRatio = steeringGearRatio;
-    this.steeringInverted = steeringInverted;
+    this.steeringDirection = steeringDirection;
   }
 
   /**
@@ -100,12 +106,14 @@ public enum SwerveModuleParameters {
   }
 
   /**
-   * Returns true if the steering motor is inverted.
+   * Returns the direction the steering motor must rotate when a positive voltage is applied to
+   * rotate the wheel in the counter-clockwise direction.
    *
-   * @return Whether the steering motor is inverted.
+   * @return The direction the steering motor must rotate when a positive voltage is applied to
+   *     rotate the wheel in the counter-clockwise direction.
    */
-  public boolean isSteeringInverted() {
-    return this.steeringInverted;
+  public MotorDirection getSteeringDirection() {
+    return this.steeringDirection;
   }
 
   /**

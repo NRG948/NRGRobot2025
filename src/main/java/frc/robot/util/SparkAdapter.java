@@ -128,16 +128,19 @@ public final class SparkAdapter implements MotorController {
    * Constructs a SparkAdapter for a {@link SparkMax} motor controller.
    *
    * @param spark The SparkMax object to adapt.
-   * @param isInverted Whether the motor should be inverted.
+   * @param direction The direction the motor rotates when a positive voltage is applied.
    * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
    * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
    *     the output shaft.
    */
   public SparkAdapter(
-      SparkMax sparkMax, boolean isInverted, MotorIdleMode idleMode, double metersPerRotation) {
+      SparkMax sparkMax,
+      MotorDirection direction,
+      MotorIdleMode idleMode,
+      double metersPerRotation) {
     this(sparkMax);
 
-    configure(isInverted, idleMode, metersPerRotation);
+    configure(direction, idleMode, metersPerRotation);
   }
 
   /**
@@ -157,30 +160,34 @@ public final class SparkAdapter implements MotorController {
    * Constructs a SparkAdapter for a {@link SparkFlex} motor controller.
    *
    * @param spark The SparkFlex object to adapt.
-   * @param isInverted Whether the motor should be inverted.
+   * @param direction The direction the motor rotates when a positive voltage is applied.
    * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
    * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
    *     the output shaft.
    */
   public SparkAdapter(
-      SparkFlex sparkFlex, boolean isInverted, MotorIdleMode idleMode, double metersPerRotation) {
+      SparkFlex sparkFlex,
+      MotorDirection direction,
+      MotorIdleMode idleMode,
+      double metersPerRotation) {
     this(sparkFlex);
 
-    configure(isInverted, idleMode, metersPerRotation);
+    configure(direction, idleMode, metersPerRotation);
   }
 
   /**
    * Configures the motor controller.
    *
-   * @param isInverted Whether the motor should be inverted.
+   * @param direction The direction the motor rotates when a positive voltage is applied.
    * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
    * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
    *     the output shaft.
    */
-  private void configure(boolean isInverted, MotorIdleMode idleMode, double metersPerRotation) {
+  private void configure(
+      MotorDirection direction, MotorIdleMode idleMode, double metersPerRotation) {
     SparkBaseConfig driveMotorConfig = spark.getConfig();
 
-    driveMotorConfig.inverted(isInverted).idleMode(idleMode.forSpark());
+    driveMotorConfig.inverted(direction.isInverted()).idleMode(idleMode.forSpark());
 
     driveMotorConfig
         .encoder

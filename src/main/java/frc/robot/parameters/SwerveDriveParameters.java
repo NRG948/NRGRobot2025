@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Newport Robotics Group. All Rights Reserved.
+ * Copyright (c) 2025 Newport Robotics Group. All Rights Reserved.
  *
  * Open Source Software; you can modify and/or share it under the terms of
  * the license file in the root directory of this project.
@@ -12,6 +12,8 @@ import static frc.robot.parameters.MotorParameters.KrakenX60;
 import static frc.robot.parameters.MotorParameters.NeoV1_1;
 import static frc.robot.parameters.SwerveModuleParameters.MK4IFast;
 import static frc.robot.parameters.SwerveModuleParameters.MK4IFaster;
+import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
+import static frc.robot.util.MotorIdleMode.BRAKE;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfigurator;
@@ -26,7 +28,7 @@ import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.Gyro;
 import frc.robot.util.MotorController;
-import frc.robot.util.MotorIdleMode;
+import frc.robot.util.MotorDirection;
 import frc.robot.util.NavXGyro;
 import frc.robot.util.Pigeon2Gyro;
 
@@ -498,11 +500,10 @@ public enum SwerveDriveParameters {
       case BackRightDrive:
         final double metersPerRotation = (getWheelDiameter() * Math.PI) / getDriveGearRatio();
         return this.driveMotor.newController(
-            motorID, false, MotorIdleMode.BRAKE, metersPerRotation);
+            motorID, COUNTER_CLOCKWISE_POSITIVE, BRAKE, metersPerRotation);
 
       default:
-        return this.steeringMotor.newController(
-            motorID, isSteeringInverted(), MotorIdleMode.BRAKE, 1.0);
+        return this.steeringMotor.newController(motorID, getSteeringDirection(), BRAKE, 1.0);
     }
   }
 
@@ -679,12 +680,14 @@ public enum SwerveDriveParameters {
   }
 
   /**
-   * Returns true if the steering motor is inverted.
+   * Returns the direction the steering motor must rotate when a positive voltage is applied to
+   * rotate the wheel in the counter-clockwise direction.
    *
-   * @return Whether the steering motor is inverted.
+   * @return The direction the steering motor must rotate when a positive voltage is applied to
+   *     rotate the wheel in the counter-clockwise direction.
    */
-  public boolean isSteeringInverted() {
-    return swerveModule.isSteeringInverted();
+  public MotorDirection getSteeringDirection() {
+    return swerveModule.getSteeringDirection();
   }
 
   /** Returns the correct gyro implementation for the robot. */

@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.util.MotorController;
+import frc.robot.util.MotorDirection;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.TalonFXAdapter;
 
@@ -70,7 +71,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   private TalonFXAdapter mainMotor =
       new TalonFXAdapter(
           new TalonFX(RobotConstants.CAN.TalonFX.CLIMBER_MAIN_MOTOR_ID, "rio"),
-          false,
+          MotorDirection.COUNTER_CLOCKWISE_POSITIVE,
           MotorIdleMode.BRAKE,
           1); // filler value; motor encoder value is not used.
 

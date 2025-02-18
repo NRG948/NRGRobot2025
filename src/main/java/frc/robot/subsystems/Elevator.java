@@ -41,6 +41,7 @@ import frc.robot.commands.ElevatorCommands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.parameters.ElevatorParameters;
 import frc.robot.util.MotorController;
+import frc.robot.util.MotorDirection;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
@@ -114,7 +115,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private TalonFXAdapter mainMotor =
       new TalonFXAdapter(
           new TalonFX(PARAMETERS.getValue().getMainDeviceID(), "rio"),
-          false,
+          MotorDirection.COUNTER_CLOCKWISE_POSITIVE,
           MotorIdleMode.BRAKE,
           METERS_PER_REVOLUTION);
 
@@ -312,7 +313,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       if (goalState.position == MIN_HEIGHT
           && !MathUtil.isNear(MIN_HEIGHT, currentState.position, STOWED_POSITION_TOLERANCE)
           && currentState.velocity == 0) {
-        encoder.reset(); 
+        encoder.reset();
       }
     }
   }

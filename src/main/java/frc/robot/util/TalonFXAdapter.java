@@ -40,19 +40,18 @@ public final class TalonFXAdapter implements MotorController {
    * Constructs a TalonFXAdapter.
    *
    * @param talonFX The TalonFX object to adapt.
-   * @param isInverted Whether the motor should be inverted.
+   * @param direction The direction the motor rotates when a positive voltage is applied.
    * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
    * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
    *     the output shaft.
    */
   public TalonFXAdapter(
-      TalonFX talonFX, boolean isInverted, MotorIdleMode idleMode, double metersPerRotation) {
+      TalonFX talonFX, MotorDirection direction, MotorIdleMode idleMode, double metersPerRotation) {
     this(talonFX, metersPerRotation);
     MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
 
     motorOutputConfigs.NeutralMode = idleMode.forTalonFX();
-    motorOutputConfigs.Inverted =
-        isInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
+    motorOutputConfigs.Inverted = direction.forTalonFX();
 
     talonFX.getConfigurator().apply(motorOutputConfigs);
   }
