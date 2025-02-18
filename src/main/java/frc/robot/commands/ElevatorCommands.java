@@ -50,7 +50,7 @@ public final class ElevatorCommands {
 
   /** Returns a command that stows the elevator and the arm. */
   public static Command stowElevatorAndArm(Subsystems subsystems) {
-    return Commands.parallel(stowElevator(subsystems), CoralCommands.stowArm(subsystems))
+    return Commands.sequence(CoralCommands.stowArm(subsystems), stowElevator(subsystems))
         .withName("StowElevatorAndArm");
   }
 }
