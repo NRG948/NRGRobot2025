@@ -9,9 +9,7 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_ROLLER_BEAM_BREAK;
 
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
@@ -33,8 +31,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.parameters.MotorParameters;
+import frc.robot.util.MotorDirection;
 import frc.robot.util.MotorIdleMode;
-import frc.robot.util.MotorUtils;
+import frc.robot.util.RelativeEncoder;
+import frc.robot.util.TalonFXAdapter;
 import java.util.Set;
 
 @RobotPreferencesLayout(groupName = "CoralRoller", row = 2, column = 0, width = 1, height = 1)
@@ -58,7 +58,13 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
   private static final double ERROR_TIME = 3.0;
 
-  private final TalonFX motor = new TalonFX(RobotConstants.CAN.TalonFX.CORAL_ROLLER_MOTOR_ID);
+  private final TalonFXAdapter motor =
+      new TalonFXAdapter(
+          new TalonFX(RobotConstants.CAN.TalonFX.CORAL_ROLLER_MOTOR_ID),
+          MotorDirection.CLOCKWISE_POSITIVE,
+          MotorIdleMode.BRAKE,
+          METERS_PER_REVOLUTION);
+  private final RelativeEncoder encoder = motor.getEncoder();
   private DigitalInput beamBreak = new DigitalInput(CORAL_ROLLER_BEAM_BREAK);
 
   private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(KS, KV);
@@ -79,11 +85,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private DoubleLogEntry logVoltage = new DoubleLogEntry(LOG, "/CoralRoller/voltage");
 
   /** Creates a new CoralRoller. */
-  public CoralRoller() {
-    MotorOutputConfigs motorConfig = new MotorOutputConfigs();
-    motorConfig.Inverted = InvertedValue.Clockwise_Positive;
-    motor.getConfigurator().apply(motorConfig);
-  }
+  public CoralRoller() {}
 
   /** Sets the goal velocity in meters per second. */
   private void setGoalVelocity(double velocity) {
@@ -129,7 +131,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
   @Override
   public void setIdleMode(MotorIdleMode idleMode) {
-    MotorUtils.setIdleMode(motor, idleMode);
+    motor.setIdleMode(idleMode);
   }
 
   @Override
@@ -151,7 +153,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   /** Updates and logs the current sensors states. */
   private void updateTelemetry() {
     hasCoral = !beamBreak.get();
-    currentVelocity = motor.getVelocity().refresh().getValueAsDouble() * METERS_PER_REVOLUTION;
+    currentVelocity = encoder.getVelocity();
 
     logHasCoral.update(hasCoral);
     logCurrentVelocity.append(currentVelocity);

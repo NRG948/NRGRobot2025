@@ -7,6 +7,7 @@
  
 package frc.robot.util;
 
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -19,20 +20,23 @@ import edu.wpi.first.units.measure.Voltage;
 public final class TalonFXAdapter implements MotorController {
   private final TalonFX talonFX;
   private final double metersPerRotation;
+  private final MotorOutputConfigs motorOutputConfigs;
 
   /**
    * Constructs a TalonFXAdapter.
    *
-   * <p>This private constructor is intended for use only by delegating public constructors or
-   * factory methods. It assumes the {@link TalonFX} object is already configured or will be
-   * configured appropriately by the public constructors or factory methods.
+   * <p>This constructor assumes the {@link TalonFX} object is already configured or will be
+   * configured to match the provided motor output configuration by the caller.
    *
    * @param talonFX The TalonFX object to adapt.
+   * @param motorOutputConfigs The motor output configuration.
    * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
    *     the output shaft.
    */
-  private TalonFXAdapter(TalonFX talonFX, double metersPerRotation) {
+  public TalonFXAdapter(
+      TalonFX talonFX, MotorOutputConfigs motorOutputConfigs, double metersPerRotation) {
     this.talonFX = talonFX;
+    this.motorOutputConfigs = motorOutputConfigs;
     this.metersPerRotation = metersPerRotation;
   }
 
@@ -47,13 +51,12 @@ public final class TalonFXAdapter implements MotorController {
    */
   public TalonFXAdapter(
       TalonFX talonFX, MotorDirection direction, MotorIdleMode idleMode, double metersPerRotation) {
-    this(talonFX, metersPerRotation);
-    MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+    this(talonFX, new MotorOutputConfigs(), metersPerRotation);
 
     motorOutputConfigs.NeutralMode = idleMode.forTalonFX();
     motorOutputConfigs.Inverted = direction.forTalonFX();
 
-    talonFX.getConfigurator().apply(motorOutputConfigs);
+    applyConfig(talonFX, motorOutputConfigs);
   }
 
   @Override
@@ -73,27 +76,24 @@ public final class TalonFXAdapter implements MotorController {
 
   @Override
   public void setInverted(boolean isInverted) {
-    MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
-
     talonFX.getConfigurator().refresh(motorOutputConfigs);
     motorOutputConfigs.Inverted =
         isInverted ? InvertedValue.Clockwise_Positive : InvertedValue.CounterClockwise_Positive;
 
-    talonFX.getConfigurator().apply(motorOutputConfigs);
+    applyConfig(talonFX, motorOutputConfigs);
+    ;
   }
 
   @Override
   public boolean getInverted() {
-    MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
-
-    talonFX.getConfigurator().refresh(motorOutputConfigs);
-
     return motorOutputConfigs.Inverted == InvertedValue.Clockwise_Positive;
   }
 
   @Override
   public void setIdleMode(MotorIdleMode idleMode) {
-    MotorUtils.setIdleMode(talonFX, idleMode);
+    motorOutputConfigs.NeutralMode = idleMode.forTalonFX();
+    applyConfig(talonFX, motorOutputConfigs);
+    ;
   }
 
   @Override
@@ -110,19 +110,18 @@ public final class TalonFXAdapter implements MotorController {
   public MotorController createFollower(int deviceID, boolean isInvertedFromLeader) {
     TalonFX follower = new TalonFX(deviceID, talonFX.getNetwork());
 
-    // Get the motor output configuration from the leader and apply it to the
-    // follower.
-    MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+    // Get the motor output configuration from the leader and apply it to the follower.
+    MotorOutputConfigs followerMotorOutputConfigs = new MotorOutputConfigs();
 
-    talonFX.getConfigurator().refresh(motorOutputConfigs);
-    follower.getConfigurator().apply(motorOutputConfigs);
+    followerMotorOutputConfigs.deserialize(motorOutputConfigs.serialize());
+    applyConfig(follower, followerMotorOutputConfigs);
 
     // Configure the follower to follow the leader.
     Follower followerConfig = new Follower(talonFX.getDeviceID(), isInvertedFromLeader);
 
     follower.setControl(followerConfig);
 
-    return new TalonFXAdapter(follower, metersPerRotation);
+    return new TalonFXAdapter(follower, followerMotorOutputConfigs, metersPerRotation);
   }
 
   @Override
@@ -148,5 +147,18 @@ public final class TalonFXAdapter implements MotorController {
 
   public double getTorqueCurrent() {
     return talonFX.getTorqueCurrent().refresh().getValueAsDouble();
+  }
+
+  private static void applyConfig(TalonFX talonFX, MotorOutputConfigs motorOutputConfigs) {
+    for (int i = 0; i < 5; i++) {
+      StatusCode status = talonFX.getConfigurator().apply(motorOutputConfigs);
+      if (status.isOK()) {
+        return;
+      }
+      System.out.println(
+          String.format(
+              "ERROR: Failed to apply motor output configs of TalonFX ID %d: %s (%s)",
+              talonFX.getDeviceID(), status.getDescription(), status.getName()));
+    }
   }
 }

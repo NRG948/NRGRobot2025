@@ -7,20 +7,23 @@
  
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.ForwardLimitValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.util.MotorDirection;
 import frc.robot.util.MotorIdleMode;
-import frc.robot.util.MotorUtils;
+import frc.robot.util.TalonFXAdapter;
 
 public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem {
 
-  private final TalonFX motor = new TalonFX(RobotConstants.CAN.TalonFX.ALGAE_GRABBER_MOTOR_ID);
+  private final TalonFXAdapter motor =
+      new TalonFXAdapter(
+          new TalonFX(RobotConstants.CAN.TalonFX.ALGAE_GRABBER_MOTOR_ID),
+          MotorDirection.COUNTER_CLOCKWISE_POSITIVE,
+          MotorIdleMode.BRAKE,
+          1.0);
   private double motorSpeed = 0;
 
-  private StatusSignal<ForwardLimitValue> beamBreak = motor.getForwardLimit();
   private boolean hasAlgae;
 
   /** Creates a new AlgaeGrabber. */
@@ -50,12 +53,11 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem {
 
   @Override
   public void setIdleMode(MotorIdleMode idleMode) {
-    MotorUtils.setIdleMode(motor, idleMode);
+    motor.setIdleMode(idleMode);
   }
 
   @Override
   public void periodic() {
-    hasAlgae = beamBreak.refresh().getValue() == ForwardLimitValue.Open;
     motor.set(motorSpeed);
   }
 }

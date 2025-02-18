@@ -37,7 +37,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.ArmParameters;
 import frc.robot.util.MotorIdleMode;
-import frc.robot.util.MotorUtils;
+import frc.robot.util.RelativeEncoder;
+import frc.robot.util.TalonFXAdapter;
 
 @RobotPreferencesLayout(groupName = "Arm", row = 1, column = 0, width = 1, height = 1)
 public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
@@ -53,7 +54,9 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   private final double MIN_ANGLE;
   private final double MAX_ANGLE;
 
-  private final TalonFX motor;
+  private final TalonFX talonFX;
+  private final TalonFXAdapter motor;
+  private final RelativeEncoder relativeEncoder;
   private final DutyCycleEncoder absoluteEncoder;
   private final Timer stuckTimer = new Timer();
   private double currentAngle = 0;
@@ -83,7 +86,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     absoluteEncoder.setInverted(parameters.isAbsoluteEncoderInverted());
     absoluteEncoder.setDutyCycleRange(1.0 / 1025.0, 1024.0 / 1025.0);
 
-    motor = new TalonFX(parameters.getMotorID(), "rio");
+    talonFX = new TalonFX(parameters.getMotorID(), "rio");
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
     MotorOutputConfigs motorOutputConfigs = talonFXConfigs.MotorOutput;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
@@ -109,10 +112,12 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     motionMagicConfigs.MotionMagicAcceleration =
         0.015625 * parameters.getMaxAngularAcceleration() / (2 * Math.PI);
 
-    TalonFXConfigurator configurator = motor.getConfigurator();
+    TalonFXConfigurator configurator = talonFX.getConfigurator();
 
     configurator.apply(talonFXConfigs);
     configurator.setPosition(MathUtil.angleModulus(absoluteEncoder.get()) / (2 * Math.PI));
+    motor = new TalonFXAdapter(talonFX, talonFXConfigs.MotorOutput, 2 * Math.PI);
+    relativeEncoder = motor.getEncoder();
 
     logCurrentAngle =
         new DoubleLogEntry(LOG, String.format("/%s/Current Angle", parameters.name()));
@@ -126,8 +131,8 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
 
   /** Updates the sensor state. */
   private void updateSensorState() {
-    currentAngle = motor.getPosition().refresh().getValueAsDouble() * 2 * Math.PI;
-    currentVelocity = motor.getVelocity().refresh().getValueAsDouble() * 2 * Math.PI;
+    currentAngle = relativeEncoder.getPosition();
+    currentVelocity = relativeEncoder.getVelocity();
     currentAbsoluteAngle = MathUtil.angleModulus(absoluteEncoder.get());
     checkError();
 
@@ -162,7 +167,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     goalAngle = angle;
     enabled = true;
     // set target position to 100 rotations
-    motor.setControl(motionMagicRequest.withPosition(angle / (2 * Math.PI)));
+    talonFX.setControl(motionMagicRequest.withPosition(angle / (2 * Math.PI)));
     logGoalAngle.append(angle);
     logEnabled.update(enabled);
   }
@@ -186,7 +191,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
 
   @Override
   public void setIdleMode(MotorIdleMode idleMode) {
-    MotorUtils.setIdleMode(motor, idleMode);
+    motor.setIdleMode(idleMode);
   }
 
   @Override
