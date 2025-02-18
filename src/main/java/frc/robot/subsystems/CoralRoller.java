@@ -35,6 +35,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.parameters.MotorParameters;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.MotorUtils;
+import java.util.Set;
 
 @RobotPreferencesLayout(groupName = "CoralRoller", row = 2, column = 0, width = 1, height = 1)
 public class CoralRoller extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
@@ -92,12 +93,12 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
   /** Intakes the coral. */
   public void intake() {
-    setGoalVelocity(0.6);
+    setGoalVelocity(MAX_VELOCITY);
   }
 
   /** Outakes the coral. */
   public void outtake() {
-    setGoalVelocity(2.0);
+    setGoalVelocity(MAX_VELOCITY);
     outtakeTimer.restart();
   }
 
@@ -168,20 +169,24 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
     statusLayout.addDouble("Goal Velocity", () -> goalVelocity);
     statusLayout.addDouble("Current Velocity", () -> currentVelocity);
     statusLayout.addBoolean("Has Coral", () -> hasCoral);
+    statusLayout.add("Max Velocity", MAX_VELOCITY);
 
     ShuffleboardLayout controlLayout =
         rollerTab.getLayout("Control", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
     GenericEntry speed = controlLayout.add("Speed", 0).getEntry();
+    GenericEntry delay = controlLayout.add("Delay", 0).getEntry();
     controlLayout.add(
         Commands.sequence(
                 Commands.runOnce(() -> goalVelocity = speed.getDouble(0), this),
                 Commands.idle(this).until(this::hasCoral),
+                Commands.defer(() -> Commands.waitSeconds(delay.getDouble(0)), Set.of(this)),
                 Commands.runOnce(this::disable, this))
             .withName("Intake"));
     controlLayout.add(
         Commands.sequence(
                 Commands.runOnce(() -> goalVelocity = speed.getDouble(0), this),
                 Commands.idle(this).until(() -> !hasCoral),
+                Commands.defer(() -> Commands.waitSeconds(delay.getDouble(0)), Set.of(this)),
                 Commands.runOnce(this::disable, this))
             .withName("Deliver"));
     controlLayout.add(Commands.runOnce(this::disable, this).withName("Disable"));
