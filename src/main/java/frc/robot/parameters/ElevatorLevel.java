@@ -16,9 +16,9 @@ public enum ElevatorLevel {
       Math.toRadians(90),
       0), // TO-DO: Determine correct values for height and arm angles
   L1(0.375, Math.toRadians(60), .2),
-  L2(0, 0, .2),
-  L3(0, 0, .2),
-  L4(1.4, Math.toRadians(60), .2),
+  L2(0.37, Math.toRadians(60), .2),
+  L3(0.78, Math.toRadians(60), .2),
+  L4(1.4, Math.toRadians(50), .2),
 
   AlgaeL2(1.5, 0, .2), // TO-DO: Determine correct values for height and arm angles (algae removal)
   AlgaeL3(2.5, 0, .2);
