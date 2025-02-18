@@ -16,6 +16,8 @@ import frc.robot.subsystems.Subsystems;
 
 /** A namespace for coral command factory methods. */
 public final class CoralCommands {
+  private static final double CORAL_DETECTION_DELAY = 0.08;
+
   /** Returns a command that intakes coral. */
   public static Command intakeCoral(Subsystems subsystems) {
     return Commands.runOnce(() -> subsystems.coralRoller.intake(), subsystems.coralRoller)
@@ -31,9 +33,13 @@ public final class CoralCommands {
   /** Returns a command that intakes coral until it is detected. */
   public static Command intakeUntilCoralDetected(Subsystems subsystems) {
     return Commands.sequence(
-        intakeCoral(subsystems),
-        Commands.idle(subsystems.coralRoller).until(() -> subsystems.coralRoller.hasCoral()),
-        Commands.runOnce(subsystems.coralRoller::disable, subsystems.coralRoller));
+            intakeCoral(subsystems),
+            Commands.idle(subsystems.coralRoller).until(subsystems.coralRoller::hasCoral),
+            Commands.waitSeconds(CORAL_DETECTION_DELAY),
+            Commands.runOnce(subsystems.coralRoller::disable, subsystems.coralRoller))
+        .handleInterrupt(subsystems.coralRoller::disable)
+        .unless(subsystems.coralRoller::hasCoral)
+        .withName("IntakeUntilCoralDetected");
   }
 
   /** Returns a command that outtakes coral until it is not detected. */
