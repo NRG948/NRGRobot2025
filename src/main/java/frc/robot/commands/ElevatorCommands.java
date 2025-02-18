@@ -15,7 +15,6 @@ import frc.robot.subsystems.Subsystems;
 
 /** A namespace for elevator command factory methods. */
 public final class ElevatorCommands {
-
   /** Returns a command that goes to the given elevator level. */
   public static Command goToElevatorLevel(Subsystems subsystems, ElevatorLevel level) {
     return Commands.runOnce(() -> subsystems.elevator.setGoalPosition(level), subsystems.elevator)
@@ -52,5 +51,13 @@ public final class ElevatorCommands {
   public static Command stowElevatorAndArm(Subsystems subsystems) {
     return Commands.sequence(CoralCommands.stowArm(subsystems), stowElevator(subsystems))
         .withName("StowElevatorAndArm");
+  }
+
+  public static Command stowElevatorAndArmForCoral(Subsystems subsystems) {
+    return Commands.sequence(
+            Commands.idle(subsystems.elevator, subsystems.coralArm)
+                .until(() -> !subsystems.coralRoller.hasCoral()),
+            stowElevatorAndArm(subsystems))
+        .withName("StowElevatorAndArmForCoral");
   }
 }

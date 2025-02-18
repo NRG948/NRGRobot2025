@@ -72,8 +72,9 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private static final double METERS_PER_REVOLUTION = (SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO;
 
   private static final double MAX_HEIGHT = PARAMETERS.getValue().getMaxHeight();
-  public static final double MIN_HEIGHT = PARAMETERS.getValue().getMinHeight(); // in meters
-  private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.04;
+  private static final double MIN_HEIGHT = PARAMETERS.getValue().getMinHeight(); // in meters
+  private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.05;
+  public static final double STOWED_HEIGHT_FOR_PID = (MIN_HEIGHT + DISABLE_HEIGHT) / 2;
   private static final double COLLISION_VELOCITY_THRESHOLD = 0.001; // in m/s
   private static final double COLLISION_DURATION = 0.25;
 
@@ -270,6 +271,11 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   public boolean hasError() {
     return hasError;
+  }
+
+  /** Returns if elevator is near the given level. */
+  public boolean isNearestToLevel(ElevatorLevel level) {
+    return MathUtil.isNear(level.getElevatorHeight(), getHeight(), 0.1);
   }
 
   @Override

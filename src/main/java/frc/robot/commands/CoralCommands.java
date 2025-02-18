@@ -7,6 +7,8 @@
  
 package frc.robot.commands;
 
+import static frc.robot.parameters.ElevatorLevel.L4;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.parameters.ElevatorLevel;
@@ -37,9 +39,14 @@ public final class CoralCommands {
   /** Returns a command that outtakes coral until it is not detected. */
   public static Command outtakeUntilCoralNotDetected(Subsystems subsystems) {
     return Commands.sequence(
-        outtakeCoral(subsystems),
-        Commands.idle(subsystems.coralRoller).until(() -> !subsystems.coralRoller.hasCoral()),
-        Commands.runOnce(subsystems.coralRoller::disable, subsystems.coralRoller));
+            outtakeCoral(subsystems),
+            Commands.either(
+                Commands.sequence(Commands.waitSeconds(0.5), stowArm(subsystems)),
+                Commands.none(),
+                () -> subsystems.elevator.isNearestToLevel(L4)),
+            Commands.idle(subsystems.coralRoller).until(() -> !subsystems.coralRoller.hasCoral()),
+            Commands.runOnce(subsystems.coralRoller::disable, subsystems.coralRoller))
+        .withName("OuttakeUntilCoralNotDetected");
   }
 
   /**

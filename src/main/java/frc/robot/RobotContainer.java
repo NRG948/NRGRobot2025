@@ -131,14 +131,15 @@ public class RobotContainer {
     m_manipulatorController.leftBumper().whileTrue(AlgaeCommands.outtakeAlgae(subsystems));
     m_manipulatorController.leftBumper().onFalse(AlgaeCommands.stopAndStowIntake(subsystems));
     m_manipulatorController.povLeft().whileTrue(CoralCommands.intakeUntilCoralDetected(subsystems));
-    m_manipulatorController.back().onTrue(ManipulatorCommands.interruptAll(subsystems));
-    m_manipulatorController.start().onTrue(ElevatorCommands.stowElevatorAndArm(subsystems));
     m_manipulatorController.povRight().whileTrue(outtakeUntilCoralNotDetected(subsystems));
-    m_manipulatorController.povRight().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
+    m_manipulatorController
+        .povRight()
+        .onFalse(ElevatorCommands.stowElevatorAndArmForCoral(subsystems));
     m_manipulatorController.povDown().whileTrue(removeAlgaeAtLevel(subsystems, AlgaeL2));
     m_manipulatorController.povUp().whileTrue(removeAlgaeAtLevel(subsystems, AlgaeL3));
     m_manipulatorController.povDown().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
     m_manipulatorController.povUp().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
+    m_manipulatorController.back().onTrue(ManipulatorCommands.interruptAll(subsystems));
 
     new Trigger(subsystems.coralRoller::hasCoral)
         .onTrue(LEDCommands.indicateCoralAcquired(subsystems));
