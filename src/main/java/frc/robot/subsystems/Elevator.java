@@ -67,7 +67,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   // physical parameters of the elevator
   private static final double GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
-  private static final double SPROCKET_DIAMETER = 0.05; // 5 cm
+  private static final double SPROCKET_DIAMETER = 0.0474; // in meters
   private static final double MASS = PARAMETERS.getValue().getMass(); // kilograms
   private static final double METERS_PER_REVOLUTION = (SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO;
 
@@ -252,7 +252,8 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   @Override
   public void setIdleMode(MotorIdleMode idleMode) {
     mainMotor.setIdleMode(idleMode);
-    follower.setIdleMode(idleMode);
+    // We leave the follower in brake mode for more controlled decent when disabled.
+    // follower.setIdleMode(idleMode);
   }
 
   private void checkError() {
