@@ -32,7 +32,7 @@ public enum ArmParameters {
       // to radians.
       Math.toRadians(360 - 10.55),
       Math.toRadians(10),
-      Math.toRadians(90)),
+      Math.toRadians(95)),
   AlgaeArm(
       MotorParameters.KrakenX60,
       1,
