@@ -52,7 +52,6 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private static final double GOAL_POSITION_TOLERANCE = 0.01;
   private static final double POSITION_ERROR_MARGIN = 0.05; // meters
   private static final double POSITION_ERROR_TIME = 2.0;
-  private static final double STOWED_POSITION_TOLERANCE = 0.001;
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -66,7 +65,9 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       new RobotPreferences.BooleanValue("Elevator", "Enable Tab", false);
 
   // physical parameters of the elevator
-  private static final double GEAR_RATIO = ((60.0 / 12.0) * (15.0 / 15.0)) / 2;
+  public static final double PRACTICE_BOT_GEAR_RATIO = ((60.0 / 12.0) * (15.0 / 15.0)) / 2;
+  public static final double COMP_BOT_GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
+  private static final double GEAR_RATIO = PARAMETERS.getValue().getGearRatio();
   private static final double SPROCKET_DIAMETER = 0.0474; // in meters
   private static final double MASS = PARAMETERS.getValue().getMass(); // kilograms
   private static final double METERS_PER_REVOLUTION = (SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO;
@@ -75,8 +76,6 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private static final double MIN_HEIGHT = PARAMETERS.getValue().getMinHeight(); // in meters
   private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.08;
   public static final double STOWED_HEIGHT_FOR_PID = (MIN_HEIGHT + DISABLE_HEIGHT) / 2;
-  private static final double COLLISION_VELOCITY_THRESHOLD = 0.001; // in m/s
-  private static final double COLLISION_DURATION = 0.25;
 
   // trapezoid profile values
   private static final DCMotor MOTOR_PARAMS = DCMotor.getKrakenX60(1);
@@ -120,6 +119,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
           MotorIdleMode.BRAKE,
           METERS_PER_REVOLUTION);
 
+  @SuppressWarnings("unused")
   private MotorController follower =
       mainMotor.createFollower(PARAMETERS.getValue().getFollowerDeviceID(), false);
 
