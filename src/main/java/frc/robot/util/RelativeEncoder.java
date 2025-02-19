@@ -9,6 +9,15 @@ package frc.robot.util;
 
 public interface RelativeEncoder {
   /**
+   * Sets the current position.
+   *
+   * <p>The unit of measure depends on the mechanism. For a mechanism that produces linear motion,
+   * the unit is typically in meters. For a mechanism that produces rotational motion, the unit is
+   * typically in radians.
+   */
+  void setPosition(double position);
+
+  /**
    * Returns the current position.
    *
    * <p>The unit of measure depends on the mechanism. For a mechanism that produces linear motion,

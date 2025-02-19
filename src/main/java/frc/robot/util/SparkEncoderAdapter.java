@@ -16,6 +16,11 @@ public final class SparkEncoderAdapter implements RelativeEncoder {
   }
 
   @Override
+  public void setPosition(double position) {
+    encoder.setPosition(position);
+  }
+
+  @Override
   public double getPosition() {
     return encoder.getPosition();
   }

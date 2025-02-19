@@ -115,9 +115,9 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     TalonFXConfigurator configurator = talonFX.getConfigurator();
 
     configurator.apply(talonFXConfigs);
-    configurator.setPosition(MathUtil.angleModulus(absoluteEncoder.get()) / (2 * Math.PI));
     motor = new TalonFXAdapter(talonFX, talonFXConfigs.MotorOutput, 2 * Math.PI);
     relativeEncoder = motor.getEncoder();
+    relativeEncoder.setPosition(MathUtil.angleModulus(absoluteEncoder.get()) / (2 * Math.PI));
 
     logCurrentAngle =
         new DoubleLogEntry(LOG, String.format("/%s/Current Angle", parameters.name()));

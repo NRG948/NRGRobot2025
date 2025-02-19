@@ -14,10 +14,10 @@ import edu.wpi.first.units.measure.AngularVelocity;
 
 /** A relative encoder implementation based on the CTR Electronics TalonFX motor controller. */
 public final class TalonFXEncoderAdapter implements RelativeEncoder {
+  private final TalonFX talonFX;
   private final StatusSignal<Angle> position;
   private final StatusSignal<AngularVelocity> velocity;
   private final double distancePerRotation;
-  private double initPosition;
 
   /**
    * Constructs a TalonFXEncoderAdapter.
@@ -30,6 +30,7 @@ public final class TalonFXEncoderAdapter implements RelativeEncoder {
    *     the unit is typically in radians.
    */
   public TalonFXEncoderAdapter(TalonFX controller, double distancePerRotation) {
+    talonFX = controller;
     position = controller.getPosition();
     velocity = controller.getVelocity();
     this.distancePerRotation = distancePerRotation;
@@ -37,8 +38,13 @@ public final class TalonFXEncoderAdapter implements RelativeEncoder {
   }
 
   @Override
+  public void setPosition(double position) {
+    talonFX.setPosition(position);
+  }
+
+  @Override
   public double getPosition() {
-    return (position.refresh().getValueAsDouble() * distancePerRotation) - initPosition;
+    return position.refresh().getValueAsDouble() * distancePerRotation;
   }
 
   @Override
@@ -48,6 +54,6 @@ public final class TalonFXEncoderAdapter implements RelativeEncoder {
 
   @Override
   public void reset() {
-    initPosition = position.refresh().getValueAsDouble() * distancePerRotation;
+    talonFX.setPosition(0);
   }
 }
