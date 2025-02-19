@@ -113,7 +113,14 @@ public final class TalonFXAdapter implements MotorController {
     // Get the motor output configuration from the leader and apply it to the follower.
     MotorOutputConfigs followerMotorOutputConfigs = new MotorOutputConfigs();
 
-    followerMotorOutputConfigs.deserialize(motorOutputConfigs.serialize());
+    followerMotorOutputConfigs.Inverted = motorOutputConfigs.Inverted;
+    followerMotorOutputConfigs.NeutralMode = motorOutputConfigs.NeutralMode;
+    followerMotorOutputConfigs.DutyCycleNeutralDeadband =
+        motorOutputConfigs.DutyCycleNeutralDeadband;
+    followerMotorOutputConfigs.PeakForwardDutyCycle = motorOutputConfigs.PeakForwardDutyCycle;
+    followerMotorOutputConfigs.PeakReverseDutyCycle = motorOutputConfigs.PeakReverseDutyCycle;
+    followerMotorOutputConfigs.ControlTimesyncFreqHz = motorOutputConfigs.ControlTimesyncFreqHz;
+
     applyConfig(follower, followerMotorOutputConfigs);
 
     // Configure the follower to follow the leader.
