@@ -16,28 +16,38 @@ import edu.wpi.first.units.measure.AngularVelocity;
 public final class TalonFXEncoderAdapter implements RelativeEncoder {
   private final StatusSignal<Angle> position;
   private final StatusSignal<AngularVelocity> velocity;
-  private final double metersPerRotation;
+  private final double distancePerRotation;
   private double initPosition;
 
-  public TalonFXEncoderAdapter(TalonFX controller, double metersPerRotation) {
+  /**
+   * Constructs a TalonFXEncoderAdapter.
+   *
+   * @param controller The TalonFX object containing the relative encoder to adapt.
+   * @param distancePerRotation The distance the attached mechanism moves per rotation of the motor
+   *     output shaft.
+   *     <p>The unit of measure depends on the mechanism. For a mechanism that produces linear
+   *     motion, the unit is typically in meters. For a mechanism that produces rotational motion,
+   *     the unit is typically in radians.
+   */
+  public TalonFXEncoderAdapter(TalonFX controller, double distancePerRotation) {
     position = controller.getPosition();
     velocity = controller.getVelocity();
-    this.metersPerRotation = metersPerRotation;
+    this.distancePerRotation = distancePerRotation;
     reset();
   }
 
   @Override
   public double getPosition() {
-    return (position.refresh().getValueAsDouble() * metersPerRotation) - initPosition;
+    return (position.refresh().getValueAsDouble() * distancePerRotation) - initPosition;
   }
 
   @Override
   public double getVelocity() {
-    return velocity.refresh().getValueAsDouble() * metersPerRotation;
+    return velocity.refresh().getValueAsDouble() * distancePerRotation;
   }
 
   @Override
   public void reset() {
-    initPosition = position.refresh().getValueAsDouble() * metersPerRotation;
+    initPosition = position.refresh().getValueAsDouble() * distancePerRotation;
   }
 }

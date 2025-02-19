@@ -19,7 +19,7 @@ import edu.wpi.first.units.measure.Voltage;
 /** A motor controller implementation based on the CTR Electronics TalonFX controller. */
 public final class TalonFXAdapter implements MotorController {
   private final TalonFX talonFX;
-  private final double metersPerRotation;
+  private final double distancePerRotation;
   private final MotorOutputConfigs motorOutputConfigs;
 
   /**
@@ -30,14 +30,17 @@ public final class TalonFXAdapter implements MotorController {
    *
    * @param talonFX The TalonFX object to adapt.
    * @param motorOutputConfigs The motor output configuration.
-   * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
-   *     the output shaft.
+   * @param distancePerRotation The distance the attached mechanism moves per rotation of the motor
+   *     output shaft.
+   *     <p>The unit of measure depends on the mechanism. For a mechanism that produces linear
+   *     motion, the unit is typically in meters. For a mechanism that produces rotational motion,
+   *     the unit is typically in radians.
    */
   public TalonFXAdapter(
-      TalonFX talonFX, MotorOutputConfigs motorOutputConfigs, double metersPerRotation) {
+      TalonFX talonFX, MotorOutputConfigs motorOutputConfigs, double distancePerRotation) {
     this.talonFX = talonFX;
     this.motorOutputConfigs = motorOutputConfigs;
-    this.metersPerRotation = metersPerRotation;
+    this.distancePerRotation = distancePerRotation;
   }
 
   /**
@@ -46,12 +49,18 @@ public final class TalonFXAdapter implements MotorController {
    * @param talonFX The TalonFX object to adapt.
    * @param direction The direction the motor rotates when a positive voltage is applied.
    * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
-   * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
-   *     the output shaft.
+   * @param distancePerRotation The distance the attached mechanism moves per rotation of the motor
+   *     output shaft.
+   *     <p>The unit of measure depends on the mechanism. For a mechanism that produces linear
+   *     motion, the unit is typically in meters. For a mechanism that produces rotational motion,
+   *     the unit is typically in radians.
    */
   public TalonFXAdapter(
-      TalonFX talonFX, MotorDirection direction, MotorIdleMode idleMode, double metersPerRotation) {
-    this(talonFX, new MotorOutputConfigs(), metersPerRotation);
+      TalonFX talonFX,
+      MotorDirection direction,
+      MotorIdleMode idleMode,
+      double distancePerRotation) {
+    this(talonFX, new MotorOutputConfigs(), distancePerRotation);
 
     motorOutputConfigs.NeutralMode = idleMode.forTalonFX();
     motorOutputConfigs.Inverted = direction.forTalonFX();
@@ -121,12 +130,12 @@ public final class TalonFXAdapter implements MotorController {
 
     follower.setControl(followerConfig);
 
-    return new TalonFXAdapter(follower, followerMotorOutputConfigs, metersPerRotation);
+    return new TalonFXAdapter(follower, followerMotorOutputConfigs, distancePerRotation);
   }
 
   @Override
   public RelativeEncoder getEncoder() {
-    return new TalonFXEncoderAdapter(talonFX, metersPerRotation);
+    return new TalonFXEncoderAdapter(talonFX, distancePerRotation);
   }
 
   @Override

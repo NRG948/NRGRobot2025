@@ -130,17 +130,20 @@ public final class SparkAdapter implements MotorController {
    * @param spark The SparkMax object to adapt.
    * @param direction The direction the motor rotates when a positive voltage is applied.
    * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
-   * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
-   *     the output shaft.
+   * @param distancePerRotation The distance the attached mechanism moves per rotation of the motor
+   *     output shaft.
+   *     <p>The unit of measure depends on the mechanism. For a mechanism that produces linear
+   *     motion, the unit is typically in meters. For a mechanism that produces rotational motion,
+   *     the unit is typically in radians.
    */
   public SparkAdapter(
       SparkMax sparkMax,
       MotorDirection direction,
       MotorIdleMode idleMode,
-      double metersPerRotation) {
+      double distancePerRotation) {
     this(sparkMax);
 
-    configure(direction, idleMode, metersPerRotation);
+    configure(direction, idleMode, distancePerRotation);
   }
 
   /**
@@ -162,17 +165,20 @@ public final class SparkAdapter implements MotorController {
    * @param spark The SparkFlex object to adapt.
    * @param direction The direction the motor rotates when a positive voltage is applied.
    * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
-   * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
-   *     the output shaft.
+   * @param distancePerRotation The distance the attached mechanism moves per rotation of the motor
+   *     output shaft.
+   *     <p>The unit of measure depends on the mechanism. For a mechanism that produces linear
+   *     motion, the unit is typically in meters. For a mechanism that produces rotational motion,
+   *     the unit is typically in radians.
    */
   public SparkAdapter(
       SparkFlex sparkFlex,
       MotorDirection direction,
       MotorIdleMode idleMode,
-      double metersPerRotation) {
+      double distancePerRotation) {
     this(sparkFlex);
 
-    configure(direction, idleMode, metersPerRotation);
+    configure(direction, idleMode, distancePerRotation);
   }
 
   /**
@@ -180,19 +186,22 @@ public final class SparkAdapter implements MotorController {
    *
    * @param direction The direction the motor rotates when a positive voltage is applied.
    * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
-   * @param metersPerRotation The distance in meters the attached mechanism moves per rotation of
-   *     the output shaft.
+   * @param distancePerRotation The distance the attached mechanism moves per rotation of the motor
+   *     output shaft.
+   *     <p>The unit of measure depends on the mechanism. For a mechanism that produces linear
+   *     motion, the unit is typically in meters. For a mechanism that produces rotational motion,
+   *     the unit is typically in radians.
    */
   private void configure(
-      MotorDirection direction, MotorIdleMode idleMode, double metersPerRotation) {
+      MotorDirection direction, MotorIdleMode idleMode, double distancePerRotation) {
     SparkBaseConfig driveMotorConfig = spark.getConfig();
 
     driveMotorConfig.inverted(direction.isInverted()).idleMode(idleMode.forSpark());
 
     driveMotorConfig
         .encoder
-        .positionConversionFactor(metersPerRotation)
-        .velocityConversionFactor(metersPerRotation);
+        .positionConversionFactor(distancePerRotation)
+        .velocityConversionFactor(distancePerRotation);
 
     spark
         .get()

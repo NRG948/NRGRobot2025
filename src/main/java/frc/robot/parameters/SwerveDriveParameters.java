@@ -457,6 +457,15 @@ public enum SwerveDriveParameters {
   }
 
   /**
+   * Returns the steering gear ratio.
+   *
+   * @return The steering gear ratio.
+   */
+  public double getSteeringGearRatio() {
+    return this.swerveModule.getSteeringGearRatio();
+  }
+
+  /**
    * Returns the swerve module used by the robot.
    *
    * @return The swerve module used by the robot.
@@ -498,12 +507,16 @@ public enum SwerveDriveParameters {
       case FrontRightDrive:
       case BackLeftDrive:
       case BackRightDrive:
-        final double metersPerRotation = (getWheelDiameter() * Math.PI) / getDriveGearRatio();
+        double metersPerRotation = (getWheelDiameter() * Math.PI) / getDriveGearRatio();
+
         return this.driveMotor.newController(
             motorID, COUNTER_CLOCKWISE_POSITIVE, BRAKE, metersPerRotation);
 
       default:
-        return this.steeringMotor.newController(motorID, getSteeringDirection(), BRAKE, 1.0);
+        double radiansPerRotation = (2 * Math.PI) / getSteeringGearRatio();
+
+        return this.steeringMotor.newController(
+            motorID, getSteeringDirection(), BRAKE, radiansPerRotation);
     }
   }
 
