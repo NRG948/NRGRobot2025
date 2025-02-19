@@ -286,16 +286,6 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       TrapezoidProfile.State desiredState =
           profile.calculate(RobotConstants.PERIODIC_INTERVAL, lastState, goalState);
 
-      /*if (goalState.position == MIN_HEIGHT
-                && Math.abs(currentState.velocity) < COLLISION_VELOCITY_THRESHOLD) {
-              if (!collisionTimer.isRunning()) {
-                collisionTimer.restart();
-              } else if (collisionTimer.hasElapsed(COLLISION_DURATION)) {
-                disable();
-                return;
-              }
-            }
-      */
       double feedforward = feedForward.calculate(desiredState.velocity);
       double pidOutput = controller.calculate(currentState.position, desiredState);
 
@@ -316,13 +306,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       logDesiredPosition.append(desiredState.position);
       logDesiredVelocity.append(desiredState.velocity);
       logCurrentVoltage.append(currentVoltage);
-    } /*else {
-        if (goalState.position == MIN_HEIGHT
-            && !MathUtil.isNear(MIN_HEIGHT, currentState.position, STOWED_POSITION_TOLERANCE)
-            && currentState.velocity == 0) {
-          encoder.reset();
-        }
-      } */
+    }
   }
 
   @Override
