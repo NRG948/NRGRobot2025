@@ -40,7 +40,6 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.parameters.ElevatorParameters;
-import frc.robot.util.MotorController;
 import frc.robot.util.MotorDirection;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
@@ -65,7 +64,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       new RobotPreferences.BooleanValue("Elevator", "Enable Tab", false);
 
   // physical parameters of the elevator
-  public static final double PRACTICE_BOT_GEAR_RATIO = ((60.0 / 12.0) * (15.0 / 15.0)) / 2;
+  public static final double PRACTICE_BOT_GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
   public static final double COMP_BOT_GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
   private static final double GEAR_RATIO = PARAMETERS.getValue().getGearRatio();
   private static final double SPROCKET_DIAMETER = 0.0474; // in meters
@@ -119,9 +118,9 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
           MotorIdleMode.BRAKE,
           METERS_PER_REVOLUTION);
 
-  @SuppressWarnings("unused")
-  private MotorController follower =
-      mainMotor.createFollower(PARAMETERS.getValue().getFollowerDeviceID(), false);
+  // @SuppressWarnings("unused")
+  // private MotorController follower =
+  //     mainMotor.createFollower(PARAMETERS.getValue().getFollowerDeviceID(), false);
 
   private RelativeEncoder encoder = mainMotor.getEncoder();
 
