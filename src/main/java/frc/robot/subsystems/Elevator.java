@@ -66,14 +66,14 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       new RobotPreferences.BooleanValue("Elevator", "Enable Tab", false);
 
   // physical parameters of the elevator
-  private static final double GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
+  private static final double GEAR_RATIO = ((60.0 / 12.0) * (15.0 / 15.0)) / 2;
   private static final double SPROCKET_DIAMETER = 0.0474; // in meters
   private static final double MASS = PARAMETERS.getValue().getMass(); // kilograms
   private static final double METERS_PER_REVOLUTION = (SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO;
 
   private static final double MAX_HEIGHT = PARAMETERS.getValue().getMaxHeight();
   private static final double MIN_HEIGHT = PARAMETERS.getValue().getMinHeight(); // in meters
-  private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.05;
+  private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.08;
   public static final double STOWED_HEIGHT_FOR_PID = (MIN_HEIGHT + DISABLE_HEIGHT) / 2;
   private static final double COLLISION_VELOCITY_THRESHOLD = 0.001; // in m/s
   private static final double COLLISION_DURATION = 0.25;
@@ -286,16 +286,16 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       TrapezoidProfile.State desiredState =
           profile.calculate(RobotConstants.PERIODIC_INTERVAL, lastState, goalState);
 
-      if (goalState.position == MIN_HEIGHT
-          && Math.abs(currentState.velocity) < COLLISION_VELOCITY_THRESHOLD) {
-        if (!collisionTimer.isRunning()) {
-          collisionTimer.restart();
-        } else if (collisionTimer.hasElapsed(COLLISION_DURATION)) {
-          disable();
-          return;
-        }
-      }
-
+      /*if (goalState.position == MIN_HEIGHT
+                && Math.abs(currentState.velocity) < COLLISION_VELOCITY_THRESHOLD) {
+              if (!collisionTimer.isRunning()) {
+                collisionTimer.restart();
+              } else if (collisionTimer.hasElapsed(COLLISION_DURATION)) {
+                disable();
+                return;
+              }
+            }
+      */
       double feedforward = feedForward.calculate(desiredState.velocity);
       double pidOutput = controller.calculate(currentState.position, desiredState);
 
@@ -316,13 +316,13 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       logDesiredPosition.append(desiredState.position);
       logDesiredVelocity.append(desiredState.velocity);
       logCurrentVoltage.append(currentVoltage);
-    } else {
-      if (goalState.position == MIN_HEIGHT
-          && !MathUtil.isNear(MIN_HEIGHT, currentState.position, STOWED_POSITION_TOLERANCE)
-          && currentState.velocity == 0) {
-        encoder.reset();
-      }
-    }
+    } /*else {
+        if (goalState.position == MIN_HEIGHT
+            && !MathUtil.isNear(MIN_HEIGHT, currentState.position, STOWED_POSITION_TOLERANCE)
+            && currentState.velocity == 0) {
+          encoder.reset();
+        }
+      } */
   }
 
   @Override
