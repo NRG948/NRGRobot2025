@@ -8,7 +8,7 @@
 package frc.robot.parameters;
 
 public enum ElevatorParameters {
-  PracticeBase2025(3.7, 0.033, 1.42, 14, 8),
+  PracticeBase2025(3.7, 0.041, 1.42, 14, 8),
   CompetitionBase2025(1, 0.033, 1.42, 9, 10);
 
   private final double mass;
