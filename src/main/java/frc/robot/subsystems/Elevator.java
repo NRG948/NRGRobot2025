@@ -81,10 +81,10 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private static final double MAX_SPEED =
       (MOTOR_PARAMS.freeSpeedRadPerSec / (2 * Math.PI)) * METERS_PER_REVOLUTION; // m/s
   private static final double MAX_ACCELERATION =
-      (2 * MOTOR_PARAMS.stallTorqueNewtonMeters * GEAR_RATIO)
+      (PARAMETERS.getValue().getMotorCount() * MOTOR_PARAMS.stallTorqueNewtonMeters * GEAR_RATIO)
           / (SPROCKET_DIAMETER * MASS); // m/s^2 for two motors
   private static final TrapezoidProfile.Constraints CONSTRAINTS =
-      new TrapezoidProfile.Constraints(MAX_SPEED, MAX_ACCELERATION / 64);
+      new TrapezoidProfile.Constraints(MAX_SPEED / 2, MAX_ACCELERATION / 64);
 
   // feedforward constants
   /*
@@ -163,6 +163,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private DoubleLogEntry logPIDOutput = new DoubleLogEntry(LOG, "Elevator/pidOutput");
   private BooleanLogEntry logAtUpperLimit = new BooleanLogEntry(LOG, "Elevator/atUpperLimit");
   private BooleanLogEntry logAtLowerLimit = new BooleanLogEntry(LOG, "Elevator/atLowerLimit");
+  private BooleanLogEntry logAtGoal = new BooleanLogEntry(LOG, "Elevator/atGoal");
   private DoubleLogEntry logDesiredPosition = new DoubleLogEntry(LOG, "Elevator/desiredPosition");
   private DoubleLogEntry logDesiredVelocity = new DoubleLogEntry(LOG, "Elevator/desiredVelocity");
 
@@ -210,6 +211,8 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     lastState = currentState;
 
     controller.setPID(KP.getValue(), KI.getValue(), KD.getValue());
+    controller.reset(currentState);
+    controller.setGoal(goalState);
 
     logIsSeekingGoal.append(true);
     logGoalPosition.append(height);
@@ -218,7 +221,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   /** Returns whether the elevator is at goal position. */
   public boolean atGoalPosition() {
-    return controller.atGoal();
+    return MathUtil.isNear(goalState.position, getHeight(), GOAL_POSITION_TOLERANCE);
   }
 
   /** Returns whether the elevator is above the arm position. */
@@ -245,15 +248,14 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     logCurrentVelocity.append(currentState.velocity);
     logAtLowerLimit.append(atLowerLimit);
     logAtUpperLimit.append(atUpperLimit);
+    logAtGoal.append(atGoalPosition());
     logStatorCurrent.append(mainMotor.getStatorCurrent());
     logTorqueCurrent.append(mainMotor.getTorqueCurrent());
   }
 
   @Override
   public void setIdleMode(MotorIdleMode idleMode) {
-    mainMotor.setIdleMode(idleMode);
-    // We leave the follower in brake mode for more controlled decent when disabled.
-    // follower.setIdleMode(idleMode);
+    // Do not put the elevator in COAST mode or else it can crash down.
   }
 
   private void checkError() {

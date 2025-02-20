@@ -10,10 +10,11 @@ package frc.robot.parameters;
 import frc.robot.subsystems.Elevator;
 
 public enum ElevatorParameters {
-  PracticeBase2025(3.7, Elevator.PRACTICE_BOT_GEAR_RATIO, 0.041, 1.42, 14, 8),
-  CompetitionBase2025(1, Elevator.COMP_BOT_GEAR_RATIO, 0.033, 1.42, 9, 10);
+  PracticeBase2025(3.7, 1, Elevator.PRACTICE_BOT_GEAR_RATIO, 0.041, 1.35, 14, 8),
+  CompetitionBase2025(3.7, 2, Elevator.COMP_BOT_GEAR_RATIO, 0.041, 1.35, 9, 10);
 
   private final double mass;
+  private final int motorCount;
   private final double gearRatio;
   private final double minHeight;
   private final double maxHeight;
@@ -22,12 +23,14 @@ public enum ElevatorParameters {
 
   ElevatorParameters(
       double mass,
+      int motorCount,
       double gearRatio,
       double minHeight,
       double maxHeight,
       int mainDeviceID,
       int followerDeviceID) {
     this.mass = mass;
+    this.motorCount = motorCount;
     this.gearRatio = gearRatio;
     this.minHeight = minHeight;
     this.maxHeight = maxHeight;
@@ -37,6 +40,10 @@ public enum ElevatorParameters {
 
   public double getMass() {
     return mass;
+  }
+
+  public int getMotorCount() {
+    return motorCount;
   }
 
   public double getGearRatio() {
