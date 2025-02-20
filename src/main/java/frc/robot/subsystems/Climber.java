@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.util.MotorController;
 import frc.robot.util.MotorDirection;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.TalonFXAdapter;
@@ -74,9 +73,6 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
           MotorDirection.COUNTER_CLOCKWISE_POSITIVE,
           MotorIdleMode.BRAKE,
           1); // filler value; motor encoder value is not used.
-
-  private MotorController follower =
-      mainMotor.createFollower(RobotConstants.CAN.TalonFX.CLIMBER_FOLLOWER_MOTOR_ID, false);
 
   private DoubleLogEntry logCurrentAbsoluteAngle =
       new DoubleLogEntry(LOG, "Climber/Absolute Angle");
@@ -159,7 +155,6 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   @Override
   public void setIdleMode(MotorIdleMode idleMode) {
     mainMotor.setIdleMode(idleMode);
-    follower.setIdleMode(idleMode);
   }
 
   @Override
