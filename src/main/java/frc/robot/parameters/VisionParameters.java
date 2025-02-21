@@ -31,7 +31,7 @@ public enum VisionParameters {
               new Rotation3d())),
       Optional.of(
           new Transform3d(
-              new Translation3d(Units.inchesToMeters(-13), -0.255, -0.8175),
+              new Translation3d(Units.inchesToMeters(-13), -0.255, -0.8175), // y & z in meters
               new Rotation3d(0, 0, Math.toRadians(180)))));
 
   private final Optional<Transform3d> frontCamera;

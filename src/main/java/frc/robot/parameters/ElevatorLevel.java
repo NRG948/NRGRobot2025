@@ -12,7 +12,7 @@ import frc.robot.subsystems.Elevator;
 public enum ElevatorLevel {
   // TODO: Determine correct values for height, arm angles and arm offset.
   STOWED(Elevator.STOWED_HEIGHT_FOR_PID, Math.toRadians(90), 0),
-  L1(0.3, Math.toRadians(95), .2),
+  L1(0.3, Math.toRadians(95), .2), // Assumes we shoot the coral in-line with the L1 shelf
   L2(0.37, Math.toRadians(60), .2),
   L3(0.78, Math.toRadians(60), .2),
   L4(1.4, Math.toRadians(50), .2),
