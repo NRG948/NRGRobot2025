@@ -37,12 +37,20 @@ import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
 import java.util.Set;
 
-@RobotPreferencesLayout(groupName = "CoralRoller", row = 2, column = 0, width = 1, height = 1)
+@RobotPreferencesLayout(groupName = "CoralRoller", row = 2, column = 0, width = 1, height = 2)
 public class CoralRoller extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
 
   @RobotPreferencesValue
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("CoralRoller", "Enable Tab", false);
+
+  @RobotPreferencesValue
+  public static final RobotPreferences.DoubleValue INTAKE_VELOCITY =
+      new RobotPreferences.DoubleValue("CoralRoller", "Intake Velocity", 1);
+
+  @RobotPreferencesValue
+  public static final RobotPreferences.DoubleValue OUTTAKE_VELOCITY =
+      new RobotPreferences.DoubleValue("CoralRoller", "Outtake Velocity", 2);
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -95,12 +103,12 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
   /** Intakes the coral. */
   public void intake() {
-    setGoalVelocity(MAX_VELOCITY);
+    setGoalVelocity(INTAKE_VELOCITY.getValue());
   }
 
   /** Outakes the coral. */
   public void outtake() {
-    setGoalVelocity(MAX_VELOCITY);
+    setGoalVelocity(OUTTAKE_VELOCITY.getValue());
     outtakeTimer.restart();
   }
 
