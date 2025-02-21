@@ -15,9 +15,9 @@ import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.ExponentialProfile;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
@@ -84,8 +84,9 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       (MOTOR_PARAMS.freeSpeedRadPerSec / (2 * Math.PI)) * METERS_PER_REVOLUTION; // m/s
   private static final double MAX_ACCELERATION =
       (MOTOR_PARAMS.stallTorqueNewtonMeters * GEAR_RATIO) / (SPROCKET_DIAMETER * MASS); // m/s^2
-  private static final TrapezoidProfile.Constraints CONSTRAINTS =
-      new TrapezoidProfile.Constraints(MAX_SPEED / 2, MAX_ACCELERATION / 64);
+  private static final ExponentialProfile.Constraints EXPONENTIAL_CONSTRAINTS =
+      ExponentialProfile.Constraints.fromCharacteristics(
+          MAX_BATTERY_VOLTAGE, MAX_SPEED / 2, MAX_ACCELERATION / 64);
 
   /**
    * Feedforward constants. The KS is calculated from the internal resistance * free speed current.
@@ -129,19 +130,19 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       mechanismRoot2d.append(new MechanismLigament2d("Elevator", 0, 90));
 
   private final ElevatorFeedforward feedForward = new ElevatorFeedforward(KS, KG, KV, KA);
-  private final TrapezoidProfile.State currentState = new TrapezoidProfile.State();
-  private final TrapezoidProfile.State goalState = new TrapezoidProfile.State();
-  private final TrapezoidProfile profile = new TrapezoidProfile(CONSTRAINTS);
-  private final ProfiledPIDController controller =
-      new ProfiledPIDController(KP.getValue(), KI.getValue(), KD.getValue(), CONSTRAINTS);
+  private final ExponentialProfile profile = new ExponentialProfile(EXPONENTIAL_CONSTRAINTS);
+  private final PIDController controller =
+      new PIDController(KP.getValue(), KI.getValue(), KD.getValue());
   private final Timer stuckTimer = new Timer();
 
   private boolean isSeekingGoal;
   private boolean hasError;
+  private final ExponentialProfile.State currentState = new ExponentialProfile.State();
+  private final ExponentialProfile.State goalState = new ExponentialProfile.State();
+  private ExponentialProfile.State lastState = currentState;
   private boolean atUpperLimit;
   private boolean atLowerLimit;
   private double currentVoltage;
-  private TrapezoidProfile.State lastState = currentState;
 
   /** The offset below the goal height when it is safe to pivot the arm. */
   private double armPivotHeightOffset = 0;
@@ -171,7 +172,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   @Override
   public void disable() {
     mainMotor.disable();
-    lastState = new TrapezoidProfile.State();
+    lastState = new ExponentialProfile.State();
     isSeekingGoal = false;
     logIsSeekingGoal.append(false);
   }
@@ -204,8 +205,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     lastState = currentState;
 
     controller.setPID(KP.getValue(), KI.getValue(), KD.getValue());
-    controller.reset(currentState);
-    controller.setGoal(goalState);
+    controller.reset();
 
     logIsSeekingGoal.append(true);
     logGoalPosition.append(height);
@@ -277,11 +277,11 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   public void periodic() {
     updateSensorState();
     if (isSeekingGoal) {
-      TrapezoidProfile.State desiredState =
+      ExponentialProfile.State desiredState =
           profile.calculate(RobotConstants.PERIODIC_INTERVAL, lastState, goalState);
 
       double feedforward = feedForward.calculate(desiredState.velocity);
-      double pidOutput = controller.calculate(currentState.position, desiredState);
+      double pidOutput = controller.calculate(currentState.position, desiredState.position);
 
       currentVoltage = feedforward + pidOutput;
       if ((currentVoltage > 0 && atUpperLimit)) {
