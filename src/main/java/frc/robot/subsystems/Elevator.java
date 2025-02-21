@@ -7,6 +7,8 @@
  
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
@@ -15,6 +17,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.ExponentialProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
@@ -85,6 +88,9 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
           / (SPROCKET_DIAMETER * MASS); // m/s^2 for two motors
   private static final TrapezoidProfile.Constraints CONSTRAINTS =
       new TrapezoidProfile.Constraints(MAX_SPEED / 2, MAX_ACCELERATION / 64);
+  private static final ExponentialProfile.Constraints EXPONENTIAL_CONSTRAINTS =
+      ExponentialProfile.Constraints.fromCharacteristics(
+          MAX_BATTERY_VOLTAGE, MAX_SPEED / 2, MAX_ACCELERATION / 64);
 
   // feedforward constants
   /*
@@ -133,16 +139,16 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       mechanismRoot2d.append(new MechanismLigament2d("Elevator", 0, 90));
 
   private final ElevatorFeedforward feedForward = new ElevatorFeedforward(KS, KG, KV, KA);
-  private final TrapezoidProfile profile = new TrapezoidProfile(CONSTRAINTS);
+  private final ExponentialProfile profile = new ExponentialProfile(EXPONENTIAL_CONSTRAINTS);
   private final ProfiledPIDController controller =
       new ProfiledPIDController(KP.getValue(), KI.getValue(), KD.getValue(), CONSTRAINTS);
   private final Timer stuckTimer = new Timer();
 
   private boolean isSeekingGoal;
   private boolean hasError;
-  private final TrapezoidProfile.State currentState = new TrapezoidProfile.State();
-  private final TrapezoidProfile.State goalState = new TrapezoidProfile.State();
-  private TrapezoidProfile.State lastState = currentState;
+  private final ExponentialProfile.State currentState = new ExponentialProfile.State();
+  private final ExponentialProfile.State goalState = new ExponentialProfile.State();
+  private ExponentialProfile.State lastState = currentState;
   private boolean atUpperLimit;
   private boolean atLowerLimit;
   private double currentVoltage;
@@ -182,7 +188,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   @Override
   public void disable() {
     mainMotor.disable();
-    lastState = new TrapezoidProfile.State();
+    lastState = new ExponentialProfile.State();
     collisionTimer.stop();
     collisionTimer.reset();
     isSeekingGoal = false;
@@ -211,8 +217,8 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     lastState = currentState;
 
     controller.setPID(KP.getValue(), KI.getValue(), KD.getValue());
-    controller.reset(currentState);
-    controller.setGoal(goalState);
+    controller.reset(currentState.position, currentState.velocity);
+    controller.setGoal(goalState.position);
 
     logIsSeekingGoal.append(true);
     logGoalPosition.append(height);
@@ -284,11 +290,11 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   public void periodic() {
     updateSensorState();
     if (isSeekingGoal) {
-      TrapezoidProfile.State desiredState =
+      ExponentialProfile.State desiredState =
           profile.calculate(RobotConstants.PERIODIC_INTERVAL, lastState, goalState);
 
       double feedforward = feedForward.calculate(desiredState.velocity);
-      double pidOutput = controller.calculate(currentState.position, desiredState);
+      double pidOutput = controller.calculate(currentState.position, desiredState.position);
 
       currentVoltage = feedforward + pidOutput;
       if ((currentVoltage > 0 && atUpperLimit)) {
