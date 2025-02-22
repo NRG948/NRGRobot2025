@@ -23,6 +23,7 @@ import static frc.robot.parameters.ElevatorLevel.L4;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -119,7 +120,12 @@ public class RobotContainer {
     m_driverController.x().whileTrue(DriveCommands.alignToReefPosition(subsystems, LEFT_BRANCH));
     m_driverController.y().whileTrue(DriveCommands.alignToReefPosition(subsystems, CENTER_REEF));
     m_driverController.b().whileTrue(DriveCommands.alignToReefPosition(subsystems, RIGHT_BRANCH));
-    m_driverController.rightBumper().whileTrue(ClimberCommands.climb(subsystems));
+    new Trigger(
+            () -> {
+              XboxController hid = m_driverController.getHID();
+              return hid.getLeftBumperButton() && hid.getRightBumperButton();
+            })
+        .whileTrue(ClimberCommands.climb(subsystems));
 
     m_manipulatorController.a().onTrue(raiseElevatorAndCoralArm(subsystems, L1));
     m_manipulatorController.x().onTrue(raiseElevatorAndCoralArm(subsystems, L2));
@@ -140,6 +146,7 @@ public class RobotContainer {
     m_manipulatorController.povDown().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
     m_manipulatorController.povUp().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
     m_manipulatorController.back().onTrue(ManipulatorCommands.interruptAll(subsystems));
+    m_manipulatorController.start().onTrue(ElevatorCommands.stowElevatorAndArm(subsystems));
 
     new Trigger(subsystems.coralRoller::hasCoral)
         .onTrue(LEDCommands.indicateCoralAcquired(subsystems));
