@@ -15,6 +15,7 @@ import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
 import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
@@ -22,6 +23,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StructLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -85,6 +87,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   private final BooleanLogEntry hasTargetLogger;
   private final DoubleLogEntry distanceLogger;
   private final DoubleLogEntry angleLogger;
+  private final StructLogEntry<Pose2d> estimatedPoseLogger;
 
   private Optional<PhotonPipelineResult> result = Optional.empty();
   private double angleToBestTarget;
@@ -122,6 +125,8 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     hasTargetLogger = new BooleanLogEntry(LOG, String.format("/%s/Has Target", cameraName));
     distanceLogger = new DoubleLogEntry(LOG, String.format("/%s/Distance", cameraName));
     angleLogger = new DoubleLogEntry(LOG, String.format("/%s/Angle", cameraName));
+    estimatedPoseLogger =
+        StructLogEntry.create(LOG, String.format("/%s/Estimated Pose", cameraName), Pose2d.struct);
   }
 
   /**
@@ -217,6 +222,10 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     }
 
     globalEstimatedPose = visionEst;
+    globalEstimatedPose.ifPresent(
+        (e) -> {
+          estimatedPoseLogger.append(e.estimatedPose.toPose2d());
+        });
 
     boolean hasTargets = currentResult.orElse(NO_RESULT).hasTargets();
 
