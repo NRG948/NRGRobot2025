@@ -106,9 +106,11 @@ public final class Autos {
 
     // These are the commands that use Vision to allign, score, and stow.
     eventMaps.put(
-        "VISION L1 Right", VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L1));
+        "VISION L1 Right",
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L1));
     eventMaps.put(
-        "VISION L1 Left", VisionCommands.autoScoreCoral(subsystems, ReefPosition.LEFT_BRANCH, ElevatorLevel.L1));
+        "VISION L1 Left",
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.LEFT_BRANCH, ElevatorLevel.L1));
     eventMaps.put(
         "VISION Score L2 Right",
         VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L2));
