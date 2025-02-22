@@ -18,7 +18,6 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -26,8 +25,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.util.AbsoluteAngleEncoder;
 import frc.robot.util.MotorDirection;
 import frc.robot.util.MotorIdleMode;
+import frc.robot.util.RevThroughboreEncoderAdapter;
 import frc.robot.util.TalonFXAdapter;
 
 @RobotPreferencesLayout(groupName = "Climber", row = 0, column = 7, width = 1, height = 3)
@@ -44,8 +45,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   @SuppressWarnings("unused")
   private final double GEAR_RATIO = 5.0 * 5.0 * 66.0 / 18.0;
 
-  // "360 - offset" needed because absolute encoder inversion is applied before the offset.
-  private final double ABSOLUTE_ENCODER_ZERO_OFFSET = Math.toRadians(360 - 173.1);
+  private final double ABSOLUTE_ENCODER_ZERO_OFFSET = Math.toRadians(173.1);
 
   @RobotPreferencesValue
   public static DoubleValue CLIMB_MAX_POWER = new DoubleValue("Climber", "Max Power", 0.4);
@@ -65,7 +65,9 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   private double goalAngle; // in radians
   private boolean enabled;
 
-  private final DutyCycleEncoder absoluteEncoder;
+  private final AbsoluteAngleEncoder absoluteEncoder =
+      new RevThroughboreEncoderAdapter(
+          RobotConstants.DigitalIO.CLIMBER_ABSOLUTE_ENCODER, true, ABSOLUTE_ENCODER_ZERO_OFFSET);
 
   private TalonFXAdapter mainMotor =
       new TalonFXAdapter(
@@ -86,15 +88,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   private DoubleLogEntry logMotorAngularVelocity = new DoubleLogEntry(LOG, "Climber/Motor Rot/s");
 
   /** Creates a new Climber. */
-  public Climber() {
-    absoluteEncoder =
-        new DutyCycleEncoder(
-            RobotConstants.DigitalIO.CLIMBER_ABSOLUTE_ENCODER,
-            2 * Math.PI,
-            ABSOLUTE_ENCODER_ZERO_OFFSET);
-    absoluteEncoder.setInverted(true);
-    absoluteEncoder.setDutyCycleRange(1.0 / 1025.0, 1024.0 / 1025.0);
-  }
+  public Climber() {}
 
   @Override
   public void periodic() {
@@ -144,7 +138,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   }
 
   private void updateSensorState() {
-    currentAngle = MathUtil.angleModulus(absoluteEncoder.get()); // in rad
+    currentAngle = absoluteEncoder.getAngle(); // in rad
 
     logCurrentAbsoluteAngle.append(currentAngle);
     logMotorAngularVelocity.append(mainMotor.getEncoder().getVelocity()); // we set meter/rot = 1
