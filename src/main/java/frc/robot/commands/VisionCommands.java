@@ -16,13 +16,17 @@ import frc.robot.subsystems.Subsystems;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class VisionCommands {
   /**
-   * Returns a Command Seuquence to allignToTheReef and Score coral in the given reefPosition and Elevator Level
+   * Returns a Command Seuquence to allignToTheReef and Score coral in the given reefPosition and
+   * Elevator Level
+   *
    * @param subsystems The Subsystems Container
    * @param reefPosition The specified Reef Position
    * @param level The specified Eleator level
-   * @return A Command Seuquence to allignToTheReef and Score coral in the given reefPosition and Elevator Level
+   * @return A Command Seuquence to allignToTheReef and Score coral in the given reefPosition and
+   *     Elevator Level
    */
-  public static Command autoScoreCoral(Subsystems subsystems, ReefPosition reefPosition, ElevatorLevel level) {
+  public static Command autoScoreCoral(
+      Subsystems subsystems, ReefPosition reefPosition, ElevatorLevel level) {
     return Commands.sequence(
         Commands.parallel(
             DriveCommands.alignToReefPosition(subsystems, reefPosition),
