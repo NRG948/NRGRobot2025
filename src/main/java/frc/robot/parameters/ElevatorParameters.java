@@ -10,40 +10,26 @@ package frc.robot.parameters;
 import frc.robot.subsystems.Elevator;
 
 public enum ElevatorParameters {
-  PracticeBase2025(3.7, 1, Elevator.PRACTICE_BOT_GEAR_RATIO, 0.041, 1.35, 14, 8),
-  CompetitionBase2025(3.7, 2, Elevator.COMP_BOT_GEAR_RATIO, 0.041, 1.35, 9, 10);
+  PracticeBase2025(3.7, Elevator.PRACTICE_BOT_GEAR_RATIO, 0.041, 1.35, 14),
+  CompetitionBase2025(3.7, Elevator.COMP_BOT_GEAR_RATIO, 0.041, 1.35, 9);
 
   private final double mass;
-  private final int motorCount;
   private final double gearRatio;
   private final double minHeight;
   private final double maxHeight;
-  private final int mainDeviceID;
-  private final int followerDeviceID;
+  private final int motorID;
 
   ElevatorParameters(
-      double mass,
-      int motorCount,
-      double gearRatio,
-      double minHeight,
-      double maxHeight,
-      int mainDeviceID,
-      int followerDeviceID) {
+      double mass, double gearRatio, double minHeight, double maxHeight, int motorID) {
     this.mass = mass;
-    this.motorCount = motorCount;
     this.gearRatio = gearRatio;
     this.minHeight = minHeight;
     this.maxHeight = maxHeight;
-    this.mainDeviceID = mainDeviceID;
-    this.followerDeviceID = followerDeviceID;
+    this.motorID = motorID;
   }
 
   public double getMass() {
     return mass;
-  }
-
-  public int getMotorCount() {
-    return motorCount;
   }
 
   public double getGearRatio() {
@@ -58,11 +44,7 @@ public enum ElevatorParameters {
     return maxHeight;
   }
 
-  public int getMainDeviceID() {
-    return mainDeviceID;
-  }
-
-  public int getFollowerDeviceID() {
-    return followerDeviceID;
+  public int getMotorID() {
+    return motorID;
   }
 }
