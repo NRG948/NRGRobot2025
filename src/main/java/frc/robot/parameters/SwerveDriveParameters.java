@@ -59,8 +59,8 @@ public enum SwerveDriveParameters {
       new int[] {17, 19, 18, 20, 1, 2, 9, 10}, // drive, steer motor controller CAN IDs
       new int[] {33, 34, 31, 32}, // CANCoder CAN IDs
       new double[] {136.14, 169.98, 166.82, 184.31},
-      0.15,
-      0.15,
+      0.0656,
+      0.2057,
       true,
       21),
   CompetitionBase2025(
@@ -73,8 +73,8 @@ public enum SwerveDriveParameters {
       new int[] {15, 14, 13, 6, 2, 1, 8, 7}, // drive, steer motor controller CAN IDs
       new int[] {31, 32, 33, 34}, // CANCoder CAN IDs
       new double[] {159.79, 109.25, 170.95, 4.66},
-      0.15,
-      0.15,
+      0.0656,
+      0.2057,
       true,
       21);
 
