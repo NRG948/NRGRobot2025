@@ -27,7 +27,6 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -36,8 +35,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.ArmParameters;
+import frc.robot.util.AbsoluteAngleEncoder;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
+import frc.robot.util.RevThroughboreEncoderAdapter;
 import frc.robot.util.TalonFXAdapter;
 
 @RobotPreferencesLayout(groupName = "Arm", row = 1, column = 0, width = 1, height = 1)
@@ -57,7 +58,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   private final TalonFX talonFX;
   private final TalonFXAdapter motor;
   private final RelativeEncoder relativeEncoder;
-  private final DutyCycleEncoder absoluteEncoder;
+  private final AbsoluteAngleEncoder absoluteEncoder;
   private final Timer stuckTimer = new Timer();
   private double currentAngle = 0;
   private double currentAbsoluteAngle = 0;
@@ -81,10 +82,10 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     MAX_ANGLE = parameters.getMaxAngleRad();
 
     absoluteEncoder =
-        new DutyCycleEncoder(
-            parameters.getEncoderID(), 2 * Math.PI, parameters.getAbsoluteEncoderZeroOffset());
-    absoluteEncoder.setInverted(parameters.isAbsoluteEncoderInverted());
-    absoluteEncoder.setDutyCycleRange(1.0 / 1025.0, 1024.0 / 1025.0);
+        new RevThroughboreEncoderAdapter(
+            parameters.getEncoderID(),
+            parameters.isAbsoluteEncoderInverted(),
+            parameters.getAbsoluteEncoderZeroOffset());
 
     talonFX = new TalonFX(parameters.getMotorID(), "rio");
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -117,7 +118,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     configurator.apply(talonFXConfigs);
     motor = new TalonFXAdapter(talonFX, talonFXConfigs.MotorOutput, 2 * Math.PI);
     relativeEncoder = motor.getEncoder();
-    relativeEncoder.setPosition(MathUtil.angleModulus(absoluteEncoder.get()) / (2 * Math.PI));
+    relativeEncoder.setPosition(absoluteEncoder.getAngle());
 
     logCurrentAngle =
         new DoubleLogEntry(LOG, String.format("/%s/Current Angle", parameters.name()));
@@ -133,7 +134,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   private void updateSensorState() {
     currentAngle = relativeEncoder.getPosition();
     currentVelocity = relativeEncoder.getVelocity();
-    currentAbsoluteAngle = MathUtil.angleModulus(absoluteEncoder.get());
+    currentAbsoluteAngle = absoluteEncoder.getAngle();
     checkError();
 
     logCurrentAngle.append(currentAngle);
