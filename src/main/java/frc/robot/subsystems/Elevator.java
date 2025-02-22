@@ -7,6 +7,8 @@
  
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
@@ -35,7 +37,6 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.parameters.ElevatorLevel;
@@ -48,11 +49,12 @@ import java.util.Set;
 
 @RobotPreferencesLayout(groupName = "Elevator", row = 0, column = 5, width = 2, height = 3)
 public class Elevator extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
-  private static final double GOAL_POSITION_TOLERANCE = 0.01;
-  private static final double POSITION_ERROR_MARGIN = 0.05; // meters
-  private static final double POSITION_ERROR_TIME = 2.0;
 
   private static final DataLog LOG = DataLogManager.getLog();
+
+  private static final double GOAL_HEIGHT_TOLERANCE = 0.01; // meters
+  private static final double POSITION_ERROR_MARGIN = 0.05; // meters
+  private static final double POSITION_ERROR_TIME = 2.0; // seconds
 
   @RobotPreferencesValue
   public static RobotPreferences.EnumValue<ElevatorParameters> PARAMETERS =
@@ -63,39 +65,38 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   public static RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("Elevator", "Enable Tab", false);
 
-  // physical parameters of the elevator
+  // Physical parameters of the elevator
   public static final double PRACTICE_BOT_GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
   public static final double COMP_BOT_GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
   private static final double GEAR_RATIO = PARAMETERS.getValue().getGearRatio();
-  private static final double SPROCKET_DIAMETER = 0.0474; // in meters
+  private static final double SPROCKET_DIAMETER = 0.0474; // meters
   private static final double MASS = PARAMETERS.getValue().getMass(); // kilograms
   private static final double METERS_PER_REVOLUTION = (SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO;
 
-  private static final double MAX_HEIGHT = PARAMETERS.getValue().getMaxHeight();
-  private static final double MIN_HEIGHT = PARAMETERS.getValue().getMinHeight(); // in meters
+  private static final double MAX_HEIGHT = PARAMETERS.getValue().getMaxHeight(); // meters
+  private static final double MIN_HEIGHT = PARAMETERS.getValue().getMinHeight(); // meters
   private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.08;
   public static final double STOWED_HEIGHT_FOR_PID = (MIN_HEIGHT + DISABLE_HEIGHT) / 2;
 
-  // trapezoid profile values
+  // Trapezoid profile values
   private static final DCMotor MOTOR_PARAMS = DCMotor.getKrakenX60(1);
   private static final double MAX_SPEED =
       (MOTOR_PARAMS.freeSpeedRadPerSec / (2 * Math.PI)) * METERS_PER_REVOLUTION; // m/s
   private static final double MAX_ACCELERATION =
-      (PARAMETERS.getValue().getMotorCount() * MOTOR_PARAMS.stallTorqueNewtonMeters * GEAR_RATIO)
+      (MOTOR_PARAMS.stallTorqueNewtonMeters * GEAR_RATIO)
           / (SPROCKET_DIAMETER * MASS); // m/s^2 for two motors
   private static final TrapezoidProfile.Constraints CONSTRAINTS =
       new TrapezoidProfile.Constraints(MAX_SPEED / 2, MAX_ACCELERATION / 64);
 
-  // feedforward constants
-  /*
-   * The KS is calculated from the internal resistance * free speed current.
-   * We can calculate the internal resistance of the motor with battery voltage / stall current.
-   * R = 12V / 366A, KS = R * 2A for the KrakenX60.
+  /**
+   * Feedforward constants. The KS is calculated from the internal resistance * free speed current.
+   * We can calculate the internal resistance of the motor with battery voltage / stall current. R =
+   * 12V / 366A, KS = R * 2A for the KrakenX60.
    */
   private static final double KS = 0.0656;
-  private static final double KV = (Constants.RobotConstants.MAX_BATTERY_VOLTAGE - KS) / MAX_SPEED;
-  private static final double KA =
-      (Constants.RobotConstants.MAX_BATTERY_VOLTAGE - KS) / MAX_ACCELERATION;
+
+  private static final double KV = (MAX_BATTERY_VOLTAGE - KS) / MAX_SPEED;
+  private static final double KA = (MAX_BATTERY_VOLTAGE - KS) / MAX_ACCELERATION;
   private static final double KG = 9.81 * KA;
 
   // feedback constants
@@ -111,28 +112,26 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   public static final RobotPreferences.DoubleValue KD =
       new RobotPreferences.DoubleValue("Elevator", "KD", 0.5);
 
-  private TalonFXAdapter mainMotor =
+  private final TalonFXAdapter mainMotor =
       new TalonFXAdapter(
-          new TalonFX(PARAMETERS.getValue().getMainDeviceID(), "rio"),
+          new TalonFX(PARAMETERS.getValue().getMotorID(), "rio"),
           MotorDirection.COUNTER_CLOCKWISE_POSITIVE,
           MotorIdleMode.BRAKE,
           METERS_PER_REVOLUTION);
 
-  // @SuppressWarnings("unused")
-  // private MotorController follower =
-  //     mainMotor.createFollower(PARAMETERS.getValue().getFollowerDeviceID(), false);
-
-  private RelativeEncoder encoder = mainMotor.getEncoder();
+  private final RelativeEncoder encoder = mainMotor.getEncoder();
 
   private ElevatorSim simElevator =
       new ElevatorSim(MOTOR_PARAMS, GEAR_RATIO, MASS, SPROCKET_DIAMETER / 2, 0, 1, true, 0);
 
-  private Mechanism2d mechanism2d = new Mechanism2d(0.5, 1.0);
-  private MechanismRoot2d mechanismRoot2d = mechanism2d.getRoot("Elevator Root", 0, 0);
-  private MechanismLigament2d elevatorMech2d =
+  private final Mechanism2d mechanism2d = new Mechanism2d(0.5, 1.0);
+  private final MechanismRoot2d mechanismRoot2d = mechanism2d.getRoot("Elevator Root", 0, 0);
+  private final MechanismLigament2d elevatorMech2d =
       mechanismRoot2d.append(new MechanismLigament2d("Elevator", 0, 90));
 
   private final ElevatorFeedforward feedForward = new ElevatorFeedforward(KS, KG, KV, KA);
+  private final TrapezoidProfile.State currentState = new TrapezoidProfile.State();
+  private final TrapezoidProfile.State goalState = new TrapezoidProfile.State();
   private final TrapezoidProfile profile = new TrapezoidProfile(CONSTRAINTS);
   private final ProfiledPIDController controller =
       new ProfiledPIDController(KP.getValue(), KI.getValue(), KD.getValue(), CONSTRAINTS);
@@ -140,16 +139,13 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   private boolean isSeekingGoal;
   private boolean hasError;
-  private final TrapezoidProfile.State currentState = new TrapezoidProfile.State();
-  private final TrapezoidProfile.State goalState = new TrapezoidProfile.State();
-  private TrapezoidProfile.State lastState = currentState;
   private boolean atUpperLimit;
   private boolean atLowerLimit;
   private double currentVoltage;
-  private final Timer collisionTimer = new Timer();
+  private TrapezoidProfile.State lastState = currentState;
 
-  /** armOffset starts from the goal height down. */
-  private double armOffset = 0;
+  /** armPivotHeightOffset is a height range from the goal height downward. */
+  private double armPivotHeightOffset = 0;
 
   private BooleanLogEntry logIsSeekingGoal = new BooleanLogEntry(LOG, "Elevator/isSeekingGoal");
   private DoubleLogEntry logCurrentVelocity = new DoubleLogEntry(LOG, "Elevator/velocity");
@@ -171,7 +167,15 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   public Elevator() {
     updateSensorState();
     SmartDashboard.putData("Elevator Sim", mechanism2d);
-    controller.setTolerance(GOAL_POSITION_TOLERANCE);
+    controller.setTolerance(GOAL_HEIGHT_TOLERANCE);
+  }
+
+  @Override
+  public void disable() {
+    mainMotor.disable();
+    lastState = new TrapezoidProfile.State();
+    isSeekingGoal = false;
+    logIsSeekingGoal.append(false);
   }
 
   /** Returns elevator height. */
@@ -179,35 +183,26 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     return this.currentState.position;
   }
 
-  @Override
-  public void disable() {
-    mainMotor.disable();
-    lastState = new TrapezoidProfile.State();
-    collisionTimer.stop();
-    collisionTimer.reset();
-    isSeekingGoal = false;
-    logIsSeekingGoal.append(false);
-  }
-
   /**
    * Sets elevator goal level.
    *
-   * @param level
+   * @param level the {@link ElevatorLevel} to seek to.
    */
-  public void setGoalPosition(ElevatorLevel level) {
-    setGoalPosition(level.getElevatorHeight(), level.getArmOffset());
+  public void setGoalHeight(ElevatorLevel level) {
+    setGoalHeight(level.getElevatorHeight(), level.getArmOffset());
   }
 
   /**
    * Sets elevator goal height in meters.
    *
-   * @param height
+   * @param height the desired height of the elevator in meters.
+   * @param armOffset the delta below the desired {@code height} where the arm is allowed to pivot.
    */
-  private void setGoalPosition(double height, double armOffset) {
+  private void setGoalHeight(double height, double armOffset) {
     isSeekingGoal = true;
     goalState.position = height;
     goalState.velocity = 0;
-    this.armOffset = armOffset;
+    armPivotHeightOffset = armOffset;
     lastState = currentState;
 
     controller.setPID(KP.getValue(), KI.getValue(), KD.getValue());
@@ -219,14 +214,19 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     logGoalVelocity.append(0);
   }
 
-  /** Returns whether the elevator is at goal position. */
-  public boolean atGoalPosition() {
-    return MathUtil.isNear(goalState.position, getHeight(), GOAL_POSITION_TOLERANCE);
+  /** Returns whether the elevator is at goal height. */
+  public boolean atGoalHeight() {
+    return MathUtil.isNear(goalState.position, getHeight(), GOAL_HEIGHT_TOLERANCE);
   }
 
-  /** Returns whether the elevator is above the arm position. */
-  public boolean aboveArmPosition() {
-    return goalState.position - armOffset <= currentState.position;
+  /** Returns whether the elevator is above the height where it is safe to tip the arm outward. */
+  public boolean isAboveSafeArmPivotHeight() {
+    return currentState.position >= goalState.position - armPivotHeightOffset;
+  }
+
+  /** Returns whether the elevator is near the given {@link ElevatorLevel}. */
+  public boolean isNearestToLevel(ElevatorLevel level) {
+    return MathUtil.isNear(level.getElevatorHeight(), getHeight(), 0.1);
   }
 
   private void updateSensorState() {
@@ -239,23 +239,19 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     }
     currentState.position += MIN_HEIGHT;
 
-    checkError();
     atUpperLimit = currentState.position >= MAX_HEIGHT;
     atLowerLimit = currentState.position <= DISABLE_HEIGHT;
+
+    checkError();
 
     elevatorMech2d.setLength(currentState.position);
     logCurrentPosition.append(currentState.position);
     logCurrentVelocity.append(currentState.velocity);
     logAtLowerLimit.append(atLowerLimit);
     logAtUpperLimit.append(atUpperLimit);
-    logAtGoal.append(atGoalPosition());
+    logAtGoal.append(atGoalHeight());
     logStatorCurrent.append(mainMotor.getStatorCurrent());
     logTorqueCurrent.append(mainMotor.getTorqueCurrent());
-  }
-
-  @Override
-  public void setIdleMode(MotorIdleMode idleMode) {
-    // Do not put the elevator in COAST mode or else it can crash down.
   }
 
   private void checkError() {
@@ -267,7 +263,6 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
         stuckTimer.restart();
       }
     }
-
     hasError = stuckTimer.hasElapsed(POSITION_ERROR_TIME);
   }
 
@@ -275,9 +270,9 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     return hasError;
   }
 
-  /** Returns if elevator is near the given level. */
-  public boolean isNearestToLevel(ElevatorLevel level) {
-    return MathUtil.isNear(level.getElevatorHeight(), getHeight(), 0.1);
+  @Override
+  public void setIdleMode(MotorIdleMode idleMode) {
+    // Do not ever put the elevator in COAST mode or else it will crash down.
   }
 
   @Override
@@ -342,8 +337,8 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     controlLayout.add(
         Commands.defer(
                 () ->
-                    Commands.runOnce(() -> this.setGoalPosition(elevatorHeight.getDouble(0), 0))
-                        .until(() -> this.atGoalPosition()),
+                    Commands.runOnce(() -> this.setGoalHeight(elevatorHeight.getDouble(0), 0))
+                        .until(() -> this.atGoalHeight()),
                 Set.of(this))
             .withName("Set Height"));
     controlLayout.add(Commands.runOnce(() -> this.disable(), this).withName("Disable"));

@@ -17,14 +17,14 @@ import frc.robot.subsystems.Subsystems;
 public final class ElevatorCommands {
   /** Returns a command that goes to the given elevator level. */
   public static Command goToElevatorLevel(Subsystems subsystems, ElevatorLevel level) {
-    return Commands.runOnce(() -> subsystems.elevator.setGoalPosition(level), subsystems.elevator)
+    return Commands.runOnce(() -> subsystems.elevator.setGoalHeight(level), subsystems.elevator)
         .withName(String.format("GoToElevatorLevel(%s)", level.name()));
   }
 
   /** Returns a command that waits for elevator to reach goal position. */
   public static Command waitForElevatorToReachGoalPosition(Elevator elevator) {
     return Commands.idle(elevator)
-        .until(elevator::atGoalPosition)
+        .until(elevator::atGoalHeight)
         .withName("WaitForElevatorToReachGoalPosition");
   }
 
@@ -41,7 +41,7 @@ public final class ElevatorCommands {
    */
   public static Command stowElevator(Elevator elevator) {
     return Commands.sequence(
-            Commands.runOnce(() -> elevator.setGoalPosition(ElevatorLevel.STOWED), elevator),
+            Commands.runOnce(() -> elevator.setGoalHeight(ElevatorLevel.STOWED), elevator),
             waitForElevatorToReachGoalPosition(elevator),
             Commands.runOnce(() -> elevator.disable(), elevator))
         .withName("Stow Elevator");

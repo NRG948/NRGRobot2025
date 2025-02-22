@@ -88,7 +88,7 @@ public final class CoralCommands {
 
   public static Command waitForElevatorToReachArmHeight(Subsystems subsystems) {
     return Commands.idle(subsystems.coralArm)
-        .until(subsystems.elevator::aboveArmPosition)
+        .until(subsystems.elevator::isAboveSafeArmPivotHeight)
         .withName("waitForElevatorToReachArmHeight");
   }
 }
