@@ -39,16 +39,22 @@ public final class TalonFXEncoderAdapter implements RelativeEncoder {
 
   @Override
   public void setPosition(double position) {
-    talonFX.setPosition(position);
+    // The TalonFX encoder position is in units of rotations, so we need to divide by the
+    // distance per rotation to get the position in encoder units.
+    talonFX.setPosition(position / distancePerRotation);
   }
 
   @Override
   public double getPosition() {
+    // The TalonFX encoder position is in units of rotations, so we need to multiply by the
+    // distance per rotation to get the position in the correct units.
     return position.refresh().getValueAsDouble() * distancePerRotation;
   }
 
   @Override
   public double getVelocity() {
+    // The TalonFX encoder velocity is in units of rotations per second, so we need to multiply by
+    // the distance per rotation to get the velocity in the correct units.
     return velocity.refresh().getValueAsDouble() * distancePerRotation;
   }
 
