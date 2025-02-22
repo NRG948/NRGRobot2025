@@ -37,6 +37,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StructLogEntry;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
@@ -157,6 +158,8 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   private DoubleLogEntry poseXLog = new DoubleLogEntry(LOG, "/Swerve/Pose X");
   private DoubleLogEntry poseYLog = new DoubleLogEntry(LOG, "/Swerve/Pose Y");
   private DoubleLogEntry poseAngleLog = new DoubleLogEntry(LOG, "/Swerve/Pose Angle");
+  private StructLogEntry<Pose2d> poseLog =
+      StructLogEntry.create(LOG, "/Swerve/Pose", Pose2d.struct);
   private DoubleLogEntry rawOrientationLog = new DoubleLogEntry(LOG, "/Swerve/rawOrientation");
   private DoubleLogEntry rawOrientationOffsetLog =
       new DoubleLogEntry(LOG, "/Swerve/rawOrientationOffset");
@@ -522,6 +525,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
     poseXLog.append(robotPose.getX());
     poseYLog.append(robotPose.getY());
     poseAngleLog.append(robotPose.getRotation().getDegrees());
+    poseLog.append(robotPose);
   }
 
   public void setIdleMode(MotorIdleMode idleMode) {
