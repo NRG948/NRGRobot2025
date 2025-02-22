@@ -22,7 +22,7 @@ public final class ElevatorCommands {
   }
 
   /** Returns a command that waits for elevator to reach goal position. */
-  public static Command waitForElevatorToReachGoalPosition(Elevator elevator) {
+  public static Command waitForElevatorToReachGoalHeight(Elevator elevator) {
     return Commands.idle(elevator)
         .until(elevator::atGoalHeight)
         .withName("WaitForElevatorToReachGoalPosition");
@@ -42,7 +42,7 @@ public final class ElevatorCommands {
   public static Command stowElevator(Elevator elevator) {
     return Commands.sequence(
             Commands.runOnce(() -> elevator.setGoalHeight(ElevatorLevel.STOWED), elevator),
-            waitForElevatorToReachGoalPosition(elevator),
+            waitForElevatorToReachGoalHeight(elevator),
             Commands.runOnce(() -> elevator.disable(), elevator))
         .withName("Stow Elevator");
   }

@@ -83,8 +83,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private static final double MAX_SPEED =
       (MOTOR_PARAMS.freeSpeedRadPerSec / (2 * Math.PI)) * METERS_PER_REVOLUTION; // m/s
   private static final double MAX_ACCELERATION =
-      (MOTOR_PARAMS.stallTorqueNewtonMeters * GEAR_RATIO)
-          / (SPROCKET_DIAMETER * MASS); // m/s^2 for two motors
+      (MOTOR_PARAMS.stallTorqueNewtonMeters * GEAR_RATIO) / (SPROCKET_DIAMETER * MASS); // m/s^2
   private static final TrapezoidProfile.Constraints CONSTRAINTS =
       new TrapezoidProfile.Constraints(MAX_SPEED / 2, MAX_ACCELERATION / 64);
 
@@ -144,7 +143,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private double currentVoltage;
   private TrapezoidProfile.State lastState = currentState;
 
-  /** armPivotHeightOffset is a height range from the goal height downward. */
+  /** The offset below the goal height when it is safe to pivot the arm. */
   private double armPivotHeightOffset = 0;
 
   private BooleanLogEntry logIsSeekingGoal = new BooleanLogEntry(LOG, "Elevator/isSeekingGoal");
