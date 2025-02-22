@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.commands.AlignToReef.ReefPosition;
+import frc.robot.parameters.Colors;
 import frc.robot.parameters.SwerveDriveParameters;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
@@ -47,6 +48,19 @@ public final class DriveCommands {
     return Commands.sequence(
             new AlignToReef(subsystems, reefPosition), new BlinkColor(subsystems.statusLEDs, WHITE))
         .withName(String.format("AlignToReef(%s)", reefPosition.name()));
+  }
+
+  /**
+   * Returns a command that alligns the robot to the Center of the Coral station.
+   *
+   * @param subsystems The subsystems container.
+   * @return A command that alligns the robot to the Center of the Coral station.
+   */
+  public static Command alignToCoralStationCenter(Subsystems subsystems) {
+    return Commands.sequence(
+            new AlignToCoralStation(subsystems),
+            new BlinkColor(subsystems.statusLEDs, Colors.GREEN))
+        .withName("alignToCoralStationCenter");
   }
 
   /**
