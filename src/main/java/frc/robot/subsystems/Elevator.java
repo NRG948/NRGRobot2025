@@ -158,7 +158,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private DoubleLogEntry logPIDOutput = new DoubleLogEntry(LOG, "Elevator/pidOutput");
   private BooleanLogEntry logAtUpperLimit = new BooleanLogEntry(LOG, "Elevator/atUpperLimit");
   private BooleanLogEntry logAtLowerLimit = new BooleanLogEntry(LOG, "Elevator/atLowerLimit");
-  private BooleanLogEntry logAtGoal = new BooleanLogEntry(LOG, "Elevator/atGoal");
+  private BooleanLogEntry logAtGoalHeight = new BooleanLogEntry(LOG, "Elevator/atGoalHeight");
   private DoubleLogEntry logDesiredPosition = new DoubleLogEntry(LOG, "Elevator/desiredPosition");
   private DoubleLogEntry logDesiredVelocity = new DoubleLogEntry(LOG, "Elevator/desiredVelocity");
 
@@ -166,7 +166,6 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   public Elevator() {
     updateSensorState();
     SmartDashboard.putData("Elevator Sim", mechanism2d);
-    controller.setTolerance(GOAL_HEIGHT_TOLERANCE);
   }
 
   @Override
@@ -224,7 +223,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   }
 
   /** Returns whether the elevator is near the given {@link ElevatorLevel}. */
-  public boolean isNearestToLevel(ElevatorLevel level) {
+  public boolean isNearLevel(ElevatorLevel level) {
     return MathUtil.isNear(level.getElevatorHeight(), getHeight(), 0.1);
   }
 
@@ -248,7 +247,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     logCurrentVelocity.append(currentState.velocity);
     logAtLowerLimit.append(atLowerLimit);
     logAtUpperLimit.append(atUpperLimit);
-    logAtGoal.append(atGoalHeight());
+    logAtGoalHeight.append(atGoalHeight());
     logStatorCurrent.append(mainMotor.getStatorCurrent());
     logTorqueCurrent.append(mainMotor.getTorqueCurrent());
   }

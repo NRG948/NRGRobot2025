@@ -49,7 +49,7 @@ public final class CoralCommands {
             Commands.either(
                 Commands.sequence(Commands.waitSeconds(0.5), stowArm(subsystems)),
                 Commands.none(),
-                () -> subsystems.elevator.isNearestToLevel(L4)),
+                () -> subsystems.elevator.isNearLevel(L4)),
             Commands.idle(subsystems.coralRoller).until(() -> !subsystems.coralRoller.hasCoral()),
             Commands.runOnce(subsystems.coralRoller::disable, subsystems.coralRoller))
         .withName("OuttakeUntilCoralNotDetected");
