@@ -67,7 +67,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   // Physical parameters of the elevator
   public static final double PRACTICE_BOT_GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
-  public static final double COMP_BOT_GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
+  public static final double COMPETITION_BOT_GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
   private static final double GEAR_RATIO = PARAMETERS.getValue().getGearRatio();
   private static final double SPROCKET_DIAMETER = 0.0474; // meters
   private static final double MASS = PARAMETERS.getValue().getMass(); // kilograms
@@ -222,9 +222,9 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     return currentState.position >= goalState.position - armPivotHeightOffset;
   }
 
-  /** Returns whether the elevator is near the given {@link ElevatorLevel}. */
-  public boolean isNearLevel(ElevatorLevel level) {
-    return MathUtil.isNear(level.getElevatorHeight(), getHeight(), 0.1);
+  /** Returns whether the elevator is seeking to the given {@link ElevatorLevel}. */
+  public boolean isSeekingLevel(ElevatorLevel level) {
+    return goalState.position == level.getElevatorHeight();
   }
 
   private void updateSensorState() {
