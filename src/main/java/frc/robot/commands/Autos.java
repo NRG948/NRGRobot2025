@@ -106,28 +106,28 @@ public final class Autos {
 
     // These are the commands that use Vision to allign, score, and stow.
     eventMaps.put(
-        "VISION L1 Right", VisionCommands.AutoScoreToL1(subsystems, ReefPosition.RIGHT_BRANCH));
+        "VISION L1 Right", VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L1));
     eventMaps.put(
-        "VISION L1 Left", VisionCommands.AutoScoreToL1(subsystems, ReefPosition.LEFT_BRANCH));
+        "VISION L1 Left", VisionCommands.autoScoreCoral(subsystems, ReefPosition.LEFT_BRANCH, ElevatorLevel.L1));
     eventMaps.put(
         "VISION Score L2 Right",
-        VisionCommands.AutoScoreToL2(subsystems, ReefPosition.RIGHT_BRANCH));
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L2));
     eventMaps.put(
         "VISION Score L2 Left ",
-        VisionCommands.AutoScoreToL2(subsystems, ReefPosition.LEFT_BRANCH));
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.LEFT_BRANCH, ElevatorLevel.L2));
     eventMaps.put(
         "VISION Score L3 Right",
-        VisionCommands.AutoScoreToL3(subsystems, ReefPosition.RIGHT_BRANCH));
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L3));
     eventMaps.put(
         "VISION Score L3 Left ",
-        VisionCommands.AutoScoreToL3(subsystems, ReefPosition.RIGHT_BRANCH));
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L3));
     eventMaps.put(
         "VISION Score L4 Right",
-        VisionCommands.AutoScoreToL4(subsystems, ReefPosition.RIGHT_BRANCH));
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L4));
     eventMaps.put(
         "VISION Score L4 Left ",
-        VisionCommands.AutoScoreToL4(subsystems, ReefPosition.RIGHT_BRANCH));
-    eventMaps.put("VISION Coral Intake", VisionCommands.AutoIntakeToCoralStation(subsystems));
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L4));
+    eventMaps.put("VISION Coral Intake", VisionCommands.autoIntakeToCoralStation(subsystems));
     return eventMaps;
   }
 }

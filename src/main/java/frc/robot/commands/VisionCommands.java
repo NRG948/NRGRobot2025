@@ -16,70 +16,22 @@ import frc.robot.subsystems.Subsystems;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class VisionCommands {
   /**
-   * Returns a command to use AllignToReef to allign to a reef position and score coral at Level 1.
-   *
-   * @param subsystems The Subsystems Container.
-   * @param reefPosition The Specified reef position.
-   * @return
+   * Returns a Command Seuquence to allignToTheReef and Score coral in the given reefPosition and Elevator Level
+   * @param subsystems The Subsystems Container
+   * @param reefPosition The specified Reef Position
+   * @param level The specified Eleator level
+   * @return A Command Seuquence to allignToTheReef and Score coral in the given reefPosition and Elevator Level
    */
-  public static Command AutoScoreToL1(Subsystems subsystems, ReefPosition reefPosition) {
+  public static Command autoScoreCoral(Subsystems subsystems, ReefPosition reefPosition, ElevatorLevel level) {
     return Commands.sequence(
         Commands.parallel(
             DriveCommands.alignToReefPosition(subsystems, reefPosition),
-            CoralAndElevatorCommands.raiseElevatorAndCoralArm(subsystems, ElevatorLevel.L1)),
+            CoralAndElevatorCommands.raiseElevatorAndCoralArm(subsystems, level)),
         CoralCommands.outtakeUntilCoralNotDetected(subsystems),
         ElevatorCommands.stowElevatorAndArmForCoral(subsystems));
   }
 
-  /**
-   * Returns a command to use AllignToReef to allign to a reef position and score coral at Level 2.
-   *
-   * @param subsystems Subsystems container.
-   * @param reefPosition Specified reef Position.
-   * @return
-   */
-  public static Command AutoScoreToL2(Subsystems subsystems, ReefPosition reefPosition) {
-    return Commands.sequence(
-        Commands.parallel(
-            DriveCommands.alignToReefPosition(subsystems, reefPosition),
-            CoralAndElevatorCommands.raiseElevatorAndCoralArm(subsystems, ElevatorLevel.L2)),
-        CoralCommands.outtakeUntilCoralNotDetected(subsystems),
-        ElevatorCommands.stowElevatorAndArmForCoral(subsystems));
-  }
-
-  /**
-   * Returns a command to use AllignToReef to allign to a reef position and score coral at Level 3.
-   *
-   * @param subsystems The Subsystems Container.
-   * @param reefPosition Specified Reef Position.
-   * @return
-   */
-  public static Command AutoScoreToL3(Subsystems subsystems, ReefPosition reefPosition) {
-    return Commands.sequence(
-        Commands.parallel(
-            DriveCommands.alignToReefPosition(subsystems, reefPosition),
-            CoralAndElevatorCommands.raiseElevatorAndCoralArm(subsystems, ElevatorLevel.L3)),
-        CoralCommands.outtakeUntilCoralNotDetected(subsystems),
-        ElevatorCommands.stowElevatorAndArmForCoral(subsystems));
-  }
-
-  /**
-   * Returns a command to use AllignToReef to allign to a reef position and score coral at Level 4.
-   *
-   * @param subsystems Subsystems Container.
-   * @param reefPosition Specified Reef Position.
-   * @return
-   */
-  public static Command AutoScoreToL4(Subsystems subsystems, ReefPosition reefPosition) {
-    return Commands.sequence(
-        Commands.parallel(
-            DriveCommands.alignToReefPosition(subsystems, reefPosition),
-            CoralAndElevatorCommands.raiseElevatorAndCoralArm(subsystems, ElevatorLevel.L4)),
-        CoralCommands.outtakeUntilCoralNotDetected(subsystems),
-        ElevatorCommands.stowElevatorAndArmForCoral(subsystems));
-  }
-
-  public static Command AutoIntakeToCoralStation(Subsystems subsystems) {
+  public static Command autoIntakeToCoralStation(Subsystems subsystems) {
     return Commands.sequence(
         DriveCommands.alignToCoralStationCenter(subsystems),
         CoralCommands.intakeUntilCoralDetected(subsystems));
