@@ -14,6 +14,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.AlignToReef.ReefPosition;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
@@ -103,6 +104,32 @@ public final class Autos {
     eventMaps.put("Elevator L4", ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L4));
     eventMaps.put("Elevator Dock", ElevatorCommands.stowElevator(subsystems));
 
+    // These are the commands that use Vision to allign, score, and stow.
+    eventMaps.put(
+        "VISION L1 Right",
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L1));
+    eventMaps.put(
+        "VISION L1 Left",
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.LEFT_BRANCH, ElevatorLevel.L1));
+    eventMaps.put(
+        "VISION Score L2 Right",
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L2));
+    eventMaps.put(
+        "VISION Score L2 Left ",
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.LEFT_BRANCH, ElevatorLevel.L2));
+    eventMaps.put(
+        "VISION Score L3 Right",
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L3));
+    eventMaps.put(
+        "VISION Score L3 Left ",
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L3));
+    eventMaps.put(
+        "VISION Score L4 Right",
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L4));
+    eventMaps.put(
+        "VISION Score L4 Left ",
+        VisionCommands.autoScoreCoral(subsystems, ReefPosition.RIGHT_BRANCH, ElevatorLevel.L4));
+    eventMaps.put("VISION Coral Intake", VisionCommands.autoIntakeToCoralStation(subsystems));
     return eventMaps;
   }
 }
