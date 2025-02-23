@@ -10,8 +10,8 @@ package frc.robot.parameters;
 import frc.robot.subsystems.Elevator;
 
 public enum ElevatorParameters {
-  PracticeBase2025(3.65, Elevator.PRACTICE_BOT_GEAR_RATIO, 0, 1.31, 14, true),
-  CompetitionBase2025(3.7, Elevator.COMPETITION_BOT_GEAR_RATIO, 0, 1.31, 9, false);
+  PracticeBase2025(3.65, Elevator.PRACTICE_BOT_GEAR_RATIO, 0, 1.39, 14, true),
+  CompetitionBase2025(3.65, Elevator.COMPETITION_BOT_GEAR_RATIO, 0, 1.39, 10, false);
 
   private final double mass;
   private final double gearRatio;

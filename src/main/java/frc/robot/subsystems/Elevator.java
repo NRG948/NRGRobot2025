@@ -67,9 +67,9 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   // Physical parameters of the elevator
   public static final double PRACTICE_BOT_GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
-  public static final double COMPETITION_BOT_GEAR_RATIO = ((60.0 / 12.0) * (24.0 / 15.0)) / 2;
+  public static final double COMPETITION_BOT_GEAR_RATIO = 9.0 / 2;
   private static final double GEAR_RATIO = PARAMETERS.getValue().getGearRatio();
-  private static final double SPROCKET_DIAMETER = 0.0474; // meters
+  private static final double SPROCKET_DIAMETER = 0.05; // meters
   private static final double MASS = PARAMETERS.getValue().getMass(); // kilograms
   private static final double METERS_PER_REVOLUTION = (SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO;
 
