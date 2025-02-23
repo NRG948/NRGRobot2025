@@ -53,7 +53,7 @@ public final class Constants {
     /**
      * The y-offset (in the width direction) of the coral end effector from the center of the robot
      */
-    public static final double CORAL_OFFSET_Y = 0.20; // TODO: GET REAL VALUE
+    public static final double CORAL_OFFSET_Y = Units.inchesToMeters(10.25); // TODO: GET REAL VALUE
 
     public static class PWMPort {
       public static final int LED = 1;
@@ -103,7 +103,7 @@ public final class Constants {
     public static final double BRANCH_TO_REEF_APRILTAG = 0.165;
 
     /** The translational tolerance value for aligning to the reef. */
-    public static final double POSE_ALIGNMENT_TOLERANCE_XY = 0.0333; // in m
+    public static final double POSE_ALIGNMENT_TOLERANCE_XY = 0.02; // in m
 
     /** The rotational tolerance value for aligning to the reef. */
     public static final double POSE_ALIGNMENT_TOLERANCE_R = 1.0; // in deg
