@@ -37,7 +37,7 @@ public final class CoralCommands {
             Commands.idle(subsystems.coralRoller).until(subsystems.coralRoller::hasCoral),
             Commands.waitSeconds(CORAL_DETECTION_DELAY),
             Commands.runOnce(subsystems.coralRoller::disable, subsystems.coralRoller))
-        .handleInterrupt(subsystems.coralRoller::disable)
+        .finallyDo(subsystems.coralRoller::disable)
         .unless(subsystems.coralRoller::hasCoral)
         .withName("IntakeUntilCoralDetected");
   }
