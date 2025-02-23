@@ -75,7 +75,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   private static final double MAX_HEIGHT = PARAMETERS.getValue().getMaxHeight(); // meters
   private static final double MIN_HEIGHT = PARAMETERS.getValue().getMinHeight(); // meters
-  private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.08;
+  private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.15;
   public static final double STOWED_HEIGHT_FOR_PID = (MIN_HEIGHT + DISABLE_HEIGHT) / 2;
 
   // Trapezoid profile values
@@ -146,6 +146,8 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   /** The offset below the goal height when it is safe to pivot the arm. */
   private double armPivotHeightOffset = 0;
+
+  private Timer resetEncoderTimer = new Timer();
 
   private BooleanLogEntry logIsSeekingGoal = new BooleanLogEntry(LOG, "Elevator/isSeekingGoal");
   private DoubleLogEntry logCurrentVelocity = new DoubleLogEntry(LOG, "Elevator/velocity");
@@ -276,31 +278,47 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   @Override
   public void periodic() {
     updateSensorState();
-    if (isSeekingGoal) {
-      ExponentialProfile.State desiredState =
-          profile.calculate(RobotConstants.PERIODIC_INTERVAL, lastState, goalState);
-
-      double feedforward = feedForward.calculate(desiredState.velocity);
-      double pidOutput = controller.calculate(currentState.position, desiredState.position);
-
-      currentVoltage = feedforward + pidOutput;
-      if ((currentVoltage > 0 && atUpperLimit)) {
-        currentVoltage = KG;
-      }
-      if ((currentVoltage < 0 && atLowerLimit)) {
-        currentVoltage = 0;
-      }
-
-      mainMotor.setVoltage(currentVoltage);
-
-      lastState = desiredState;
-
-      logPIDOutput.append(pidOutput);
-      logFeedForward.append(feedforward);
-      logDesiredPosition.append(desiredState.position);
-      logDesiredVelocity.append(desiredState.velocity);
-      logCurrentVoltage.append(currentVoltage);
+    if (!isSeekingGoal) {
+      return;
     }
+
+    if (atLowerLimit
+        && goalState.position == STOWED_HEIGHT_FOR_PID
+        && PARAMETERS.getValue().resetEncoderWhenStowed()) {
+      if (!resetEncoderTimer.isRunning()) {
+        resetEncoderTimer.restart();
+      } else if (resetEncoderTimer.hasElapsed(2.0)) {
+        resetEncoderTimer.stop();
+        resetEncoderTimer.reset();
+        encoder.reset();
+        disable();
+        return;
+      }
+    }
+
+    ExponentialProfile.State desiredState =
+        profile.calculate(RobotConstants.PERIODIC_INTERVAL, lastState, goalState);
+
+    double feedforward = feedForward.calculate(desiredState.velocity);
+    double pidOutput = controller.calculate(currentState.position, desiredState.position);
+
+    currentVoltage = feedforward + pidOutput;
+    if ((currentVoltage > 0 && atUpperLimit)) {
+      currentVoltage = KG;
+    }
+    if ((currentVoltage < 0 && atLowerLimit)) {
+      currentVoltage = 0;
+    }
+
+    mainMotor.setVoltage(currentVoltage);
+
+    lastState = desiredState;
+
+    logPIDOutput.append(pidOutput);
+    logFeedForward.append(feedforward);
+    logDesiredPosition.append(desiredState.position);
+    logDesiredVelocity.append(desiredState.velocity);
+    logCurrentVoltage.append(currentVoltage);
   }
 
   @Override

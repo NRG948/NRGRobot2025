@@ -10,22 +10,29 @@ package frc.robot.parameters;
 import frc.robot.subsystems.Elevator;
 
 public enum ElevatorParameters {
-  PracticeBase2025(3.65, Elevator.PRACTICE_BOT_GEAR_RATIO, 0, 1.31, 14),
-  CompetitionBase2025(3.7, Elevator.COMPETITION_BOT_GEAR_RATIO, 0, 1.31, 9);
+  PracticeBase2025(3.65, Elevator.PRACTICE_BOT_GEAR_RATIO, 0, 1.31, 14, true),
+  CompetitionBase2025(3.7, Elevator.COMPETITION_BOT_GEAR_RATIO, 0, 1.31, 9, false);
 
   private final double mass;
   private final double gearRatio;
   private final double minHeight;
   private final double maxHeight;
   private final int motorID;
+  private final boolean resetEncoderWhenStowed;
 
   ElevatorParameters(
-      double mass, double gearRatio, double minHeight, double maxHeight, int motorID) {
+      double mass,
+      double gearRatio,
+      double minHeight,
+      double maxHeight,
+      int motorID,
+      boolean resetEncoderWhenStowed) {
     this.mass = mass;
     this.gearRatio = gearRatio;
     this.minHeight = minHeight;
     this.maxHeight = maxHeight;
     this.motorID = motorID;
+    this.resetEncoderWhenStowed = resetEncoderWhenStowed;
   }
 
   public double getMass() {
@@ -46,5 +53,9 @@ public enum ElevatorParameters {
 
   public int getMotorID() {
     return motorID;
+  }
+
+  public boolean resetEncoderWhenStowed() {
+    return resetEncoderWhenStowed;
   }
 }
