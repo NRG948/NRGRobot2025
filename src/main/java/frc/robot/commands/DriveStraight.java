@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StructLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -42,12 +43,10 @@ public class DriveStraight extends Command {
       new DoubleLogEntry(LOG, "DriveStraight/orientation");
   private final DoubleLogEntry logDistance = new DoubleLogEntry(LOG, "DriveStraight/distance");
   private final DoubleLogEntry logHeading = new DoubleLogEntry(LOG, "DriveStraight/heading");
-  private final DoubleLogEntry logInitialPoseX =
-      new DoubleLogEntry(LOG, "DriveStraight/initialPoseX");
-  private final DoubleLogEntry logInitialPoseY =
-      new DoubleLogEntry(LOG, "DriveStraight/initialPoseY");
-  private final DoubleLogEntry logFinalPoseX = new DoubleLogEntry(LOG, "DriveStraight/finalPoseX");
-  private final DoubleLogEntry logFinalPoseY = new DoubleLogEntry(LOG, "DriveStraight/finalPoseY");
+  private final StructLogEntry<Pose2d> logInitialPose =
+      StructLogEntry.create(LOG, "DriveStraight/initialPose", Pose2d.struct);
+  private final StructLogEntry<Pose2d> logFinalPose =
+      StructLogEntry.create(LOG, "DriveStraight/finalPose", Pose2d.struct);
 
   /**
    * Creates a new DriveStraight that drives robot along the specified vector at maximum speed while
@@ -152,14 +151,13 @@ public class DriveStraight extends Command {
     initialState = new TrapezoidProfile.State(0, 0);
     goalState = new TrapezoidProfile.State(distance, 0);
 
+    timer.reset();
+    timer.start();
+
     logOrientation.append(orientation.getDegrees());
     logDistance.append(distance);
     logHeading.append(heading.getDegrees());
-    logInitialPoseX.append(initialPose.getX());
-    logInitialPoseY.append(initialPose.getY());
-
-    timer.reset();
-    timer.start();
+    logInitialPose.append(initialPose);
   }
 
   @Override
@@ -189,9 +187,6 @@ public class DriveStraight extends Command {
   public void end(boolean interrupted) {
     drivetrain.stopMotors();
     timer.stop();
-    Pose2d finalPose = drivetrain.getPosition();
-    logFinalPoseX.append(finalPose.getX());
-    logFinalPoseY.append(finalPose.getY());
-    logOrientation.append(finalPose.getRotation().getDegrees());
+    logFinalPose.append(drivetrain.getPosition());
   }
 }

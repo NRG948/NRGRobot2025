@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StructLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -49,9 +50,8 @@ public class AlignToPose extends Command {
   private final DoubleLogEntry yErrorLog = new DoubleLogEntry(LOG, "Vision/Pose Y Error");
   private final DoubleLogEntry rErrorLog = new DoubleLogEntry(LOG, "Vision/Pose Yaw Error");
 
-  private final DoubleLogEntry xTargetLog = new DoubleLogEntry(LOG, "Vision/Pose Target X");
-  private final DoubleLogEntry yTargetLog = new DoubleLogEntry(LOG, "Vision/Pose Target Y");
-  private final DoubleLogEntry rTargetLog = new DoubleLogEntry(LOG, "Vision/Pose Target Yaw");
+  private final StructLogEntry<Pose2d> poseTargetLog =
+      StructLogEntry.create(LOG, "Vision/Pose Target", Pose2d.struct);
 
   private double xTarget;
   private double yTarget;
@@ -80,9 +80,7 @@ public class AlignToPose extends Command {
     yTarget = targetPose.getY();
     rTarget = targetPose.getRotation().getDegrees();
 
-    xTargetLog.append(xTarget);
-    yTargetLog.append(yTarget);
-    rTargetLog.append(rTarget);
+    poseTargetLog.append(targetPose);
 
     // Set up the PID controllers to drive to the target pose.
     xController.setSetpoint(xTarget);

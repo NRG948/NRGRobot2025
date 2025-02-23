@@ -155,9 +155,6 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   private Supplier<Optional<Rotation2d>> targetOrientationSupplier = () -> Optional.empty();
   private double acceleration = 0;
 
-  private DoubleLogEntry poseXLog = new DoubleLogEntry(LOG, "/Swerve/Pose X");
-  private DoubleLogEntry poseYLog = new DoubleLogEntry(LOG, "/Swerve/Pose Y");
-  private DoubleLogEntry poseAngleLog = new DoubleLogEntry(LOG, "/Swerve/Pose Angle");
   private StructLogEntry<Pose2d> poseLog =
       StructLogEntry.create(LOG, "/Swerve/Pose", Pose2d.struct);
   private DoubleLogEntry rawOrientationLog = new DoubleLogEntry(LOG, "/Swerve/rawOrientation");
@@ -522,9 +519,6 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
     // Send the robot and module location to the logger
     Pose2d robotPose = getPosition();
 
-    poseXLog.append(robotPose.getX());
-    poseYLog.append(robotPose.getY());
-    poseAngleLog.append(robotPose.getRotation().getDegrees());
     poseLog.append(robotPose);
   }
 
