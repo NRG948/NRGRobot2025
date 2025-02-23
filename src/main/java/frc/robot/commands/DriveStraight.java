@@ -147,7 +147,7 @@ public class DriveStraight extends Command {
     orientation = orientationSupplier.get();
     profile =
         new TrapezoidProfile(
-            new TrapezoidProfile.Constraints(maxSpeed, Swerve.getMaxAcceleration()));
+            new TrapezoidProfile.Constraints(maxSpeed, Swerve.getMaxAcceleration() * 0.3));
 
     initialState = new TrapezoidProfile.State(0, 0);
     goalState = new TrapezoidProfile.State(distance, 0);

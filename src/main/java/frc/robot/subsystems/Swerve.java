@@ -601,7 +601,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
       GenericEntry distance = driveStraight.add("Distance", 0).getEntry();
       driveStraight.add(
           Commands.defer(
-                  () -> new DriveStraight(this, distance.getDouble(0), Swerve.getMaxSpeed() / 2),
+                  () -> new DriveStraight(this, distance.getDouble(0), Swerve.getMaxSpeed() * 0.25),
                   Set.of(this))
               .withName("Drive Straight"));
     }
