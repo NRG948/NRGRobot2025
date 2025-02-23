@@ -96,7 +96,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   public CoralRoller() {}
 
   /** Sets the goal velocity in meters per second. */
-  private void setGoalVelocity(double velocity) {
+  public void setGoalVelocity(double velocity) {
     goalVelocity = velocity;
     logGoalVelocity.append(goalVelocity);
   }
