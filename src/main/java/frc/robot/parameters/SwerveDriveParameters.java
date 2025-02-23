@@ -10,7 +10,6 @@ package frc.robot.parameters;
 import static frc.robot.parameters.MotorParameters.Falcon500;
 import static frc.robot.parameters.MotorParameters.KrakenX60;
 import static frc.robot.parameters.MotorParameters.NeoV1_1;
-import static frc.robot.parameters.SwerveModuleParameters.MK4IFast;
 import static frc.robot.parameters.SwerveModuleParameters.MK4IFaster;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 import static frc.robot.util.MotorIdleMode.BRAKE;
@@ -53,7 +52,7 @@ public enum SwerveDriveParameters {
       41.0,
       0.602,
       0.602,
-      MK4IFast,
+      MK4IFaster,
       KrakenX60,
       NeoV1_1,
       new int[] {17, 19, 18, 20, 1, 2, 9, 10}, // drive, steer motor controller CAN IDs
@@ -67,7 +66,7 @@ public enum SwerveDriveParameters {
       41.0, // TODO Correct robot mass
       0.602,
       0.602,
-      MK4IFast,
+      MK4IFaster,
       KrakenX60,
       NeoV1_1,
       new int[] {15, 14, 13, 6, 2, 1, 8, 7}, // drive, steer motor controller CAN IDs
