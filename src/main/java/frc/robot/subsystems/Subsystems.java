@@ -12,7 +12,6 @@ import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.parameters.ArmParameters;
 import frc.robot.util.MotorIdleMode;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -27,10 +26,10 @@ public class Subsystems {
   public final Swerve drivetrain = new Swerve();
   public final Elevator elevator = new Elevator();
 
-  public final Arm coralArm = new Arm(ArmParameters.CoralArm);
+  public final Arm coralArm = new Arm(Arm.CORAL_ARM.getValue());
   public final CoralRoller coralRoller = new CoralRoller();
 
-  public final Arm algaeArm = new Arm(ArmParameters.AlgaeArm);
+  public final Arm algaeArm = new Arm(Arm.ALGAE_ARM.getValue());
   public final AlgaeGrabber algaeGrabber = new AlgaeGrabber();
 
   public final Climber climber = new Climber();

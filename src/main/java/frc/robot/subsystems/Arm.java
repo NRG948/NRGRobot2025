@@ -34,21 +34,41 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.parameters.AlgaeArmParameters;
 import frc.robot.parameters.ArmParameters;
+import frc.robot.parameters.CoralArmParameters;
 import frc.robot.util.AbsoluteAngleEncoder;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.RevThroughboreEncoderAdapter;
 import frc.robot.util.TalonFXAdapter;
 
-@RobotPreferencesLayout(groupName = "Arm", row = 1, column = 0, width = 1, height = 1)
+@RobotPreferencesLayout(
+    groupName = "Arm",
+    row = 3,
+    column = 4,
+    width = 4,
+    height = 1,
+    type = "Grid Layout",
+    gridColumns = 3,
+    gridRows = 1)
 public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   private static final double ERROR_MARGIN = Math.toRadians(2);
   private static final double ERROR_TIME = 1.0;
 
-  @RobotPreferencesValue
+  @RobotPreferencesValue(row = 0, column = 0, width = 1, height = 1)
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("Arm", "Enable Tab", false);
+
+  @RobotPreferencesValue(row = 0, column = 1, width = 1, height = 1)
+  public static final RobotPreferences.EnumValue<CoralArmParameters> CORAL_ARM =
+      new RobotPreferences.EnumValue<CoralArmParameters>(
+          "Arm", "Coral Arm", CoralArmParameters.CompetitionBase2025);
+
+  @RobotPreferencesValue(row = 0, column = 2, width = 1, height = 1)
+  public static final RobotPreferences.EnumValue<AlgaeArmParameters> ALGAE_ARM =
+      new RobotPreferences.EnumValue<AlgaeArmParameters>(
+          "Arm", "Algae Arm", AlgaeArmParameters.CompetitionBase2025);
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -77,7 +97,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
 
   /** Creates a new Arm. */
   public Arm(ArmParameters parameters) {
-    setName(parameters.toString());
+    setName(parameters.getArmName());
     MIN_ANGLE = parameters.getMinAngleRad();
     MAX_ANGLE = parameters.getMaxAngleRad();
 
@@ -121,13 +141,15 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     relativeEncoder.setPosition(absoluteEncoder.getAngle());
 
     logCurrentAngle =
-        new DoubleLogEntry(LOG, String.format("/%s/Current Angle", parameters.name()));
+        new DoubleLogEntry(LOG, String.format("/%s/Current Angle", parameters.getArmName()));
     logCurrentAbsoluteAngle =
-        new DoubleLogEntry(LOG, String.format("/%s/Current Absolute Angle", parameters.name()));
+        new DoubleLogEntry(
+            LOG, String.format("/%s/Current Absolute Angle", parameters.getArmName()));
     logCurrentVelocity =
-        new DoubleLogEntry(LOG, String.format("/%s/Current Velocity", parameters.name()));
-    logGoalAngle = new DoubleLogEntry(LOG, String.format("/%s/Goal Angle", parameters.name()));
-    logEnabled = new BooleanLogEntry(LOG, String.format("/%s/Enabled", parameters.name()));
+        new DoubleLogEntry(LOG, String.format("/%s/Current Velocity", parameters.getArmName()));
+    logGoalAngle =
+        new DoubleLogEntry(LOG, String.format("/%s/Goal Angle", parameters.getArmName()));
+    logEnabled = new BooleanLogEntry(LOG, String.format("/%s/Enabled", parameters.getArmName()));
   }
 
   /** Updates the sensor state. */
