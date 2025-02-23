@@ -56,7 +56,8 @@ public final class DriveCommands {
    * @return A command that interrupts all subsystems.
    */
   public static Command interruptAll(Subsystems subsystems) {
-    return Commands.runOnce(() -> {}, subsystems.getAll()).withName("InterruptAll");
+    return Commands.runOnce(() -> subsystems.disableAll(), subsystems.getAll())
+        .withName("InterruptAll");
   }
 
   /**

@@ -50,10 +50,10 @@ public class Subsystems {
     // Add all manipulator subsystems to the `manipulators` list.
     var manipulators =
         new ArrayList<Subsystem>(
-            Arrays.asList(elevator, coralArm, algaeArm, algaeGrabber, coralRoller, climber));
+            Arrays.asList(elevator, coralArm, algaeArm, algaeGrabber, coralRoller));
 
     // Add all non-manipulator subsystems to the `all` list.
-    var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, statusLEDs));
+    var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, statusLEDs, climber));
 
     // Add optional subsystems to the appropriate list.
     frontCamera =
@@ -153,13 +153,23 @@ public class Subsystems {
     }
   }
 
-  /** Disables all subsystems implementing the {@link ActiveSubsystem} interface. */
-  public void disable() {
-    for (Subsystem subsystem : all) {
+  /** Disables the specified subsystems implementing the {@link ActiveSubsystem} interface. */
+  private void disableSubsystems(Subsystem[] subsystems) {
+    for (Subsystem subsystem : subsystems) {
       if (subsystem instanceof ActiveSubsystem) {
         ActiveSubsystem.class.cast(subsystem).disable();
       }
     }
+  }
+
+  /** Disables all subsystems implementing the {@link ActiveSubsystem} interface. */
+  public void disableAll() {
+    disableSubsystems(all);
+  }
+
+  /** Disables all manipulator subsystems implementing the {@link ActiveSubsystem} interface. */
+  public void disableManipulators() {
+    disableSubsystems(manipulators);
   }
 
   /**

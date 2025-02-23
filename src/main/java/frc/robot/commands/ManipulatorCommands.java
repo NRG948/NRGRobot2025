@@ -15,7 +15,7 @@ import frc.robot.subsystems.Subsystems;
 public final class ManipulatorCommands {
   /** Returns a command that interrupts all manipulator subsystems. */
   public static Command interruptAll(Subsystems subsystems) {
-    return Commands.runOnce(() -> {}, subsystems.getManipulators())
+    return Commands.runOnce(() -> subsystems.disableManipulators(), subsystems.getManipulators())
         .withName("InterruptManipulators");
   }
 }

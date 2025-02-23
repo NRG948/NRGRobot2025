@@ -77,7 +77,7 @@ public class RobotContainer {
   }
 
   public void disabledInit() {
-    subsystems.disable();
+    subsystems.disableAll();
     coastModeTimer.restart();
   }
 
