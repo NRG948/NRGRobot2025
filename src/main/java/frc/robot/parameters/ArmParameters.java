@@ -30,7 +30,7 @@ public enum ArmParameters {
       // reading the raw value of the absolute encoder to obtain the zero point,
       // we must invert the value by subtracting it from 1 before converting it
       // to radians.
-      Math.toRadians(360 - 10.55),
+      Math.toRadians(10.55),
       Math.toRadians(10),
       Math.toRadians(95)),
   AlgaeArm(
@@ -43,7 +43,7 @@ public enum ArmParameters {
       RobotConstants.CAN.TalonFX.ALGAE_ARM_MOTOR_ID,
       RobotConstants.DigitalIO.ALGAE_ARM_ABSOLUTE_ENCODER,
       false, // TODO: determine inversion
-      0, // TODO: get real encoder offset
+      Math.toRadians(0), // TODO: get real encoder offset
       Math.toRadians(45),
       Math.toRadians(90));
 
