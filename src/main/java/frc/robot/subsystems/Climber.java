@@ -7,6 +7,11 @@
  
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CLIMBER_MAIN_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.DigitalIO.CLIMBER_ABSOLUTE_ENCODER;
+import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
+import static frc.robot.util.MotorIdleMode.BRAKE;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferences.DoubleValue;
@@ -24,9 +29,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.RobotConstants;
 import frc.robot.util.AbsoluteAngleEncoder;
-import frc.robot.util.MotorDirection;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RevThroughboreEncoderAdapter;
 import frc.robot.util.TalonFXAdapter;
@@ -67,13 +70,13 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   private final AbsoluteAngleEncoder absoluteEncoder =
       new RevThroughboreEncoderAdapter(
-          RobotConstants.DigitalIO.CLIMBER_ABSOLUTE_ENCODER, true, ABSOLUTE_ENCODER_ZERO_OFFSET);
+          CLIMBER_ABSOLUTE_ENCODER, true, ABSOLUTE_ENCODER_ZERO_OFFSET);
 
   private TalonFXAdapter mainMotor =
       new TalonFXAdapter(
-          new TalonFX(RobotConstants.CAN.TalonFX.CLIMBER_MAIN_MOTOR_ID, "rio"),
-          MotorDirection.COUNTER_CLOCKWISE_POSITIVE,
-          MotorIdleMode.BRAKE,
+          new TalonFX(CLIMBER_MAIN_MOTOR_ID, "rio"),
+          COUNTER_CLOCKWISE_POSITIVE,
+          BRAKE,
           1); // filler value; motor encoder value is not used.
 
   private DoubleLogEntry logCurrentAbsoluteAngle =

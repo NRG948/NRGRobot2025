@@ -7,11 +7,14 @@
  
 package frc.robot.parameters;
 
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.ALGAE_ARM_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.DigitalIO.ALGAE_ARM_ABSOLUTE_ENCODER;
+import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import frc.robot.Constants.RobotConstants;
 
 /** A class to hold the feedforward constants calculated from maximum velocity and acceleration. */
 public enum AlgaeArmParameters implements ArmParameters {
@@ -23,8 +26,8 @@ public enum AlgaeArmParameters implements ArmParameters {
       Units.inchesToMeters(20),
       1,
       1,
-      RobotConstants.CAN.TalonFX.ALGAE_ARM_MOTOR_ID,
-      RobotConstants.DigitalIO.ALGAE_ARM_ABSOLUTE_ENCODER,
+      ALGAE_ARM_MOTOR_ID,
+      ALGAE_ARM_ABSOLUTE_ENCODER,
       false, // TODO: determine inversion
       Math.toRadians(0), // TODO: get real encoder offset
       Math.toRadians(45),
@@ -37,8 +40,8 @@ public enum AlgaeArmParameters implements ArmParameters {
       Units.inchesToMeters(20),
       1,
       1,
-      RobotConstants.CAN.TalonFX.ALGAE_ARM_MOTOR_ID,
-      RobotConstants.DigitalIO.ALGAE_ARM_ABSOLUTE_ENCODER,
+      ALGAE_ARM_MOTOR_ID,
+      ALGAE_ARM_ABSOLUTE_ENCODER,
       false, // TODO: determine inversion
       Math.toRadians(0), // TODO: get real encoder offset
       Math.toRadians(45),
@@ -104,8 +107,8 @@ public enum AlgaeArmParameters implements ArmParameters {
     this.absoluteEncoderZeroOffset = absoluteEncoderZeroOffset;
     this.minAngleRad = minAngleRad;
     this.maxAngleRad = maxAngleRad;
-    kV = (RobotConstants.MAX_BATTERY_VOLTAGE - kS) / getMaxAngularSpeed();
-    kA = (RobotConstants.MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAcceleration();
+    kV = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularSpeed();
+    kA = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAcceleration();
     kG = kA * 9.81;
   }
 

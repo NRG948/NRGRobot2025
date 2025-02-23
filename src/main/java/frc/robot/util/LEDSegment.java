@@ -7,6 +7,8 @@
  
 package frc.robot.util;
 
+import static frc.robot.Constants.RobotConstants.LED_COUNT;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color8Bit;
@@ -44,8 +46,7 @@ public final class LEDSegment {
     0xd7, 0xda, 0xdc, 0xdf, 0xe1, 0xe4, 0xe7, 0xe9, 0xec, 0xef, 0xf1, 0xf4, 0xf7, 0xf9, 0xfc, 0xff
   };
 
-  private static final AddressableLEDBuffer ledBuffer =
-      new AddressableLEDBuffer(RobotConstants.LED_COUNT);
+  private static final AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_COUNT);
   private static final AddressableLED leds = createAddressableLED(ledBuffer);
 
   private final int firstLED;
@@ -54,7 +55,7 @@ public final class LEDSegment {
   /** Creates and initializes the shared {@link AddressableLED} object. */
   private static AddressableLED createAddressableLED(AddressableLEDBuffer buffer) {
     AddressableLED led = new AddressableLED(RobotConstants.PWMPort.LED);
-    led.setLength(RobotConstants.LED_COUNT);
+    led.setLength(LED_COUNT);
     led.setData(buffer);
     led.start();
     return led;

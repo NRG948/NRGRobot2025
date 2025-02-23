@@ -7,7 +7,8 @@
  
 package frc.robot.parameters;
 
-import frc.robot.Constants.RobotConstants;
+import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
+
 import java.util.function.DoubleSupplier;
 
 /** A class to hold the feedforward constants calculated from maximum velocity and acceleration. */
@@ -24,7 +25,7 @@ public class CalculatedFeedforwardConstants extends FeedforwardConstants {
       double kS, DoubleSupplier maxSpeed, DoubleSupplier maxAcceleration) {
     super(
         kS,
-        (RobotConstants.MAX_BATTERY_VOLTAGE - kS) / maxSpeed.getAsDouble(),
-        (RobotConstants.MAX_BATTERY_VOLTAGE - kS) / maxAcceleration.getAsDouble());
+        (MAX_BATTERY_VOLTAGE - kS) / maxSpeed.getAsDouble(),
+        (MAX_BATTERY_VOLTAGE - kS) / maxAcceleration.getAsDouble());
   }
 }

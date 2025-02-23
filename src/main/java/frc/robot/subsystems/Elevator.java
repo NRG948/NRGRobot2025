@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
+import static frc.robot.Constants.RobotConstants.PERIODIC_INTERVAL;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.nrg948.preferences.RobotPreferences;
@@ -37,7 +38,6 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.parameters.ElevatorParameters;
@@ -297,7 +297,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     }
 
     ExponentialProfile.State desiredState =
-        profile.calculate(RobotConstants.PERIODIC_INTERVAL, lastState, goalState);
+        profile.calculate(PERIODIC_INTERVAL, lastState, goalState);
 
     double feedforward = feedForward.calculate(desiredState.velocity);
     double pidOutput = controller.calculate(currentState.position, desiredState.position);

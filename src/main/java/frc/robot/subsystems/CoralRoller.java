@@ -7,7 +7,11 @@
  
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CORAL_ROLLER_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_ROLLER_BEAM_BREAK;
+import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
+import static frc.robot.util.MotorDirection.CLOCKWISE_POSITIVE;
+import static frc.robot.util.MotorIdleMode.BRAKE;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.nrg948.preferences.RobotPreferences;
@@ -29,9 +33,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.RobotConstants;
 import frc.robot.parameters.MotorParameters;
-import frc.robot.util.MotorDirection;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
@@ -62,15 +64,15 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
       (MotorParameters.KrakenX60.getFreeSpeedRPM() * METERS_PER_REVOLUTION) / 60;
 
   private static final double KS = 0.0656;
-  private static final double KV = (RobotConstants.MAX_BATTERY_VOLTAGE - KS) / MAX_VELOCITY;
+  private static final double KV = (MAX_BATTERY_VOLTAGE - KS) / MAX_VELOCITY;
 
   private static final double ERROR_TIME = 3.0;
 
   private final TalonFXAdapter motor =
       new TalonFXAdapter(
-          new TalonFX(RobotConstants.CAN.TalonFX.CORAL_ROLLER_MOTOR_ID),
-          MotorDirection.CLOCKWISE_POSITIVE,
-          MotorIdleMode.BRAKE,
+          new TalonFX(CORAL_ROLLER_MOTOR_ID, "rio"),
+          CLOCKWISE_POSITIVE,
+          BRAKE,
           METERS_PER_REVOLUTION);
   private final RelativeEncoder encoder = motor.getEncoder();
   private DigitalInput beamBreak = new DigitalInput(CORAL_ROLLER_BEAM_BREAK);

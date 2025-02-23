@@ -7,10 +7,13 @@
  
 package frc.robot.parameters;
 
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CORAL_ARM_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_ARM_ABSOLUTE_ENCODER;
+import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import frc.robot.Constants.RobotConstants;
 
 /** A class to hold the feedforward constants calculated from maximum velocity and acceleration. */
 public enum CoralArmParameters implements ArmParameters {
@@ -22,8 +25,8 @@ public enum CoralArmParameters implements ArmParameters {
       0.315,
       1,
       0.0656,
-      RobotConstants.CAN.TalonFX.CORAL_ARM_MOTOR_ID,
-      RobotConstants.DigitalIO.CORAL_ARM_ABSOLUTE_ENCODER,
+      CORAL_ARM_MOTOR_ID,
+      CORAL_ARM_ABSOLUTE_ENCODER,
       true, // The absolute encoder is inverted.
       Math.toRadians(10.55),
       Math.toRadians(10),
@@ -35,8 +38,8 @@ public enum CoralArmParameters implements ArmParameters {
       0.315,
       1,
       0.0656,
-      RobotConstants.CAN.TalonFX.CORAL_ARM_MOTOR_ID,
-      RobotConstants.DigitalIO.CORAL_ARM_ABSOLUTE_ENCODER,
+      CORAL_ARM_MOTOR_ID,
+      CORAL_ARM_ABSOLUTE_ENCODER,
       true, // The absolute encoder is inverted.
       Math.toRadians(0),
       Math.toRadians(10),
@@ -102,8 +105,8 @@ public enum CoralArmParameters implements ArmParameters {
     this.absoluteEncoderZeroOffset = absoluteEncoderZeroOffset;
     this.minAngleRad = minAngleRad;
     this.maxAngleRad = maxAngleRad;
-    kV = (RobotConstants.MAX_BATTERY_VOLTAGE - kS) / getMaxAngularSpeed();
-    kA = (RobotConstants.MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAcceleration();
+    kV = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularSpeed();
+    kA = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAcceleration();
     kG = kA * 9.81;
   }
 

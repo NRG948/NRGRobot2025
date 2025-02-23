@@ -7,10 +7,12 @@
  
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.ALGAE_GRABBER_MOTOR_ID;
+import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
+import static frc.robot.util.MotorIdleMode.BRAKE;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.RobotConstants;
-import frc.robot.util.MotorDirection;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.TalonFXAdapter;
 
@@ -18,10 +20,7 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem {
 
   private final TalonFXAdapter motor =
       new TalonFXAdapter(
-          new TalonFX(RobotConstants.CAN.TalonFX.ALGAE_GRABBER_MOTOR_ID),
-          MotorDirection.COUNTER_CLOCKWISE_POSITIVE,
-          MotorIdleMode.BRAKE,
-          1.0);
+          new TalonFX(ALGAE_GRABBER_MOTOR_ID), COUNTER_CLOCKWISE_POSITIVE, BRAKE, 1.0);
   private double motorSpeed = 0;
 
   private boolean hasAlgae;
