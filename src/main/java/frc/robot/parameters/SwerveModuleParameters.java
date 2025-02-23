@@ -19,6 +19,12 @@ import frc.robot.util.MotorDirection;
  * <p>The parameters for the MK4 modules are taken from <a
  * href="https://www.swervedrivespecialties.com/products/mk4-swerve-module">MK4 Swerve Module</a>.
  *
+ * <p>The parameters for the MK4i modules are taken from <a
+ * href="https://www.swervedrivespecialties.com/products/mk4i-swerve-module">MK4i Swerve Module</a>
+ * and <a
+ * href="https://www.swervedrivespecialties.com/collections/mk4i-parts/products/kit-adapter-16t-drive-pinion-gear-mk4i">Kit,
+ * Adapter, 16T Drive Pinion Gear (MK4i)</a>.
+ *
  * <p>The calculations for the theoretical maximum speeds and acceleration are taken from the <a
  * href=
  * "https://www.chiefdelphi.com/uploads/default/original/3X/f/7/f79d24101e6f1487e76099774e4ba60683e86cda.pdf">
@@ -27,29 +33,29 @@ import frc.robot.util.MotorDirection;
  */
 public enum SwerveModuleParameters {
 
-  /** An MK4 Swerve Module in the L1 - Standard configuration. */
-  MK4Standard(WHEEL_DIAMETER, 8.14, 12.8, COUNTER_CLOCKWISE_POSITIVE),
+  /** An MK4 Swerve Module in the L1 configuration. */
+  MK4_L1(WHEEL_DIAMETER, 8.14, 12.8, COUNTER_CLOCKWISE_POSITIVE),
 
-  /** An MK4 Swerve Module in the L2 - Fast configuration. */
-  MK4Fast(WHEEL_DIAMETER, 6.75, 12.8, COUNTER_CLOCKWISE_POSITIVE),
+  /** An MK4 Swerve Module in the L2 configuration. */
+  MK4_L2(WHEEL_DIAMETER, 6.75, 12.8, COUNTER_CLOCKWISE_POSITIVE),
 
-  /** An MK4 Swerve Module in the L3 - Very Fast configuration. */
-  MK4VeryFast(WHEEL_DIAMETER, 6.12, 12.8, COUNTER_CLOCKWISE_POSITIVE),
+  /** An MK4 Swerve Module in the L3 configuration. */
+  MK4_L3(WHEEL_DIAMETER, 6.12, 12.8, COUNTER_CLOCKWISE_POSITIVE),
 
-  /** An MK4 Swerve Module in the L4 - Too Fast configuration. */
-  MK4TooFast(WHEEL_DIAMETER, 5.14, 12.8, COUNTER_CLOCKWISE_POSITIVE),
+  /** An MK4 Swerve Module in the L4 configuration. */
+  MK4_L4(WHEEL_DIAMETER, 5.14, 12.8, COUNTER_CLOCKWISE_POSITIVE),
 
-  /** An MK4I Swerve Module in the L1 - Standard configuration. */
-  MK4IStandard(WHEEL_DIAMETER, 8.14, 150.0 / 7.0, CLOCKWISE_POSITIVE),
+  /** An MK4I Swerve Module in the L1 configuration. */
+  MK4I_L1(WHEEL_DIAMETER, 8.14, 150.0 / 7.0, CLOCKWISE_POSITIVE),
 
-  /** An MK4I Swerve Module in the L2 - Fast configuration. */
-  MK4IFast(WHEEL_DIAMETER, 6.75, 150.0 / 7.0, CLOCKWISE_POSITIVE),
+  /** An MK4I Swerve Module in the L2 configuration. */
+  MK4I_L2(WHEEL_DIAMETER, 6.75, 150.0 / 7.0, CLOCKWISE_POSITIVE),
 
-  /** An MK4I Swerve Module in the L2+ - Faster configuration. */
-  MK4IFaster(WHEEL_DIAMETER, 5.9, 150.0 / 7.0, CLOCKWISE_POSITIVE),
+  /** An MK4I Swerve Module in the L2+ configuration. */
+  MK4I_L2_PLUS(WHEEL_DIAMETER, 5.9, 150.0 / 7.0, CLOCKWISE_POSITIVE),
 
-  /** An MK4I Swerve Module in the L3 - Very Fast configuration. */
-  MK4IVeryFast(WHEEL_DIAMETER, 6.12, 150.0 / 7.0, CLOCKWISE_POSITIVE);
+  /** An MK4I Swerve Module in the L3 configuration. */
+  MK4I_L3(WHEEL_DIAMETER, 6.12, 150.0 / 7.0, CLOCKWISE_POSITIVE);
 
   /** */
   private final double wheelDiameter;
