@@ -31,7 +31,8 @@ public enum CoralArmParameters implements ArmParameters {
       true, // The absolute encoder is inverted.
       Math.toRadians(10.55),
       Math.toRadians(10),
-      Math.toRadians(95)),
+      Math.toRadians(95),
+      0),
   CompetitionBase2025(
       MotorParameters.KrakenX60,
       1.25,
@@ -44,7 +45,8 @@ public enum CoralArmParameters implements ArmParameters {
       true, // The absolute encoder is inverted.
       Math.toRadians(34.4),
       Math.toRadians(10),
-      Math.toRadians(95));
+      Math.toRadians(95),
+      0.1);
 
   private final MotorParameters motorParameters;
   private final double gearRatio;
@@ -63,6 +65,8 @@ public enum CoralArmParameters implements ArmParameters {
   private double kV;
   private double kA;
   private double kG;
+  
+  private double rollerDelay;
 
   /**
    * Constructs a new ArmParameters.
@@ -93,7 +97,8 @@ public enum CoralArmParameters implements ArmParameters {
       boolean absoluteEncoderInverted,
       double absoluteEncoderZeroOffset,
       double minAngleRad,
-      double maxAngleRad) {
+      double maxAngleRad, 
+      double rollerDelay) {
     this.gearRatio = gearRatio;
     this.motorParameters = motorParameters;
     this.mass = mass;
@@ -106,6 +111,7 @@ public enum CoralArmParameters implements ArmParameters {
     this.absoluteEncoderZeroOffset = absoluteEncoderZeroOffset;
     this.minAngleRad = minAngleRad;
     this.maxAngleRad = maxAngleRad;
+    this.rollerDelay = rollerDelay;
     kV = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularSpeed();
     kA = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAcceleration();
     kG = kA * 9.81;
