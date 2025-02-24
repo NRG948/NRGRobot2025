@@ -7,7 +7,8 @@
  
 package frc.robot.parameters;
 
-import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CORAL_ARM_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.COMPETITION_CORAL_ARM_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.PRACTICE_CORAL_ARM_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_ARM_ABSOLUTE_ENCODER;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
 
@@ -25,7 +26,7 @@ public enum CoralArmParameters implements ArmParameters {
       0.315,
       1,
       0.0656,
-      CORAL_ARM_MOTOR_ID,
+      PRACTICE_CORAL_ARM_MOTOR_ID,
       CORAL_ARM_ABSOLUTE_ENCODER,
       true, // The absolute encoder is inverted.
       Math.toRadians(10.55),
@@ -34,14 +35,14 @@ public enum CoralArmParameters implements ArmParameters {
   CompetitionBase2025(
       MotorParameters.KrakenX60,
       1.25,
-      3.0 * 9.0 * 54.0 / 36.0,
+      9.0 * 54.0 / 36.0,
       0.315,
       1,
       0.0656,
-      CORAL_ARM_MOTOR_ID,
+      COMPETITION_CORAL_ARM_MOTOR_ID,
       CORAL_ARM_ABSOLUTE_ENCODER,
       true, // The absolute encoder is inverted.
-      Math.toRadians(0),
+      Math.toRadians(34.4),
       Math.toRadians(10),
       Math.toRadians(95));
 
