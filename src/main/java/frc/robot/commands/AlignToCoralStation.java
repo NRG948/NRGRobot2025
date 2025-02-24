@@ -31,7 +31,7 @@ public class AlignToCoralStation extends AlignToPose {
     double xOffset = ODOMETRY_CENTER_TO_REAR_BUMPER_DELTA_X;
     double yOffset = 0;
 
-    targetPose = nearestTagPose.plus(new Transform2d(xOffset, yOffset, Rotation2d.k180deg));
+    targetPose = nearestTagPose.plus(new Transform2d(xOffset, yOffset, Rotation2d.kZero));
 
     // Set up the PID controllers to drive to the target pose.
     super.initialize();

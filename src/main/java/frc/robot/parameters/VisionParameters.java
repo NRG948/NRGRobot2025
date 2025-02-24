@@ -32,7 +32,7 @@ public enum VisionParameters {
       Optional.of(
           new Transform3d(
               new Translation3d(Units.inchesToMeters(-13), -0.255, -0.8175), // y & z in meters
-              new Rotation3d(0, 0, Math.toRadians(180)))));
+              new Rotation3d(0, -Math.toRadians(15), Math.toRadians(180)))));
 
   private final Optional<Transform3d> frontCamera;
   private final Optional<Transform3d> backCamera;
