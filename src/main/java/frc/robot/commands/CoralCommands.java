@@ -12,11 +12,12 @@ import static frc.robot.parameters.ElevatorLevel.L4;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.parameters.ElevatorLevel;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Subsystems;
 
 /** A namespace for coral command factory methods. */
 public final class CoralCommands {
-  private static final double CORAL_DETECTION_DELAY = 0.08;
+  private static final double CORAL_DETECTION_DELAY = Arm.CORAL_ARM.getValue().getRollerDelay();
 
   /** Returns a command that intakes coral. */
   public static Command intakeCoral(Subsystems subsystems) {

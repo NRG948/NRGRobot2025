@@ -32,7 +32,7 @@ public enum CoralArmParameters implements ArmParameters {
       Math.toRadians(10.55),
       Math.toRadians(10),
       Math.toRadians(95),
-      0),
+      0.08),
   CompetitionBase2025(
       MotorParameters.KrakenX60,
       1.25,
@@ -65,7 +65,7 @@ public enum CoralArmParameters implements ArmParameters {
   private double kV;
   private double kA;
   private double kG;
-  
+
   private double rollerDelay;
 
   /**
@@ -97,7 +97,7 @@ public enum CoralArmParameters implements ArmParameters {
       boolean absoluteEncoderInverted,
       double absoluteEncoderZeroOffset,
       double minAngleRad,
-      double maxAngleRad, 
+      double maxAngleRad,
       double rollerDelay) {
     this.gearRatio = gearRatio;
     this.motorParameters = motorParameters;
@@ -233,5 +233,9 @@ public enum CoralArmParameters implements ArmParameters {
   /** Returns a {@link ProfiledPIDController} object for use with the arm. */
   public ProfiledPIDController getProfiledPIDController() {
     return new ProfiledPIDController(1.0, 0, 0, getConstraints());
+  }
+
+  public double getRollerDelay() {
+    return rollerDelay;
   }
 }
