@@ -10,6 +10,7 @@ package frc.robot.parameters;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.util.MotorDirection;
 
 public interface ArmParameters {
 
@@ -29,6 +30,9 @@ public interface ArmParameters {
 
   /** Returns the robot motor parameters. */
   public MotorParameters getMotorParameters();
+
+  /** Returns the direction the motor rotates when a positive voltage is applied. */
+  public MotorDirection getMotorDirection();
 
   /** Returns the robot mass. */
   public double getMass();

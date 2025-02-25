@@ -7,7 +7,7 @@
  
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CLIMBER_MAIN_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CLIMBER_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.DigitalIO.CLIMBER_ABSOLUTE_ENCODER;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 import static frc.robot.util.MotorIdleMode.BRAKE;
@@ -74,7 +74,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   private TalonFXAdapter mainMotor =
       new TalonFXAdapter(
-          new TalonFX(CLIMBER_MAIN_MOTOR_ID, "rio"),
+          new TalonFX(CLIMBER_MOTOR_ID, "rio"),
           COUNTER_CLOCKWISE_POSITIVE,
           BRAKE,
           1); // filler value; motor encoder value is not used.

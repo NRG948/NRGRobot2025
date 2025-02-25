@@ -72,10 +72,9 @@ public final class Constants {
         public static final int PRACTICE_CORAL_ARM_MOTOR_ID = 6;
         public static final int COMPETITION_CORAL_ARM_MOTOR_ID = 4;
         public static final int CORAL_ROLLER_MOTOR_ID = 5; // For both bots
-        public static final int ALGAE_ARM_MOTOR_ID = 3;
-        public static final int ALGAE_GRABBER_MOTOR_ID = 11;
-        public static final int CLIMBER_MAIN_MOTOR_ID = 4; // bottom
-        public static final int CLIMBER_FOLLOWER_MOTOR_ID = 12; // top
+        public static final int ALGAE_ARM_MOTOR_ID = 12;
+        public static final int ALGAE_GRABBER_MOTOR_ID = 3;
+        public static final int CLIMBER_MOTOR_ID = 4;
       }
     }
 

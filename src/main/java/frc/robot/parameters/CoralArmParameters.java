@@ -11,10 +11,12 @@ import static frc.robot.Constants.RobotConstants.CAN.TalonFX.COMPETITION_CORAL_A
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.PRACTICE_CORAL_ARM_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_ARM_ABSOLUTE_ENCODER;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
+import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.util.MotorDirection;
 
 /** A class to hold the feedforward constants calculated from maximum velocity and acceleration. */
 public enum CoralArmParameters implements ArmParameters {
@@ -145,6 +147,11 @@ public enum CoralArmParameters implements ArmParameters {
   /** Returns the robot motor parameters. */
   public MotorParameters getMotorParameters() {
     return motorParameters;
+  }
+
+  /** Returns the direction the motor rotates when a positive voltage is applied. */
+  public MotorDirection getMotorDirection() {
+    return COUNTER_CLOCKWISE_POSITIVE;
   }
 
   /** Returns the robot mass. */

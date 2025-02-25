@@ -16,7 +16,6 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
@@ -111,7 +110,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
     MotorOutputConfigs motorOutputConfigs = talonFXConfigs.MotorOutput;
     motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-    motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    motorOutputConfigs.Inverted = parameters.getMotorDirection().forTalonFX();
     FeedbackConfigs feedbackConfigs = talonFXConfigs.Feedback;
     feedbackConfigs.SensorToMechanismRatio = parameters.getGearRatio();
     // set slot 0 gains

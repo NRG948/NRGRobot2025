@@ -10,36 +10,38 @@ package frc.robot.parameters;
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.ALGAE_ARM_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.DigitalIO.ALGAE_ARM_ABSOLUTE_ENCODER;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
+import static frc.robot.util.MotorDirection.CLOCKWISE_POSITIVE;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.util.MotorDirection;
 
 /** A class to hold the feedforward constants calculated from maximum velocity and acceleration. */
 public enum AlgaeArmParameters implements ArmParameters {
   // TODO: Update algae arm + coral arm enum values
   PracticeBase2025(
       MotorParameters.KrakenX60,
+      2.086,
+      4.0,
+      Units.inchesToMeters(8),
       1,
-      1.0,
-      Units.inchesToMeters(20),
-      1,
-      1,
+      0.0656,
       ALGAE_ARM_MOTOR_ID,
       ALGAE_ARM_ABSOLUTE_ENCODER,
-      false, // TODO: determine inversion
-      Math.toRadians(0), // TODO: get real encoder offset
+      true,
+      Math.toRadians(120),
       Math.toRadians(45),
       Math.toRadians(90)),
 
   CompetitionBase2025(
       MotorParameters.KrakenX60,
       1,
-      1.0,
+      4.0,
       Units.inchesToMeters(20),
       1,
-      1,
+      0.0656,
       ALGAE_ARM_MOTOR_ID,
       ALGAE_ARM_ABSOLUTE_ENCODER,
       false, // TODO: determine inversion
@@ -140,6 +142,11 @@ public enum AlgaeArmParameters implements ArmParameters {
   /** Returns the robot motor parameters. */
   public MotorParameters getMotorParameters() {
     return motorParameters;
+  }
+
+  /** Returns the direction the motor rotates when a positive voltage is applied. */
+  public MotorDirection getMotorDirection() {
+    return CLOCKWISE_POSITIVE;
   }
 
   /** Returns the robot mass. */
