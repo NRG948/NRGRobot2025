@@ -31,7 +31,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeCommands;
-import frc.robot.commands.AlignToCoralStation;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.CoralCommands;
 import frc.robot.commands.CoralRollerWithController;
@@ -125,7 +124,7 @@ public class RobotContainer {
     m_driverController.x().whileTrue(DriveCommands.alignToReefPosition(subsystems, LEFT_BRANCH));
     m_driverController.y().whileTrue(DriveCommands.alignToReefPosition(subsystems, CENTER_REEF));
     m_driverController.b().whileTrue(DriveCommands.alignToReefPosition(subsystems, RIGHT_BRANCH));
-    m_driverController.a().whileTrue(new AlignToCoralStation(subsystems));
+    m_driverController.a().whileTrue(DriveCommands.alignToCoralStation(subsystems));
     new Trigger(
             () -> {
               XboxController hid = m_driverController.getHID();

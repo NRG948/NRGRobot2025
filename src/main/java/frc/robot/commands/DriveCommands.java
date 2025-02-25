@@ -12,6 +12,7 @@ import static frc.robot.Constants.RobotConstants.CORAL_OFFSET_Y;
 import static frc.robot.Constants.RobotConstants.ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X;
 import static frc.robot.Constants.VisionConstants.BRANCH_TO_REEF_APRILTAG;
 import static frc.robot.commands.AlignToReef.ReefPosition.RIGHT_BRANCH;
+import static frc.robot.parameters.Colors.PINK;
 import static frc.robot.parameters.Colors.WHITE;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -48,9 +49,25 @@ public final class DriveCommands {
    * @return A command that aligns the robot to the specified reef position.
    */
   public static Command alignToReefPosition(Subsystems subsystems, ReefPosition reefPosition) {
-    return Commands.sequence(
-            new AlignToReef(subsystems, reefPosition), new BlinkColor(subsystems.statusLEDs, WHITE))
+    return Commands.parallel(
+            new BlinkColor(subsystems.statusLEDs, PINK).asProxy(),
+            Commands.sequence(
+                new AlignToReef(subsystems, reefPosition), //
+                new BlinkColor(subsystems.statusLEDs, WHITE)))
         .withName(String.format("AlignToReef(%s)", reefPosition.name()));
+  }
+
+  /**
+   * Returns a command that aligns the robot to the coral station while intaking.
+   *
+   * @param subsystems The subsystems container.
+   * @return A command that aligns the robot to the coral station while intaking.
+   */
+  public static Command alignToCoralStation(Subsystems subsystems) {
+    return Commands.parallel(
+            new AlignToCoralStation(subsystems), //
+            CoralCommands.intakeUntilCoralDetected(subsystems))
+        .withName("AlignToCoralStationWithIntake");
   }
 
   /**

@@ -7,6 +7,7 @@
  
 package frc.robot.commands;
 
+import static frc.robot.parameters.Colors.YELLOW;
 import static frc.robot.parameters.ElevatorLevel.L4;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,11 +34,13 @@ public final class CoralCommands {
 
   /** Returns a command that intakes coral until it is detected. */
   public static Command intakeUntilCoralDetected(Subsystems subsystems) {
-    return Commands.sequence(
-            intakeCoral(subsystems),
-            Commands.idle(subsystems.coralRoller).until(subsystems.coralRoller::hasCoral),
-            Commands.waitSeconds(CORAL_DETECTION_DELAY),
-            Commands.runOnce(subsystems.coralRoller::disable, subsystems.coralRoller))
+    return Commands.parallel(
+            new BlinkColor(subsystems.statusLEDs, YELLOW).asProxy(),
+            Commands.sequence(
+                intakeCoral(subsystems),
+                Commands.idle(subsystems.coralRoller).until(subsystems.coralRoller::hasCoral),
+                Commands.waitSeconds(CORAL_DETECTION_DELAY),
+                Commands.runOnce(subsystems.coralRoller::disable, subsystems.coralRoller)))
         .finallyDo(subsystems.coralRoller::disable)
         .unless(subsystems.coralRoller::hasCoral)
         .withName("IntakeUntilCoralDetected");
