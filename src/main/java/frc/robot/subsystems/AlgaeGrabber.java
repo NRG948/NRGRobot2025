@@ -12,33 +12,45 @@ import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 import static frc.robot.util.MotorIdleMode.BRAKE;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.TalonFXAdapter;
 
-public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem {
+public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
 
   private final TalonFXAdapter motor =
       new TalonFXAdapter(
           new TalonFX(ALGAE_GRABBER_MOTOR_ID), COUNTER_CLOCKWISE_POSITIVE, BRAKE, 1.0);
   private double motorSpeed = 0;
-
+  private boolean enabled;
   private boolean hasAlgae;
 
   /** Creates a new AlgaeGrabber. */
   public AlgaeGrabber() {}
 
+  private void setMotorSpeed(double speed) {
+    enabled = true;
+    motorSpeed = speed;
+  }
+
   public void intake() {
-    motorSpeed = 0.8; // TODO: test & determine safe maximum speed
+    // TODO: test & determine safe maximum speed
+    setMotorSpeed(0.8);
   }
 
   public void hold() {
-    motorSpeed =
-        0.2; // TODO: test & determine motor power needed to hang on to game piece while moving
+    // TODO: test & determine motor power needed to hang on to game piece while moving
+    setMotorSpeed(0.2);
   }
 
   public void outtake() {
-    motorSpeed = -0.8;
+    setMotorSpeed(-0.8);
   }
 
   public boolean hasAlgae() {
@@ -47,6 +59,7 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem {
 
   @Override
   public void disable() {
+    enabled = false;
     motor.stopMotor();
   }
 
@@ -57,6 +70,27 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem {
 
   @Override
   public void periodic() {
-    motor.set(motorSpeed);
+    if (enabled) {
+      motor.set(motorSpeed);
+    }
+  }
+
+  public void addShuffleboardTab() {
+    // if (!ENABLE_TAB.getValue()) {
+    //   return;
+    // }
+
+    ShuffleboardTab rollerTab = Shuffleboard.getTab("Algae Grabber");
+
+    ShuffleboardLayout statusLayout =
+        rollerTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
+    statusLayout.addBoolean("Enabled", () -> enabled);
+
+    ShuffleboardLayout controlLayout =
+        rollerTab.getLayout("Control", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
+    GenericEntry speed = controlLayout.add("Speed", 0).getEntry();
+    controlLayout.add(
+        Commands.runOnce(() -> setMotorSpeed(speed.getDouble(0)), this).withName("Set Speed"));
+    controlLayout.add(Commands.runOnce(this::disable, this).withName("Disable"));
   }
 }
