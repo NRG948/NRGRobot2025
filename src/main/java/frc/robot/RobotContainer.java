@@ -49,7 +49,7 @@ import frc.robot.util.MotorIdleMode;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-@RobotPreferencesLayout(groupName = "Preferences", column = 0, row = 0, width = 1, height = 1)
+@RobotPreferencesLayout(groupName = "Preferences", column = 0, row = 1, width = 1, height = 1)
 public class RobotContainer {
   private static final int COAST_MODE_DELAY = 10;
   // The robot's subsystems and commands are defined here...
