@@ -24,21 +24,21 @@ public enum AlgaeArmParameters implements ArmParameters {
   PracticeBase2025(
       MotorParameters.KrakenX60,
       2.086,
-      4.0,
+      9.0,
       Units.inchesToMeters(8),
       1,
       0.0656,
       ALGAE_ARM_MOTOR_ID,
       ALGAE_ARM_ABSOLUTE_ENCODER,
       true,
-      Math.toRadians(120),
-      Math.toRadians(45),
+      Math.toRadians(-120),
+      Math.toRadians(15),
       Math.toRadians(90)),
 
   CompetitionBase2025(
       MotorParameters.KrakenX60,
-      1,
-      4.0,
+      2.086,
+      9.0,
       Units.inchesToMeters(20),
       1,
       0.0656,
@@ -46,7 +46,7 @@ public enum AlgaeArmParameters implements ArmParameters {
       ALGAE_ARM_ABSOLUTE_ENCODER,
       false, // TODO: determine inversion
       Math.toRadians(0), // TODO: get real encoder offset
-      Math.toRadians(45),
+      Math.toRadians(15),
       Math.toRadians(90));
 
   private final MotorParameters motorParameters;
