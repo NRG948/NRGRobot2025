@@ -19,7 +19,7 @@ import frc.robot.util.SparkAdapter;
 import frc.robot.util.TalonFXAdapter;
 import org.ejml.simple.UnsupportedOperation;
 
-/** A enum representing the properties on a specific motor type. */
+/** A enum representing the properties of a specific motor type. */
 public enum MotorParameters {
   /**
    * A VEX PRO <a href="https://www.vexrobotics.com/217-6515.html">Falcon 500</a> motor with
@@ -64,13 +64,16 @@ public enum MotorParameters {
   /**
    * Constructs an instance of this enum.
    *
-   * @param freeSpeedRPM The free speed RPM.
-   * @param stallTorque The stall torque in Nm.
-   * @param pulsesPerRevolution The number of pulses per revolution of the motor reported by the
-   *     integrated encoder.
+   * @param motor The motor properties.
    */
   MotorParameters(DCMotor motor) {
     this.motor = motor;
+  }
+/**
+ * @return the Dcmotor .
+ */
+  public DCMotor getDCMotor() {
+    return motor;
   }
 
   /**
@@ -79,12 +82,7 @@ public enum MotorParameters {
    * @return The free speed RPM.
    */
   public double getFreeSpeedRPM() {
-    // return this.freeSpeedRPM;
     return this.motor.freeSpeedRadPerSec / (2 * Math.PI) * 60;
-  }
-
-  public DCMotor getDCMotor() {
-    return motor;
   }
 
   /**
