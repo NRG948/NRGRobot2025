@@ -150,8 +150,12 @@ public enum SwerveDriveParameters {
    *     steering, back right drive and steering.
    * @param angleEncoderIds An array containing the CAN IDs of the swerve module angle encoders in
    *     the order front left, front right, back left, back right.
+   * @param angleOffset An array containing the zero point offsets for the swerve module angle
+   *     encoders in the order front left, front right, back left, back right.
    * @param driveFeedforward The drive feedforward constants.
    * @param steeringFeedforward The steering feedforward constants.
+   * @param usesPigeon Whether the robot uses a Pigeon 2 or NavX MXP for its gyro.
+   * @param pigeonID The CAN ID for the Pigeon 2 gyro if present.
    */
   private SwerveDriveParameters(
       double robotMass,
@@ -250,8 +254,12 @@ public enum SwerveDriveParameters {
    *     steering, back right drive and steering.
    * @param angleEncoderIds An array containing the CAN IDs of the swerve module angle encoders in
    *     the order front left, front right, back left, back right.
+   * @param angleOffset An array containing the zero point offsets for the swerve module angle
+   *     encoders in the order front left, front right, back left, back right.
    * @param driveFeedforward The drive feedforward constants.
-   * @param steeringFeedforward The steering feedforward constants.
+   * @param steeringKs The steering Ks feedforward constant.
+   * @param usesPigeon Whether the robot uses a Pigeon 2 or NavX MXP for its gyro.
+   * @param pigeonID The CAN ID for the Pigeon 2 gyro if present.
    */
   private SwerveDriveParameters(
       double robotMass,
@@ -320,8 +328,12 @@ public enum SwerveDriveParameters {
    *     steering, back right drive and steering.
    * @param angleEncoderIds An array containing the CAN IDs of the swerve module angle encoders in
    *     the order front left, front right, back left, back right.
+   * @param angleOffset An array containing the zero point offsets for the swerve module angle
+   *     encoders in the order front left, front right, back left, back right.
    * @param driveKs The drive kS constant.
    * @param steeringKs The steering kS constant.
+   * @param usesPigeon Whether the robot uses a Pigeon 2 or NavX MXP for its gyro.
+   * @param pigeonID The CAN ID for the Pigeon 2 gyro if present.
    */
   private SwerveDriveParameters(
       double robotMass,
