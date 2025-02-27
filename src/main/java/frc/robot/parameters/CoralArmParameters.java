@@ -20,7 +20,6 @@ import frc.robot.util.MotorDirection;
 
 /** A class to hold the feedforward constants calculated from maximum velocity and acceleration. */
 public enum CoralArmParameters implements ArmParameters {
-  // TODO: Update algae arm + coral arm enum values
   PracticeBase2025(
       MotorParameters.KrakenX60,
       1.25,

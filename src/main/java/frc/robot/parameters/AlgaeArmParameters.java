@@ -20,7 +20,6 @@ import frc.robot.util.MotorDirection;
 
 /** A class to hold the feedforward constants calculated from maximum velocity and acceleration. */
 public enum AlgaeArmParameters implements ArmParameters {
-  // TODO: Update algae arm + coral arm enum values
   PracticeBase2025(
       MotorParameters.KrakenX60,
       2.086,
@@ -39,13 +38,13 @@ public enum AlgaeArmParameters implements ArmParameters {
       MotorParameters.KrakenX60,
       2.086,
       9.0,
-      Units.inchesToMeters(20),
+      Units.inchesToMeters(8),
       1,
       0.0656,
       ALGAE_ARM_MOTOR_ID,
       ALGAE_ARM_ABSOLUTE_ENCODER,
-      false, // TODO: determine inversion
-      Math.toRadians(0), // TODO: get real encoder offset
+      true,
+      Math.toRadians(-120),
       Math.toRadians(15),
       Math.toRadians(90));
 

@@ -13,11 +13,12 @@ import frc.robot.subsystems.Subsystems;
 
 /** A namespace for climber command factory methods. */
 public final class ClimberCommands {
+  private static final double CLIMB_ANGLE = Math.toRadians(92);
+
   /** Returns a command that climbs. */
   public static Command climb(Subsystems subsystems) {
     return Commands.parallel(
-            Commands.runOnce(
-                () -> subsystems.climber.setGoalAngle(0.0)), // TODO: set goal angle for climber
+            Commands.runOnce(() -> subsystems.climber.setGoalAngle(CLIMB_ANGLE)),
             new RainbowCycle(subsystems.statusLEDs))
         .withName("Climb");
   }

@@ -28,12 +28,10 @@ public final class Constants {
         Units.inchesToMeters(4.0); // WARNING: need to be 3.625 for crescendo bot!
 
     /** The length of the robot including bumpers. */
-    // TODO: GET REAL VALUE
     public static final double ROBOT_LENGTH = 0.928;
 
     /** The width of the robot including bumpers. */
-    // TODO: GET REAL VALUE
-    public static final double ROBOT_WIDTH = 0.9;
+    public static final double ROBOT_WIDTH = 0.928;
 
     /**
      * The x distance from the odometry center (center of the wheels) to the edge of the front
@@ -53,7 +51,7 @@ public final class Constants {
     /**
      * The y-offset (in the width direction) of the coral end effector from the center of the robot
      */
-    public static final double CORAL_OFFSET_Y = Units.inchesToMeters(10.25); // TODO: GET REAL VALUE
+    public static final double CORAL_OFFSET_Y = Units.inchesToMeters(10.25);
 
     public static class PWMPort {
       public static final int LED = 1;

@@ -10,14 +10,12 @@ package frc.robot.parameters;
 import frc.robot.subsystems.Elevator;
 
 public enum ElevatorLevel {
-  // TODO: Determine correct values for height, arm angles, and arm offsets for coral placement.
   STOWED(Elevator.STOWED_HEIGHT_FOR_PID, Math.toRadians(90), 0),
-  L1(0.15, Math.toRadians(36), .2), // Assumes we shoot the coral in-line with the L1 shelf
+  L1(0.15, Math.toRadians(36), .2),
   L2(0.33, Math.toRadians(60), .2),
   L3(0.74, Math.toRadians(60), .2),
   L4(1.32, Math.toRadians(50), .2),
 
-  // TODO: Determine correct values for height, arm angles, and arm offsets for algae removal.
   AlgaeL2(0.25, Math.toRadians(40), .2),
   AlgaeL3(0.65, Math.toRadians(40), .2);
 

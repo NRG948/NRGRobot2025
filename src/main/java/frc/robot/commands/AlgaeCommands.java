@@ -14,6 +14,8 @@ import frc.robot.subsystems.Subsystems;
 
 /** A namespace for algae command factory methods. */
 public final class AlgaeCommands {
+  private static final double STOWED_ANGLE = Math.toRadians(90.0);
+
   /** Returns a command to intake algae. */
   public static Command intakeAlgae(Subsystems subsystems) {
     return Commands.runOnce(() -> subsystems.algaeGrabber.intake(), subsystems.algaeGrabber)
@@ -49,8 +51,7 @@ public final class AlgaeCommands {
     return Commands.parallel(
             Commands.runOnce(() -> subsystems.algaeGrabber.disable(), subsystems.algaeGrabber),
             Commands.runOnce(
-                () -> subsystems.algaeArm.setGoalAngle(0.0), // TODO: determine stowed angle
-                subsystems.algaeArm))
+                () -> subsystems.algaeArm.setGoalAngle(STOWED_ANGLE), subsystems.algaeArm))
         .withName("StopAndStowIntake");
   }
 }

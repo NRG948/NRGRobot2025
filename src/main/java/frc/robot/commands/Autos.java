@@ -85,10 +85,8 @@ public final class Autos {
   private static Map<String, Command> getPathplannerEventMap(
       Subsystems subsystems, String pathGroupName) {
 
-    Map<String, Command> eventMaps =
-        new HashMap<String, Command>(); // TODO: Replace placeholder parameters
+    Map<String, Command> eventMaps = new HashMap<String, Command>();
 
-    // TODO: Replace placeholder commands and parameters
     eventMaps.put(
         "Remove Algae L2", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.AlgaeL2));
     eventMaps.put(

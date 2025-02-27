@@ -57,13 +57,13 @@ public enum SwerveDriveParameters {
       NeoV1_1,
       new int[] {17, 19, 18, 20, 1, 2, 9, 10}, // drive, steer motor controller CAN IDs
       new int[] {33, 34, 31, 32}, // CANCoder CAN IDs
-      new double[] {136.14, 169.98, 166.82, 184.31},
+      new double[] {136.14, 169.98, 166.82, 184.31}, // CANCoder offsets
       0.0656,
       0.2057,
       true,
       21),
   CompetitionBase2025(
-      41.0, // TODO Correct robot mass
+      41.0, // TODO: Correct robot mass
       0.602,
       0.602,
       MK4I_L2_PLUS,
@@ -71,7 +71,7 @@ public enum SwerveDriveParameters {
       NeoV1_1,
       new int[] {15, 14, 13, 6, 2, 1, 8, 7}, // drive, steer motor controller CAN IDs
       new int[] {31, 32, 33, 34}, // CANCoder CAN IDs
-      new double[] {159.79, 109.25, 170.95, 4.66},
+      new double[] {159.79, 109.25, 170.95, 4.66}, // CANCoder offsets
       0.0656,
       0.2057,
       true,
@@ -139,7 +139,7 @@ public enum SwerveDriveParameters {
    * </code>
    * </pre>
    *
-   * @param robotMass The mass of the robot in Kg.
+   * @param robotMass The mass of the robot in Kg including bumpers and battery.
    * @param wheelDistanceX The distance between the wheels along the X axis in meters.
    * @param wheelDistanceY The distance between the wheels along the Y axis in meters.
    * @param swerveModule The swerve module used by the robot.
@@ -239,7 +239,7 @@ public enum SwerveDriveParameters {
    * </code>
    * </pre>
    *
-   * @param robotMass The mass of the robot in Kg.
+   * @param robotMass The mass of the robot in Kg including bumpers and battery.
    * @param wheelDistanceX The distance between the wheels along the X axis in meters.
    * @param wheelDistanceY The distance between the wheels along the Y axis in meters.
    * @param swerveModule The swerve module used by the robot.
