@@ -70,7 +70,7 @@ public enum MotorParameters {
     this.motor = motor;
   }
 /**
- * @return the Dcmotor .
+ * @return the DCMotor.
  */
   public DCMotor getDCMotor() {
     return motor;
