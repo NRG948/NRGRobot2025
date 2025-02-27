@@ -11,7 +11,7 @@ import static frc.robot.commands.AlgaeCommands.removeAlgaeAtLevel;
 import static frc.robot.commands.AlignToReef.ReefPosition.CENTER_REEF;
 import static frc.robot.commands.AlignToReef.ReefPosition.LEFT_BRANCH;
 import static frc.robot.commands.AlignToReef.ReefPosition.RIGHT_BRANCH;
-import static frc.robot.commands.CoralAndElevatorCommands.raiseElevatorAndCoralArm;
+import static frc.robot.commands.CoralAndElevatorCommands.raiseElevatorAndTipCoralArm;
 import static frc.robot.commands.CoralCommands.outtakeUntilCoralNotDetected;
 import static frc.robot.parameters.ElevatorLevel.AlgaeL2;
 import static frc.robot.parameters.ElevatorLevel.AlgaeL3;
@@ -132,10 +132,10 @@ public class RobotContainer {
             })
         .whileTrue(ClimberCommands.climb(subsystems));
 
-    m_manipulatorController.a().onTrue(raiseElevatorAndCoralArm(subsystems, L1));
-    m_manipulatorController.x().onTrue(raiseElevatorAndCoralArm(subsystems, L2));
-    m_manipulatorController.b().onTrue(raiseElevatorAndCoralArm(subsystems, L3));
-    m_manipulatorController.y().onTrue(raiseElevatorAndCoralArm(subsystems, L4));
+    m_manipulatorController.a().onTrue(raiseElevatorAndTipCoralArm(subsystems, L1));
+    m_manipulatorController.x().onTrue(raiseElevatorAndTipCoralArm(subsystems, L2));
+    m_manipulatorController.b().onTrue(raiseElevatorAndTipCoralArm(subsystems, L3));
+    m_manipulatorController.y().onTrue(raiseElevatorAndTipCoralArm(subsystems, L4));
 
     m_manipulatorController.rightBumper().whileTrue(AlgaeCommands.intakeAlgae(subsystems));
     m_manipulatorController.rightBumper().onFalse(AlgaeCommands.stopAndStowIntake(subsystems));
