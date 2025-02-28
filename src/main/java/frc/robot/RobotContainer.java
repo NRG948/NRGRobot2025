@@ -22,6 +22,7 @@ import static frc.robot.parameters.ElevatorLevel.L4;
 
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
+import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -43,6 +44,8 @@ import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.FlameCycle;
 import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
+import frc.robot.subsystems.AprilTag;
+import frc.robot.subsystems.AprilTag.VisionParameters;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.util.MotorIdleMode;
 
@@ -55,6 +58,7 @@ import frc.robot.util.MotorIdleMode;
 @RobotPreferencesLayout(groupName = "Preferences", column = 0, row = 1, width = 1, height = 1)
 public class RobotContainer {
   private static final int COAST_MODE_DELAY = 10;
+
   private static final DataLog LOG = DataLogManager.getLog();
 
   // The robot's subsystems and commands are defined here...
@@ -69,6 +73,46 @@ public class RobotContainer {
 
   private final Timer coastModeTimer = new Timer();
   private final StringLogEntry phaseLogger = new StringLogEntry(LOG, "/Robot/Phase");
+
+  public enum RobotSelector {
+    PracticeRobot2025(AprilTag.VISION_PARAMS),
+    CompetitionRobot2025(AprilTag.VISION_PARAMS);
+
+    private final VisionParameters visionParams;
+
+    private RobotSelector(VisionParameters visionParams) {
+      this.visionParams = visionParams;
+    }
+
+    public VisionParameters visionParameters() {
+      return visionParams;
+    }
+  }
+
+  @RobotPreferencesValue
+  public static RobotPreferences.EnumValue<RobotSelector> PARAMETERS =
+      new RobotPreferences.EnumValue<RobotSelector>(
+          "Robot", "Robot Type", RobotSelector.CompetitionRobot2025);
+
+  public enum RobotSelector {
+    PracticeRobot2025(AprilTag.VISION_PARAMS),
+    CompetitionRobot2025(AprilTag.VISION_PARAMS);
+
+    private final VisionParameters visionParams;
+
+    private RobotSelector(VisionParameters visionParams) {
+      this.visionParams = visionParams;
+    }
+
+    public VisionParameters visionParameters() {
+      return visionParams;
+    }
+  }
+
+  @RobotPreferencesValue
+  public static RobotPreferences.EnumValue<RobotSelector> PARAMETERS =
+      new RobotPreferences.EnumValue<RobotSelector>(
+          "Robot", "Robot Type", RobotSelector.CompetitionRobot2025);
 
   /** The container for the robot. Contains subsystems, OI devices, and command bindings. */
   public RobotContainer() {
