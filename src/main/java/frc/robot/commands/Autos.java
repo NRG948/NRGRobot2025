@@ -20,13 +20,14 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
-import frc.robot.subsystems.Swerve;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.javatuples.LabelValue;
@@ -66,11 +67,11 @@ public final class Autos {
    * @return The PathPlanner auto command.
    */
   public static Command getPathPlannerAuto(Subsystems subsystems, String name) {
-    Swerve driveTrain = subsystems.drivetrain;
-
     NamedCommands.registerCommands(getPathplannerEventMap(subsystems, name));
 
-    return Commands.defer(() -> newPathPlannerAuto(name), Set.of(driveTrain)).withName(name);
+    Set<Subsystem> requirements = new HashSet<>(Arrays.asList(subsystems.getManipulators()));
+    requirements.add(subsystems.drivetrain);
+    return Commands.defer(() -> newPathPlannerAuto(name), requirements).withName(name);
   }
 
   /**
