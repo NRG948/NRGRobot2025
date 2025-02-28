@@ -11,7 +11,7 @@ import static frc.robot.commands.AlgaeCommands.removeAlgaeAtLevel;
 import static frc.robot.commands.AlignToReef.ReefPosition.CENTER_REEF;
 import static frc.robot.commands.AlignToReef.ReefPosition.LEFT_BRANCH;
 import static frc.robot.commands.AlignToReef.ReefPosition.RIGHT_BRANCH;
-import static frc.robot.commands.CoralAndElevatorCommands.raiseElevatorAndCoralArm;
+import static frc.robot.commands.CoralAndElevatorCommands.raiseElevatorAndTipCoralArm;
 import static frc.robot.commands.CoralCommands.outtakeUntilCoralNotDetected;
 import static frc.robot.parameters.ElevatorLevel.AlgaeL2;
 import static frc.robot.parameters.ElevatorLevel.AlgaeL3;
@@ -23,6 +23,9 @@ import static frc.robot.parameters.ElevatorLevel.L4;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -56,6 +59,8 @@ import frc.robot.util.MotorIdleMode;
 public class RobotContainer {
   private static final int COAST_MODE_DELAY = 10;
 
+  private static final DataLog LOG = DataLogManager.getLog();
+
   // The robot's subsystems and commands are defined here...
   private final Subsystems subsystems = new Subsystems();
   private final RobotAutonomous autonomous = new RobotAutonomous(subsystems, null);
@@ -67,6 +72,27 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.MANIPULATOR_CONTROLLER_PORT);
 
   private final Timer coastModeTimer = new Timer();
+  private final StringLogEntry phaseLogger = new StringLogEntry(LOG, "/Robot/Phase");
+
+  public enum RobotSelector {
+    PracticeRobot2025(AprilTag.VISION_PARAMS),
+    CompetitionRobot2025(AprilTag.VISION_PARAMS);
+
+    private final VisionParameters visionParams;
+
+    private RobotSelector(VisionParameters visionParams) {
+      this.visionParams = visionParams;
+    }
+
+    public VisionParameters visionParameters() {
+      return visionParams;
+    }
+  }
+
+  @RobotPreferencesValue
+  public static RobotPreferences.EnumValue<RobotSelector> PARAMETERS =
+      new RobotPreferences.EnumValue<RobotSelector>(
+          "Robot", "Robot Type", RobotSelector.CompetitionRobot2025);
 
   public enum RobotSelector {
     PracticeRobot2025(AprilTag.VISION_PARAMS),
@@ -105,6 +131,7 @@ public class RobotContainer {
   }
 
   public void disabledInit() {
+    phaseLogger.append("Disabled");
     subsystems.disableAll();
     coastModeTimer.restart();
   }
@@ -118,10 +145,12 @@ public class RobotContainer {
   }
 
   public void autonomousInit() {
+    phaseLogger.append("Autonomous");
     subsystems.setIdleMode(MotorIdleMode.BRAKE);
   }
 
   public void teleopInit() {
+    phaseLogger.append("Teleop");
     subsystems.setIdleMode(MotorIdleMode.BRAKE);
   }
 
@@ -156,10 +185,10 @@ public class RobotContainer {
             })
         .whileTrue(ClimberCommands.climb(subsystems));
 
-    m_manipulatorController.a().onTrue(raiseElevatorAndCoralArm(subsystems, L1));
-    m_manipulatorController.x().onTrue(raiseElevatorAndCoralArm(subsystems, L2));
-    m_manipulatorController.b().onTrue(raiseElevatorAndCoralArm(subsystems, L3));
-    m_manipulatorController.y().onTrue(raiseElevatorAndCoralArm(subsystems, L4));
+    m_manipulatorController.a().onTrue(raiseElevatorAndTipCoralArm(subsystems, L1));
+    m_manipulatorController.x().onTrue(raiseElevatorAndTipCoralArm(subsystems, L2));
+    m_manipulatorController.b().onTrue(raiseElevatorAndTipCoralArm(subsystems, L3));
+    m_manipulatorController.y().onTrue(raiseElevatorAndTipCoralArm(subsystems, L4));
 
     m_manipulatorController.rightBumper().whileTrue(AlgaeCommands.intakeAlgae(subsystems));
     m_manipulatorController.rightBumper().onFalse(AlgaeCommands.stopAndStowIntake(subsystems));

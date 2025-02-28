@@ -13,8 +13,8 @@ import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
 
 public final class CoralAndElevatorCommands {
-  /** Raises elevator and coral arm based on pivot height. */
-  public static Command raiseElevatorAndCoralArm(Subsystems subsystems, ElevatorLevel level) {
+  /** Raises elevator and sets the coral arm angle when the elevator reaches the pivot height. */
+  public static Command raiseElevatorAndTipCoralArm(Subsystems subsystems, ElevatorLevel level) {
     return Commands.parallel(
             ElevatorCommands.goToElevatorLevel(subsystems, level),
             Commands.sequence(

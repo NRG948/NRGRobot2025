@@ -7,6 +7,12 @@
  
 package frc.robot.commands;
 
+import static frc.robot.commands.AlgaeCommands.removeAlgaeAtLevel;
+import static frc.robot.commands.CoralAndElevatorCommands.raiseElevatorAndTipCoralArm;
+import static frc.robot.commands.CoralCommands.intakeUntilCoralDetected;
+import static frc.robot.commands.CoralCommands.outtakeUntilCoralNotDetected;
+import static frc.robot.commands.ElevatorCommands.stowElevator;
+
 import com.nrg948.autonomous.AutonomousCommandGenerator;
 import com.nrg948.autonomous.AutonomousCommandMethod;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -14,13 +20,14 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Subsystems;
-import frc.robot.subsystems.Swerve;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.javatuples.LabelValue;
@@ -60,11 +67,11 @@ public final class Autos {
    * @return The PathPlanner auto command.
    */
   public static Command getPathPlannerAuto(Subsystems subsystems, String name) {
-    Swerve driveTrain = subsystems.drivetrain;
-
     NamedCommands.registerCommands(getPathplannerEventMap(subsystems, name));
 
-    return Commands.defer(() -> newPathPlannerAuto(name), Set.of(driveTrain)).withName(name);
+    Set<Subsystem> requirements = new HashSet<>(Arrays.asList(subsystems.getManipulators()));
+    requirements.add(subsystems.drivetrain);
+    return Commands.defer(() -> newPathPlannerAuto(name), requirements).withName(name);
   }
 
   /**
@@ -87,19 +94,17 @@ public final class Autos {
 
     Map<String, Command> eventMaps = new HashMap<String, Command>();
 
-    eventMaps.put(
-        "Remove Algae L2", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.AlgaeL2));
-    eventMaps.put(
-        "Remove Algae L3", AlgaeCommands.removeAlgaeAtLevel(subsystems, ElevatorLevel.AlgaeL3));
+    eventMaps.put("Remove Algae L2", removeAlgaeAtLevel(subsystems, ElevatorLevel.AlgaeL2));
+    eventMaps.put("Remove Algae L3", removeAlgaeAtLevel(subsystems, ElevatorLevel.AlgaeL3));
 
-    eventMaps.put("Coral Intake", CoralCommands.intakeUntilCoralDetected(subsystems));
-    eventMaps.put("Coral Outtake", CoralCommands.outtakeUntilCoralNotDetected(subsystems));
+    eventMaps.put("Coral Intake", intakeUntilCoralDetected(subsystems));
+    eventMaps.put("Coral Outtake", outtakeUntilCoralNotDetected(subsystems));
 
-    eventMaps.put("Elevator L1", ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L1));
-    eventMaps.put("Elevator L2", ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L2));
-    eventMaps.put("Elevator L3", ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L3));
-    eventMaps.put("Elevator L4", ElevatorCommands.goToElevatorLevel(subsystems, ElevatorLevel.L4));
-    eventMaps.put("Elevator Dock", ElevatorCommands.stowElevator(subsystems));
+    eventMaps.put("Elevator L1", raiseElevatorAndTipCoralArm(subsystems, ElevatorLevel.L1));
+    eventMaps.put("Elevator L2", raiseElevatorAndTipCoralArm(subsystems, ElevatorLevel.L2));
+    eventMaps.put("Elevator L3", raiseElevatorAndTipCoralArm(subsystems, ElevatorLevel.L3));
+    eventMaps.put("Elevator L4", raiseElevatorAndTipCoralArm(subsystems, ElevatorLevel.L4));
+    eventMaps.put("Elevator Dock", stowElevator(subsystems));
 
     return eventMaps;
   }
