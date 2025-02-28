@@ -7,6 +7,8 @@
  
 package frc.robot.subsystems;
 
+import static java.lang.Math.toRadians;
+
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
@@ -17,7 +19,9 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
@@ -33,7 +37,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.parameters.VisionParameters;
 import frc.robot.util.FieldUtils;
 import java.util.List;
 import java.util.Map;
@@ -64,10 +67,25 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
       new EstimatedRobotPose(new Pose3d(), 0, List.of(), PoseStrategy.LOWEST_AMBIGUITY);
   private static final double LAST_RESULT_TIMEOUT = 0.1;
 
-  @RobotPreferencesValue
-  public static RobotPreferences.EnumValue<VisionParameters> PARAMETERS =
-      new RobotPreferences.EnumValue<VisionParameters>(
-          "AprilTag", "Robot Vision", VisionParameters.PracticeBase2025);
+  public static final Transform3d ROBOT_TO_FRONT_CAMERA =
+      new Transform3d(new Translation3d(0.28, -0.26, 0.321), Rotation3d.kZero);
+
+  public static final Transform3d ROBOT_TO_BACK_CAMERA =
+      new Transform3d(
+          new Translation3d(-0.33, -0.255, -0.8175),
+          new Rotation3d(0, toRadians(-15), toRadians(180)));
+
+  /**
+   * The robot's vision parameters.
+   *
+   * @param robotToFrontCamera transform from the robot's odometry center to the front camera.
+   * @param robotToBackCamera transform from the robot's odometry center to the back camera.
+   */
+  public record VisionParameters(
+      Optional<Transform3d> robotToFrontCamera, Optional<Transform3d> robotToBackCamera) {}
+
+  public static final VisionParameters VISION_PARAMS =
+      new VisionParameters(Optional.of(ROBOT_TO_FRONT_CAMERA), Optional.of(ROBOT_TO_BACK_CAMERA));
 
   @RobotPreferencesValue(column = 0, row = 0)
   public static final RobotPreferences.BooleanValue ENABLED =

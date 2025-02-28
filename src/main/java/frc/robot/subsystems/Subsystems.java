@@ -12,6 +12,7 @@ import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.RobotContainer;
 import frc.robot.util.MotorIdleMode;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -54,20 +55,20 @@ public class Subsystems {
     // Add all non-manipulator subsystems to the `all` list.
     var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, statusLEDs, climber));
 
+    var visionParams = RobotContainer.PARAMETERS.getValue().visionParameters();
+
     // Add optional subsystems to the appropriate list.
     frontCamera =
-        AprilTag.PARAMETERS
-            .getValue()
-            .getRobotToFrontCamera()
+        visionParams
+            .robotToFrontCamera()
             .flatMap(
                 (t) -> newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "FrontCamera", t));
 
     frontCamera.ifPresent((s) -> all.add(s));
 
     backCamera =
-        AprilTag.PARAMETERS
-            .getValue()
-            .getRobotToBackCamera()
+        visionParams
+            .robotToBackCamera()
             .flatMap(
                 (t) -> newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "BackCamera", t));
 
