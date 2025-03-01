@@ -59,8 +59,9 @@ public final class DriveCommands {
     return Commands.parallel(
             new BlinkColor(statusLEDs, PINK).asProxy(),
             Commands.sequence(
-                new AlignToReef(subsystems, reefPosition), //
-                new BlinkColor(statusLEDs, WHITE).asProxy()))
+                // new AlignToReef(subsystems, reefPosition), //
+                new ReefLateralAlignment(subsystems, reefPosition),
+                new BlinkColor(subsystems.statusLEDs, WHITE).asProxy()))
         .withName(String.format("AlignToReef(%s)", reefPosition.name()));
   }
 
