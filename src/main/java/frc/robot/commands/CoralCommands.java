@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.CoralRoller;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.StatusLED;
 import frc.robot.subsystems.Subsystems;
 
 /** A namespace for coral command factory methods. */
@@ -22,40 +25,48 @@ public final class CoralCommands {
 
   /** Returns a command that intakes coral. */
   public static Command intakeCoral(Subsystems subsystems) {
-    return Commands.runOnce(() -> subsystems.coralRoller.intake(), subsystems.coralRoller)
-        .withName("IntakeCoral");
+    CoralRoller coralRoller = subsystems.coralRoller;
+
+    return Commands.runOnce(() -> coralRoller.intake(), coralRoller).withName("IntakeCoral");
   }
 
   /** Returns a command that outtakes coral. */
   public static Command outtakeCoral(Subsystems subsystems) {
-    return Commands.runOnce(() -> subsystems.coralRoller.outtake(), subsystems.coralRoller)
-        .withName("OuttakeCoral");
+    CoralRoller coralRoller = subsystems.coralRoller;
+
+    return Commands.runOnce(() -> coralRoller.outtake(), coralRoller).withName("OuttakeCoral");
   }
 
   /** Returns a command that intakes coral until it is detected. */
   public static Command intakeUntilCoralDetected(Subsystems subsystems) {
+    CoralRoller coralRoller = subsystems.coralRoller;
+    StatusLED statusLEDs = subsystems.statusLEDs;
+
     return Commands.parallel(
-            new BlinkColor(subsystems.statusLEDs, YELLOW).asProxy(),
+            new BlinkColor(statusLEDs, YELLOW).asProxy(),
             Commands.sequence(
                 intakeCoral(subsystems),
-                Commands.idle(subsystems.coralRoller).until(subsystems.coralRoller::hasCoral),
+                Commands.idle(coralRoller).until(coralRoller::hasCoral),
                 Commands.waitSeconds(CORAL_DETECTION_DELAY),
-                Commands.runOnce(subsystems.coralRoller::disable, subsystems.coralRoller)))
-        .finallyDo(subsystems.coralRoller::disable)
-        .unless(subsystems.coralRoller::hasCoral)
+                Commands.runOnce(coralRoller::disable, coralRoller)))
+        .finallyDo(coralRoller::disable)
+        .unless(coralRoller::hasCoral)
         .withName("IntakeUntilCoralDetected");
   }
 
   /** Returns a command that outtakes coral until it is not detected. */
   public static Command outtakeUntilCoralNotDetected(Subsystems subsystems) {
+    CoralRoller coralRoller = subsystems.coralRoller;
+    Elevator elevator = subsystems.elevator;
+
     return Commands.sequence(
             outtakeCoral(subsystems),
             Commands.either(
                 Commands.sequence(Commands.waitSeconds(0.5), stowArm(subsystems)),
                 Commands.none(),
-                () -> subsystems.elevator.isSeekingLevel(L4)),
-            Commands.idle(subsystems.coralRoller).until(() -> !subsystems.coralRoller.hasCoral()),
-            Commands.runOnce(subsystems.coralRoller::disable, subsystems.coralRoller))
+                () -> elevator.isSeekingLevel(L4)),
+            Commands.idle(coralRoller).until(() -> !coralRoller.hasCoral()),
+            Commands.runOnce(coralRoller::disable, coralRoller))
         .withName("OuttakeUntilCoralNotDetected");
   }
 
@@ -67,32 +78,39 @@ public final class CoralCommands {
    * @return
    */
   public static Command setArmAngleForReefLevel(Subsystems subsystems, ElevatorLevel level) {
-    return Commands.runOnce(
-            () -> subsystems.coralArm.setGoalAngle(level.getArmAngle()), subsystems.coralArm)
+    Arm coralArm = subsystems.coralArm;
+
+    return Commands.runOnce(() -> coralArm.setGoalAngle(level.getArmAngle()), coralArm)
         .withName(String.format("SetArmAngleForReefLevel(%s)", level.name()));
   }
 
   /** Returns a command that waits for coral arm to reach goal angle. */
   public static Command waitForArmToReachGoalAngle(Subsystems subsystems) {
-    return Commands.idle(subsystems.coralArm)
-        .until(subsystems.coralArm::atGoalAngle)
+    Arm coralArm = subsystems.coralArm;
+
+    return Commands.idle(coralArm)
+        .until(coralArm::atGoalAngle)
         .withName("WaitForArmToReachGoalAngle");
   }
 
   /** Returns a command to stow the coral arm. */
   public static Command stowArm(Subsystems subsystems) {
+    Arm coralArm = subsystems.coralArm;
+
     return Commands.sequence(
             Commands.runOnce(
-                () -> subsystems.coralArm.setGoalAngle(ElevatorLevel.STOWED.getArmAngle()),
-                subsystems.coralArm),
+                () -> coralArm.setGoalAngle(ElevatorLevel.STOWED.getArmAngle()), coralArm),
             waitForArmToReachGoalAngle(subsystems),
-            Commands.runOnce(() -> subsystems.coralArm.disable(), subsystems.coralArm))
+            Commands.runOnce(() -> coralArm.disable(), coralArm))
         .withName("StowArm");
   }
 
   public static Command waitForElevatorToReachArmHeight(Subsystems subsystems) {
-    return Commands.idle(subsystems.coralArm)
-        .until(subsystems.elevator::isAboveSafeArmPivotHeight)
+    Arm coralArm = subsystems.coralArm;
+    Elevator elevator = subsystems.elevator;
+
+    return Commands.idle(coralArm)
+        .until(elevator::isAboveSafeArmPivotHeight)
         .withName("waitForElevatorToReachArmHeight");
   }
 }

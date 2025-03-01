@@ -13,6 +13,8 @@ import static frc.robot.parameters.Colors.RED;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.parameters.Colors;
+import frc.robot.subsystems.AlgaeGrabber;
+import frc.robot.subsystems.CoralRoller;
 import frc.robot.subsystems.StatusLED;
 import frc.robot.subsystems.Subsystems;
 
@@ -41,10 +43,13 @@ public final class LEDCommands {
    * @return A command that blinks the status LEDs.
    */
   public static Command indicateCoralAcquired(Subsystems subsystem) {
+    StatusLED statusLEDs = subsystem.statusLEDs;
+    CoralRoller coralRoller = subsystem.coralRoller;
+
     return Commands.sequence(
-            new BlinkColor(subsystem.statusLEDs, GREEN).withTimeout(BLINK_DURATION),
-            setColor(subsystem.statusLEDs, GREEN),
-            Commands.idle(subsystem.statusLEDs).until(() -> !subsystem.coralRoller.hasCoral()))
+            new BlinkColor(statusLEDs, GREEN).withTimeout(BLINK_DURATION),
+            setColor(statusLEDs, GREEN),
+            Commands.idle(statusLEDs).until(() -> !coralRoller.hasCoral()))
         .withName("IndicateCoralAcquired");
   }
 
@@ -57,10 +62,13 @@ public final class LEDCommands {
    * @return A command that blinks the status LEDs.
    */
   public static Command indicateAlgaeAcquired(Subsystems subsystem) {
+    StatusLED statusLEDs = subsystem.statusLEDs;
+    AlgaeGrabber algaeGrabber = subsystem.algaeGrabber;
+
     return Commands.sequence(
-            new BlinkColor(subsystem.statusLEDs, GREEN).withTimeout(BLINK_DURATION),
-            setColor(subsystem.statusLEDs, GREEN),
-            Commands.idle(subsystem.statusLEDs).until(() -> !subsystem.algaeGrabber.hasAlgae()))
+            new BlinkColor(statusLEDs, GREEN).withTimeout(BLINK_DURATION),
+            setColor(statusLEDs, GREEN),
+            Commands.idle(statusLEDs).until(() -> !algaeGrabber.hasAlgae()))
         .withName("IndicateAlgaeAcquired");
   }
 
@@ -82,8 +90,11 @@ public final class LEDCommands {
    * @return A command that turns the status LEDs red.
    */
   public static Command indicateErrorWithSolid(Subsystems subsystem) {
+    StatusLED statusLEDs = subsystem.statusLEDs;
+
     return Commands.sequence(
-            setColor(subsystem.statusLEDs, RED), Commands.idle(subsystem.statusLEDs))
+            setColor(statusLEDs, RED), //
+            Commands.idle(statusLEDs))
         .withName("IndicateErrorWithSolid");
   }
 }

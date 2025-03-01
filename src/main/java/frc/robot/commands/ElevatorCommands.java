@@ -10,6 +10,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.parameters.ElevatorLevel;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.CoralRoller;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Subsystems;
 
@@ -17,7 +19,9 @@ import frc.robot.subsystems.Subsystems;
 public final class ElevatorCommands {
   /** Returns a command that goes to the given elevator level. */
   public static Command goToElevatorLevel(Subsystems subsystems, ElevatorLevel level) {
-    return Commands.runOnce(() -> subsystems.elevator.setGoalHeight(level), subsystems.elevator)
+    Elevator elevator = subsystems.elevator;
+
+    return Commands.runOnce(() -> elevator.setGoalHeight(level), elevator)
         .withName(String.format("GoToElevatorLevel(%s)", level.name()));
   }
 
@@ -54,9 +58,12 @@ public final class ElevatorCommands {
   }
 
   public static Command stowElevatorAndArmForCoral(Subsystems subsystems) {
+    Elevator elevator = subsystems.elevator;
+    Arm coralArm = subsystems.coralArm;
+    CoralRoller coralRoller = subsystems.coralRoller;
+
     return Commands.sequence(
-            Commands.idle(subsystems.elevator, subsystems.coralArm)
-                .until(() -> !subsystems.coralRoller.hasCoral()),
+            Commands.idle(elevator, coralArm).until(() -> !coralRoller.hasCoral()),
             stowElevatorAndArm(subsystems))
         .withName("StowElevatorAndArmForCoral");
   }

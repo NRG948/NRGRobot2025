@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.AlignToReef.ReefPosition;
 import frc.robot.parameters.SwerveDriveParameters;
+import frc.robot.subsystems.StatusLED;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.FieldUtils;
@@ -37,10 +38,11 @@ public final class DriveCommands {
    * @return
    */
   public static Command resetOrientation(Subsystems subsystems) {
+    Swerve drivetrain = subsystems.drivetrain;
+
     return Commands.runOnce(
-            () ->
-                subsystems.drivetrain.resetOrientation(
-                    FieldUtils.isRedAlliance() ? k180deg : kZero))
+            () -> drivetrain.resetOrientation(FieldUtils.isRedAlliance() ? k180deg : kZero),
+            drivetrain)
         .withName("ResetOrientation");
   }
 
@@ -52,11 +54,13 @@ public final class DriveCommands {
    * @return A command that aligns the robot to the specified reef position.
    */
   public static Command alignToReefPosition(Subsystems subsystems, ReefPosition reefPosition) {
+    StatusLED statusLEDs = subsystems.statusLEDs;
+
     return Commands.parallel(
-            new BlinkColor(subsystems.statusLEDs, PINK).asProxy(),
+            new BlinkColor(statusLEDs, PINK).asProxy(),
             Commands.sequence(
                 new AlignToReef(subsystems, reefPosition), //
-                new BlinkColor(subsystems.statusLEDs, WHITE)))
+                new BlinkColor(statusLEDs, WHITE)))
         .withName(String.format("AlignToReef(%s)", reefPosition.name()));
   }
 

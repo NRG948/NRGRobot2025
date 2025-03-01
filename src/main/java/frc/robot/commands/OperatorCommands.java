@@ -26,6 +26,7 @@ public final class OperatorCommands {
   public static Command rumbleController(
       CommandXboxController controller, RumbleType rumbleType, double duration) {
     XboxController hid = controller.getHID();
+
     return Commands.sequence(
         Commands.runOnce(() -> hid.setRumble(rumbleType, 1.0)),
         Commands.waitSeconds(duration),
