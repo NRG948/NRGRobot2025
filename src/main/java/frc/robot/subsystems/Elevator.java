@@ -75,7 +75,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   private static final double MAX_HEIGHT = PARAMETERS.getValue().getMaxHeight(); // meters
   private static final double MIN_HEIGHT = PARAMETERS.getValue().getMinHeight(); // meters
-  private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.15;
+  private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.01;
   public static final double STOWED_HEIGHT_FOR_PID = (MIN_HEIGHT + DISABLE_HEIGHT) / 2;
 
   // Trapezoid profile values
@@ -115,7 +115,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private final TalonFXAdapter mainMotor =
       new TalonFXAdapter(
           new TalonFX(PARAMETERS.getValue().getMotorID(), "rio"),
-          MotorDirection.COUNTER_CLOCKWISE_POSITIVE,
+          MotorDirection.CLOCKWISE_POSITIVE,
           MotorIdleMode.BRAKE,
           METERS_PER_REVOLUTION);
 
