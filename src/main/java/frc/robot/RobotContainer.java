@@ -21,6 +21,7 @@ import static frc.robot.parameters.ElevatorLevel.L3;
 import static frc.robot.parameters.ElevatorLevel.L4;
 
 import com.nrg948.preferences.RobotPreferences;
+import com.nrg948.preferences.RobotPreferences.EnumValue;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.util.datalog.DataLog;
@@ -55,7 +56,7 @@ import frc.robot.util.MotorIdleMode;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-@RobotPreferencesLayout(groupName = "Preferences", column = 0, row = 1, width = 1, height = 1)
+@RobotPreferencesLayout(groupName = "Preferences", column = 0, row = 0, width = 1, height = 2)
 public class RobotContainer {
   private static final int COAST_MODE_DELAY = 10;
 
@@ -90,29 +91,8 @@ public class RobotContainer {
   }
 
   @RobotPreferencesValue
-  public static RobotPreferences.EnumValue<RobotSelector> PARAMETERS =
-      new RobotPreferences.EnumValue<RobotSelector>(
-          "Robot", "Robot Type", RobotSelector.CompetitionRobot2025);
-
-  public enum RobotSelector {
-    PracticeRobot2025(AprilTag.VISION_PARAMS),
-    CompetitionRobot2025(AprilTag.VISION_PARAMS);
-
-    private final VisionParameters visionParams;
-
-    private RobotSelector(VisionParameters visionParams) {
-      this.visionParams = visionParams;
-    }
-
-    public VisionParameters visionParameters() {
-      return visionParams;
-    }
-  }
-
-  @RobotPreferencesValue
-  public static RobotPreferences.EnumValue<RobotSelector> PARAMETERS =
-      new RobotPreferences.EnumValue<RobotSelector>(
-          "Robot", "Robot Type", RobotSelector.CompetitionRobot2025);
+  public static EnumValue<RobotSelector> PARAMETERS =
+      new EnumValue<RobotSelector>("Preferences", "Robot Type", RobotSelector.CompetitionRobot2025);
 
   /** The container for the robot. Contains subsystems, OI devices, and command bindings. */
   public RobotContainer() {
