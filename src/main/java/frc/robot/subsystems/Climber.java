@@ -7,7 +7,8 @@
  
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CLIMBER_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.COMPETITION_BOT_CLIMBER_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.PRACTICE_BOT_CLIMBER_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.DigitalIO.CLIMBER_ABSOLUTE_ENCODER;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 import static frc.robot.util.MotorIdleMode.BRAKE;
@@ -29,8 +30,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.util.AbsoluteAngleEncoder;
 import frc.robot.util.MotorIdleMode;
+import frc.robot.util.RelativeEncoder;
 import frc.robot.util.RevThroughboreEncoderAdapter;
 import frc.robot.util.TalonFXAdapter;
 
@@ -48,7 +51,23 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   @SuppressWarnings("unused")
   private final double GEAR_RATIO = 5.0 * 5.0 * 66.0 / 18.0;
 
-  private final double ABSOLUTE_ENCODER_ZERO_OFFSET = Math.toRadians(173.1);
+  /**
+   * The robot's climber parameters.
+   *
+   * @param motorID The CAN ID of the climber motor.
+   * @param encoderZeroOffset The zero point of the encoder in radians with range -π to π radians.
+   *     <p>To get this value, set it to zero initially and read the value from the encoder. Pass
+   *     the observed value here.
+   */
+  public record ClimberParameters(int motorID, double encoderZeroOffset) {}
+  ;
+
+  public static final ClimberParameters PRACTICE_BOT_PARAMETERS =
+      new ClimberParameters(PRACTICE_BOT_CLIMBER_MOTOR_ID, Math.toRadians(173.1));
+  public static final ClimberParameters COMPETITION_BOT_PARAMETERS =
+      new ClimberParameters(COMPETITION_BOT_CLIMBER_MOTOR_ID, Math.toRadians(0));
+  public static final ClimberParameters PARAMETERS =
+      RobotContainer.PARAMETERS.getValue().climberParameters();
 
   @RobotPreferencesValue
   public static DoubleValue CLIMB_MAX_POWER = new DoubleValue("Climber", "Max Power", 0.4);
@@ -70,11 +89,11 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   private final AbsoluteAngleEncoder absoluteEncoder =
       new RevThroughboreEncoderAdapter(
-          CLIMBER_ABSOLUTE_ENCODER, true, ABSOLUTE_ENCODER_ZERO_OFFSET);
+          CLIMBER_ABSOLUTE_ENCODER, true, PARAMETERS.encoderZeroOffset);
 
   private TalonFXAdapter mainMotor =
       new TalonFXAdapter(
-          new TalonFX(CLIMBER_MOTOR_ID, "rio"),
+          new TalonFX(PARAMETERS.motorID, "rio"),
           COUNTER_CLOCKWISE_POSITIVE,
           BRAKE,
           1); // filler value; motor encoder value is not used.
@@ -89,6 +108,8 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   private DoubleLogEntry logMotorTorqueCurent =
       new DoubleLogEntry(LOG, "Climber/Motor Torque Current");
   private DoubleLogEntry logMotorAngularVelocity = new DoubleLogEntry(LOG, "Climber/Motor Rot/s");
+
+  private RelativeEncoder encoder = mainMotor.getEncoder();
 
   /** Creates a new Climber subsystem. */
   public Climber() {}
@@ -139,7 +160,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
     currentAngle = absoluteEncoder.getAngle(); // in rad
 
     logCurrentAbsoluteAngle.append(currentAngle);
-    logMotorAngularVelocity.append(mainMotor.getEncoder().getVelocity()); // we set meter/rot = 1
+    logMotorAngularVelocity.append(encoder.getVelocity()); // we set meter/rot = 1
     logMotorStatorCurent.append(mainMotor.getStatorCurrent());
     logMotorTorqueCurent.append(mainMotor.getTorqueCurrent());
   }

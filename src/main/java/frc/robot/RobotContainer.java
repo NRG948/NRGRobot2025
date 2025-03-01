@@ -47,6 +47,8 @@ import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.subsystems.AprilTag;
 import frc.robot.subsystems.AprilTag.VisionParameters;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber.ClimberParameters;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.util.MotorIdleMode;
 
@@ -76,17 +78,23 @@ public class RobotContainer {
   private final StringLogEntry phaseLogger = new StringLogEntry(LOG, "/Robot/Phase");
 
   public enum RobotSelector {
-    PracticeRobot2025(AprilTag.VISION_PARAMS),
-    CompetitionRobot2025(AprilTag.VISION_PARAMS);
+    PracticeRobot2025(AprilTag.VISION_PARAMS, Climber.PRACTICE_BOT_PARAMETERS),
+    CompetitionRobot2025(AprilTag.VISION_PARAMS, Climber.COMPETITION_BOT_PARAMETERS);
 
     private final VisionParameters visionParams;
+    private final ClimberParameters climberParams;
 
-    private RobotSelector(VisionParameters visionParams) {
+    private RobotSelector(VisionParameters visionParams, ClimberParameters climberParams) {
       this.visionParams = visionParams;
+      this.climberParams = climberParams;
     }
 
     public VisionParameters visionParameters() {
       return visionParams;
+    }
+
+    public ClimberParameters climberParameters() {
+      return climberParams;
     }
   }
 
