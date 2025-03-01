@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.Autos;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.FieldUtils;
@@ -32,7 +33,7 @@ import java.util.function.DoubleSupplier;
 public class RobotAutonomous {
   private final SendableChooser<Command> chooser;
 
-  private RobotConfig config = Swerve.PARAMETERS.getValue().getPathplannerConfig();
+  private final RobotConfig config = Swerve.PARAMETERS.getValue().getPathplannerConfig();
 
   public RobotAutonomous(Subsystems subsystems, DoubleSupplier rotationFeedbackOverride) {
     AutoBuilder.configure(
@@ -49,6 +50,8 @@ public class RobotAutonomous {
     PPHolonomicDriveController.overrideRotationFeedback(rotationFeedbackOverride);
 
     this.chooser = Autonomous.getChooser(subsystems, "frc.robot");
+    chooser.onChange(Autos::preloadAuto);
+    Autos.preloadAuto(chooser.getSelected());
   }
 
   /**
