@@ -27,7 +27,7 @@ public final class FieldUtils {
   private static final int FIRST_RED_CORAL_STATION_APRILTAG_ID = 1;
   private static final int FIRST_BLUE_CORAL_STATION_APRILTAG_ID = 12;
 
-  @RobotPreferencesValue(column = 0, row = 1)
+  @RobotPreferencesValue(column = 1, row = 1)
   public static RobotPreferences.EnumValue<AprilTagFieldParameters> FIELD_LAYOUT_PREFERENCE =
       new RobotPreferences.EnumValue<AprilTagFieldParameters>(
           "AprilTag", "Field Layout", AprilTagFieldParameters.k2025ReefscapeWelded);

@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import static java.lang.Math.toRadians;
 
 import com.nrg948.preferences.RobotPreferences;
+import com.nrg948.preferences.RobotPreferences.EnumValue;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.cscore.HttpCamera;
@@ -53,7 +54,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
     column = 1,
     row = 2,
     width = 3,
-    height = 1,
+    height = 2,
     type = "Grid Layout",
     gridColumns = 2,
     gridRows = 1)
@@ -95,6 +96,32 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("AprilTag", "Enable Tab", true);
 
+  private enum PoseEstimationStrategy {
+    AverageBestTargets(PoseStrategy.AVERAGE_BEST_TARGETS),
+    ClosestToCameraHeight(PoseStrategy.CLOSEST_TO_CAMERA_HEIGHT),
+    ClosestToLastPose(PoseStrategy.CLOSEST_TO_LAST_POSE),
+    ClosestToReferencePose(PoseStrategy.CLOSEST_TO_REFERENCE_POSE),
+    ConstrainedSolvePnp(PoseStrategy.CONSTRAINED_SOLVEPNP),
+    LowestAmbiguity(PoseStrategy.LOWEST_AMBIGUITY),
+    MultiTagPnpOnCoprocessor(PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR),
+    PnpDistanceTrigSolve(PoseStrategy.PNP_DISTANCE_TRIG_SOLVE);
+
+    private final PoseStrategy strategy;
+
+    private PoseEstimationStrategy(PoseStrategy strategy) {
+      this.strategy = strategy;
+    }
+
+    public PoseStrategy getStrategy() {
+      return strategy;
+    }
+  }
+
+  @RobotPreferencesValue(column = 0, row = 1)
+  public static EnumValue<PoseEstimationStrategy> POSE_ESTIMATION_STRATEGY =
+      new EnumValue<PoseEstimationStrategy>(
+          "AprilTag", "Pose Est. Strategy", PoseEstimationStrategy.AverageBestTargets);
+
   private final PhotonCamera camera;
   private final Transform3d cameraToRobot;
   private final Transform3d robotToCamera;
@@ -133,7 +160,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
 
     estimator =
         new PhotonPoseEstimator(
-            FieldUtils.getFieldLayout(), PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCamera);
+            FieldUtils.getFieldLayout(), POSE_ESTIMATION_STRATEGY.getValue().getStrategy(), robotToCamera);
 
     for (int i = 1; i <= 22; i++) {
       aprilTagIdChooser.addOption(String.valueOf(i), i);
@@ -172,6 +199,8 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
    */
   private void updateEstimationStdDevs(
       Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
+    estimator.setPrimaryStrategy(POSE_ESTIMATION_STRATEGY.getValue().getStrategy());
+    
     if (estimatedPose.isEmpty()) {
       // No pose input. Default to single-tag std devs
       curStdDevs = SINGLE_TAG_STD_DEVS;
