@@ -7,7 +7,10 @@
  
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
@@ -15,6 +18,7 @@ import frc.robot.commands.AlignToReef.ReefPosition;
 import frc.robot.subsystems.AprilTag;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
+import frc.robot.util.FieldUtils;
 import java.util.Optional;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -25,9 +29,11 @@ public class ReefLateralAlignment extends Command {
   private Swerve drivetrain;
   private AprilTag vision;
   private int targetID;
-  private ProfiledPIDController controller;
+  private ProfiledPIDController yController;
+  private PIDController rController;
   private ReefPosition reefPosition;
   private TrapezoidProfile.Constraints constraints;
+  private boolean isAligningY = false;
 
   /** Creates a new TagLateralAlignment. */
   public ReefLateralAlignment(Subsystems subsystems, ReefPosition reefPosition) {
@@ -38,6 +44,9 @@ public class ReefLateralAlignment extends Command {
     constraints =
         new TrapezoidProfile.Constraints(
             Swerve.getMaxSpeed() * SCALE_FACTOR, Swerve.getMaxAcceleration() * SCALE_FACTOR);
+
+    yController = new ProfiledPIDController(AlignToPose.Py.getValue(), 0, 0, constraints);
+    rController = new PIDController(AlignToPose.Pr.getValue(), 0, 0);
     addRequirements(drivetrain);
   }
 
@@ -53,31 +62,47 @@ public class ReefLateralAlignment extends Command {
 
       case CENTER_REEF:
         targetY = 0;
+        break;
 
       case RIGHT_BRANCH:
         targetY = VisionConstants.BRANCH_TO_REEF_APRILTAG;
+        break;
 
       default:
         targetY = 0;
         break;
     }
-    controller.setGoal(targetY);
-    controller.setTolerance(VisionConstants.POSE_ALIGNMENT_TOLERANCE_XY);
-    controller.setPID(AlignToPose.Py.getValue(), 0, 0);
-    controller.setConstraints(constraints);
+
+    yController.setGoal(targetY);
+    yController.setTolerance(VisionConstants.POSE_ALIGNMENT_TOLERANCE_XY);
+    yController.setPID(AlignToPose.Py.getValue(), 0, 0);
+
+    Pose2d currentRobotPose = drivetrain.getPosition();
+    Pose2d nearestTagPose = currentRobotPose.nearest(FieldUtils.getReefAprilTags());
+    rController.setSetpoint(nearestTagPose.getRotation().rotateBy(Rotation2d.k180deg).getDegrees());
+    rController.setTolerance(VisionConstants.POSE_ALIGNMENT_TOLERANCE_R);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (rController.atSetpoint()) {
+      isAligningY = true;
+    }
+
     Optional<PhotonTrackedTarget> optionalTarget = vision.getTarget(targetID);
     if (optionalTarget.isEmpty()) {
       // ?
     }
-    PhotonTrackedTarget target = optionalTarget.get();
-    double yDist = target.getBestCameraToTarget().getY();
-    double pidOutput = controller.calculate(yDist);
-    drivetrain.drive(0, pidOutput, 0, false);
+
+    double rOutput = rController.calculate(drivetrain.getPosition().getRotation().getDegrees());
+
+    if (isAligningY) {
+      PhotonTrackedTarget target = optionalTarget.get();
+      double yDist = target.getBestCameraToTarget().getY();
+      double yOutput = yController.calculate(yDist);
+      drivetrain.drive(0, yOutput, rOutput, false);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -87,6 +112,6 @@ public class ReefLateralAlignment extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return controller.atGoal();
+    return yController.atGoal();
   }
 }
