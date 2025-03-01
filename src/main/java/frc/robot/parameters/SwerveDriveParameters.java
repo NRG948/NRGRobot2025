@@ -88,7 +88,7 @@ public enum SwerveDriveParameters {
   private final double robotMass;
   private final double wheelDistanceX;
   private final double wheelDistanceY;
-  private final SwerveModuleParameters swerveModule;
+  private final SwerveModuleParameters moduleParams;
   private final MotorParameters driveMotor;
   private final MotorParameters steeringMotor;
   private final int[] motorIds;
@@ -142,7 +142,7 @@ public enum SwerveDriveParameters {
    * @param robotMass The mass of the robot in Kg including bumpers and battery.
    * @param wheelDistanceX The distance between the wheels along the X axis in meters.
    * @param wheelDistanceY The distance between the wheels along the Y axis in meters.
-   * @param swerveModule The swerve module used by the robot.
+   * @param moduleParams The swerve module used by the robot.
    * @param driveMotor The motor used by swerve module drive on the robot.
    * @param steeringMotor The motor used by the swerve module steering on the robot.
    * @param motorIds An array containing the CAN IDs of the swerve module drive motors in the order
@@ -161,7 +161,7 @@ public enum SwerveDriveParameters {
       double robotMass,
       double wheelDistanceX,
       double wheelDistanceY,
-      SwerveModuleParameters swerveModule,
+      SwerveModuleParameters moduleParams,
       MotorParameters driveMotor,
       MotorParameters steeringMotor,
       int[] motorIds,
@@ -174,7 +174,7 @@ public enum SwerveDriveParameters {
     this.robotMass = robotMass;
     this.wheelDistanceX = wheelDistanceX;
     this.wheelDistanceY = wheelDistanceY;
-    this.swerveModule = swerveModule;
+    this.moduleParams = moduleParams;
     this.driveMotor = driveMotor;
     this.steeringMotor = steeringMotor;
     this.motorIds = motorIds;
@@ -187,16 +187,16 @@ public enum SwerveDriveParameters {
 
     double scaleFactor = Constants.SCALE_FACTOR;
 
-    this.maxDriveSpeed = scaleFactor * this.swerveModule.calculateMaxDriveSpeed(this.driveMotor);
+    this.maxDriveSpeed = scaleFactor * this.moduleParams.calculateMaxDriveSpeed(this.driveMotor);
     this.maxDriveAcceleration =
         scaleFactor
-            * this.swerveModule.calculateMaxDriveAcceleration(this.driveMotor, this.robotMass);
+            * this.moduleParams.calculateMaxDriveAcceleration(this.driveMotor, this.robotMass);
 
     this.maxSteeringSpeed =
-        scaleFactor * this.swerveModule.calculateMaxSteeringSpeed(this.steeringMotor);
+        scaleFactor * this.moduleParams.calculateMaxSteeringSpeed(this.steeringMotor);
     this.maxSteeringAcceleration =
         scaleFactor
-            * this.swerveModule.calculateMaxSteeringAcceleration(
+            * this.moduleParams.calculateMaxSteeringAcceleration(
                 this.steeringMotor, this.robotMass);
 
     final double wheelTrackRadius = Math.hypot(this.wheelDistanceX, this.wheelDistanceY);
@@ -455,7 +455,7 @@ public enum SwerveDriveParameters {
    * @return The wheel diameter in meters.
    */
   public double getWheelDiameter() {
-    return this.swerveModule.getWheelDiameter();
+    return this.moduleParams.getWheelDiameter();
   }
 
   /**
@@ -464,7 +464,7 @@ public enum SwerveDriveParameters {
    * @return The drive gear ratio.
    */
   public double getDriveGearRatio() {
-    return this.swerveModule.getDriveGearRatio();
+    return this.moduleParams.getDriveGearRatio();
   }
 
   /**
@@ -473,7 +473,7 @@ public enum SwerveDriveParameters {
    * @return The steering gear ratio.
    */
   public double getSteeringGearRatio() {
-    return this.swerveModule.getSteeringGearRatio();
+    return this.moduleParams.getSteeringGearRatio();
   }
 
   /**
@@ -481,8 +481,8 @@ public enum SwerveDriveParameters {
    *
    * @return The swerve module used by the robot.
    */
-  public SwerveModuleParameters getSwerveModule() {
-    return this.swerveModule;
+  public SwerveModuleParameters getModuleParameters() {
+    return this.moduleParams;
   }
 
   /**
@@ -711,7 +711,7 @@ public enum SwerveDriveParameters {
    *     rotate the wheel in the counter-clockwise direction.
    */
   public MotorDirection getSteeringDirection() {
-    return swerveModule.getSteeringDirection();
+    return moduleParams.getSteeringDirection();
   }
 
   /** Returns the correct gyro implementation for the robot. */

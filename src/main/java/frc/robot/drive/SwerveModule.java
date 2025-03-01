@@ -51,8 +51,8 @@ public class SwerveModule {
 
   private final MotorController driveMotor;
   private final DoubleSupplier positionSupplier;
-  private final DoubleSupplier velocitySupplier;
   private final MotorController steeringMotor;
+  private final DoubleSupplier velocitySupplier;
   private final Supplier<Rotation2d> wheelAngleSupplier;
   private final DoubleSupplier wheelAngleVelocitySupplier;
   private final String name;
@@ -123,7 +123,7 @@ public class SwerveModule {
     this.positionSupplier = realRobot ? position : () -> this.simPosition;
     this.velocitySupplier = realRobot ? velocity : () -> this.simVelocity;
     this.name = name;
-    this.wheelDiameter = parameters.getSwerveModule().getWheelDiameter();
+    this.wheelDiameter = parameters.getModuleParameters().getWheelDiameter();
 
     this.driveSpeedLog =
         new DoubleLogEntry(LOG, String.format("/SwerveModule/%s/driveSpeed", name));
@@ -161,13 +161,13 @@ public class SwerveModule {
         new FlywheelSim(
             LinearSystemId.identifyVelocitySystem(parameters.getDriveKv(), parameters.getDriveKa()),
             DCMotor.getFalcon500(1),
-            parameters.getSwerveModule().getDriveGearRatio());
+            parameters.getModuleParameters().getDriveGearRatio());
     this.simSteeringMotor =
         new FlywheelSim(
             LinearSystemId.identifyVelocitySystem(
                 parameters.getSteeringKv(), parameters.getSteeringKa()),
             DCMotor.getFalcon500(1),
-            parameters.getSwerveModule().getSteeringGearRatio());
+            parameters.getModuleParameters().getSteeringGearRatio());
   }
 
   /** Initializes the supplied state. */
@@ -268,38 +268,38 @@ public class SwerveModule {
     setMotorVoltages(moduleVoltages.driveVoltage, moduleVoltages.steeringVoltage);
   }
 
-  /**
-   * Returns the current module state describing the wheel velocity and angle.
-   *
-   * @return The current module state.
-   */
-  public SwerveModuleState getState() {
-    return state;
-  }
-
-  /**
-   * Returns the current module velocities.
-   *
-   * @return The current module velocities.
-   */
-  public SwerveModuleVelocities getVelocities() {
-    return velocities;
-  }
-
   /** Stops the drive and steering motors. */
   public void stopMotors() {
     driveMotor.stopMotor();
     steeringMotor.stopMotor();
-  }
+  }  
+
+  /**
+   * Returns the current module state describing the wheel velocity and angle.
+   *
+   * @return The current module state.
+   */ 
+  public SwerveModuleState getState() {
+    return state;
+  }  
 
   /**
    * The position of the wheel on its axis of travel.
    *
    * @return The position of the swerve module.
-   */
+   */ 
   public SwerveModulePosition getPosition() {
     return position;
-  }
+  }  
+
+  /**
+   * Returns the current module velocities.
+   *
+   * @return The current module velocities.
+   */  
+  public SwerveModuleVelocities getVelocities() {
+    return velocities;
+  }    
 
   /**
    * Returns the current wheel orientation.
