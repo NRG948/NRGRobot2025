@@ -160,7 +160,9 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
 
     estimator =
         new PhotonPoseEstimator(
-            FieldUtils.getFieldLayout(), POSE_ESTIMATION_STRATEGY.getValue().getStrategy(), robotToCamera);
+            FieldUtils.getFieldLayout(),
+            POSE_ESTIMATION_STRATEGY.getValue().getStrategy(),
+            robotToCamera);
 
     for (int i = 1; i <= 22; i++) {
       aprilTagIdChooser.addOption(String.valueOf(i), i);

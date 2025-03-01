@@ -272,34 +272,34 @@ public class SwerveModule {
   public void stopMotors() {
     driveMotor.stopMotor();
     steeringMotor.stopMotor();
-  }  
+  }
 
   /**
    * Returns the current module state describing the wheel velocity and angle.
    *
    * @return The current module state.
-   */ 
+   */
   public SwerveModuleState getState() {
     return state;
-  }  
+  }
 
   /**
    * The position of the wheel on its axis of travel.
    *
    * @return The position of the swerve module.
-   */ 
+   */
   public SwerveModulePosition getPosition() {
     return position;
-  }  
+  }
 
   /**
    * Returns the current module velocities.
    *
    * @return The current module velocities.
-   */  
+   */
   public SwerveModuleVelocities getVelocities() {
     return velocities;
-  }    
+  }
 
   /**
    * Returns the current wheel orientation.
