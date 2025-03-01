@@ -120,7 +120,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   @RobotPreferencesValue(column = 0, row = 1)
   public static EnumValue<PoseEstimationStrategy> POSE_ESTIMATION_STRATEGY =
       new EnumValue<PoseEstimationStrategy>(
-          "AprilTag", "Pose Est. Strategy", PoseEstimationStrategy.AverageBestTargets);
+          "AprilTag", "Pose Est. Strategy", PoseEstimationStrategy.MultiTagPnpOnCoprocessor);
 
   private final PhotonCamera camera;
   private final Transform3d cameraToRobot;
@@ -200,7 +200,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   private void updateEstimationStdDevs(
       Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
     estimator.setPrimaryStrategy(POSE_ESTIMATION_STRATEGY.getValue().getStrategy());
-    
+
     if (estimatedPose.isEmpty()) {
       // No pose input. Default to single-tag std devs
       curStdDevs = SINGLE_TAG_STD_DEVS;
