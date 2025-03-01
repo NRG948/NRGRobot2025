@@ -49,7 +49,7 @@ import frc.robot.util.TalonFXAdapter;
     width = 4,
     height = 1,
     type = "Grid Layout",
-    gridColumns = 3,
+    gridColumns = 4,
     gridRows = 1)
 public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   private static final double ERROR_MARGIN = Math.toRadians(2);
@@ -68,6 +68,10 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   public static final RobotPreferences.EnumValue<AlgaeArmParameters> ALGAE_ARM =
       new RobotPreferences.EnumValue<AlgaeArmParameters>(
           "Arm", "Algae Arm", AlgaeArmParameters.CompetitionBase2025);
+
+  @RobotPreferencesValue(row = 0, column = 3, width = 1, height = 1)
+  public static final RobotPreferences.BooleanValue ENABLE_ALGAE_ARM =
+      new RobotPreferences.BooleanValue("Arm", "Enable Algae Arm", true);
 
   private static final DataLog LOG = DataLogManager.getLog();
 

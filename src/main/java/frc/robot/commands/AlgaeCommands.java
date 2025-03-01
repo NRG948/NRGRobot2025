@@ -22,22 +22,38 @@ public final class AlgaeCommands {
 
   /** Returns a command to intake algae. */
   public static Command intakeAlgae(Subsystems subsystems) {
-    AlgaeGrabber algaeGrabber = subsystems.algaeGrabber;
-
-    return Commands.runOnce(() -> algaeGrabber.intake(), algaeGrabber).withName("IntakeAlgae");
+    return subsystems
+        .algaeGrabber
+        .map(
+            (algaeGrabber) ->
+                (Command)
+                    Commands.runOnce(() -> algaeGrabber.intake(), algaeGrabber)
+                        .withName("IntakeAlgae"))
+        .orElse(Commands.none());
   }
 
   /** Returns a command to outtake algae. */
   public static Command outtakeAlgae(Subsystems subsystems) {
-    AlgaeGrabber algaeGrabber = subsystems.algaeGrabber;
-    return Commands.runOnce(() -> algaeGrabber.outtake(), algaeGrabber).withName("OuttakeAlgae");
+    return subsystems
+        .algaeGrabber
+        .map(
+            (algaeGrabber) ->
+                (Command)
+                    Commands.runOnce(() -> algaeGrabber.outtake(), algaeGrabber)
+                        .withName("OuttakeAlgae"))
+        .orElse(Commands.none());
   }
 
   /** Returns a command to stop the algae grabber. */
   public static Command stopAlgaeGrabber(Subsystems subsystems) {
-    AlgaeGrabber algaeGrabber = subsystems.algaeGrabber;
-    return Commands.runOnce(() -> algaeGrabber.disable(), algaeGrabber)
-        .withName("StopAlgaeGrabber");
+    return subsystems
+        .algaeGrabber
+        .map(
+            (algaeGrabber) ->
+                (Command)
+                    Commands.runOnce(() -> algaeGrabber.disable(), algaeGrabber)
+                        .withName("StopAlgaeGrabber"))
+        .orElse(Commands.none());
   }
 
   /** Returns a command that removes algae at the given reef level. */
@@ -58,8 +74,12 @@ public final class AlgaeCommands {
 
   /** Returns a command that stops and stows the intake. */
   public static Command stopAndStowIntake(Subsystems subsystems) {
-    AlgaeGrabber algaeGrabber = subsystems.algaeGrabber;
-    Arm algaeArm = subsystems.algaeArm;
+    if (subsystems.algaeGrabber.isEmpty() || subsystems.algaeArm.isEmpty()) {
+      return Commands.none();
+    }
+
+    AlgaeGrabber algaeGrabber = subsystems.algaeGrabber.get();
+    Arm algaeArm = subsystems.algaeArm.get();
 
     return Commands.parallel(
             Commands.runOnce(() -> algaeGrabber.disable(), algaeGrabber),

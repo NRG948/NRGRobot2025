@@ -38,13 +38,13 @@ public final class LEDCommands {
    * Returns a command that blinks the status LEDs green for one second and then sets the color to
    * solid green when a coral is acquired.
    *
-   * @param statusLED The status LED subsystem.
+   * @param subsystems The subsystems container.
    * @param period The period of the blink.
    * @return A command that blinks the status LEDs.
    */
-  public static Command indicateCoralAcquired(Subsystems subsystem) {
-    StatusLED statusLEDs = subsystem.statusLEDs;
-    CoralRoller coralRoller = subsystem.coralRoller;
+  public static Command indicateCoralAcquired(Subsystems subsystems) {
+    StatusLED statusLEDs = subsystems.statusLEDs;
+    CoralRoller coralRoller = subsystems.coralRoller;
 
     return Commands.sequence(
             new BlinkColor(statusLEDs, GREEN).withTimeout(BLINK_DURATION),
@@ -57,14 +57,27 @@ public final class LEDCommands {
    * Returns a command that blinks the status LEDs green for one second and then sets the color to
    * solid green when an algae is acquired.
    *
-   * @param statusLED The status LED subsystem.
+   * @param subsystem The subsystems container.
    * @param period The period of the blink.
    * @return A command that blinks the status LEDs.
    */
-  public static Command indicateAlgaeAcquired(Subsystems subsystem) {
-    StatusLED statusLEDs = subsystem.statusLEDs;
-    AlgaeGrabber algaeGrabber = subsystem.algaeGrabber;
+  public static Command indicateAlgaeAcquired(Subsystems subsystems) {
+    return subsystems
+        .algaeGrabber
+        .map((algaeGrabber) -> indicateAlgaeAcquired(algaeGrabber, subsystems.statusLEDs))
+        .orElse(Commands.none());
+  }
 
+  /**
+   * Returns a command that blinks the status LEDs green for one second and then sets the color to
+   * solid green when an algae is acquired.
+   *
+   * @param algaeGrabber The algae grabber subsystem.
+   * @param statusLEDs The status LED subsystem.
+   * @param period The period of the blink.
+   * @return A command that blinks the status LEDs.
+   */
+  private static Command indicateAlgaeAcquired(AlgaeGrabber algaeGrabber, StatusLED statusLEDs) {
     return Commands.sequence(
             new BlinkColor(statusLEDs, GREEN).withTimeout(BLINK_DURATION),
             setColor(statusLEDs, GREEN),
@@ -75,22 +88,22 @@ public final class LEDCommands {
   /**
    * Returns a command that blinks the status LEDs red while a condition is true.
    *
-   * @param subsystem The subsystems.
+   * @param subsystems The subsystems container.
    * @return A command that blinks the status LEDs red.
    */
-  public static Command indicateErrorWithBlink(Subsystems subsystem) {
-    return new BlinkColor(subsystem.statusLEDs, RED).withName("IndicateErrorWithBlink");
+  public static Command indicateErrorWithBlink(Subsystems subsystems) {
+    return new BlinkColor(subsystems.statusLEDs, RED).withName("IndicateErrorWithBlink");
   }
 
   /**
    * Returns a command that turns the status LEDs red while a condition is true.
    *
-   * @param subsystem The subsystems.
+   * @param subsystems The subsystems.
    * @param condition The condition for the command to run.
    * @return A command that turns the status LEDs red.
    */
-  public static Command indicateErrorWithSolid(Subsystems subsystem) {
-    StatusLED statusLEDs = subsystem.statusLEDs;
+  public static Command indicateErrorWithSolid(Subsystems subsystems) {
+    StatusLED statusLEDs = subsystems.statusLEDs;
 
     return Commands.sequence(
             setColor(statusLEDs, RED), //
