@@ -34,6 +34,11 @@ import org.javatuples.LabelValue;
 
 /** A namespace for autonomous command factory methods. */
 public final class Autos {
+  private static final String AUTO_FILE_TYPE = ".auto";
+
+  private static final File AUTOS_DIR =
+      new File(Filesystem.getDeployDirectory(), "pathplanner/autos");
+
   private static final HashMap<String, Command> autosMap = new HashMap<String, Command>();
 
   private Autos() {
@@ -53,8 +58,7 @@ public final class Autos {
   @AutonomousCommandGenerator
   public static Collection<LabelValue<String, Command>> generatePathPlannerAutos(
       Subsystems subsystems) {
-    File autosDir = new File(Filesystem.getDeployDirectory(), "pathplanner/autos");
-    return Arrays.stream(autosDir.listFiles((file, name) -> name.endsWith(".auto")))
+    return Arrays.stream(AUTOS_DIR.listFiles((file, name) -> name.endsWith(AUTO_FILE_TYPE)))
         .map((file) -> file.getName().split("\\.")[0])
         .sorted()
         .map(name -> new LabelValue<>(name, generatePathPlannerAuto(subsystems, name)))
@@ -98,8 +102,12 @@ public final class Autos {
    */
   public static void preloadAuto(Command auto) {
     String autoName = auto.getName();
-    Command autoCommand = newPathPlannerAuto(autoName);
-    autosMap.put(autoName, autoCommand);
+    File autoFile = new File(AUTOS_DIR, autoName + AUTO_FILE_TYPE);
+
+    if (autoFile.exists()) {
+      Command autoCommand = newPathPlannerAuto(autoName);
+      autosMap.put(autoName, autoCommand);
+    }
   }
 
   /**
