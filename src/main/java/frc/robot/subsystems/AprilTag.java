@@ -53,10 +53,10 @@ import org.photonvision.targeting.PhotonTrackedTarget;
     column = 1,
     row = 2,
     width = 3,
-    height = 2,
+    height = 1,
     type = "Grid Layout",
     gridColumns = 2,
-    gridRows = 2)
+    gridRows = 1)
 public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   private static final DataLog LOG = DataLogManager.getLog();
 
