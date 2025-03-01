@@ -7,6 +7,8 @@
  
 package frc.robot.parameters;
 
+import static frc.robot.Constants.RobotConstants.COMPETITION_ROBOT_MASS_KG;
+import static frc.robot.Constants.RobotConstants.PRACTICE_ROBOT_MASS_KG;
 import static frc.robot.parameters.MotorParameters.Falcon500;
 import static frc.robot.parameters.MotorParameters.KrakenX60;
 import static frc.robot.parameters.MotorParameters.NeoV1_1;
@@ -49,7 +51,7 @@ public enum SwerveDriveParameters {
       false,
       0),
   PracticeBase2025(
-      41.0,
+      PRACTICE_ROBOT_MASS_KG,
       0.602,
       0.602,
       MK4I_L2_PLUS,
@@ -63,7 +65,7 @@ public enum SwerveDriveParameters {
       true,
       21),
   CompetitionBase2025(
-      41.0, // TODO: Correct robot mass
+      COMPETITION_ROBOT_MASS_KG,
       0.602,
       0.602,
       MK4I_L2_PLUS,

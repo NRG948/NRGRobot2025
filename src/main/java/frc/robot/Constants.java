@@ -33,6 +33,28 @@ public final class Constants {
     /** The width of the robot including bumpers. */
     public static final double ROBOT_WIDTH = 0.928;
 
+    /** The mass in kg of a typical battery plus its connecting cables. */
+    private static final double BATTERY_KG = Units.lbsToKilograms(13.2);
+
+    /** The mass in kg of the bumpers. */
+    private static final double BUMPER_KG = Units.lbsToKilograms(15.0); // TODO: verify value
+
+    /** The mass in kg of the competition robot without bumpers and battery. */
+    private static final double COMPETITION_CHASSIS_KG =
+        Units.lbsToKilograms(110.0); // TODO: verify value
+
+    /** The mass in kg of the practice robot without bumpers and battery. */
+    private static final double PRACTICE_CHASSIS_KG =
+        Units.lbsToKilograms(115.0); // TODO: verify value
+
+    /** The total mass in kg of the competition robot including bumpers and battery. */
+    public static final double COMPETITION_ROBOT_MASS_KG =
+        COMPETITION_CHASSIS_KG + BATTERY_KG + BUMPER_KG;
+
+    /** The total mass in kg of the practice robot including bumpers and battery. */
+    public static final double PRACTICE_ROBOT_MASS_KG =
+        PRACTICE_CHASSIS_KG + BATTERY_KG + BUMPER_KG;
+
     /**
      * The x distance from the odometry center (center of the wheels) to the edge of the front
      * bumper.
