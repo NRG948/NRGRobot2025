@@ -68,9 +68,9 @@ import java.util.function.Supplier;
 
 @RobotPreferencesLayout(
     groupName = "Drive",
-    column = 0,
+    column = 1,
     row = 0,
-    width = 4,
+    width = 3,
     height = 1,
     type = "Grid Layout",
     gridColumns = 3,
