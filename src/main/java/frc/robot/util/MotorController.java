@@ -29,4 +29,7 @@ public interface MotorController extends edu.wpi.first.wpilibj.motorcontrol.Moto
 
   /** Sets the motor behavior when idle (i.e. brake or coast mode). */
   void setIdleMode(MotorIdleMode idleMode);
+
+  /** Logs motor-specific telemetry to the data log. */
+  void logTelemetry();
 }

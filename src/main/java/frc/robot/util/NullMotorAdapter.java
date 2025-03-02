@@ -78,4 +78,7 @@ public class NullMotorAdapter implements MotorController {
 
   @Override
   public void setIdleMode(MotorIdleMode idleMode) {}
+
+  @Override
+  public void logTelemetry() {}
 }

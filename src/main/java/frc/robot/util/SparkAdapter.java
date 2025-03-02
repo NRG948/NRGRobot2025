@@ -17,6 +17,9 @@ import com.revrobotics.spark.config.SparkBaseConfigAccessor;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 
 /** A motor controller implementation based on the REV Robotics Spark controllers. */
 public final class SparkAdapter implements MotorController {
@@ -36,9 +39,10 @@ public final class SparkAdapter implements MotorController {
     /**
      * Returns a new adapter of the same controller type.
      *
+     * @param namePrefix The prefix for the log entries.
      * @param deviceID The device ID of the new controller.
      */
-    SparkAdapter newAdapter(int deviceID);
+    SparkAdapter newAdapter(String namePrefix, int deviceID);
   }
 
   private static final class SparkMaxAccessor implements Accessor {
@@ -70,8 +74,8 @@ public final class SparkAdapter implements MotorController {
     }
 
     @Override
-    public SparkAdapter newAdapter(int deviceID) {
-      return new SparkAdapter(new SparkMax(deviceID, spark.getMotorType()));
+    public SparkAdapter newAdapter(String namePrefix, int deviceID) {
+      return new SparkAdapter(namePrefix, new SparkMax(deviceID, spark.getMotorType()));
     }
   }
 
@@ -104,12 +108,18 @@ public final class SparkAdapter implements MotorController {
     }
 
     @Override
-    public SparkAdapter newAdapter(int deviceID) {
-      return new SparkAdapter(new SparkFlex(deviceID, spark.getMotorType()));
+    public SparkAdapter newAdapter(String namePrefix, int deviceID) {
+      return new SparkAdapter(namePrefix, new SparkFlex(deviceID, spark.getMotorType()));
     }
   }
 
+  private static final DataLog LOG = DataLogManager.getLog();
+
+  private final String namePrefix;
   private final Accessor spark;
+
+  private final DoubleLogEntry logOutputCurrent;
+  private final DoubleLogEntry logTemperature;
 
   /**
    * Constructs a SparkAdapter for a {@link SparkMax} motor controller.
@@ -118,15 +128,22 @@ public final class SparkAdapter implements MotorController {
    * factory methods. It assumes the SparkMax object is already configured or will be configured
    * approriately by the public constructors or factory methods.
    *
+   * @param namePrefix The prefix for the log entries.
    * @param spark The SparkMax object to adapt.
    */
-  private SparkAdapter(SparkMax spark) {
+  private SparkAdapter(String namePrefix, SparkMax spark) {
+    this.namePrefix = namePrefix;
     this.spark = new SparkMaxAccessor(spark);
+
+    String name = String.format("%s/SparkMax-%d", namePrefix, spark.getDeviceId());
+    this.logOutputCurrent = new DoubleLogEntry(LOG, "%s/OutputCurrent", name);
+    this.logTemperature = new DoubleLogEntry(LOG, "%s/Temperature", name);
   }
 
   /**
    * Constructs a SparkAdapter for a {@link SparkMax} motor controller.
    *
+   * @param namePrefix The prefix for the log entries.
    * @param spark The SparkMax object to adapt.
    * @param direction The direction the motor rotates when a positive voltage is applied.
    * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
@@ -137,11 +154,12 @@ public final class SparkAdapter implements MotorController {
    *     the unit is typically in radians.
    */
   public SparkAdapter(
+      String namePrefix,
       SparkMax sparkMax,
       MotorDirection direction,
       MotorIdleMode idleMode,
       double distancePerRotation) {
-    this(sparkMax);
+    this(namePrefix, sparkMax);
 
     configure(direction, idleMode, distancePerRotation);
   }
@@ -153,15 +171,22 @@ public final class SparkAdapter implements MotorController {
    * factory methods. It assumes the SparkFlex object is already configured or will be configured
    * approriately by the public constructors or factory methods.
    *
+   * @param namePrefix The prefix for the log entries.
    * @param spark The SparkFlex object to adapt.
    */
-  private SparkAdapter(SparkFlex spark) {
+  private SparkAdapter(String namePrefix, SparkFlex spark) {
+    this.namePrefix = namePrefix;
     this.spark = new SparkFlexAccessor(spark);
+
+    String name = String.format("%s/SparkMax-%d", namePrefix, spark.getDeviceId());
+    this.logOutputCurrent = new DoubleLogEntry(LOG, "%s/OutputCurrent", name);
+    this.logTemperature = new DoubleLogEntry(LOG, "%s/Temperature", name);
   }
 
   /**
    * Constructs a SparkAdapter for a {@link SparkFlex} motor controller.
    *
+   * @param namePrefix The prefix for the log entries.
    * @param spark The SparkFlex object to adapt.
    * @param direction The direction the motor rotates when a positive voltage is applied.
    * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
@@ -172,11 +197,12 @@ public final class SparkAdapter implements MotorController {
    *     the unit is typically in radians.
    */
   public SparkAdapter(
+      String namePrefix,
       SparkFlex sparkFlex,
       MotorDirection direction,
       MotorIdleMode idleMode,
       double distancePerRotation) {
-    this(sparkFlex);
+    this(namePrefix, sparkFlex);
 
     configure(direction, idleMode, distancePerRotation);
   }
@@ -261,7 +287,7 @@ public final class SparkAdapter implements MotorController {
 
   @Override
   public MotorController createFollower(int deviceID, boolean isInvertedFromLeader) {
-    SparkAdapter follower = spark.newAdapter(deviceID);
+    SparkAdapter follower = spark.newAdapter(namePrefix, deviceID);
     SparkBaseConfigAccessor configAccessor = spark.getConfigAccessor();
     SparkBaseConfig motorOutputConfigs = spark.newConfig();
 
@@ -303,7 +329,9 @@ public final class SparkAdapter implements MotorController {
     return new SparkLimitSwitchAdapter(spark.get().getReverseLimitSwitch());
   }
 
-  public double getOutputCurrent() {
-    return spark.get().getOutputCurrent();
+  @Override
+  public void logTelemetry() {
+    logOutputCurrent.append(spark.get().getOutputCurrent());
+    logTemperature.append(spark.get().getMotorTemperature());
   }
 }

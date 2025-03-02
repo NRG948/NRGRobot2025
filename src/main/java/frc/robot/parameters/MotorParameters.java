@@ -96,6 +96,7 @@ public enum MotorParameters {
   /**
    * Returns a new {@link MotorController} implementation for this motor type.
    *
+   * @param logPrefix The prefix for the log entries.
    * @param deviceID The CAN device ID.
    * @param direction The direction the motor rotates when a positive voltage is applied.
    * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
@@ -107,20 +108,30 @@ public enum MotorParameters {
    * @return A new MotorController implementation.
    */
   public MotorController newController(
-      int deviceID, MotorDirection direction, MotorIdleMode idleMode, double distancePerRotation) {
+      String logPrefix,
+      int deviceID,
+      MotorDirection direction,
+      MotorIdleMode idleMode,
+      double distancePerRotation) {
     switch (this) {
       case Falcon500:
       case KrakenX60:
-        return new TalonFXAdapter(new TalonFX(deviceID), direction, idleMode, distancePerRotation);
+        return new TalonFXAdapter(
+            logPrefix, new TalonFX(deviceID, "rio"), direction, idleMode, distancePerRotation);
 
       case NeoV1_1:
       case NeoVortexMax:
       case Neo550:
         return new SparkAdapter(
-            new SparkMax(deviceID, MotorType.kBrushless), direction, idleMode, distancePerRotation);
+            logPrefix,
+            new SparkMax(deviceID, MotorType.kBrushless),
+            direction,
+            idleMode,
+            distancePerRotation);
 
       case NeoVortexFlex:
         return new SparkAdapter(
+            logPrefix,
             new SparkFlex(deviceID, MotorType.kBrushless),
             direction,
             idleMode,

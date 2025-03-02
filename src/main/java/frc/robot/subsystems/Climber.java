@@ -92,21 +92,18 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   private TalonFXAdapter mainMotor =
       new TalonFXAdapter(
+          "/Climber",
           new TalonFX(PARAMETERS.motorID, "rio"),
           COUNTER_CLOCKWISE_POSITIVE,
           BRAKE,
-          1); // filler value; motor encoder value is not used.
+          1.0); // filler value; motor encoder value is not used.
 
   private DoubleLogEntry logCurrentAbsoluteAngle =
-      new DoubleLogEntry(LOG, "Climber/Absolute Angle");
-  private DoubleLogEntry logGoalAngle = new DoubleLogEntry(LOG, "Climber/Goal Angle");
-  private BooleanLogEntry logEnabled = new BooleanLogEntry(LOG, "Climber/Is Enabled");
-  private DoubleLogEntry logMotorPower = new DoubleLogEntry(LOG, "Climber/Motor Power");
-  private DoubleLogEntry logMotorStatorCurent =
-      new DoubleLogEntry(LOG, "Climber/Motor Stator Current");
-  private DoubleLogEntry logMotorTorqueCurent =
-      new DoubleLogEntry(LOG, "Climber/Motor Torque Current");
-  private DoubleLogEntry logMotorAngularVelocity = new DoubleLogEntry(LOG, "Climber/Motor Rot/s");
+      new DoubleLogEntry(LOG, "/Climber/Absolute Angle");
+  private DoubleLogEntry logGoalAngle = new DoubleLogEntry(LOG, "/Climber/Goal Angle");
+  private BooleanLogEntry logEnabled = new BooleanLogEntry(LOG, "/Climber/Is Enabled");
+  private DoubleLogEntry logMotorPower = new DoubleLogEntry(LOG, "/Climber/Motor Power");
+  private DoubleLogEntry logMotorAngularVelocity = new DoubleLogEntry(LOG, "/Climber/Motor Rot/s");
 
   private RelativeEncoder encoder = mainMotor.getEncoder();
 
@@ -115,7 +112,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   @Override
   public void periodic() {
-    updateSensorState();
+    updateTelemetry();
 
     double angleError = goalAngle - currentAngle;
     double motorPower;
@@ -155,13 +152,12 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
     return MathUtil.isNear(goalAngle, currentAngle, Math.toRadians(TOLERANCE_DEG.getValue()));
   }
 
-  private void updateSensorState() {
+  private void updateTelemetry() {
     currentAngle = absoluteEncoder.getAngle(); // in rad
 
     logCurrentAbsoluteAngle.append(currentAngle);
     logMotorAngularVelocity.append(encoder.getVelocity()); // we set meter/rot = 1
-    logMotorStatorCurent.append(mainMotor.getStatorCurrent());
-    logMotorTorqueCurent.append(mainMotor.getTorqueCurrent());
+    mainMotor.logTelemetry();
   }
 
   @Override

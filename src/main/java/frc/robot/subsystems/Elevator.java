@@ -114,6 +114,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   private final TalonFXAdapter mainMotor =
       new TalonFXAdapter(
+          "/Elevator",
           new TalonFX(PARAMETERS.getValue().getMotorID(), "rio"),
           MotorDirection.CLOCKWISE_POSITIVE,
           MotorIdleMode.BRAKE,
@@ -149,25 +150,23 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   private Timer resetEncoderTimer = new Timer();
 
-  private BooleanLogEntry logIsSeekingGoal = new BooleanLogEntry(LOG, "Elevator/isSeekingGoal");
-  private DoubleLogEntry logCurrentVelocity = new DoubleLogEntry(LOG, "Elevator/velocity");
-  private DoubleLogEntry logCurrentPosition = new DoubleLogEntry(LOG, "Elevator/position");
-  private DoubleLogEntry logGoalVelocity = new DoubleLogEntry(LOG, "Elevator/goalVelocity");
-  private DoubleLogEntry logGoalPosition = new DoubleLogEntry(LOG, "Elevator/goalPosition");
-  private DoubleLogEntry logCurrentVoltage = new DoubleLogEntry(LOG, "Elevator/voltage");
-  private DoubleLogEntry logStatorCurrent = new DoubleLogEntry(LOG, "Elevator/statorCurrent");
-  private DoubleLogEntry logTorqueCurrent = new DoubleLogEntry(LOG, "Elevator/torqueCurrent");
-  private DoubleLogEntry logFeedForward = new DoubleLogEntry(LOG, "Elevator/FeedForward");
-  private DoubleLogEntry logPIDOutput = new DoubleLogEntry(LOG, "Elevator/pidOutput");
-  private BooleanLogEntry logAtUpperLimit = new BooleanLogEntry(LOG, "Elevator/atUpperLimit");
-  private BooleanLogEntry logAtLowerLimit = new BooleanLogEntry(LOG, "Elevator/atLowerLimit");
-  private BooleanLogEntry logAtGoalHeight = new BooleanLogEntry(LOG, "Elevator/atGoalHeight");
-  private DoubleLogEntry logDesiredPosition = new DoubleLogEntry(LOG, "Elevator/desiredPosition");
-  private DoubleLogEntry logDesiredVelocity = new DoubleLogEntry(LOG, "Elevator/desiredVelocity");
+  private BooleanLogEntry logIsSeekingGoal = new BooleanLogEntry(LOG, "/Elevator/isSeekingGoal");
+  private DoubleLogEntry logCurrentVelocity = new DoubleLogEntry(LOG, "/Elevator/velocity");
+  private DoubleLogEntry logCurrentPosition = new DoubleLogEntry(LOG, "/Elevator/position");
+  private DoubleLogEntry logGoalVelocity = new DoubleLogEntry(LOG, "/Elevator/goalVelocity");
+  private DoubleLogEntry logGoalPosition = new DoubleLogEntry(LOG, "/Elevator/goalPosition");
+  private DoubleLogEntry logCurrentVoltage = new DoubleLogEntry(LOG, "/Elevator/voltage");
+  private DoubleLogEntry logFeedForward = new DoubleLogEntry(LOG, "/Elevator/FeedForward");
+  private DoubleLogEntry logPIDOutput = new DoubleLogEntry(LOG, "/Elevator/pidOutput");
+  private BooleanLogEntry logAtUpperLimit = new BooleanLogEntry(LOG, "/Elevator/atUpperLimit");
+  private BooleanLogEntry logAtLowerLimit = new BooleanLogEntry(LOG, "/Elevator/atLowerLimit");
+  private BooleanLogEntry logAtGoalHeight = new BooleanLogEntry(LOG, "/Elevator/atGoalHeight");
+  private DoubleLogEntry logDesiredPosition = new DoubleLogEntry(LOG, "/Elevator/desiredPosition");
+  private DoubleLogEntry logDesiredVelocity = new DoubleLogEntry(LOG, "/Elevator/desiredVelocity");
 
   /** Creates a new Elevator. */
   public Elevator() {
-    updateSensorState();
+    updateTelemetry();
     SmartDashboard.putData("Elevator Sim", mechanism2d);
   }
 
@@ -229,7 +228,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     return goalState.position == level.getElevatorHeight();
   }
 
-  private void updateSensorState() {
+  private void updateTelemetry() {
     if (RobotBase.isReal()) {
       currentState.position = encoder.getPosition();
       currentState.velocity = encoder.getVelocity();
@@ -250,8 +249,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     logAtLowerLimit.append(atLowerLimit);
     logAtUpperLimit.append(atUpperLimit);
     logAtGoalHeight.append(atGoalHeight());
-    logStatorCurrent.append(mainMotor.getStatorCurrent());
-    logTorqueCurrent.append(mainMotor.getTorqueCurrent());
+    mainMotor.logTelemetry();
   }
 
   private void checkError() {
@@ -277,7 +275,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   @Override
   public void periodic() {
-    updateSensorState();
+    updateTelemetry();
     if (!isSeekingGoal) {
       return;
     }

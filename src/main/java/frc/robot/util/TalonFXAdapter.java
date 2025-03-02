@@ -8,19 +8,35 @@
 package frc.robot.util;
 
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.ReverseLimitValue;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 
 /** A motor controller implementation based on the CTR Electronics TalonFX controller. */
 public final class TalonFXAdapter implements MotorController {
+  private static final DataLog LOG = DataLogManager.getLog();
+
+  private final String logPrefix;
   private final TalonFX talonFX;
   private final double distancePerRotation;
   private final MotorOutputConfigs motorOutputConfigs;
+  private final StatusSignal<Current> supplyCurrent;
+  private final StatusSignal<Current> statorCurrent;
+  private final StatusSignal<Temperature> temperature;
+
+  private final DoubleLogEntry logSupplyCurrent;
+  private final DoubleLogEntry logStatorCurrent;
+  private final DoubleLogEntry logTemperature;
 
   /**
    * Constructs a TalonFXAdapter.
@@ -28,6 +44,7 @@ public final class TalonFXAdapter implements MotorController {
    * <p>This constructor assumes the {@link TalonFX} object is already configured or will be
    * configured to match the provided motor output configuration by the caller.
    *
+   * @param logPrefix The prefix for the log entries.
    * @param talonFX The TalonFX object to adapt.
    * @param motorOutputConfigs The motor output configuration.
    * @param distancePerRotation The distance the attached mechanism moves per rotation of the motor
@@ -37,15 +54,29 @@ public final class TalonFXAdapter implements MotorController {
    *     the unit is typically in radians.
    */
   public TalonFXAdapter(
-      TalonFX talonFX, MotorOutputConfigs motorOutputConfigs, double distancePerRotation) {
+      String logPrefix,
+      TalonFX talonFX,
+      MotorOutputConfigs motorOutputConfigs,
+      double distancePerRotation) {
+    this.logPrefix = logPrefix;
     this.talonFX = talonFX;
     this.motorOutputConfigs = motorOutputConfigs;
     this.distancePerRotation = distancePerRotation;
+    this.supplyCurrent = talonFX.getSupplyCurrent();
+    this.statorCurrent = talonFX.getStatorCurrent();
+    this.temperature = talonFX.getDeviceTemp();
+
+    String name = String.format("%s/TalonFX-%d", logPrefix, talonFX.getDeviceID());
+
+    this.logSupplyCurrent = new DoubleLogEntry(LOG, "%s/SupplyCurrent", name);
+    this.logStatorCurrent = new DoubleLogEntry(LOG, "%s/StatorCurrent", name);
+    this.logTemperature = new DoubleLogEntry(LOG, "%s/Temperature", name);
   }
 
   /**
    * Constructs a TalonFXAdapter.
    *
+   * @param logPrefix The prefix for the log entries.
    * @param talonFX The TalonFX object to adapt.
    * @param direction The direction the motor rotates when a positive voltage is applied.
    * @param idleMode The motor behavior when idle (i.e. brake or coast mode).
@@ -56,11 +87,12 @@ public final class TalonFXAdapter implements MotorController {
    *     the unit is typically in radians.
    */
   public TalonFXAdapter(
+      String logPrefix,
       TalonFX talonFX,
       MotorDirection direction,
       MotorIdleMode idleMode,
       double distancePerRotation) {
-    this(talonFX, new MotorOutputConfigs(), distancePerRotation);
+    this(logPrefix, talonFX, new MotorOutputConfigs(), distancePerRotation);
 
     motorOutputConfigs.NeutralMode = idleMode.forTalonFX();
     motorOutputConfigs.Inverted = direction.forTalonFX();
@@ -137,7 +169,7 @@ public final class TalonFXAdapter implements MotorController {
 
     follower.setControl(followerConfig);
 
-    return new TalonFXAdapter(follower, followerMotorOutputConfigs, distancePerRotation);
+    return new TalonFXAdapter(logPrefix, follower, followerMotorOutputConfigs, distancePerRotation);
   }
 
   @Override
@@ -157,12 +189,11 @@ public final class TalonFXAdapter implements MotorController {
         talonFX.getReverseLimit(), ReverseLimitValue.ClosedToGround);
   }
 
-  public double getStatorCurrent() {
-    return talonFX.getStatorCurrent().refresh().getValueAsDouble();
-  }
-
-  public double getTorqueCurrent() {
-    return talonFX.getTorqueCurrent().refresh().getValueAsDouble();
+  @Override
+  public void logTelemetry() {
+    logSupplyCurrent.append(this.supplyCurrent.refresh().getValueAsDouble());
+    logStatorCurrent.append(this.statorCurrent.refresh().getValueAsDouble());
+    logTemperature.append(this.temperature.refresh().getValueAsDouble());
   }
 
   private static void applyConfig(TalonFX talonFX, MotorOutputConfigs motorOutputConfigs) {

@@ -70,6 +70,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
   private final TalonFXAdapter motor =
       new TalonFXAdapter(
+          "/CoralRoller",
           new TalonFX(CORAL_ROLLER_MOTOR_ID, "rio"),
           CLOCKWISE_POSITIVE,
           BRAKE,
@@ -167,6 +168,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
     logHasCoral.update(hasCoral);
     logCurrentVelocity.append(currentVelocity);
+    motor.logTelemetry();
   }
 
   @Override

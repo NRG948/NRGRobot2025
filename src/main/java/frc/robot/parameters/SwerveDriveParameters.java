@@ -513,6 +513,7 @@ public enum SwerveDriveParameters {
    * @return The motor controller.
    */
   public MotorController getMotorController(SwerveMotors motor) {
+    String logPrefix = "/SwerveModule/" + motor.name();
     int motorID = getMotorId(motor);
 
     switch (motor) {
@@ -523,13 +524,13 @@ public enum SwerveDriveParameters {
         double metersPerRotation = (getWheelDiameter() * Math.PI) / getDriveGearRatio();
 
         return this.driveMotor.newController(
-            motorID, COUNTER_CLOCKWISE_POSITIVE, BRAKE, metersPerRotation);
+            logPrefix, motorID, COUNTER_CLOCKWISE_POSITIVE, BRAKE, metersPerRotation);
 
       default:
         double radiansPerRotation = (2 * Math.PI) / getSteeringGearRatio();
 
         return this.steeringMotor.newController(
-            motorID, getSteeringDirection(), BRAKE, radiansPerRotation);
+            logPrefix, motorID, getSteeringDirection(), BRAKE, radiansPerRotation);
     }
   }
 

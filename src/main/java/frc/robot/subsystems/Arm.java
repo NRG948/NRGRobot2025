@@ -139,24 +139,22 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     TalonFXConfigurator configurator = talonFX.getConfigurator();
 
     configurator.apply(talonFXConfigs);
-    motor = new TalonFXAdapter(talonFX, talonFXConfigs.MotorOutput, 2 * Math.PI);
+
+    String logPrefix = String.format("/%s", parameters.getArmName());
+
+    motor = new TalonFXAdapter(logPrefix, talonFX, talonFXConfigs.MotorOutput, 2 * Math.PI);
     relativeEncoder = motor.getEncoder();
     relativeEncoder.setPosition(absoluteEncoder.getAngle());
 
-    logCurrentAngle =
-        new DoubleLogEntry(LOG, String.format("/%s/Current Angle", parameters.getArmName()));
-    logCurrentAbsoluteAngle =
-        new DoubleLogEntry(
-            LOG, String.format("/%s/Current Absolute Angle", parameters.getArmName()));
-    logCurrentVelocity =
-        new DoubleLogEntry(LOG, String.format("/%s/Current Velocity", parameters.getArmName()));
-    logGoalAngle =
-        new DoubleLogEntry(LOG, String.format("/%s/Goal Angle", parameters.getArmName()));
-    logEnabled = new BooleanLogEntry(LOG, String.format("/%s/Enabled", parameters.getArmName()));
+    logCurrentAngle = new DoubleLogEntry(LOG, logPrefix + "/Current Angle");
+    logCurrentAbsoluteAngle = new DoubleLogEntry(LOG, logPrefix + "/Current Absolute Angle");
+    logCurrentVelocity = new DoubleLogEntry(LOG, logPrefix + "/Current Velocity");
+    logGoalAngle = new DoubleLogEntry(LOG, logPrefix + "/Goal Angle");
+    logEnabled = new BooleanLogEntry(LOG, logPrefix + "/Enabled");
   }
 
-  /** Updates the sensor state. */
-  private void updateSensorState() {
+  /** Updates and logs the current sensor states. */
+  private void updateTelemtry() {
     currentAngle = relativeEncoder.getPosition();
     currentVelocity = relativeEncoder.getVelocity();
     currentAbsoluteAngle = absoluteEncoder.getAngle();
@@ -165,6 +163,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     logCurrentAngle.append(currentAngle);
     logCurrentVelocity.append(currentVelocity);
     logCurrentAbsoluteAngle.append(currentAbsoluteAngle);
+    motor.logTelemetry();
   }
 
   /**
@@ -222,7 +221,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
 
   @Override
   public void periodic() {
-    updateSensorState();
+    updateTelemtry();
   }
 
   @Override

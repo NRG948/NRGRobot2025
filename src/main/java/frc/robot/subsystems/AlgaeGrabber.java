@@ -75,6 +75,7 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
 
   private final TalonFXAdapter motor =
       new TalonFXAdapter(
+          "/AlgaeGrabber",
           new TalonFX(ALGAE_GRABBER_MOTOR_ID, "rio"),
           CLOCKWISE_POSITIVE,
           BRAKE,
@@ -173,6 +174,7 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
 
     logHasAlgae.update(hasAlgae);
     logCurrentVelocity.append(currentVelocity);
+    motor.logTelemetry();
   }
 
   @Override
