@@ -92,6 +92,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   public static RobotPreferences.BooleanValue ENABLE_RUMBLE =
       new RobotPreferences.BooleanValue("Drive", "Enable Rumble", true);
 
+  public static final double ROTATIONAL_KP = 1.0;
   public static final double DRIVE_KP = 1.0;
 
   // 4 pairs of motors for drive & steering.
@@ -361,7 +362,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
    */
   public HolonomicDriveController createDriveController() {
     ProfiledPIDController thetaController =
-        new ProfiledPIDController(1.0, 0.0, 0.0, getRotationalConstraints());
+        new ProfiledPIDController(ROTATIONAL_KP, 0.0, 0.0, getRotationalConstraints());
 
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
