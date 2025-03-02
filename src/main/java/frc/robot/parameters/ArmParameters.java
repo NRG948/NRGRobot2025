@@ -40,9 +40,6 @@ public interface ArmParameters {
   /** Returns the robot arm length. */
   public double getArmLength();
 
-  /** Returns the efficiency. */
-  public double getEfficiency();
-
   /** Returns the absolute encoder reading in radians at the designated 0 point of the mechanism */
   public double getAbsoluteEncoderZeroOffset();
 

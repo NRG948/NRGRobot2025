@@ -93,6 +93,11 @@ public enum MotorParameters {
     return this.motor.stallTorqueNewtonMeters;
   }
 
+  /** Returns the voltage required to overcome the internal resistance of the motor. */
+  public double getKs() {
+    return this.motor.rOhms * this.motor.freeCurrentAmps;
+  }
+
   /**
    * Returns a new {@link MotorController} implementation for this motor type.
    *

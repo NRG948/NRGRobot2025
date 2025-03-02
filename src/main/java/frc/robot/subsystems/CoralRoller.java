@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CORAL_ROLLER_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_ROLLER_BEAM_BREAK;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
+import static frc.robot.parameters.MotorParameters.KrakenX60;
 import static frc.robot.util.MotorDirection.CLOCKWISE_POSITIVE;
 import static frc.robot.util.MotorIdleMode.BRAKE;
 
@@ -63,7 +64,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private static final double MAX_VELOCITY =
       (MotorParameters.KrakenX60.getFreeSpeedRPM() * METERS_PER_REVOLUTION) / 60;
 
-  private static final double KS = 0.0656;
+  private static final double KS = KrakenX60.getKs();
   private static final double KV = (MAX_BATTERY_VOLTAGE - KS) / MAX_VELOCITY;
 
   private static final double ERROR_TIME = 3.0;

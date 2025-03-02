@@ -25,8 +25,6 @@ public enum AlgaeArmParameters implements ArmParameters {
       2.086,
       9.0,
       Units.inchesToMeters(8),
-      1,
-      0.0656,
       ALGAE_ARM_MOTOR_ID,
       ALGAE_ARM_ABSOLUTE_ENCODER,
       true,
@@ -39,8 +37,6 @@ public enum AlgaeArmParameters implements ArmParameters {
       2.086,
       9.0,
       Units.inchesToMeters(8),
-      1,
-      0.0656,
       ALGAE_ARM_MOTOR_ID,
       ALGAE_ARM_ABSOLUTE_ENCODER,
       true,
@@ -52,7 +48,6 @@ public enum AlgaeArmParameters implements ArmParameters {
   private final double gearRatio;
   private final double mass;
   private final double armLength;
-  private final double efficiency;
   private final int motorID;
   private final int encoderID;
   private final double minAngleRad;
@@ -73,8 +68,6 @@ public enum AlgaeArmParameters implements ArmParameters {
    * @param mass The mass of the arm.
    * @param gearRatio The gear ratio.
    * @param armLength The length of the arm.
-   * @param efficiency The efficiency of the arm.
-   * @param kS The kS feedforward constant in volts.
    * @param motorID The CAN ID of the motor.
    * @param encoderID The absolute encoder ID.
    * @param absoluteEncoderInverted Whether the absolute encoder is inverted.
@@ -88,8 +81,6 @@ public enum AlgaeArmParameters implements ArmParameters {
       double mass,
       double gearRatio,
       double armLength,
-      double efficiency,
-      double kS,
       int motorID,
       int encoderID,
       boolean absoluteEncoderInverted,
@@ -100,8 +91,7 @@ public enum AlgaeArmParameters implements ArmParameters {
     this.motorParameters = motorParameters;
     this.mass = mass;
     this.armLength = armLength;
-    this.efficiency = efficiency;
-    this.kS = kS;
+    this.kS = motorParameters.getKs();
     this.motorID = motorID;
     this.encoderID = encoderID;
     this.absoluteEncoderInverted = absoluteEncoderInverted;
@@ -158,11 +148,6 @@ public enum AlgaeArmParameters implements ArmParameters {
     return armLength;
   }
 
-  /** Returns the efficiency. */
-  public double getEfficiency() {
-    return efficiency;
-  }
-
   /** Returns the absolute encoder reading in radians at the designated 0 point of the mechanism */
   public double getAbsoluteEncoderZeroOffset() {
     return absoluteEncoderZeroOffset;
@@ -205,15 +190,12 @@ public enum AlgaeArmParameters implements ArmParameters {
 
   /** Returns the max angular speed in rad/s. */
   public double getMaxAngularSpeed() {
-    return (this.efficiency * this.motorParameters.getDCMotor().freeSpeedRadPerSec)
-        / this.gearRatio;
+    return (this.motorParameters.getDCMotor().freeSpeedRadPerSec) / this.gearRatio;
   }
 
   /** Returns the max angular acceleration in rad/s^2. */
   public double getMaxAngularAcceleration() {
-    return (this.efficiency
-            * this.motorParameters.getDCMotor().stallTorqueNewtonMeters
-            * this.gearRatio)
+    return (this.motorParameters.getDCMotor().stallTorqueNewtonMeters * this.gearRatio)
         / (this.mass * this.armLength);
   }
 

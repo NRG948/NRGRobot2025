@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
 import static frc.robot.Constants.RobotConstants.PERIODIC_INTERVAL;
+import static frc.robot.parameters.MotorParameters.KrakenX60;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.nrg948.preferences.RobotPreferences;
@@ -88,13 +89,8 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       ExponentialProfile.Constraints.fromCharacteristics(
           MAX_BATTERY_VOLTAGE, MAX_SPEED / 2, MAX_ACCELERATION / 64);
 
-  /**
-   * Feedforward constants. The KS is calculated from the internal resistance * free speed current.
-   * We can calculate the internal resistance of the motor with battery voltage / stall current. R =
-   * 12V / 366A, KS = R * 2A for the KrakenX60.
-   */
-  private static final double KS = 0.0656;
-
+  // Feedforward constants
+  private static final double KS = KrakenX60.getKs();
   private static final double KV = (MAX_BATTERY_VOLTAGE - KS) / MAX_SPEED;
   private static final double KA = (MAX_BATTERY_VOLTAGE - KS) / MAX_ACCELERATION;
   private static final double KG = 9.81 * KA;

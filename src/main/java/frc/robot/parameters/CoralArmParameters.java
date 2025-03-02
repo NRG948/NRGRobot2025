@@ -25,8 +25,6 @@ public enum CoralArmParameters implements ArmParameters {
       1.25,
       3.0 * 9.0 * 54.0 / 36.0,
       0.315,
-      1,
-      0.0656,
       PRACTICE_CORAL_ARM_MOTOR_ID,
       CORAL_ARM_ABSOLUTE_ENCODER,
       true, // The absolute encoder is inverted.
@@ -39,8 +37,6 @@ public enum CoralArmParameters implements ArmParameters {
       1.25,
       9.0 * 54.0 / 36.0,
       0.315,
-      1,
-      0.0656,
       COMPETITION_CORAL_ARM_MOTOR_ID,
       CORAL_ARM_ABSOLUTE_ENCODER,
       true, // The absolute encoder is inverted.
@@ -53,7 +49,6 @@ public enum CoralArmParameters implements ArmParameters {
   private final double gearRatio;
   private final double mass;
   private final double armLength;
-  private final double efficiency;
   private final int motorID;
   private final int encoderID;
   private final double minAngleRad;
@@ -76,8 +71,6 @@ public enum CoralArmParameters implements ArmParameters {
    * @param mass The mass of the arm.
    * @param gearRatio The gear ratio.
    * @param armLength The length of the arm.
-   * @param efficiency The efficiency of the arm.
-   * @param kS The kS feedforward constant in volts.
    * @param motorID The CAN ID of the motor.
    * @param encoderID The absolute encoder ID.
    * @param absoluteEncoderInverted Whether the absolute encoder is inverted.
@@ -91,8 +84,6 @@ public enum CoralArmParameters implements ArmParameters {
       double mass,
       double gearRatio,
       double armLength,
-      double efficiency,
-      double kS,
       int motorID,
       int encoderID,
       boolean absoluteEncoderInverted,
@@ -104,8 +95,7 @@ public enum CoralArmParameters implements ArmParameters {
     this.motorParameters = motorParameters;
     this.mass = mass;
     this.armLength = armLength;
-    this.efficiency = efficiency;
-    this.kS = kS;
+    this.kS = motorParameters.getKs();
     this.motorID = motorID;
     this.encoderID = encoderID;
     this.absoluteEncoderInverted = absoluteEncoderInverted;
@@ -163,11 +153,6 @@ public enum CoralArmParameters implements ArmParameters {
     return armLength;
   }
 
-  /** Returns the efficiency. */
-  public double getEfficiency() {
-    return efficiency;
-  }
-
   /** Returns the absolute encoder reading in radians at the designated 0 point of the mechanism */
   public double getAbsoluteEncoderZeroOffset() {
     return absoluteEncoderZeroOffset;
@@ -210,15 +195,12 @@ public enum CoralArmParameters implements ArmParameters {
 
   /** Returns the max angular speed in rad/s. */
   public double getMaxAngularSpeed() {
-    return (this.efficiency * this.motorParameters.getDCMotor().freeSpeedRadPerSec)
-        / this.gearRatio;
+    return this.motorParameters.getDCMotor().freeSpeedRadPerSec / this.gearRatio;
   }
 
   /** Returns the max angular acceleration in rad/s^2. */
   public double getMaxAngularAcceleration() {
-    return (this.efficiency
-            * this.motorParameters.getDCMotor().stallTorqueNewtonMeters
-            * this.gearRatio)
+    return (this.motorParameters.getDCMotor().stallTorqueNewtonMeters * this.gearRatio)
         / (this.mass * this.armLength);
   }
 
