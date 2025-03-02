@@ -60,6 +60,8 @@ public final class DriveCommands {
             new BlinkColor(statusLEDs, PINK).asProxy(),
             Commands.sequence(
                 // new AlignToReef(subsystems, reefPosition), //
+                Commands.idle(subsystems.drivetrain)
+                    .until(() -> subsystems.frontCamera.get().hasTargets()),
                 new ReefLateralAlignment(subsystems, reefPosition),
                 new BlinkColor(subsystems.statusLEDs, WHITE).asProxy()))
         .withName(String.format("AlignToReef(%s)", reefPosition.name()));
