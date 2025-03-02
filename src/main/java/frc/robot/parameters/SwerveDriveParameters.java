@@ -59,7 +59,7 @@ public enum SwerveDriveParameters {
       NeoV1_1,
       new int[] {17, 19, 18, 20, 1, 2, 9, 10}, // drive, steer motor controller CAN IDs
       new int[] {33, 34, 31, 32}, // CANCoder CAN IDs
-      new double[] {136.14, 169.98, 166.82, 184.31}, // CANCoder offsets
+      new double[] {137.29, 168.93, 167.17, 186.24}, // CANCoder offsets
       0.0656,
       0.2057,
       true,
