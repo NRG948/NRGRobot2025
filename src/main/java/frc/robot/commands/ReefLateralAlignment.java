@@ -7,6 +7,8 @@
  
 package frc.robot.commands;
 
+import com.nrg948.preferences.RobotPreferences.DoubleValue;
+import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,6 +28,12 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class ReefLateralAlignment extends Command {
   private static final double SCALE_FACTOR = 0.3;
 
+  @RobotPreferencesValue
+  public static DoubleValue Pr = new DoubleValue("AlignToPose", "Lateral R KP", 5.0);
+
+  @RobotPreferencesValue
+  public static DoubleValue Py = new DoubleValue("AlignToPose", "Lateral Y KP", 3.0);
+
   private Swerve drivetrain;
   private AprilTag vision;
   private int targetID;
@@ -44,14 +52,14 @@ public class ReefLateralAlignment extends Command {
 
     yController =
         new ProfiledPIDController(
-            AlignToPose.Py.getValue(),
+            Py.getValue(),
             0,
             0,
             new TrapezoidProfile.Constraints(
                 Swerve.getMaxSpeed() * SCALE_FACTOR, Swerve.getMaxAcceleration() * SCALE_FACTOR));
     rController =
         new ProfiledPIDController(
-            Math.toRadians(AlignToPose.Pr.getValue()), 0, 0, Swerve.getRotationalConstraints());
+            Math.toRadians(Pr.getValue()), 0, 0, Swerve.getRotationalConstraints());
     addRequirements(drivetrain);
   }
 
@@ -80,13 +88,13 @@ public class ReefLateralAlignment extends Command {
 
     yController.setGoal(targetY);
     yController.setTolerance(VisionConstants.POSE_ALIGNMENT_TOLERANCE_XY);
-    yController.setPID(AlignToPose.Py.getValue(), 0, 0);
+    yController.setPID(Py.getValue(), 0, 0);
 
     Pose2d currentRobotPose = drivetrain.getPosition();
     Pose2d nearestTagPose = currentRobotPose.nearest(FieldUtils.getReefAprilTags());
     rController.setGoal(nearestTagPose.getRotation().rotateBy(Rotation2d.k180deg).getRadians());
     rController.setTolerance(Math.toRadians(VisionConstants.POSE_ALIGNMENT_TOLERANCE_R));
-    rController.setPID(Math.toRadians(AlignToPose.Pr.getValue()), 0, 0);
+    rController.setPID(Pr.getValue(), 0, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -107,7 +115,7 @@ public class ReefLateralAlignment extends Command {
     if (isAligningY) {
       PhotonTrackedTarget target = optionalTarget.get();
       double yDist = target.getBestCameraToTarget().getY();
-      double yOutput = yController.calculate(yDist);
+      double yOutput = -yController.calculate(yDist);
       chassisSpeeds.vyMetersPerSecond = yOutput;
     }
 
