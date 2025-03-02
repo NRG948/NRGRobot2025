@@ -60,7 +60,7 @@ public final class DriveCommands {
             new BlinkColor(statusLEDs, PINK).asProxy(),
             Commands.sequence(
                 new AlignToReef(subsystems, reefPosition), //
-                new BlinkColor(statusLEDs, WHITE)))
+                new BlinkColor(statusLEDs, WHITE).asProxy()))
         .withName(String.format("AlignToReef(%s)", reefPosition.name()));
   }
 
