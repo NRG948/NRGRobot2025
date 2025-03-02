@@ -71,9 +71,10 @@ public final class Constants {
     public static final double PERIODIC_INTERVAL = 0.02;
 
     /**
-     * The y-offset (in the width direction) of the coral end effector from the center of the robot
+     * The y-offset of the coral end effector from the center of the robot in the robot's frame of
+     * reference.
      */
-    public static final double CORAL_OFFSET_Y = Units.inchesToMeters(10.25);
+    public static final double CORAL_ARM_CENTER_Y_OFFSET = -Units.inchesToMeters(10.25);
 
     public static class PWMPort {
       public static final int LED = 1;

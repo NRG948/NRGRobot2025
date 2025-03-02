@@ -49,7 +49,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.DriveStraight;
+import frc.robot.commands.DriveToPose;
 import frc.robot.drive.SwerveDrive;
 import frc.robot.drive.SwerveModule;
 import frc.robot.parameters.SwerveAngleEncoder;
@@ -596,7 +596,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
       GenericEntry distance = driveStraight.add("Distance", 0).getEntry();
       driveStraight.add(
           Commands.defer(
-                  () -> new DriveStraight(this, distance.getDouble(0), Swerve.getMaxSpeed() * 0.25),
+                  () -> new DriveToPose(this, distance.getDouble(0), Swerve.getMaxSpeed() * 0.25),
                   Set.of(this))
               .withName("Drive Straight"));
     }

@@ -7,9 +7,31 @@
  
 package frc.robot.util;
 
+import static frc.robot.Constants.VisionConstants.BRANCH_TO_REEF_APRILTAG;
+
 /** An enum that represents the reef alignment positions as viewed face on. */
 public enum ReefPosition {
-  LEFT_BRANCH,
-  CENTER_REEF,
-  RIGHT_BRANCH
+  LEFT_BRANCH(-BRANCH_TO_REEF_APRILTAG),
+  CENTER_REEF(0),
+  RIGHT_BRANCH(BRANCH_TO_REEF_APRILTAG);
+
+  private double yOffset;
+
+  /**
+   * Creates a new {@link ReefPosition} enum.
+   *
+   * @param yOffset The y offset from the center of the AprilTag to the reef position in the
+   *     AprilTag's frame of reference.
+   */
+  private ReefPosition(double yOffset) {
+    this.yOffset = yOffset;
+  }
+
+  /**
+   * Returns the y offset from the center of the AprilTag to the reef position in the AprilTag's
+   * frame of reference.
+   */
+  public double getYOffset() {
+    return yOffset;
+  }
 }
