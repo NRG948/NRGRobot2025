@@ -23,7 +23,7 @@ public enum AlgaeArmParameters implements ArmParameters {
   PracticeBase2025(
       MotorParameters.KrakenX60,
       2.086,
-      9.0,
+      25.0,
       Units.inchesToMeters(8),
       1,
       0.0656,
@@ -37,7 +37,7 @@ public enum AlgaeArmParameters implements ArmParameters {
   CompetitionBase2025(
       MotorParameters.KrakenX60,
       2.086,
-      9.0,
+      25.0,
       Units.inchesToMeters(8),
       1,
       0.0656,
