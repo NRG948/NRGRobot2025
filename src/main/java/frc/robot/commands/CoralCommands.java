@@ -100,8 +100,8 @@ public final class CoralCommands {
     return Commands.sequence(
             Commands.runOnce(
                 () -> coralArm.setGoalAngle(ElevatorLevel.STOWED.getArmAngle()), coralArm),
-            waitForArmToReachGoalAngle(subsystems),
-            Commands.runOnce(() -> coralArm.disable(), coralArm))
+            waitForArmToReachGoalAngle(subsystems))
+        .finallyDo(coralArm::disable)
         .withName("StowArm");
   }
 
