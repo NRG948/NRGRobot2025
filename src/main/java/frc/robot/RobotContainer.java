@@ -38,7 +38,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeCommands;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.CoralCommands;
-import frc.robot.commands.CoralRollerWithController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveUsingController;
 import frc.robot.commands.ElevatorCommands;
@@ -109,8 +108,8 @@ public class RobotContainer {
     subsystems.drivetrain.setDefaultCommand(
         new DriveUsingController(subsystems, m_driverController));
 
-    subsystems.coralRoller.setDefaultCommand(
-        new CoralRollerWithController(subsystems, m_manipulatorController));
+    // subsystems.coralRoller.setDefaultCommand(
+    //    new CoralRollerWithController(subsystems, m_manipulatorController));
 
     subsystems.statusLEDs.setDefaultCommand(new FlameCycle(subsystems.statusLEDs));
 
