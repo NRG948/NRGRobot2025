@@ -10,6 +10,9 @@ package frc.robot;
 import static frc.robot.commands.AlgaeCommands.removeAlgaeAtLevel;
 import static frc.robot.commands.CoralAndElevatorCommands.raiseElevatorAndTipCoralArm;
 import static frc.robot.commands.CoralCommands.outtakeUntilCoralNotDetected;
+import static frc.robot.commands.DriveCommands.alignToCoralStation;
+import static frc.robot.commands.DriveCommands.alignToReefPosition;
+import static frc.robot.commands.DriveCommands.resetOrientation;
 import static frc.robot.parameters.ElevatorLevel.AlgaeL2;
 import static frc.robot.parameters.ElevatorLevel.AlgaeL3;
 import static frc.robot.parameters.ElevatorLevel.L1;
@@ -38,7 +41,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AlgaeCommands;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.CoralCommands;
-import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveUsingController;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.FlameCycle;
@@ -160,11 +162,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.start().onTrue(DriveCommands.resetOrientation(subsystems));
-    m_driverController.x().whileTrue(DriveCommands.alignToReefPosition(subsystems, LEFT_BRANCH));
-    m_driverController.y().whileTrue(DriveCommands.alignToReefPosition(subsystems, CENTER_REEF));
-    m_driverController.b().whileTrue(DriveCommands.alignToReefPosition(subsystems, RIGHT_BRANCH));
-    m_driverController.a().whileTrue(DriveCommands.alignToCoralStation(subsystems));
+    m_driverController.start().onTrue(resetOrientation(subsystems));
+    m_driverController.x().whileTrue(alignToReefPosition(subsystems, LEFT_BRANCH));
+    m_driverController.y().whileTrue(alignToReefPosition(subsystems, CENTER_REEF));
+    m_driverController.b().whileTrue(alignToReefPosition(subsystems, RIGHT_BRANCH));
+    m_driverController.a().whileTrue(alignToCoralStation(subsystems));
     new Trigger(
             () -> {
               XboxController hid = m_driverController.getHID();

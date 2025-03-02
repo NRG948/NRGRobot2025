@@ -89,4 +89,19 @@ public final class FieldUtils {
   public static ArrayList<Pose2d> getCoralStationAprilTags() {
     return isRedAlliance() ? redCoralStationTags : blueCoralStationTags;
   }
+
+  /**
+   * Returns the {@link Pose2d} describing the robot's expected pose at the specified position of
+   * the nearest reef side.
+   *
+   * @param currentRobotPose The swerve drivetrain.
+   * @param reefPosition The target reef position.
+   * @return The {@link Pose2d} of the nearest reef AprilTag to the robot's current position.
+   */
+  public static Pose2d getRobotPoseForNearestReefAprilTag(
+      Pose2d currentRobotPose, ReefPosition reefPosition) {
+    Pose2d nearestTagPose = currentRobotPose.nearest(getReefAprilTags());
+
+    return nearestTagPose.plus(reefPosition.tagToRobot());
+  }
 }
