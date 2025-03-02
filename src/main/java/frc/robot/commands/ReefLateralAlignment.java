@@ -7,10 +7,10 @@
  
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
@@ -30,10 +30,10 @@ public class ReefLateralAlignment extends Command {
   private AprilTag vision;
   private int targetID;
   private ProfiledPIDController yController;
-  private PIDController rController;
+  private ProfiledPIDController rController;
   private ReefPosition reefPosition;
-  private TrapezoidProfile.Constraints constraints;
   private boolean isAligningY = false;
+  private ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
   /** Creates a new TagLateralAlignment. */
   public ReefLateralAlignment(Subsystems subsystems, ReefPosition reefPosition) {
@@ -41,12 +41,17 @@ public class ReefLateralAlignment extends Command {
     drivetrain = subsystems.drivetrain;
     vision = subsystems.frontCamera.get();
     this.reefPosition = reefPosition;
-    constraints =
-        new TrapezoidProfile.Constraints(
-            Swerve.getMaxSpeed() * SCALE_FACTOR, Swerve.getMaxAcceleration() * SCALE_FACTOR);
 
-    yController = new ProfiledPIDController(AlignToPose.Py.getValue(), 0, 0, constraints);
-    rController = new PIDController(AlignToPose.Pr.getValue(), 0, 0);
+    yController =
+        new ProfiledPIDController(
+            AlignToPose.Py.getValue(),
+            0,
+            0,
+            new TrapezoidProfile.Constraints(
+                Swerve.getMaxSpeed() * SCALE_FACTOR, Swerve.getMaxAcceleration() * SCALE_FACTOR));
+    rController =
+        new ProfiledPIDController(
+            Math.toRadians(AlignToPose.Pr.getValue()), 0, 0, Swerve.getRotationalConstraints());
     addRequirements(drivetrain);
   }
 
@@ -79,35 +84,42 @@ public class ReefLateralAlignment extends Command {
 
     Pose2d currentRobotPose = drivetrain.getPosition();
     Pose2d nearestTagPose = currentRobotPose.nearest(FieldUtils.getReefAprilTags());
-    rController.setSetpoint(nearestTagPose.getRotation().rotateBy(Rotation2d.k180deg).getDegrees());
-    rController.setTolerance(VisionConstants.POSE_ALIGNMENT_TOLERANCE_R);
+    rController.setGoal(nearestTagPose.getRotation().rotateBy(Rotation2d.k180deg).getRadians());
+    rController.setTolerance(Math.toRadians(VisionConstants.POSE_ALIGNMENT_TOLERANCE_R));
+    rController.setPID(Math.toRadians(AlignToPose.Pr.getValue()), 0, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (rController.atSetpoint()) {
+    if (rController.atGoal()) {
       isAligningY = true;
     }
 
     Optional<PhotonTrackedTarget> optionalTarget = vision.getTarget(targetID);
     if (optionalTarget.isEmpty()) {
-      // ?
+      return;
     }
 
-    double rOutput = rController.calculate(drivetrain.getPosition().getRotation().getDegrees());
+    double rOutput = rController.calculate(drivetrain.getPosition().getRotation().getRadians());
+    chassisSpeeds.omegaRadiansPerSecond = rOutput;
 
     if (isAligningY) {
       PhotonTrackedTarget target = optionalTarget.get();
       double yDist = target.getBestCameraToTarget().getY();
       double yOutput = yController.calculate(yDist);
-      drivetrain.drive(0, yOutput, rOutput, false);
+      chassisSpeeds.vyMetersPerSecond = yOutput;
     }
+
+    drivetrain.setChassisSpeeds(chassisSpeeds);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    chassisSpeeds.vyMetersPerSecond = 0;
+    drivetrain.setChassisSpeeds(chassisSpeeds);
+  }
 
   // Returns true when the command should end.
   @Override
