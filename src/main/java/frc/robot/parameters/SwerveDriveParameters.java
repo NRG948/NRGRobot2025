@@ -52,8 +52,8 @@ public enum SwerveDriveParameters {
       0),
   PracticeBase2025(
       PRACTICE_ROBOT_MASS_KG,
-      0.602,
-      0.602,
+      Units.inchesToMeters(23.5),
+      Units.inchesToMeters(23.5),
       MK4I_L2_PLUS,
       KrakenX60,
       NeoV1_1,
@@ -66,8 +66,8 @@ public enum SwerveDriveParameters {
       21),
   CompetitionBase2025(
       COMPETITION_ROBOT_MASS_KG,
-      0.602,
-      0.602,
+      Units.inchesToMeters(23.5),
+      Units.inchesToMeters(23.5),
       MK4I_L2_PLUS,
       KrakenX60,
       NeoV1_1,

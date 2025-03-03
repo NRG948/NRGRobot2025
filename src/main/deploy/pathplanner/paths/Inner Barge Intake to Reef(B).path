@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.69224999999435,
-        "y": 6.745249999996049
+        "x": 0.741,
+        "y": 6.6770000000000005
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.583749999997017,
-        "y": 6.66725000000167
+        "x": 2.6325000000026666,
+        "y": 6.5990000000056215
       },
       "isLocked": false,
       "linkedName": "Inner Barge Intake"
     },
     {
       "anchor": {
-        "x": 3.22725,
-        "y": 4.13225
+        "x": 3.15,
+        "y": 4.132
       },
       "prevControl": {
-        "x": 1.72575,
-        "y": 5.468
+        "x": 1.6484999999999996,
+        "y": 5.46775
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
