@@ -9,12 +9,13 @@ package frc.robot.commands;
 
 import static edu.wpi.first.math.geometry.Rotation2d.k180deg;
 import static edu.wpi.first.math.geometry.Rotation2d.kZero;
-import static frc.robot.Constants.RobotConstants.CORAL_OFFSET_Y;
+import static frc.robot.Constants.RobotConstants.CORAL_ARM_CENTER_Y_OFFSET;
 import static frc.robot.Constants.RobotConstants.ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X;
 import static frc.robot.Constants.VisionConstants.BRANCH_TO_REEF_APRILTAG;
-import static frc.robot.commands.AlignToReef.ReefPosition.RIGHT_BRANCH;
 import static frc.robot.parameters.Colors.PINK;
 import static frc.robot.parameters.Colors.WHITE;
+import static frc.robot.util.FieldUtils.getRobotPoseForNearestReefAprilTag;
+import static frc.robot.util.ReefPosition.RIGHT_BRANCH;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
@@ -22,12 +23,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.AlignToReef.ReefPosition;
 import frc.robot.parameters.SwerveDriveParameters;
 import frc.robot.subsystems.StatusLED;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.FieldUtils;
+import frc.robot.util.ReefPosition;
+import java.util.Set;
 
 /** A namespace for driver command factory methods. */
 public final class DriveCommands {
@@ -62,6 +64,33 @@ public final class DriveCommands {
                 new AlignToReef(subsystems, reefPosition), //
                 new BlinkColor(statusLEDs, WHITE).asProxy()))
         .withName(String.format("AlignToReef(%s)", reefPosition.name()));
+  }
+
+  /**
+   * Returns a command that drives the robot straight to the specified reef position.
+   *
+   * @param subsystems The subsystems container.
+   * @param reefPosition The specified reef position.
+   * @return A command that drives the robot straight to the specified reef position.
+   */
+  public static Command driveStraightToReefPosition(
+      Subsystems subsystems, ReefPosition reefPosition) {
+    StatusLED statusLEDs = subsystems.statusLEDs;
+    Swerve drivetrain = subsystems.drivetrain;
+
+    return (Command)
+        Commands.parallel(
+                new BlinkColor(statusLEDs, PINK).asProxy(),
+                Commands.sequence(
+                    Commands.defer(
+                        () -> {
+                          var pose = getRobotPoseForNearestReefAprilTag(drivetrain, reefPosition);
+
+                          return new DriveToPose(drivetrain, pose, Swerve.getMaxSpeed() * 0.3);
+                        },
+                        Set.of(drivetrain)),
+                    new BlinkColor(statusLEDs, WHITE).asProxy()))
+            .withName(String.format("DriveStraightToReef(%s)", reefPosition.name()));
   }
 
   /**
@@ -102,12 +131,12 @@ public final class DriveCommands {
     Pose2d nearestTagPose = currentRobotPose.nearest(FieldUtils.getReefAprilTags());
     double v, h, d;
     v = ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X;
-    h = CORAL_OFFSET_Y;
+    h = CORAL_ARM_CENTER_Y_OFFSET;
     d = BRANCH_TO_REEF_APRILTAG;
 
     var targetPose =
         nearestTagPose.plus(
-            new Transform2d(v, (targetReefPosition.equals(RIGHT_BRANCH) ? d : -d) - h, k180deg));
+            new Transform2d(v, (targetReefPosition.equals(RIGHT_BRANCH) ? d : -d) + h, k180deg));
     System.out.println("TARGET pose: " + targetPose);
     System.out.println("Target Branch: " + targetReefPosition);
 

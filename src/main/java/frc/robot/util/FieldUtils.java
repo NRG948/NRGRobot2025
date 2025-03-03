@@ -7,14 +7,20 @@
  
 package frc.robot.util;
 
+import static frc.robot.Constants.RobotConstants.CORAL_ARM_CENTER_Y_OFFSET;
+import static frc.robot.Constants.RobotConstants.ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X;
+
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.parameters.AprilTagFieldParameters;
+import frc.robot.subsystems.Swerve;
 import java.util.ArrayList;
 
 /** Helper methods related to the 2025 FRC ReefScape field. */
@@ -88,5 +94,23 @@ public final class FieldUtils {
   /** Returns a list of AprilTag poses for our alliance's coral stations. */
   public static ArrayList<Pose2d> getCoralStationAprilTags() {
     return isRedAlliance() ? redCoralStationTags : blueCoralStationTags;
+  }
+
+  /**
+   * Returns the {@link Pose2d} describing the robot's expected pose at the specified position of
+   * the nearest reef side.
+   *
+   * @param drivetrain The swerve drivetrain.
+   * @param targetReefPosition The target reef position.
+   * @return The {@link Pose2d} of the nearest reef AprilTag to the robot's current position.
+   */
+  public static Pose2d getRobotPoseForNearestReefAprilTag(
+      Swerve drivetrain, ReefPosition targetReefPosition) {
+    Pose2d currentRobotPose = drivetrain.getPosition();
+    Pose2d nearestTagPose = currentRobotPose.nearest(getReefAprilTags());
+    double xOffset = ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X;
+    double yOffset = CORAL_ARM_CENTER_Y_OFFSET + targetReefPosition.getYOffset();
+
+    return nearestTagPose.plus(new Transform2d(xOffset, yOffset, Rotation2d.k180deg));
   }
 }

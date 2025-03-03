@@ -7,29 +7,17 @@
  
 package frc.robot.commands;
 
-import static frc.robot.Constants.RobotConstants.CORAL_OFFSET_Y;
-import static frc.robot.Constants.RobotConstants.ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X;
-import static frc.robot.Constants.VisionConstants.BRANCH_TO_REEF_APRILTAG;
+import static frc.robot.util.FieldUtils.getRobotPoseForNearestReefAprilTag;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Subsystems;
-import frc.robot.util.FieldUtils;
+import frc.robot.util.ReefPosition;
 
 /**
  * A {@link Command} that autonomous drives and aligns the robot to the specified position of the
  * nearest reef side.
  */
 public class AlignToReef extends AlignToPose {
-
-  /** An enum that represents the reef alignment positions as viewed face on. */
-  public enum ReefPosition {
-    LEFT_BRANCH,
-    CENTER_REEF,
-    RIGHT_BRANCH
-  }
 
   private final ReefPosition targetReefPosition;
 
@@ -44,22 +32,7 @@ public class AlignToReef extends AlignToPose {
   @Override
   public void initialize() {
     // Figure out the robot's target pose.
-    Pose2d currentRobotPose = drivetrain.getPosition();
-    Pose2d nearestTagPose = currentRobotPose.nearest(FieldUtils.getReefAprilTags());
-    double xOffset = ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X;
-    double yOffset = -CORAL_OFFSET_Y;
-    switch (targetReefPosition) {
-      case RIGHT_BRANCH:
-        yOffset += BRANCH_TO_REEF_APRILTAG;
-        break;
-      case LEFT_BRANCH:
-        yOffset -= BRANCH_TO_REEF_APRILTAG;
-        break;
-      case CENTER_REEF:
-        break;
-    }
-
-    targetPose = nearestTagPose.plus(new Transform2d(xOffset, yOffset, Rotation2d.k180deg));
+    targetPose = getRobotPoseForNearestReefAprilTag(drivetrain, targetReefPosition);
     System.out.println("Target Position: " + targetReefPosition);
 
     super.initialize();
