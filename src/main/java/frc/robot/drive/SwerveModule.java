@@ -86,7 +86,7 @@ public class SwerveModule {
   // Simulation support.
   private double simVelocity;
   private double simPosition;
-  private Rotation2d simWheelAngle = new Rotation2d();
+  private Rotation2d simWheelAngle = Rotation2d.kZero;
   private double simWheelAngleVelocity;
   private FlywheelSim simDriveMotor;
   private FlywheelSim simSteeringMotor;
