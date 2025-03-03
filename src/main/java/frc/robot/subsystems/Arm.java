@@ -98,8 +98,18 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   private DoubleLogEntry logGoalAngle;
   private BooleanLogEntry logEnabled;
 
+  /** Creates a new Arm from {@link AlgaeArmParameters}. */
+  public Arm(AlgaeArmParameters parameters) {
+    this((ArmParameters) parameters);
+  }
+
+  /** Creates a new Arm from {@link CoralArmParameters}. */
+  public Arm(CoralArmParameters parameters) {
+    this((ArmParameters) parameters);
+  }
+
   /** Creates a new Arm. */
-  public Arm(ArmParameters parameters) {
+  private Arm(ArmParameters parameters) {
     setName(parameters.getArmName());
     MIN_ANGLE = parameters.getMinAngleRad();
     MAX_ANGLE = parameters.getMaxAngleRad();
