@@ -68,9 +68,9 @@ public final class TalonFXAdapter implements MotorController {
 
     String name = String.format("%s/TalonFX-%d", logPrefix, talonFX.getDeviceID());
 
-    this.logSupplyCurrent = new DoubleLogEntry(LOG, "%s/SupplyCurrent", name);
-    this.logStatorCurrent = new DoubleLogEntry(LOG, "%s/StatorCurrent", name);
-    this.logTemperature = new DoubleLogEntry(LOG, "%s/Temperature", name);
+    this.logSupplyCurrent = new DoubleLogEntry(LOG, name + "/SupplyCurrent");
+    this.logStatorCurrent = new DoubleLogEntry(LOG, name + "/StatorCurrent");
+    this.logTemperature = new DoubleLogEntry(LOG, name + "/Temperature");
   }
 
   /**

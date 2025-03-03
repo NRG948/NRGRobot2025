@@ -136,8 +136,8 @@ public final class SparkAdapter implements MotorController {
     this.spark = new SparkMaxAccessor(spark);
 
     String name = String.format("%s/SparkMax-%d", namePrefix, spark.getDeviceId());
-    this.logOutputCurrent = new DoubleLogEntry(LOG, "%s/OutputCurrent", name);
-    this.logTemperature = new DoubleLogEntry(LOG, "%s/Temperature", name);
+    this.logOutputCurrent = new DoubleLogEntry(LOG, name + "/OutputCurrent");
+    this.logTemperature = new DoubleLogEntry(LOG, name + "/Temperature");
   }
 
   /**
@@ -179,8 +179,8 @@ public final class SparkAdapter implements MotorController {
     this.spark = new SparkFlexAccessor(spark);
 
     String name = String.format("%s/SparkMax-%d", namePrefix, spark.getDeviceId());
-    this.logOutputCurrent = new DoubleLogEntry(LOG, "%s/OutputCurrent", name);
-    this.logTemperature = new DoubleLogEntry(LOG, "%s/Temperature", name);
+    this.logOutputCurrent = new DoubleLogEntry(LOG, name + "/OutputCurrent");
+    this.logTemperature = new DoubleLogEntry(LOG, name + "/Temperature");
   }
 
   /**
