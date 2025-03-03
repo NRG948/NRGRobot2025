@@ -44,7 +44,7 @@ public enum AlgaeArmParameters implements ArmParameters {
       ALGAE_ARM_MOTOR_ID,
       ALGAE_ARM_ABSOLUTE_ENCODER,
       true,
-      Math.toRadians(-120),
+      Math.toRadians(-120.5),
       Math.toRadians(15),
       Math.toRadians(90));
 
