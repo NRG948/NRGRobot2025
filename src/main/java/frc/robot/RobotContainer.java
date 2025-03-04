@@ -8,9 +8,6 @@
 package frc.robot;
 
 import static frc.robot.commands.AlgaeCommands.removeAlgaeAtLevel;
-import static frc.robot.commands.AlignToReef.ReefPosition.CENTER_REEF;
-import static frc.robot.commands.AlignToReef.ReefPosition.LEFT_BRANCH;
-import static frc.robot.commands.AlignToReef.ReefPosition.RIGHT_BRANCH;
 import static frc.robot.commands.CoralAndElevatorCommands.raiseElevatorAndTipCoralArm;
 import static frc.robot.commands.CoralCommands.outtakeUntilCoralNotDetected;
 import static frc.robot.parameters.ElevatorLevel.AlgaeL2;
@@ -19,6 +16,9 @@ import static frc.robot.parameters.ElevatorLevel.L1;
 import static frc.robot.parameters.ElevatorLevel.L2;
 import static frc.robot.parameters.ElevatorLevel.L3;
 import static frc.robot.parameters.ElevatorLevel.L4;
+import static frc.robot.util.ReefPosition.CENTER_REEF;
+import static frc.robot.util.ReefPosition.LEFT_BRANCH;
+import static frc.robot.util.ReefPosition.RIGHT_BRANCH;
 
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferences.EnumValue;

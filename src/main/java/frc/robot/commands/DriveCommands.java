@@ -11,8 +11,6 @@ import static edu.wpi.first.math.geometry.Rotation2d.k180deg;
 import static edu.wpi.first.math.geometry.Rotation2d.kZero;
 import static frc.robot.Constants.RobotConstants.CORAL_OFFSET_Y;
 import static frc.robot.Constants.RobotConstants.ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X;
-import static frc.robot.Constants.VisionConstants.BRANCH_TO_REEF_APRILTAG;
-import static frc.robot.commands.AlignToReef.ReefPosition.RIGHT_BRANCH;
 import static frc.robot.parameters.Colors.PINK;
 import static frc.robot.parameters.Colors.WHITE;
 
@@ -22,12 +20,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.AlignToReef.ReefPosition;
 import frc.robot.parameters.SwerveDriveParameters;
 import frc.robot.subsystems.StatusLED;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.FieldUtils;
+import frc.robot.util.ReefPosition;
 
 /** A namespace for driver command factory methods. */
 public final class DriveCommands {
@@ -100,14 +98,10 @@ public final class DriveCommands {
 
     Pose2d currentRobotPose = drivetrain.getPosition();
     Pose2d nearestTagPose = currentRobotPose.nearest(FieldUtils.getReefAprilTags());
-    double v, h, d;
-    v = ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X;
-    h = CORAL_OFFSET_Y;
-    d = BRANCH_TO_REEF_APRILTAG;
-
+    double xOffset = ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X;
     var targetPose =
         nearestTagPose.plus(
-            new Transform2d(v, (targetReefPosition.equals(RIGHT_BRANCH) ? d : -d) - h, k180deg));
+            new Transform2d(xOffset, targetReefPosition.yOffset() - CORAL_OFFSET_Y, k180deg));
     System.out.println("TARGET pose: " + targetPose);
     System.out.println("Target Branch: " + targetReefPosition);
 
