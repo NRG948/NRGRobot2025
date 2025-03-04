@@ -60,6 +60,10 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
   public static final RobotPreferences.DoubleValue OUTTAKE_VELOCITY =
       new RobotPreferences.DoubleValue("AlgaeGrabber", "Outtake Velocity", 2);
 
+  @RobotPreferencesValue(column = 2, row = 0)
+  public static final RobotPreferences.DoubleValue HOLD_POWER =
+      new RobotPreferences.DoubleValue("AlgaeGrabber", "Hold Power", 0.1);
+
   private static final DataLog LOG = DataLogManager.getLog();
 
   private static final double WHEEL_DIAMETER = Units.inchesToMeters(3);
@@ -118,7 +122,7 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
 
   /** Outakes the coral. */
   public void outtake() {
-    setGoalVelocity(OUTTAKE_VELOCITY.getValue());
+    setGoalVelocity(-OUTTAKE_VELOCITY.getValue());
     outtakeTimer.restart();
   }
 
@@ -166,7 +170,10 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
       logFeedForward.append(feedforward);
       logFeedBack.append(feedback);
       logVoltage.append(motorVoltage);
-    }
+    } 
+    // else if (hasAlgae) {
+    //   motor.set(HOLD_POWER.getValue());
+    // }
   }
 
   /** Updates and logs the current sensors states. */
