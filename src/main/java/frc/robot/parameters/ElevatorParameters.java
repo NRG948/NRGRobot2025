@@ -8,10 +8,26 @@
 package frc.robot.parameters;
 
 import frc.robot.subsystems.Elevator;
+import frc.robot.util.MotorDirection;
 
 public enum ElevatorParameters {
-  PracticeBase2025(3.65, Elevator.PRACTICE_BOT_GEAR_RATIO, 0, 1.39, 14, false),
-  CompetitionBase2025(3.65, Elevator.COMPETITION_BOT_GEAR_RATIO, 0, 1.39, 10, false);
+  PracticeBase2025(
+      3.65,
+      Elevator.PRACTICE_BOT_GEAR_RATIO,
+      0,
+      1.39,
+      14,
+      false,
+      MotorDirection.CLOCKWISE_POSITIVE),
+  CompetitionBase2025(
+      3.65,
+      Elevator.COMPETITION_BOT_GEAR_RATIO,
+      0,
+      1.39,
+      10,
+      false,
+      MotorDirection.COUNTER_CLOCKWISE_POSITIVE),
+  ;
 
   private final double mass;
   private final double gearRatio;
@@ -19,6 +35,7 @@ public enum ElevatorParameters {
   private final double maxHeight;
   private final int motorID;
   private final boolean resetEncoderWhenStowed;
+  private final MotorDirection motorDirection;
 
   ElevatorParameters(
       double mass,
@@ -26,13 +43,15 @@ public enum ElevatorParameters {
       double minHeight,
       double maxHeight,
       int motorID,
-      boolean resetEncoderWhenStowed) {
+      boolean resetEncoderWhenStowed,
+      MotorDirection motorDirection) {
     this.mass = mass;
     this.gearRatio = gearRatio;
     this.minHeight = minHeight;
     this.maxHeight = maxHeight;
     this.motorID = motorID;
     this.resetEncoderWhenStowed = resetEncoderWhenStowed;
+    this.motorDirection = motorDirection;
   }
 
   public double getMass() {
@@ -57,5 +76,9 @@ public enum ElevatorParameters {
 
   public boolean resetEncoderWhenStowed() {
     return resetEncoderWhenStowed;
+  }
+
+  public MotorDirection getMotorDirection() {
+    return motorDirection;
   }
 }

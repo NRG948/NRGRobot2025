@@ -42,7 +42,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.parameters.ElevatorParameters;
-import frc.robot.util.MotorDirection;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
@@ -113,7 +112,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
       new TalonFXAdapter(
           "/Elevator",
           new TalonFX(PARAMETERS.getValue().getMotorID(), "rio"),
-          MotorDirection.COUNTER_CLOCKWISE_POSITIVE,
+          PARAMETERS.getValue().getMotorDirection(),
           MotorIdleMode.BRAKE,
           METERS_PER_REVOLUTION);
 
