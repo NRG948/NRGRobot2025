@@ -51,7 +51,8 @@ public final class DriveCommands {
         (s, p) -> {
           return Commands.sequence(
               Commands.idle(s.drivetrain).until(() -> s.frontCamera.get().hasTargets()),
-              new ReefLateralAlignment(s, p));
+              new ReefLateralAlignment(s, p),
+              new DriveUntilHitObstacle(s, 1));
         });
 
     private final BiFunction<Subsystems, ReefPosition, Command> commandProducer;

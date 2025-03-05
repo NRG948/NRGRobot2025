@@ -16,11 +16,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.util.ReefPosition;
 import frc.robot.subsystems.AprilTag;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.FieldUtils;
+import frc.robot.util.ReefPosition;
 import java.util.Optional;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
