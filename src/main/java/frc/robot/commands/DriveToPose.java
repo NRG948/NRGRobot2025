@@ -166,12 +166,14 @@ public class DriveToPose extends Command {
     var currentSpeeds = drivetrain.getChassisSpeeds();
     var delta = targetPose.getTranslation().minus(currentPose.getTranslation());
     double distanceToGo = delta.getNorm();
-    Rotation2d heading = delta.getAngle();
+    Rotation2d desiredHeading = delta.getAngle();
 
     // Calculate the current speed along the desired heading.
+    var currentHeading =
+        new Rotation2d(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond);
     double currentSpeed =
         Math.hypot(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond)
-            * Math.cos(currentPose.getRotation().minus(heading).getRadians());
+            * Math.cos(currentHeading.minus(desiredHeading).getRadians());
 
     // Calculate the next setpoint of motion (position and velocity) using the
     // trapezoidal profile.
@@ -181,8 +183,8 @@ public class DriveToPose extends Command {
 
     // Determine the next position on the field by offsetting the initial position
     // by the distance moved along the line of travel.
-    Translation2d offset = new Translation2d(setpoint.position, heading);
-    Pose2d trajectoryPose = new Pose2d(currentPose.getTranslation().plus(offset), heading);
+    Translation2d offset = new Translation2d(setpoint.position, desiredHeading);
+    Pose2d trajectoryPose = new Pose2d(currentPose.getTranslation().plus(offset), desiredHeading);
 
     // Calculate the swerve drive module states needed to reach the next state.
     ChassisSpeeds speeds =
