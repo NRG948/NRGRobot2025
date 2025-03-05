@@ -168,10 +168,14 @@ public class DriveToPose extends Command {
     double distanceToGo = delta.getNorm();
     Rotation2d heading = delta.getAngle();
 
+    // Calculate the current speed along the desired heading.
+    double currentSpeed =
+        Math.hypot(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond)
+            * Math.cos(currentPose.getRotation().minus(heading).getRadians());
+
     // Calculate the next setpoint of motion (position and velocity) using the
     // trapezoidal profile.
-    double speed = Math.hypot(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond);
-    var currentState = new TrapezoidProfile.State(0, speed);
+    var currentState = new TrapezoidProfile.State(0, currentSpeed);
     var goalState = new TrapezoidProfile.State(distanceToGo, 0);
     var setpoint = profile.calculate(PERIODIC_INTERVAL, currentState, goalState);
 
