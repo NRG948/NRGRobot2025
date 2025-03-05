@@ -37,13 +37,13 @@ public class DriveToPose extends Command {
   private static final DataLog LOG = DataLogManager.getLog();
 
   private final StructLogEntry<Pose2d> logInitialPose =
-      StructLogEntry.create(LOG, "command/initialPose", Pose2d.struct);
+      StructLogEntry.create(LOG, "/AlignToPose/initialPose", Pose2d.struct);
   private final StructLogEntry<Pose2d> logTargetPose =
-      StructLogEntry.create(LOG, "command/targetPose", Pose2d.struct);
+      StructLogEntry.create(LOG, "/AlignToPose/targetPose", Pose2d.struct);
   private final StructLogEntry<Pose2d> logTrajectoryPose =
-      StructLogEntry.create(LOG, "command/trajectoryPose", Pose2d.struct);
+      StructLogEntry.create(LOG, "/AlignToPose/trajectoryPose", Pose2d.struct);
   private final StructLogEntry<Pose2d> logNextPose =
-      StructLogEntry.create(LOG, "command/nextPose", Pose2d.struct);
+      StructLogEntry.create(LOG, "/AlignToPose/nextPose", Pose2d.struct);
 
   /**
    * Creates a new command that drives robot the specified distance in the direction of its current
