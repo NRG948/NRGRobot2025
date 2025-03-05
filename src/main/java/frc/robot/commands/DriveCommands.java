@@ -13,6 +13,8 @@ import static frc.robot.parameters.Colors.PINK;
 import static frc.robot.parameters.Colors.WHITE;
 import static frc.robot.util.FieldUtils.getRobotPoseForNearestReefAprilTag;
 
+import com.nrg948.preferences.RobotPreferences;
+import com.nrg948.preferences.RobotPreferencesValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,9 +26,57 @@ import frc.robot.subsystems.Swerve;
 import frc.robot.util.FieldUtils;
 import frc.robot.util.ReefPosition;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 /** A namespace for driver command factory methods. */
 public final class DriveCommands {
+
+  /** An enum used to select among various align to reef strategies. */
+  public static enum AlignToReefSelector {
+    /** Aligns to the reef position using the {@link AlignToReef} command. */
+    USING_ALIGN_TO_REEF((s, p) -> new AlignToReef(s, p)),
+
+    /* Aligns to the reef position using Pathplanner. */
+    USING_ALIGN_TO_REEF_PP((s, p) -> alignToReefPP(s, p)),
+
+    /** Aligns to the reef position using the {@link DriveToPose} command. */
+    USING_DRIVE_STRAIGHT_TO_REEF(
+        (s, p) -> {
+          var pose = getRobotPoseForNearestReefAprilTag(s.drivetrain.getPosition(), p);
+
+          return new DriveToPose(s.drivetrain, pose, Swerve.getMaxSpeed() * 0.3);
+        }),
+    ;
+
+    private final BiFunction<Subsystems, ReefPosition, Command> commandProducer;
+
+    /**
+     * Creates a new {@link AlignToReefSelector} enum variant.
+     *
+     * @param commandProducer A function that produces a command based on the subsystems and reef
+     *     position.
+     */
+    private AlignToReefSelector(BiFunction<Subsystems, ReefPosition, Command> commandProducer) {
+      this.commandProducer = commandProducer;
+    }
+
+    /**
+     * Creates a new command based on the selected align to reef strategy.
+     *
+     * @param subsystems The subsystems container.
+     * @param reefPosition The specified reef position.
+     * @return A command that aligns to the specified reef position using the selected strategy.
+     */
+    public Command newCommand(Subsystems subsystems, ReefPosition reefPosition) {
+      return commandProducer.apply(subsystems, reefPosition);
+    }
+  }
+
+  @RobotPreferencesValue(column = 0, row = 1)
+  public static final RobotPreferences.EnumValue<AlignToReefSelector> ALIGN_TO_REEF_STRATEGY =
+      new RobotPreferences.EnumValue<>(
+          "Drive", "AlignToReefStrategy", AlignToReefSelector.USING_ALIGN_TO_REEF);
+
   /**
    * Returns a command that resets the orientation of the drivetrain.
    *
@@ -55,38 +105,11 @@ public final class DriveCommands {
     return Commands.parallel(
             new BlinkColor(statusLEDs, PINK).asProxy(),
             Commands.sequence(
-                new AlignToReef(subsystems, reefPosition), //
+                Commands.defer(
+                    () -> ALIGN_TO_REEF_STRATEGY.getValue().newCommand(subsystems, reefPosition),
+                    Set.of(subsystems.drivetrain)), //
                 new BlinkColor(statusLEDs, WHITE).asProxy()))
-        .withName(String.format("AlignToReef(%s)", reefPosition.name()));
-  }
-
-  /**
-   * Returns a command that drives the robot straight to the specified reef position.
-   *
-   * @param subsystems The subsystems container.
-   * @param reefPosition The specified reef position.
-   * @return A command that drives the robot straight to the specified reef position.
-   */
-  public static Command driveStraightToReefPosition(
-      Subsystems subsystems, ReefPosition reefPosition) {
-    StatusLED statusLEDs = subsystems.statusLEDs;
-    Swerve drivetrain = subsystems.drivetrain;
-
-    return (Command)
-        Commands.parallel(
-                new BlinkColor(statusLEDs, PINK).asProxy(),
-                Commands.sequence(
-                    Commands.defer(
-                        () -> {
-                          var pose =
-                              getRobotPoseForNearestReefAprilTag(
-                                  drivetrain.getPosition(), reefPosition);
-
-                          return new DriveToPose(drivetrain, pose, Swerve.getMaxSpeed() * 0.3);
-                        },
-                        Set.of(drivetrain)),
-                    new BlinkColor(statusLEDs, WHITE).asProxy()))
-            .withName(String.format("DriveStraightToReef(%s)", reefPosition.name()));
+        .withName(String.format("AlignToReefPosition(%s)", reefPosition.name()));
   }
 
   /**

@@ -39,24 +39,24 @@ import frc.robot.util.TalonFXAdapter;
 
 @RobotPreferencesLayout(
     groupName = "AlgaeGrabber",
-    row = 1,
-    column = 1,
-    width = 3,
-    height = 1,
+    row = 0,
+    column = 6,
+    width = 1,
+    height = 3,
     type = "Grid Layout",
-    gridColumns = 3,
-    gridRows = 0)
+    gridColumns = 1,
+    gridRows = 3)
 public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
 
   @RobotPreferencesValue(column = 0, row = 0)
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("AlgaeGrabber", "Enable Tab", false);
 
-  @RobotPreferencesValue(column = 1, row = 0)
+  @RobotPreferencesValue(column = 0, row = 1)
   public static final RobotPreferences.DoubleValue INTAKE_VELOCITY =
       new RobotPreferences.DoubleValue("AlgaeGrabber", "Intake Velocity", 1);
 
-  @RobotPreferencesValue(column = 2, row = 0)
+  @RobotPreferencesValue(column = 0, row = 1)
   public static final RobotPreferences.DoubleValue OUTTAKE_VELOCITY =
       new RobotPreferences.DoubleValue("AlgaeGrabber", "Outtake Velocity", 2);
 

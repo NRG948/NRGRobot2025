@@ -74,7 +74,7 @@ import java.util.function.Supplier;
     height = 1,
     type = "Grid Layout",
     gridColumns = 3,
-    gridRows = 1)
+    gridRows = 2)
 public class Swerve extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   private static final DataLog LOG = DataLogManager.getLog();
   private static final Rotation2d ROTATE_180_DEGREES = Rotation2d.fromDegrees(180);

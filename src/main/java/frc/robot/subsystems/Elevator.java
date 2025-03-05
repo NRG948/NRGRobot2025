@@ -48,7 +48,7 @@ import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
 import java.util.Set;
 
-@RobotPreferencesLayout(groupName = "Elevator", row = 0, column = 5, width = 2, height = 3)
+@RobotPreferencesLayout(groupName = "Elevator", row = 0, column = 5, width = 1, height = 3)
 public class Elevator extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
 
   private static final DataLog LOG = DataLogManager.getLog();
