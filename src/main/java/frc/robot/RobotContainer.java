@@ -27,11 +27,15 @@ import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferences.EnumValue;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
+import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -148,8 +152,35 @@ public class RobotContainer {
 
     subsystems.initShuffleboard();
 
+    // TODO Make sure name/url is accurate for the desired camera feed
+    VideoSource frontCameraVideo =
+        new HttpCamera(
+            "photonvision_Port_1190_Output_MJPEG_Server",
+            "http://photonvision.local:1190/stream.mjpg",
+            HttpCameraKind.kMJPGStreamer);
+
+    VideoSource backCameraVideo =
+        new HttpCamera(
+            "photonvision_Port_1190_Output_MJPEG_Server",
+            "http://photonvision.local:1190/stream.mjpg",
+            HttpCameraKind.kMJPGStreamer);
+
     ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator");
     autonomous.addShuffleboardLayout(operatorTab);
+
+    operatorTab
+        .add("Front Camera", frontCameraVideo)
+        .withWidget(BuiltInWidgets.kCameraStream)
+        .withPosition(2, 0)
+        .withSize(4, 3);
+
+    operatorTab
+        .add("Back Camera", backCameraVideo)
+        .withWidget(BuiltInWidgets.kCameraStream)
+        .withPosition(6, 0)
+        .withSize(4, 3);
+
+    operatorTab.addBoolean("Has Coral", () -> subsystems.coralRoller.hasCoral()).withSize(2, 2).withPosition(0, 2);
   }
 
   /**
