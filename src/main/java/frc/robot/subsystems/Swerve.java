@@ -593,10 +593,21 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
               .getLayout("Drive Straight", BuiltInLayouts.kList)
               .withPosition(0, 4)
               .withSize(4, 2);
-      GenericEntry distance = driveStraight.add("Distance", 0).getEntry();
+      GenericEntry distanceX = driveStraight.add("Distance X", 0).getEntry();
+      GenericEntry distanceY = driveStraight.add("Distance Y", 0).getEntry();
+      GenericEntry orientation = driveStraight.add("Orientation", 0).getEntry();
       driveStraight.add(
           Commands.defer(
-                  () -> new DriveToPose(this, distance.getDouble(0), Swerve.getMaxSpeed() * 0.25),
+                  () -> {
+                    double dx = distanceX.getDouble(0);
+                    double dy = distanceY.getDouble(0);
+                    double angle = orientation.getDouble(0);
+                    return new DriveToPose(
+                        this,
+                        new Translation2d(dx, dy),
+                        Swerve.getMaxSpeed() * 0.25,
+                        Rotation2d.fromDegrees(angle));
+                  },
                   Set.of(this))
               .withName("Drive Straight"));
     }
