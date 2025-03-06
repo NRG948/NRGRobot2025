@@ -46,7 +46,14 @@ public final class DriveCommands {
 
           return new DriveToPose(s.drivetrain, pose, Swerve.getMaxSpeed() * 0.3);
         }),
-    ;
+
+    USING_LATERAL_ALIGNMENT(
+        (s, p) -> {
+          return Commands.sequence(
+              Commands.idle(s.drivetrain).until(() -> s.frontCamera.get().hasTargets()),
+              new ReefLateralAlignment(s, p),
+              new DriveUntilHitObstacle(s, 1));
+        });
 
     private final BiFunction<Subsystems, ReefPosition, Command> commandProducer;
 
