@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.772332205379405,
-        "y": 3.3090033340894074
+        "x": 7.741500000000001,
+        "y": 3.2547499999999996
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.044041813645318,
-        "y": 3.3090033340894074
+        "x": 8.013209608265916,
+        "y": 3.2547499999999996
       },
       "isLocked": false,
       "linkedName": "Processor Center Start"
     },
     {
       "anchor": {
-        "x": 5.742110655737705,
-        "y": 3.9470799180327862
+        "x": 5.642,
+        "y": 3.78
       },
       "prevControl": {
-        "x": 5.499158441809864,
-        "y": 4.006022447224876
+        "x": 5.399047786072159,
+        "y": 3.83894252919209
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

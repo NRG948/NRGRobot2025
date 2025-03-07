@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.742110655737705,
-        "y": 3.9470799180327862
+        "x": 5.642,
+        "y": 3.78
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.964856557377049,
-        "y": 2.8801741803278684
+        "x": 6.864745901639344,
+        "y": 2.713094262295082
       },
       "isLocked": false,
       "linkedName": "Reef(H)"
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 1.5,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
