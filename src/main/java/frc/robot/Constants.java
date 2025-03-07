@@ -25,7 +25,7 @@ public final class Constants {
 
     /** The swerve drive wheel diameter. */
     public static final double WHEEL_DIAMETER =
-        Units.inchesToMeters(4.0); // WARNING: need to be 3.625 for crescendo bot!
+        Units.inchesToMeters(3.88); // WARNING: need to be 3.625 for crescendo bot!
 
     /** The length of the robot including bumpers. */
     public static final double ROBOT_LENGTH = 0.928;
@@ -52,8 +52,7 @@ public final class Constants {
         COMPETITION_CHASSIS_KG + BATTERY_KG + BUMPER_KG;
 
     /** The total mass in kg of the practice robot including bumpers and battery. */
-    public static final double PRACTICE_ROBOT_MASS_KG =
-        PRACTICE_CHASSIS_KG + BATTERY_KG + BUMPER_KG;
+    public static final double PRACTICE_ROBOT_MASS_KG = 59.6;
 
     /**
      * The x distance from the odometry center (center of the wheels) to the edge of the front
