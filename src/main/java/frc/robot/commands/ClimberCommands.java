@@ -15,7 +15,7 @@ import frc.robot.subsystems.Subsystems;
 
 /** A namespace for climber command factory methods. */
 public final class ClimberCommands {
-  private static final double CLIMB_ANGLE = Math.toRadians(92);
+  private static final double CLIMB_ANGLE = Math.toRadians(-93);
 
   /** Returns a command that climbs. */
   public static Command climb(Subsystems subsystems) {
