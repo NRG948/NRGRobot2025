@@ -14,7 +14,7 @@ public enum ElevatorLevel {
   L1(0.15, Math.toRadians(36), .2),
   L2(0.33, Math.toRadians(60), .2),
   L3(0.74, Math.toRadians(60), .2),
-  L4(1.32, Math.toRadians(50), .2),
+  L4(1.34, Math.toRadians(50), .2),
 
   AlgaeL2(0.25, Math.toRadians(40), .2),
   AlgaeL3(0.65, Math.toRadians(40), .2);
