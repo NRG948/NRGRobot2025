@@ -88,7 +88,7 @@ public final class Autos {
    * @return The PathPlanner auto command.
    */
   private static Command getPathPlannerAuto(String name) {
-    Command autoCommand = autosMap.get(name);
+    Command autoCommand = autosMap.remove(name);
     if (autoCommand == null) {
       autoCommand = newPathPlannerAuto(name);
     }
