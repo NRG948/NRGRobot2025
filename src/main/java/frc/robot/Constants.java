@@ -85,7 +85,7 @@ public final class Constants {
       public static final int STATUS_LED_COUNT = 56; // 33 on front, 23 on back
     }
 
-    public static final int LED_COUNT = 56;
+    public static final int LED_COUNT = 77;
 
     /** CANBus device IDs. */
     public static final class CAN {
