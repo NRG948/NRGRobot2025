@@ -136,11 +136,13 @@ public class RobotContainer {
   public void autonomousInit() {
     phaseLogger.append("Autonomous");
     subsystems.setIdleMode(MotorIdleMode.BRAKE);
+    subsystems.setInitialStates();
   }
 
   public void teleopInit() {
     phaseLogger.append("Teleop");
     subsystems.setIdleMode(MotorIdleMode.BRAKE);
+    subsystems.setInitialStates();
   }
 
   private void initShuffleboard() {

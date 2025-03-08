@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotContainer;
+import frc.robot.parameters.AlgaeArmState;
+import frc.robot.parameters.ElevatorLevel;
 import frc.robot.util.MotorIdleMode;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -155,6 +157,11 @@ public class Subsystems {
       e.printStackTrace();
       return Optional.empty();
     }
+  }
+
+  public void setInitialStates() {
+    coralArm.setGoalAngle(ElevatorLevel.STOWED.getArmAngle());
+    algaeArm.ifPresent(algaeArm -> algaeArm.setGoalAngle(AlgaeArmState.STOWED.armAngle()));
   }
 
   /** Disables the specified subsystems implementing the {@link ActiveSubsystem} interface. */
