@@ -7,6 +7,7 @@
  
 package frc.robot.commands;
 
+import static frc.robot.commands.CoralCommands.CORAL_DETECTION_DELAY;
 import static frc.robot.parameters.Colors.GREEN;
 import static frc.robot.parameters.Colors.RED;
 
@@ -47,6 +48,7 @@ public final class LEDCommands {
     CoralRoller coralRoller = subsystems.coralRoller;
 
     return Commands.sequence(
+            Commands.waitSeconds(CORAL_DETECTION_DELAY),
             new BlinkColor(statusLEDs, GREEN).withTimeout(BLINK_DURATION),
             setColor(statusLEDs, GREEN),
             Commands.idle(statusLEDs).until(() -> !coralRoller.hasCoral()))
