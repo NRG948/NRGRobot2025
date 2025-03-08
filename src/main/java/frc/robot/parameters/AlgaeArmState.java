@@ -12,7 +12,7 @@ public enum AlgaeArmState {
   INTAKE(Math.toRadians(45), 1.5),
   OUTTAKE(Math.toRadians(90), -1.5),
   HOLD(Math.toRadians(90), 0.5),
-  BALANCE(Math.toRadians(15), 0);
+  BALANCE(Math.toRadians(52), 0);
   private final double armAngle;
   private final double grabberVelocity;
 

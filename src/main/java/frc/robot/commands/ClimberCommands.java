@@ -7,6 +7,8 @@
  
 package frc.robot.commands;
 
+import static frc.robot.parameters.AlgaeArmState.BALANCE;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Climber;
@@ -20,10 +22,15 @@ public final class ClimberCommands {
   /** Returns a command that climbs. */
   public static Command climb(Subsystems subsystems) {
     Climber climber = subsystems.climber;
+    var algaeArm = subsystems.algaeArm;
     StatusLED statusLEDs = subsystems.statusLEDs;
 
     return Commands.parallel(
-            Commands.runOnce(() -> climber.setGoalAngle(CLIMB_ANGLE)), //
+            Commands.runOnce(() -> climber.setGoalAngle(CLIMB_ANGLE)),
+            Commands.either(
+                Commands.runOnce(() -> algaeArm.get().setGoalAngle(BALANCE.armAngle())),
+                Commands.none(),
+                () -> algaeArm.isPresent()),
             new RainbowCycle(statusLEDs))
         .withName("Climb");
   }
