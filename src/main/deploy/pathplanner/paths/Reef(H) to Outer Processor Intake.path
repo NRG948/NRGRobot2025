@@ -4,28 +4,44 @@
     {
       "anchor": {
         "x": 5.642,
-        "y": 3.78
+        "y": 4.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.864745901639344,
-        "y": 2.713094262295082
+        "x": 7.156659836065364,
+        "y": 3.0839651639306385
       },
       "isLocked": false,
       "linkedName": "Reef(H)"
     },
     {
       "anchor": {
-        "x": 1.6303278688524592,
-        "y": 0.6264856557377039
+        "x": 4.495389344262295,
+        "y": 1.8252561475409823
       },
       "prevControl": {
-        "x": 2.7451844262295078,
-        "y": 1.7053790983606554
+        "x": 5.478381147540984,
+        "y": 2.2688012295081963
+      },
+      "nextControl": {
+        "x": 3.2546908244584314,
+        "y": 1.2654287666538708
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.1028688524590162,
+        "y": 0.9022028688524597
+      },
+      "prevControl": {
+        "x": 2.433504098360446,
+        "y": 1.2138831967175248
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Outer Processor Intake"
     }
   ],
   "rotationTargets": [],

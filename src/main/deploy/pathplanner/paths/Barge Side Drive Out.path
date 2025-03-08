@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.029971590909091,
-        "y": 7.5100710227272724
+        "x": 7.025132034142137,
+        "y": 7.595440051020407
       },
       "isLocked": false,
       "linkedName": "Barge Side Start"
@@ -20,8 +20,8 @@
         "y": 7.37046875
       },
       "prevControl": {
-        "x": 6.860454545454546,
-        "y": 7.48015625
+        "x": 6.870265283326867,
+        "y": 7.37046875
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
