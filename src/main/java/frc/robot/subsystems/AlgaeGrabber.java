@@ -42,7 +42,7 @@ import frc.robot.util.TalonFXAdapter;
     row = 0,
     column = 6,
     width = 1,
-    height = 3,
+    height = 1,
     type = "Grid Layout",
     gridColumns = 1,
     gridRows = 3)
@@ -51,14 +51,6 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
   @RobotPreferencesValue(column = 0, row = 0)
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("AlgaeGrabber", "Enable Tab", false);
-
-  @RobotPreferencesValue(column = 0, row = 1)
-  public static final RobotPreferences.DoubleValue INTAKE_VELOCITY =
-      new RobotPreferences.DoubleValue("AlgaeGrabber", "Intake Velocity", 1);
-
-  @RobotPreferencesValue(column = 0, row = 1)
-  public static final RobotPreferences.DoubleValue OUTTAKE_VELOCITY =
-      new RobotPreferences.DoubleValue("AlgaeGrabber", "Outtake Velocity", 2);
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -109,17 +101,6 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
     enabled = true;
     goalVelocity = velocity;
     logGoalVelocity.append(goalVelocity);
-  }
-
-  /** Intakes the coral. */
-  public void intake() {
-    setGoalVelocity(INTAKE_VELOCITY.getValue());
-  }
-
-  /** Outakes the coral. */
-  public void outtake() {
-    setGoalVelocity(OUTTAKE_VELOCITY.getValue());
-    outtakeTimer.restart();
   }
 
   /** Updates hasError if stuckTimer exceeds 3 seconds. */
