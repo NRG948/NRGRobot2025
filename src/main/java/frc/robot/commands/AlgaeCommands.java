@@ -7,6 +7,10 @@
  
 package frc.robot.commands;
 
+import static frc.robot.parameters.AlgaeArmState.INTAKE;
+import static frc.robot.parameters.AlgaeArmState.OUTTAKE;
+import static frc.robot.parameters.AlgaeArmState.STOWED;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.parameters.ElevatorLevel;
@@ -18,30 +22,39 @@ import frc.robot.subsystems.Subsystems;
 
 /** A namespace for algae command factory methods. */
 public final class AlgaeCommands {
-  private static final double STOWED_ANGLE = Math.toRadians(90.0);
 
   /** Returns a command to intake algae. */
   public static Command intakeAlgae(Subsystems subsystems) {
-    return subsystems
-        .algaeGrabber
-        .map(
-            (algaeGrabber) ->
-                (Command)
-                    Commands.runOnce(() -> algaeGrabber.intake(), algaeGrabber)
-                        .withName("IntakeAlgae"))
-        .orElse(Commands.none());
+    if (subsystems.algaeArm.isEmpty() || subsystems.algaeGrabber.isEmpty()) {
+      return Commands.none();
+    }
+
+    var algaeGrabber = subsystems.algaeGrabber.get();
+    var algaeArm = subsystems.algaeArm.get();
+
+    return Commands.sequence(
+        Commands.parallel(
+            Commands.runOnce(() -> algaeArm.setGoalAngle(INTAKE.armAngle()), algaeArm),
+            Commands.runOnce(
+                () -> algaeGrabber.setGoalVelocity(INTAKE.grabberVelocity()), algaeGrabber)),
+        Commands.idle(algaeArm, algaeGrabber));
   }
 
   /** Returns a command to outtake algae. */
   public static Command outtakeAlgae(Subsystems subsystems) {
-    return subsystems
-        .algaeGrabber
-        .map(
-            (algaeGrabber) ->
-                (Command)
-                    Commands.runOnce(() -> algaeGrabber.outtake(), algaeGrabber)
-                        .withName("OuttakeAlgae"))
-        .orElse(Commands.none());
+    if (subsystems.algaeArm.isEmpty() || subsystems.algaeGrabber.isEmpty()) {
+      return Commands.none();
+    }
+
+    var algaeGrabber = subsystems.algaeGrabber.get();
+    var algaeArm = subsystems.algaeArm.get();
+
+    return Commands.sequence(
+        Commands.parallel(
+            Commands.runOnce(() -> algaeArm.setGoalAngle(OUTTAKE.armAngle()), algaeArm),
+            Commands.runOnce(
+                () -> algaeGrabber.setGoalVelocity(OUTTAKE.grabberVelocity()), algaeGrabber)),
+        Commands.idle(algaeArm, algaeGrabber));
   }
 
   /** Returns a command to stop the algae grabber. */
@@ -73,7 +86,7 @@ public final class AlgaeCommands {
   }
 
   /** Returns a command that stops and stows the intake. */
-  public static Command stopAndStowIntake(Subsystems subsystems) {
+  public static Command stopAndStowAlgaeIntake(Subsystems subsystems) {
     if (subsystems.algaeGrabber.isEmpty() || subsystems.algaeArm.isEmpty()) {
       return Commands.none();
     }
@@ -83,7 +96,7 @@ public final class AlgaeCommands {
 
     return Commands.parallel(
             Commands.runOnce(() -> algaeGrabber.disable(), algaeGrabber),
-            Commands.runOnce(() -> algaeArm.setGoalAngle(STOWED_ANGLE), algaeArm))
+            Commands.runOnce(() -> algaeArm.setGoalAngle(STOWED.armAngle()), algaeArm))
         .withName("StopAndStowIntake");
   }
 }

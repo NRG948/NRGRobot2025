@@ -7,7 +7,10 @@
  
 package frc.robot;
 
+import static frc.robot.commands.AlgaeCommands.intakeAlgae;
+import static frc.robot.commands.AlgaeCommands.outtakeAlgae;
 import static frc.robot.commands.AlgaeCommands.removeAlgaeAtLevel;
+import static frc.robot.commands.AlgaeCommands.stopAndStowAlgaeIntake;
 import static frc.robot.commands.CoralAndElevatorCommands.raiseElevatorAndTipCoralArm;
 import static frc.robot.commands.CoralCommands.outtakeUntilCoralNotDetected;
 import static frc.robot.commands.DriveCommands.alignToCoralStation;
@@ -38,7 +41,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AlgaeCommands;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.CoralCommands;
 import frc.robot.commands.DriveUsingController;
@@ -181,10 +183,10 @@ public class RobotContainer {
     m_manipulatorController.b().onTrue(raiseElevatorAndTipCoralArm(subsystems, L3));
     m_manipulatorController.y().onTrue(raiseElevatorAndTipCoralArm(subsystems, L4));
 
-    m_manipulatorController.rightBumper().whileTrue(AlgaeCommands.intakeAlgae(subsystems));
-    m_manipulatorController.rightBumper().onFalse(AlgaeCommands.stopAndStowIntake(subsystems));
-    m_manipulatorController.leftBumper().whileTrue(AlgaeCommands.outtakeAlgae(subsystems));
-    m_manipulatorController.leftBumper().onFalse(AlgaeCommands.stopAndStowIntake(subsystems));
+    m_manipulatorController.rightBumper().whileTrue(intakeAlgae(subsystems));
+    m_manipulatorController.rightBumper().onFalse(stopAndStowAlgaeIntake(subsystems));
+    m_manipulatorController.leftBumper().whileTrue(outtakeAlgae(subsystems));
+    m_manipulatorController.leftBumper().onFalse(stopAndStowAlgaeIntake(subsystems));
     m_manipulatorController.povLeft().whileTrue(CoralCommands.intakeUntilCoralDetected(subsystems));
     m_manipulatorController.povRight().whileTrue(outtakeUntilCoralNotDetected(subsystems));
     m_manipulatorController
