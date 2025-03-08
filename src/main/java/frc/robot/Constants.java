@@ -37,11 +37,11 @@ public final class Constants {
     private static final double BATTERY_KG = Units.lbsToKilograms(13.2);
 
     /** The mass in kg of the bumpers. */
-    private static final double BUMPER_KG = Units.lbsToKilograms(15.0); // TODO: verify value
+    private static final double BUMPER_KG = Units.lbsToKilograms(20.0);
 
     /** The mass in kg of the competition robot without bumpers and battery. */
     private static final double COMPETITION_CHASSIS_KG =
-        Units.lbsToKilograms(115.0); // TODO: verify value
+        Units.lbsToKilograms(114.5); // TODO: verify final mass, this is pre-loadin
 
     /** The mass in kg of the practice robot without bumpers and battery. */
     private static final double PRACTICE_CHASSIS_KG =
@@ -81,7 +81,7 @@ public final class Constants {
 
     public static class LEDSegment {
       public static final int STATUS_FIRST_LED = 0;
-      public static final int STATUS_LED_COUNT = 56; // 33 on front, 23 on back
+      public static final int STATUS_LED_COUNT = 56; // 15 on front, 20+21 on coral chute sides
     }
 
     public static final int LED_COUNT = 77;
