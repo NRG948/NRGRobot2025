@@ -73,7 +73,7 @@ import java.util.function.Supplier;
     width = 3,
     height = 1,
     type = "Grid Layout",
-    gridColumns = 3,
+    gridColumns = 2,
     gridRows = 2)
 public class Swerve extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   private static final DataLog LOG = DataLogManager.getLog();
@@ -88,7 +88,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   public static RobotPreferences.BooleanValue ENABLE_DRIVE_TAB =
       new RobotPreferences.BooleanValue("Drive", "Enable Tab", false);
 
-  @RobotPreferencesValue(column = 2, row = 0)
+  @RobotPreferencesValue(column = 1, row = 1)
   public static RobotPreferences.BooleanValue ENABLE_RUMBLE =
       new RobotPreferences.BooleanValue("Drive", "Enable Rumble", true);
 
