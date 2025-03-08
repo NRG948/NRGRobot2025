@@ -228,7 +228,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
 
   @Override
   public void setIdleMode(MotorIdleMode idleMode) {
-    motor.setIdleMode(idleMode);
+    // motor.setIdleMode(idleMode);
   }
 
   @Override
