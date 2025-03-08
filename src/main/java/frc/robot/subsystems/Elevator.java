@@ -107,7 +107,6 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   public static final RobotPreferences.DoubleValue KD =
       new RobotPreferences.DoubleValue("Elevator", "KD", 0.5);
 
-  // TODO: Parameterize motor direction. (The practice bot is clockwise-positive.)
   private final TalonFXAdapter mainMotor =
       new TalonFXAdapter(
           "/Elevator",

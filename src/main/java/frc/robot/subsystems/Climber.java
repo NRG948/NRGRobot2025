@@ -64,8 +64,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   public static final ClimberParameters PRACTICE_BOT_PARAMETERS =
       new ClimberParameters(PRACTICE_BOT_CLIMBER_MOTOR_ID, Math.toRadians(173.1));
   public static final ClimberParameters COMPETITION_BOT_PARAMETERS =
-      new ClimberParameters(
-          COMPETITION_BOT_CLIMBER_MOTOR_ID, Math.toRadians(179.74)); // TODO: get value
+      new ClimberParameters(COMPETITION_BOT_CLIMBER_MOTOR_ID, Math.toRadians(179.74));
   public static final ClimberParameters PARAMETERS =
       RobotContainer.PARAMETERS.getValue().climberParameters();
 
