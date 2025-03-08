@@ -79,8 +79,8 @@ public class RobotContainer {
   private final StringLogEntry phaseLogger = new StringLogEntry(LOG, "/Robot/Phase");
 
   public enum RobotSelector {
-    PracticeRobot2025(AprilTag.VISION_PARAMS, Climber.PRACTICE_BOT_PARAMETERS),
-    CompetitionRobot2025(AprilTag.VISION_PARAMS, Climber.COMPETITION_BOT_PARAMETERS);
+    PracticeRobot2025(AprilTag.PRACTICE_VISION_PARAMS, Climber.PRACTICE_BOT_PARAMETERS),
+    CompetitionRobot2025(AprilTag.COMPETITION_VISION_PARAMS, Climber.COMPETITION_BOT_PARAMETERS);
 
     private final VisionParameters visionParams;
     private final ClimberParameters climberParams;

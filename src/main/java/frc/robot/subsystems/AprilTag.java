@@ -59,6 +59,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
     gridColumns = 2,
     gridRows = 1)
 public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
+
   private static final DataLog LOG = DataLogManager.getLog();
 
   private static final Matrix<N3, N1> SINGLE_TAG_STD_DEVS = VecBuilder.fill(4, 4, 8);
@@ -68,13 +69,17 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
       new EstimatedRobotPose(new Pose3d(), 0, List.of(), PoseStrategy.LOWEST_AMBIGUITY);
   private static final double LAST_RESULT_TIMEOUT = 0.1;
 
-  public static final Transform3d ROBOT_TO_FRONT_CAMERA =
-      new Transform3d(new Translation3d(0.28, -0.26, 0.321), Rotation3d.kZero);
+  public static final Transform3d PRACTICE_ROBOT_TO_FRONT_CAMERA =
+      new Transform3d(new Translation3d(0.28, -0.26, 0.327), Rotation3d.kZero);
+  public static final Transform3d COMPETITION_ROBOT_TO_FRONT_CAMERA =
+      new Transform3d(new Translation3d(0.28, -0.278, 0.327), Rotation3d.kZero);
 
-  public static final Transform3d ROBOT_TO_BACK_CAMERA =
-      new Transform3d(
-          new Translation3d(-0.33, -0.255, -0.8175),
-          new Rotation3d(0, toRadians(-15), toRadians(180)));
+  private static final Rotation3d REAR_CAMERA_ROTATION =
+      new Rotation3d(0, toRadians(-15), toRadians(180));
+  public static final Transform3d PRACTICE_ROBOT_TO_BACK_CAMERA =
+      new Transform3d(new Translation3d(-0.33, -0.255, +0.818), REAR_CAMERA_ROTATION);
+  public static final Transform3d COMPETITION_ROBOT_TO_BACK_CAMERA =
+      new Transform3d(new Translation3d(-0.36, -0.265, +0.80), REAR_CAMERA_ROTATION);
 
   /**
    * The robot's vision parameters.
@@ -85,8 +90,14 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   public record VisionParameters(
       Optional<Transform3d> robotToFrontCamera, Optional<Transform3d> robotToBackCamera) {}
 
-  public static final VisionParameters VISION_PARAMS =
-      new VisionParameters(Optional.of(ROBOT_TO_FRONT_CAMERA), Optional.of(ROBOT_TO_BACK_CAMERA));
+  public static final VisionParameters PRACTICE_VISION_PARAMS =
+      new VisionParameters(
+          Optional.of(PRACTICE_ROBOT_TO_FRONT_CAMERA), //
+          Optional.of(PRACTICE_ROBOT_TO_BACK_CAMERA));
+  public static final VisionParameters COMPETITION_VISION_PARAMS =
+      new VisionParameters(
+          Optional.of(COMPETITION_ROBOT_TO_FRONT_CAMERA),
+          Optional.of(COMPETITION_ROBOT_TO_BACK_CAMERA));
 
   @RobotPreferencesValue(column = 0, row = 0)
   public static final RobotPreferences.BooleanValue ENABLED =
