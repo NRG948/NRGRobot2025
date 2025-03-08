@@ -36,12 +36,15 @@ public final class Constants {
     /** The mass in kg of a typical battery plus its connecting cables. */
     private static final double BATTERY_KG = Units.lbsToKilograms(13.2);
 
-    /** The mass in kg of the bumpers. */
-    private static final double BUMPER_KG = Units.lbsToKilograms(20.0);
+    /**
+     * The mass in kg of the bumpers.
+     *
+     * <p>Takes the average of the weights of the blue and red bumpers.
+     */
+    private static final double BUMPER_KG = Units.lbsToKilograms((20.3 + 19.3) / 2);
 
     /** The mass in kg of the competition robot without bumpers and battery. */
-    private static final double COMPETITION_CHASSIS_KG =
-        Units.lbsToKilograms(114.5); // TODO: verify final mass, this is pre-loadin
+    private static final double COMPETITION_CHASSIS_KG = Units.lbsToKilograms(114.6);
 
     /** The mass in kg of the practice robot without bumpers and battery. */
     private static final double PRACTICE_CHASSIS_KG =
