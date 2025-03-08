@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.797512755102041,
-        "y": 0.45455994897959046
+        "x": 7.995,
+        "y": 5.4095
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.418863636363636,
-        "y": 0.4900710227272725
+        "x": 7.468500000000001,
+        "y": 5.799500000000001
       },
       "isLocked": false,
-      "linkedName": "Processor Side Start"
+      "linkedName": "Barge Push Out Start"
     },
     {
       "anchor": {
-        "x": 6.441647727272727,
-        "y": 0.6197017045454549
+        "x": 6.38625,
+        "y": 6.443
       },
       "prevControl": {
-        "x": 6.960170454545455,
-        "y": 0.5897869318181812
+        "x": 6.9615,
+        "y": 5.984750000000001
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Processor Drive Out"
+      "linkedName": "Barge Push Out End"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.5,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 145.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "push out auto",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 145.0
   },
   "useDefaultConstraints": true
 }
