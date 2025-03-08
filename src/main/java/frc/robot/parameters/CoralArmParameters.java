@@ -35,7 +35,7 @@ public enum CoralArmParameters implements ArmParameters {
   CompetitionBase2025(
       MotorParameters.KrakenX60,
       1.25,
-      9.0 * 54.0 / 36.0,
+      27.0 * 54.0 / 36.0,
       0.315,
       COMPETITION_CORAL_ARM_MOTOR_ID,
       CORAL_ARM_ABSOLUTE_ENCODER,
