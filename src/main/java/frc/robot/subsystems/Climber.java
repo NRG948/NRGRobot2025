@@ -69,7 +69,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
       RobotContainer.PARAMETERS.getValue().climberParameters();
 
   @RobotPreferencesValue
-  public static DoubleValue CLIMB_MAX_POWER = new DoubleValue("Climber", "Max Power", 0.4);
+  public static DoubleValue CLIMB_MAX_POWER = new DoubleValue("Climber", "Max Power", 0.65);
 
   @RobotPreferencesValue
   public static DoubleValue TOLERANCE_DEG = new DoubleValue("Climber", "Tolerance (deg)", 1);

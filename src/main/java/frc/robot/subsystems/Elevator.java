@@ -105,7 +105,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
   @RobotPreferencesValue
   public static final RobotPreferences.DoubleValue KD =
-      new RobotPreferences.DoubleValue("Elevator", "KD", 0.5);
+      new RobotPreferences.DoubleValue("Elevator", "KD", 0);
 
   private final TalonFXAdapter mainMotor =
       new TalonFXAdapter(

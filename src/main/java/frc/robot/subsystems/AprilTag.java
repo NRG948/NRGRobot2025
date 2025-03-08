@@ -105,7 +105,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
 
   @RobotPreferencesValue(column = 1, row = 0)
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
-      new RobotPreferences.BooleanValue("AprilTag", "Enable Tab", true);
+      new RobotPreferences.BooleanValue("AprilTag", "Enable Tab", false);
 
   private enum PoseEstimationStrategy {
     AverageBestTargets(PoseStrategy.AVERAGE_BEST_TARGETS),
