@@ -30,11 +30,15 @@ import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferences.EnumValue;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
+import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
+import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -152,15 +156,32 @@ public class RobotContainer {
 
     subsystems.initShuffleboard();
 
+    VideoSource video =
+        new HttpCamera(
+            "photonvision_Port_1190_Output_MJPEG_Server",
+            "http://photonvision.local:1190/stream.mjpg",
+            HttpCameraKind.kMJPGStreamer);
+
     ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator");
     autonomous.addShuffleboardLayout(operatorTab);
+
+    operatorTab
+        .add("Front Camera", video)
+        .withWidget(BuiltInWidgets.kCameraStream)
+        .withPosition(2, 0)
+        .withSize(4, 3);
+
+    operatorTab
+        .addBoolean("Has Coral", () -> subsystems.coralRoller.hasCoral())
+        .withSize(2, 2)
+        .withPosition(0, 2);
   }
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'snull subclasses for {@link
    * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
