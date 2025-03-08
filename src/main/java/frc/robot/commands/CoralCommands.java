@@ -21,7 +21,7 @@ import frc.robot.subsystems.Subsystems;
 
 /** A namespace for coral command factory methods. */
 public final class CoralCommands {
-  private static final double CORAL_DETECTION_DELAY = Arm.CORAL_ARM.getValue().getRollerDelay();
+  public static final double CORAL_DETECTION_DELAY = Arm.CORAL_ARM.getValue().getRollerDelay();
 
   /** Returns a command that intakes coral. */
   public static Command intakeCoral(Subsystems subsystems) {
