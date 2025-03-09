@@ -61,16 +61,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Outer Barge Intake to Reef(H)"
-                }
-              }
-            ]
+            "pathName": "Outer Barge Intake to Reef(K)"
           }
         },
         {
@@ -92,7 +85,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(H) to Outer Barge Intake"
+                  "pathName": "Reef(K) to Outer Barge Intake"
                 }
               },
               {
@@ -111,16 +104,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Outer Barge Intake to Reef(I)"
-                }
-              }
-            ]
+            "pathName": "Outer Barge Intake to Reef(L)"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
           }
         },
         {

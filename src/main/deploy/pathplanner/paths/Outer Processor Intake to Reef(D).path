@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2439610742397837,
-        "y": 2.1502191036439933
+        "x": 2.402870442237293,
+        "y": 1.92997135693566
       },
       "isLocked": false,
       "linkedName": "Outer Processor Intake"
@@ -20,8 +20,8 @@
         "y": 2.976075819672131
       },
       "prevControl": {
-        "x": 3.377006509826333,
-        "y": 2.5214361670493015
+        "x": 3.295001085832479,
+        "y": 2.5697994161472177
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,14 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Elevator L4",
+      "waypointRelativePos": 0.39602977667493716,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 2.0,

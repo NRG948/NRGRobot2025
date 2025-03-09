@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6069988052456836,
-        "y": 7.392278999979434
+        "x": 1.5502500000000001,
+        "y": 7.3985
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5780029036063405,
-        "y": 7.164512606536812
+        "x": 2.521254098360657,
+        "y": 7.170733606557379
       },
       "isLocked": false,
       "linkedName": "Outer Barge Intake"
@@ -31,7 +31,14 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Elevator L4",
+      "waypointRelativePos": 0.5725860904794033,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 2.0,

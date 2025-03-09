@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Barge Start to Reef(G)"
+                  "pathName": "Processor Start to Reef(H)"
                 }
               },
               {
@@ -24,12 +24,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Coral Outtake"
@@ -42,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(G) to Outer Barge Intake"
+                  "pathName": "Reef(H) to Outer Processor Intake"
                 }
               },
               {
@@ -67,16 +61,10 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Outer Barge Intake to Reef(H)"
+                  "pathName": "Outer Processor Intake to Reef(D)"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
           }
         },
         {
@@ -92,7 +80,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(H) to Outer Barge Intake"
+                  "pathName": "Reef(D) to Outer Processor Intake"
                 }
               },
               {
@@ -117,7 +105,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Outer Barge Intake to Reef(I)"
+                  "pathName": "Outer Processor Intake to Reef(C)"
                 }
               }
             ]

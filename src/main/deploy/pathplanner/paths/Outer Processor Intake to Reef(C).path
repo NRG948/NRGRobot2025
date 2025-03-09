@@ -3,35 +3,42 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.742,
-        "y": 3.595
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 6.341385245901638,
-        "y": 2.8038114754098364
-      },
-      "isLocked": false,
-      "linkedName": "Reef(G)"
-    },
-    {
-      "anchor": {
         "x": 1.1028688524590162,
         "y": 0.9022028688524597
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.65575062038964,
+        "y": 1.40871529679904
+      },
+      "isLocked": false,
+      "linkedName": "Outer Processor Intake"
+    },
+    {
+      "anchor": {
+        "x": 3.4701136363636365,
+        "y": 3.1524857954545458
+      },
       "prevControl": {
-        "x": 3.9439549180327864,
-        "y": 2.3407274590163945
+        "x": 2.8960347308947085,
+        "y": 2.5816360763186514
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Outer Processor Intake"
+      "linkedName": "Reef(C)"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Elevator L4",
+      "waypointRelativePos": 0.4456575682382052,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 2.0,
@@ -42,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 54.090276920822355
+    "rotation": 57.01147838636548
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 54.090276920822355
   },
   "useDefaultConstraints": true
 }
