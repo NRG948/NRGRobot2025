@@ -47,6 +47,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.CoralCommands;
+import frc.robot.commands.CoralRollerWithController;
 import frc.robot.commands.DriveUsingController;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.FlameCycle;
@@ -116,8 +117,8 @@ public class RobotContainer {
     subsystems.drivetrain.setDefaultCommand(
         new DriveUsingController(subsystems, m_driverController));
 
-    // subsystems.coralRoller.setDefaultCommand(
-    //    new CoralRollerWithController(subsystems, m_manipulatorController));
+    subsystems.coralRoller.setDefaultCommand(
+        new CoralRollerWithController(subsystems, m_manipulatorController));
 
     subsystems.statusLEDs.setDefaultCommand(new FlameCycle(subsystems.statusLEDs));
 
