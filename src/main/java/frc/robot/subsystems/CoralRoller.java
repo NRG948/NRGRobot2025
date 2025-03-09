@@ -159,6 +159,8 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
       logFeedForward.append(feedforward);
       logFeedBack.append(feedback);
       logVoltage.append(motorVoltage);
+    } else {
+      motor.setVoltage(0);
     }
   }
 
