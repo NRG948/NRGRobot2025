@@ -20,6 +20,7 @@ import frc.robot.subsystems.Subsystems;
 /** A namespace for climber command factory methods. */
 public final class ClimberCommands {
   private static final double CLIMB_ANGLE = Math.toRadians(-93);
+  private static final double STOW_ANGLE = Math.toRadians(90);
 
   /** Returns a command that climbs. */
   public static Command climb(Subsystems subsystems) {
@@ -37,5 +38,11 @@ public final class ClimberCommands {
                 () -> algaeArm.isPresent()),
             new RainbowCycle(statusLEDs))
         .withName("Climb");
+  }
+
+  public static Command unclimb(Subsystems subsystems) {
+    return Commands.sequence(
+        Commands.runOnce(() -> subsystems.climber.setGoalAngle(STOW_ANGLE), subsystems.climber),
+        Commands.idle(subsystems.climber).until(() -> subsystems.climber.atGoalAngle()));
   }
 }
