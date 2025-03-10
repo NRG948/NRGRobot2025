@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.7805,
-        "y": 7.595440051020407
+        "x": 7.702,
+        "y": 7.515
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.025132034142137,
-        "y": 7.595440051020407
+        "x": 7.12725,
+        "y": 7.145
       },
       "isLocked": false,
       "linkedName": "Barge Side Start"
     },
     {
       "anchor": {
-        "x": 6.2521875,
-        "y": 7.37046875
+        "x": 2.6715,
+        "y": 7.38875
       },
       "prevControl": {
-        "x": 6.870265283326867,
-        "y": 7.37046875
+        "x": 3.2443124999999995,
+        "y": 7.22178125
       },
       "nextControl": null,
       "isLocked": false,
