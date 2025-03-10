@@ -13,14 +13,14 @@
                 "data": {
                   "pathName": "Barge Side Start to Reef(L)"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.75
           }
         },
         {
@@ -63,14 +63,14 @@
                 "data": {
                   "pathName": "Inner Barge Intake to Reef(A)"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.75
           }
         },
         {
@@ -113,14 +113,14 @@
                 "data": {
                   "pathName": "Inner Barge Intake to Reef(B)"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.75
           }
         },
         {

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.7805,
-        "y": 7.595440051020407
+        "x": 7.702,
+        "y": 7.515
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.232044994212962,
-        "y": 6.394986617476852
+        "x": 5.153544994212962,
+        "y": 6.314546566456444
       },
       "isLocked": false,
       "linkedName": "Barge Side Start"
@@ -31,7 +31,19 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Elevator L4",
+      "waypointRelativePos": 0.4694789081885897,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Elevator L4"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 2.0,

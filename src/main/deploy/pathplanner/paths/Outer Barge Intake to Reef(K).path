@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5502500000000001,
-        "y": 7.3985
+        "x": 1.51125,
+        "y": 7.505749999999999
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8877114220270437,
-        "y": 7.286945431838748
+        "x": 1.8487114220270435,
+        "y": 7.394195431838747
       },
       "isLocked": false,
       "linkedName": "Outer Barge Intake"
     },
     {
       "anchor": {
-        "x": 4.267622950819672,
-        "y": 5.33765368852459
+        "x": 4.37775,
+        "y": 5.3315
       },
       "prevControl": {
-        "x": 3.9188352272727274,
-        "y": 5.83484375
+        "x": 4.028962276453055,
+        "y": 5.8286900614754105
       },
       "nextControl": null,
       "isLocked": false,
@@ -36,7 +36,12 @@
       "name": "Elevator L4",
       "waypointRelativePos": 0.49330024813895773,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Elevator L4"
+        }
+      }
     }
   ],
   "globalConstraints": {
