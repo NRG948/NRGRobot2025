@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import static frc.robot.commands.CoralCommands.CORAL_DETECTION_DELAY;
 import static frc.robot.parameters.Colors.GREEN;
+import static frc.robot.parameters.Colors.PURPLE;
 import static frc.robot.parameters.Colors.RED;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -79,12 +80,28 @@ public final class LEDCommands {
    * @param period The period of the blink.
    * @return A command that blinks the status LEDs.
    */
-  private static Command indicateAlgaeAcquired(AlgaeGrabber algaeGrabber, StatusLED statusLEDs) {
+  public static Command indicateAlgaeAcquired(AlgaeGrabber algaeGrabber, StatusLED statusLEDs) {
     return Commands.sequence(
             new BlinkColor(statusLEDs, GREEN).withTimeout(BLINK_DURATION),
             setColor(statusLEDs, GREEN),
             Commands.idle(statusLEDs).until(() -> !algaeGrabber.hasAlgae()))
         .withName("IndicateAlgaeAcquired");
+  }
+
+  /**
+   * Returns a command that blinks the status LEDs purple for one second and then sets the color to
+   * solid purple when a reef branch is detected.
+   *
+   * @param coralRoller The coral roller subsystem.
+   * @param subsystems The subsystems container.
+   * @param period The period of the blink.
+   * @return A command that blinks the status LEDs.
+   */
+  public static Command indicateBranchDetected(Subsystems subsystems) {
+    return Commands.sequence(
+            new BlinkColor(subsystems.statusLEDs, PURPLE).withTimeout(BLINK_DURATION),
+            setColor(subsystems.statusLEDs, PURPLE).until(() -> !CoralRoller.detectsReef))
+        .withName("IndicateBranchDetected");
   }
 
   /**

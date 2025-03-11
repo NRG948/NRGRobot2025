@@ -108,6 +108,7 @@ public final class Constants {
       public static final int CORAL_ARM_ABSOLUTE_ENCODER = 0;
       public static final int ALGAE_ARM_ABSOLUTE_ENCODER = 1;
       public static final int CLIMBER_ABSOLUTE_ENCODER = 2;
+      public static final int CORAL_ARM_LASER_CAN = 3; // TODO: add the correct DIO port.
     }
   }
 

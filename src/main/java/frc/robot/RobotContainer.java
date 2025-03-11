@@ -26,6 +26,7 @@ import static frc.robot.util.ReefPosition.CENTER_REEF;
 import static frc.robot.util.ReefPosition.LEFT_BRANCH;
 import static frc.robot.util.ReefPosition.RIGHT_BRANCH;
 
+import au.grapplerobotics.CanBridge;
 import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferences.EnumValue;
 import com.nrg948.preferences.RobotPreferencesLayout;
@@ -113,6 +114,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and command bindings. */
   public RobotContainer() {
     initShuffleboard();
+    CanBridge.runTCP();
 
     subsystems.drivetrain.setDefaultCommand(
         new DriveUsingController(subsystems, m_driverController));
@@ -229,6 +231,8 @@ public class RobotContainer {
         (algaeGrabber) -> {
           new Trigger(algaeGrabber::hasAlgae).onTrue(LEDCommands.indicateAlgaeAcquired(subsystems));
         });
+    new Trigger(subsystems.coralRoller::detectsReef)
+        .onTrue(LEDCommands.indicateBranchDetected(subsystems));
 
     new Trigger(subsystems.coralArm::hasError)
         .whileTrue(LEDCommands.indicateErrorWithBlink(subsystems));
