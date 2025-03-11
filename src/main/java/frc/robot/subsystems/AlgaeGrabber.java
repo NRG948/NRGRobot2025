@@ -25,7 +25,6 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -64,8 +63,6 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
   private static final double KS = KrakenX60.getKs();
   private static final double KV = (MAX_BATTERY_VOLTAGE - KS) / MAX_VELOCITY;
 
-  private static final double ERROR_TIME = 3.0;
-
   private final TalonFXAdapter motor =
       new TalonFXAdapter(
           "/AlgaeGrabber",
@@ -77,13 +74,11 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
 
   private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(KS, KV);
   private final PIDController pidController = new PIDController(1, 0, 0);
-  private final Timer outtakeTimer = new Timer();
 
   private double goalVelocity = 0;
   private double currentVelocity = 0;
   private boolean enabled;
   private boolean hasAlgae = false;
-  private boolean hasError = false;
 
   private DoubleLogEntry logCurrentVelocity =
       new DoubleLogEntry(LOG, "/AlgaeGrabber/currentVelocity");
@@ -103,30 +98,18 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
     logGoalVelocity.append(goalVelocity);
   }
 
-  /** Updates hasError if stuckTimer exceeds 3 seconds. */
-  public void checkError() {
-    hasError = outtakeTimer.hasElapsed(ERROR_TIME);
-  }
-
   /** Disables the subsystem. */
   @Override
   public void disable() {
     enabled = false;
     goalVelocity = 0;
     logGoalVelocity.append(0);
-    outtakeTimer.stop();
-    outtakeTimer.reset();
     motor.stopMotor();
   }
 
   /** Returns whether we have coral. */
   public boolean hasAlgae() {
     return hasAlgae;
-  }
-
-  /** Returns hasError. */
-  public boolean hasError() {
-    return hasError;
   }
 
   @Override
@@ -142,7 +125,6 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
       double feedback = pidController.calculate(currentVelocity, goalVelocity);
       double motorVoltage = feedforward + feedback;
       motor.setVoltage(motorVoltage);
-      checkError();
 
       logFeedForward.append(feedforward);
       logFeedBack.append(feedback);
