@@ -157,25 +157,27 @@ public class RobotContainer {
 
     subsystems.initShuffleboard();
 
-    VideoSource video =
-        new HttpCamera(
-            "photonvision_Port_1190_Output_MJPEG_Server",
-            "http://photonvision.local:1190/stream.mjpg",
-            HttpCameraKind.kMJPGStreamer);
-
     ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator");
     autonomous.addShuffleboardLayout(operatorTab);
-
-    operatorTab
-        .add("Front Camera", video)
-        .withWidget(BuiltInWidgets.kCameraStream)
-        .withPosition(2, 0)
-        .withSize(4, 3);
 
     operatorTab
         .addBoolean("Has Coral", () -> subsystems.coralRoller.hasCoral())
         .withSize(2, 2)
         .withPosition(0, 2);
+
+    if (subsystems.frontCamera.isPresent()) {
+      VideoSource video =
+          new HttpCamera(
+              "photonvision_Port_1190_Output_MJPEG_Server",
+              "http://photonvision.local:1190/stream.mjpg",
+              HttpCameraKind.kMJPGStreamer);
+
+      operatorTab
+          .add("Front Camera", video)
+          .withWidget(BuiltInWidgets.kCameraStream)
+          .withPosition(2, 0)
+          .withSize(4, 3);
+    }
   }
 
   /**
