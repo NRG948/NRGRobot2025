@@ -41,7 +41,7 @@ public enum CoralArmParameters implements ArmParameters {
       CORAL_ARM_ABSOLUTE_ENCODER,
       true, // The absolute encoder is inverted.
       // Math.toRadians(34.4),
-      Math.toRadians(-92), // TODO: Work arounds disconected absolute encoder
+      Math.toRadians(-92), // TODO: this works around disconected absolute encoder
       Math.toRadians(10),
       Math.toRadians(95),
       0.1);
