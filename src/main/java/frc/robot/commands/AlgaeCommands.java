@@ -13,8 +13,8 @@ import static frc.robot.parameters.AlgaeArmState.STOWED;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.parameters.AlgaeArmState;
 import frc.robot.parameters.ElevatorLevel;
-import frc.robot.subsystems.AlgaeGrabber;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.CoralRoller;
 import frc.robot.subsystems.Elevator;
@@ -25,48 +25,33 @@ public final class AlgaeCommands {
 
   /** Returns a command to intake algae. */
   public static Command intakeAlgae(Subsystems subsystems) {
-    if (subsystems.algaeArm.isEmpty() || subsystems.algaeGrabber.isEmpty()) {
-      return Commands.none();
-    }
-
-    var algaeGrabber = subsystems.algaeGrabber.get();
-    var algaeArm = subsystems.algaeArm.get();
-
-    return Commands.sequence(
-        Commands.parallel(
-            Commands.runOnce(() -> algaeArm.setGoalAngle(INTAKE.armAngle()), algaeArm),
-            Commands.runOnce(
-                () -> algaeGrabber.setGoalVelocity(INTAKE.grabberVelocity()), algaeGrabber)),
-        Commands.idle(algaeArm, algaeGrabber));
+    return setAlgaeState(subsystems, INTAKE).withName("IntakeAlgae");
   }
 
   /** Returns a command to outtake algae. */
   public static Command outtakeAlgae(Subsystems subsystems) {
+    return setAlgaeState(subsystems, OUTTAKE).withName("OuttakeAlgae");
+  }
+
+  /** Returns a command that stops and stows the intake. */
+  public static Command stopAndStowAlgaeIntake(Subsystems subsystems) {
+    return setAlgaeState(subsystems, STOWED).withName("StopAndStowAlgaeIntake");
+  }
+
+  /** Returns a command that sets the algae arm+intake to a given state and then idles both. */
+  private static Command setAlgaeState(Subsystems subsystems, AlgaeArmState state) {
     if (subsystems.algaeArm.isEmpty() || subsystems.algaeGrabber.isEmpty()) {
       return Commands.none();
     }
 
-    var algaeGrabber = subsystems.algaeGrabber.get();
-    var algaeArm = subsystems.algaeArm.get();
+    var grabber = subsystems.algaeGrabber.get();
+    var arm = subsystems.algaeArm.get();
 
     return Commands.sequence(
         Commands.parallel(
-            Commands.runOnce(() -> algaeArm.setGoalAngle(OUTTAKE.armAngle()), algaeArm),
-            Commands.runOnce(
-                () -> algaeGrabber.setGoalVelocity(OUTTAKE.grabberVelocity()), algaeGrabber)),
-        Commands.idle(algaeArm, algaeGrabber));
-  }
-
-  /** Returns a command to stop the algae grabber. */
-  public static Command stopAlgaeGrabber(Subsystems subsystems) {
-    return subsystems
-        .algaeGrabber
-        .map(
-            (algaeGrabber) ->
-                (Command)
-                    Commands.runOnce(() -> algaeGrabber.disable(), algaeGrabber)
-                        .withName("StopAlgaeGrabber"))
-        .orElse(Commands.none());
+            Commands.runOnce(() -> arm.setGoalAngle(state.armAngle()), arm),
+            Commands.runOnce(() -> grabber.setGoalVelocity(state.grabberVelocity()), grabber)),
+        Commands.idle(arm, grabber));
   }
 
   /** Returns a command that removes algae at the given reef level. */
@@ -83,20 +68,5 @@ public final class AlgaeCommands {
             Commands.idle(elevator, coralArm, coralRoller))
         .finallyDo(coralRoller::disable)
         .withName(String.format("RemoveAlgaeAtLevel(%s)", elevatorLevel.name()));
-  }
-
-  /** Returns a command that stops and stows the intake. */
-  public static Command stopAndStowAlgaeIntake(Subsystems subsystems) {
-    if (subsystems.algaeGrabber.isEmpty() || subsystems.algaeArm.isEmpty()) {
-      return Commands.none();
-    }
-
-    AlgaeGrabber algaeGrabber = subsystems.algaeGrabber.get();
-    Arm algaeArm = subsystems.algaeArm.get();
-
-    return Commands.parallel(
-            Commands.runOnce(() -> algaeGrabber.disable(), algaeGrabber),
-            Commands.runOnce(() -> algaeArm.setGoalAngle(STOWED.armAngle()), algaeArm))
-        .withName("StopAndStowIntake");
   }
 }
