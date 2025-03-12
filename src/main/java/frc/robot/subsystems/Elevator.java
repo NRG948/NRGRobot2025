@@ -223,6 +223,10 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
     return goalState.position == level.getElevatorHeight();
   }
 
+  public boolean isSeekingAboveLevel(ElevatorLevel level) {
+    return goalState.position > level.getElevatorHeight();
+  }
+
   private void updateTelemetry() {
     if (RobotBase.isReal()) {
       currentState.position = encoder.getPosition();
