@@ -167,6 +167,11 @@ public class RobotContainer {
         .withSize(2, 2)
         .withPosition(0, 2);
 
+    operatorTab
+        .addBoolean("Branch Detected", () -> subsystems.coralRoller.detectsReef())
+        .withSize(2, 2)
+        .withPosition(0, 6);
+
     if (subsystems.frontCamera.isPresent()) {
       VideoSource video =
           new HttpCamera(
@@ -231,7 +236,9 @@ public class RobotContainer {
         (algaeGrabber) -> {
           new Trigger(algaeGrabber::hasAlgae).onTrue(LEDCommands.indicateAlgaeAcquired(subsystems));
         });
-    new Trigger(subsystems.coralRoller::detectsReef)
+    new Trigger(
+            () ->
+                subsystems.coralRoller.detectsReef() && subsystems.elevator.isSeekingAboveLevel(L1))
         .onTrue(LEDCommands.indicateBranchDetected(subsystems));
 
     new Trigger(subsystems.coralArm::hasError)
