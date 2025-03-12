@@ -71,24 +71,7 @@ public class ReefLateralAlignment extends Command {
   @Override
   public void initialize() {
     targetID = vision.getBestTarget().getFiducialId(); // bad, but good enough for now?
-    double targetY;
-    switch (reefPosition) {
-      case LEFT_BRANCH:
-        targetY = -VisionConstants.BRANCH_TO_REEF_APRILTAG;
-        break;
-
-      case CENTER_REEF:
-        targetY = 0;
-        break;
-
-      case RIGHT_BRANCH:
-        targetY = VisionConstants.BRANCH_TO_REEF_APRILTAG;
-        break;
-
-      default:
-        targetY = 0;
-        break;
-    }
+    double targetY = reefPosition.yOffset();
 
     yController.setGoal(targetY);
     yController.setTolerance(VisionConstants.POSE_ALIGNMENT_TOLERANCE_XY);
