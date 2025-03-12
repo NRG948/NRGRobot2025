@@ -50,7 +50,7 @@ public final class DriveCommands {
     USING_LATERAL_ALIGNMENT(
         (s, p) -> {
           return Commands.sequence(
-              Commands.idle(s.drivetrain).until(() -> s.frontCamera.get().hasTargets()),
+              VisionCommands.waitForAprilTag(s.aprilTag, s.drivetrain),
               new ReefLateralAlignment(s, p),
               new DriveUntilHitObstacle(s, 1));
         });
