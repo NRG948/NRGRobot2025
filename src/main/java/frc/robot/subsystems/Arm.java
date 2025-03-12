@@ -53,7 +53,7 @@ import frc.robot.util.TalonFXAdapter;
     gridRows = 1)
 public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   private static final double RADIANS_PER_ROTATION = 2 * Math.PI;
-  private static final double ERROR_MARGIN = Math.toRadians(2);
+  private static final double ERROR_MARGIN = Math.toRadians(5);
   private static final double ERROR_TIME = 1.0;
 
   @RobotPreferencesValue(row = 0, column = 0, width = 1, height = 1)
