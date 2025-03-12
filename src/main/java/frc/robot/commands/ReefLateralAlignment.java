@@ -24,7 +24,11 @@ import frc.robot.util.ReefPosition;
 import java.util.Optional;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+/**
+ * A command that aligns the robot to the specified reef position by first rotating the robot to
+ * face the nearest reef side and then moving laterally to a position directly in front of the
+ * position.
+ */
 public class ReefLateralAlignment extends Command {
   private static final double SCALE_FACTOR = 0.3;
 
