@@ -100,6 +100,8 @@ public final class Constants {
         public static final int PRACTICE_BOT_CLIMBER_MOTOR_ID = 4;
         public static final int COMPETITION_BOT_CLIMBER_MOTOR_ID = 11;
       }
+
+      public static final int CORAL_ARM_LASER_CAN = 22;
     }
 
     /** Digital I/O port numbers. */
@@ -108,7 +110,6 @@ public final class Constants {
       public static final int CORAL_ARM_ABSOLUTE_ENCODER = 0;
       public static final int ALGAE_ARM_ABSOLUTE_ENCODER = 1;
       public static final int CLIMBER_ABSOLUTE_ENCODER = 2;
-      public static final int CORAL_ARM_LASER_CAN = 3; // TODO: add the correct DIO port.
     }
   }
 
