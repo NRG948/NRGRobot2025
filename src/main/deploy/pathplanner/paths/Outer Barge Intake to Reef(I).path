@@ -36,7 +36,12 @@
       "name": "Elevator L4",
       "waypointRelativePos": 0.5725860904794033,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Elevator L4"
+        }
+      }
     }
   ],
   "globalConstraints": {
