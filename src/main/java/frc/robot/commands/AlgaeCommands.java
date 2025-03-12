@@ -7,6 +7,7 @@
  
 package frc.robot.commands;
 
+import static frc.robot.parameters.AlgaeArmState.HOLD;
 import static frc.robot.parameters.AlgaeArmState.INTAKE;
 import static frc.robot.parameters.AlgaeArmState.OUTTAKE;
 import static frc.robot.parameters.AlgaeArmState.STOWED;
@@ -26,6 +27,21 @@ public final class AlgaeCommands {
   /** Returns a command to intake algae. */
   public static Command intakeAlgae(Subsystems subsystems) {
     return setAlgaeState(subsystems, INTAKE).withName("IntakeAlgae");
+  }
+
+  public static Command intakeAndHoldAlgae(Subsystems subsystems) {
+    if (subsystems.algaeArm.isEmpty() || subsystems.algaeGrabber.isEmpty()) {
+      return Commands.none();
+    }
+
+    var algaeGrabber = subsystems.algaeGrabber.get();
+    var algaeArm = subsystems.algaeArm.get();
+
+    return Commands.sequence(
+        setAlgaeState(subsystems, INTAKE),
+        Commands.idle(algaeArm, algaeGrabber).until(algaeGrabber::hasAlgae),
+        setAlgaeState(subsystems, HOLD),
+        Commands.idle(algaeArm, algaeGrabber));
   }
 
   /** Returns a command to outtake algae. */
