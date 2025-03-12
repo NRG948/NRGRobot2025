@@ -54,7 +54,7 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
   private static final DataLog LOG = DataLogManager.getLog();
 
   private static final double WHEEL_DIAMETER = Units.inchesToMeters(3);
-  private static final double GEAR_RATIO = 5.0;
+  private static final double GEAR_RATIO = 25.0;
 
   private static final double METERS_PER_REVOLUTION = (WHEEL_DIAMETER * Math.PI) / GEAR_RATIO;
   private static final double MAX_VELOCITY =
