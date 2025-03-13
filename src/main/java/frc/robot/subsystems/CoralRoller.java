@@ -116,7 +116,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
     try {
       laserCAN.setRangingMode(LaserCan.RangingMode.SHORT);
       laserCAN.setRegionOfInterest(
-          new LaserCan.RegionOfInterest(8, 8, 16, 16)); // Makes detection region a box
+          new LaserCan.RegionOfInterest(12, 8, 8, 16)); // Makes detection region a box
       laserCAN.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
     } catch (ConfigurationFailedException e) {
       System.out.println("Configuration failed! " + e);

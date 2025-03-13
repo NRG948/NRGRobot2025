@@ -239,7 +239,7 @@ public class RobotContainer {
     new Trigger(
             () ->
                 subsystems.coralRoller.detectsReef() && subsystems.elevator.isSeekingAboveLevel(L1))
-        .onTrue(LEDCommands.indicateBranchDetected(subsystems));
+        .whileTrue(LEDCommands.indicateBranchDetected(subsystems));
 
     new Trigger(subsystems.coralArm::hasError)
         .whileTrue(LEDCommands.indicateErrorWithBlink(subsystems));

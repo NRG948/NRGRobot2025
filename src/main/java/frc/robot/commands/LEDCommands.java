@@ -99,7 +99,6 @@ public final class LEDCommands {
    */
   public static Command indicateBranchDetected(Subsystems subsystems) {
     return Commands.sequence(
-            new BlinkColor(subsystems.statusLEDs, PURPLE).withTimeout(BLINK_DURATION),
             setColor(subsystems.statusLEDs, PURPLE),
             Commands.idle(subsystems.statusLEDs).until(() -> !subsystems.coralRoller.detectsReef()))
         .withName("IndicateBranchDetected");
