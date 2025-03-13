@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.51125,
-        "y": 7.505749999999999
+        "x": 1.62825,
+        "y": 7.3595
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4822540983606567,
-        "y": 7.2779836065573775
+        "x": 2.5992540983606567,
+        "y": 7.131733606557378
       },
       "isLocked": false,
       "linkedName": "Outer Barge Intake"
     },
     {
       "anchor": {
-        "x": 5.478381147540984,
-        "y": 4.882120901639344
+        "x": 5.51,
+        "y": 4.93
       },
       "prevControl": {
-        "x": 5.574119318181818,
-        "y": 5.655355113636364
+        "x": 5.6057381706408345,
+        "y": 5.703234211997019
       },
       "nextControl": null,
       "isLocked": false,
@@ -54,7 +54,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.745
+    "rotation": -119.99999999999999
   },
   "reversed": false,
   "folder": null,
