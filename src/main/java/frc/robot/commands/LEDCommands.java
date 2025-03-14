@@ -89,13 +89,10 @@ public final class LEDCommands {
   }
 
   /**
-   * Returns a command that blinks the status LEDs purple for one second and then sets the color to
-   * solid purple when a reef branch is detected.
+   * Returns a command that sets the status LEDs to solid purple when a reef branch is detected.
    *
-   * @param coralRoller The coral roller subsystem.
    * @param subsystems The subsystems container.
-   * @param period The period of the blink.
-   * @return A command that blinks the status LEDs.
+   * @return A command that sets the status LEDs to purple.
    */
   public static Command indicateBranchDetected(Subsystems subsystems) {
     return Commands.sequence(
