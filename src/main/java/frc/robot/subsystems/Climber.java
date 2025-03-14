@@ -75,10 +75,6 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   public static DoubleValue TOLERANCE_DEG = new DoubleValue("Climber", "Tolerance (deg)", 1);
 
   @RobotPreferencesValue
-  public static DoubleValue CLIMB_GOAL_ANGLE_DEG =
-      new DoubleValue("Climber", "Climb Goal Angle (deg)", -88);
-
-  @RobotPreferencesValue
   public static DoubleValue PROPORTIONAL_CONTROL_THRESHOLD_DEG =
       new DoubleValue("Climber", "Proportional Control Threshold", 10);
 
@@ -136,11 +132,6 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
     logGoalAngle.append(angle);
     logEnabled.update(enabled);
-  }
-
-  /** Sets the goal angle to preprogrammed angle and supply climbing power to motors. */
-  public void climb() {
-    setGoalAngle(Math.toRadians(CLIMB_GOAL_ANGLE_DEG.getValue()));
   }
 
   public void disable() {
