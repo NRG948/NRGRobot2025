@@ -97,7 +97,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private final PIDController pidController = new PIDController(1, 0, 0);
   private final Timer outtakeTimer = new Timer();
 
-  private double branchDistance = 0;
+  private double branchDistance = NO_MEASUREMENT;
   private double goalVelocity = 0;
   private double currentVelocity = 0;
   private boolean hasCoral = false;
