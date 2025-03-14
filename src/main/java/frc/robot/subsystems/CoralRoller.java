@@ -71,11 +71,14 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private static final double KS = KrakenX60.getKs();
   private static final double KV = (MAX_BATTERY_VOLTAGE - KS) / MAX_VELOCITY;
 
-  /** Distance measure in millimeters of CoralRoller when its empty. */
-  private static final double REEF_MIN_DISTANCE = Units.inchesToMeters(8.0); // TODO: Fix distance
+  /** A value indicating no measurement was available on the laserCAN distance sensor. */
+  private static final double NO_MEASUREMENT = 0.0;
 
-  private static final double REEF_MAX_DISTANCE =
-      REEF_MIN_DISTANCE + Units.inchesToMeters(13.0); // TODO: Fix distance
+  /** The minimum detection distance from the laserCAN to the reef branch. */
+  private static final double REEF_MIN_DISTANCE = Units.inchesToMeters(8.0);
+
+  /** The maximum detection distance from the laserCAN to the reef branch. */
+  private static final double REEF_MAX_DISTANCE = REEF_MIN_DISTANCE + Units.inchesToMeters(13.0);
 
   private static final double ERROR_TIME = 3.0;
 
@@ -88,18 +91,18 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
           METERS_PER_REVOLUTION);
   private final RelativeEncoder encoder = motor.getEncoder();
   private DigitalInput beamBreak = new DigitalInput(CORAL_ROLLER_BEAM_BREAK);
-  private LaserCan laserCAN = new LaserCan(CAN.CORAL_ARM_LASER_CAN);
+  private LaserCan laserCAN = new LaserCan(CAN.CORAL_ARM_LASER_CAN_ID);
 
   private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(KS, KV);
   private final PIDController pidController = new PIDController(1, 0, 0);
   private final Timer outtakeTimer = new Timer();
 
-  public static boolean detectsReef = false;
   private double branchDistance = 0;
   private double goalVelocity = 0;
   private double currentVelocity = 0;
   private boolean hasCoral = false;
   private boolean hasError = false;
+  private boolean detectsReef = false;
 
   private DoubleLogEntry logBranchDistance = new DoubleLogEntry(LOG, "/CoralRoller/branchDistance");
   private BooleanLogEntry logDetectsReef = new BooleanLogEntry(LOG, "/CoralRoller/detectsReef");
@@ -201,7 +204,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
     if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       branchDistance = measurement.distance_mm / 1000.0;
     } else {
-      branchDistance = 10.0;
+      branchDistance = NO_MEASUREMENT;
     }
     detectsReef = branchDistance >= REEF_MIN_DISTANCE && branchDistance <= REEF_MAX_DISTANCE;
     logBranchDistance.append(branchDistance);

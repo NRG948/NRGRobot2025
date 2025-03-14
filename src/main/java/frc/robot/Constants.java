@@ -101,7 +101,7 @@ public final class Constants {
         public static final int COMPETITION_BOT_CLIMBER_MOTOR_ID = 11;
       }
 
-      public static final int CORAL_ARM_LASER_CAN = 22;
+      public static final int CORAL_ARM_LASER_CAN_ID = 22;
     }
 
     /** Digital I/O port numbers. */
