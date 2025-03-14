@@ -165,12 +165,12 @@ public class RobotContainer {
     operatorTab
         .addBoolean("Has Coral", () -> subsystems.coralRoller.hasCoral())
         .withSize(2, 2)
-        .withPosition(0, 2);
+        .withPosition(6, 0);
 
     operatorTab
         .addBoolean("Branch Detected", () -> subsystems.coralRoller.detectsReef())
         .withSize(2, 2)
-        .withPosition(0, 6);
+        .withPosition(6, 2);
 
     if (subsystems.frontCamera.isPresent()) {
       VideoSource video =
@@ -182,8 +182,8 @@ public class RobotContainer {
       operatorTab
           .add("Front Camera", video)
           .withWidget(BuiltInWidgets.kCameraStream)
-          .withPosition(2, 0)
-          .withSize(4, 3);
+          .withSize(4, 3)
+          .withPosition(2, 0);
     }
   }
 
