@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2480000000000002,
-        "y": 0.9829999999999995
+        "x": 1.238,
+        "y": 0.963
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.892262295081967,
-        "y": 1.306668032786885
+        "x": 4.882262295081967,
+        "y": 1.2866680327868854
       },
       "isLocked": false,
       "linkedName": "Outer Processor Intake"
