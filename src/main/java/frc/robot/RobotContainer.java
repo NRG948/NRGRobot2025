@@ -242,6 +242,7 @@ public class RobotContainer {
     m_manipulatorController.povUp().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
     m_manipulatorController.back().onTrue(ManipulatorCommands.interruptAll(subsystems));
     m_manipulatorController.start().onTrue(ElevatorCommands.stowElevatorAndArm(subsystems));
+    m_manipulatorController.rightTrigger().whileTrue(CoralCommands.autoCenterCoral(subsystems));
 
     new Trigger(subsystems.coralRoller::hasCoral)
         .onTrue(LEDCommands.indicateCoralAcquired(subsystems));
@@ -251,7 +252,8 @@ public class RobotContainer {
         });
     // new Trigger(
     //         () ->
-    //             subsystems.coralRoller.detectsReef() && subsystems.elevator.isSeekingAboveLevel(L1))
+    //             subsystems.coralRoller.detectsReef() &&
+    // subsystems.elevator.isSeekingAboveLevel(L1))
     //     .whileTrue(LEDCommands.indicateBranchDetected(subsystems));
 
     new Trigger(subsystems.coralArm::hasError)

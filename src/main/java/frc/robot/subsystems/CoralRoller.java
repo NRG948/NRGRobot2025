@@ -59,6 +59,10 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   public static final RobotPreferences.DoubleValue OUTTAKE_VELOCITY =
       new RobotPreferences.DoubleValue("CoralRoller", "Outtake Velocity", 2);
 
+  @RobotPreferencesValue
+  public static final RobotPreferences.DoubleValue AUTO_CENTER_VELOCITY =
+      new RobotPreferences.DoubleValue("CoralRoller", "Auto Center Velocity", -1);
+
   private static final DataLog LOG = DataLogManager.getLog();
 
   private static final double WHEEL_DIAMETER = Units.inchesToMeters(3);
