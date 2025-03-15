@@ -34,6 +34,7 @@ import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
 import edu.wpi.first.cscore.VideoSource;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -60,6 +61,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.ClimberParameters;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.util.MotorIdleMode;
+import java.util.Map;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -85,6 +87,8 @@ public class RobotContainer {
 
   private final Timer coastModeTimer = new Timer();
   private final StringLogEntry phaseLogger = new StringLogEntry(LOG, "/Robot/Phase");
+
+  private static GenericEntry outtakeSpeedWidget;
 
   public enum RobotSelector {
     PracticeRobot2025(AprilTag.PRACTICE_VISION_PARAMS, Climber.PRACTICE_BOT_PARAMETERS),
@@ -184,6 +188,15 @@ public class RobotContainer {
           .withWidget(BuiltInWidgets.kCameraStream)
           .withSize(4, 3)
           .withPosition(2, 0);
+
+      outtakeSpeedWidget =
+          operatorTab
+              .add("OuttakeSpeed L2 L3", 2)
+              .withWidget(BuiltInWidgets.kNumberSlider)
+              .withPosition(3, 3)
+              .withSize(3, 1)
+              .withProperties(Map.of("min", 1, "max", 2)) // specify widget properties here
+              .getEntry();
     }
   }
 
@@ -256,6 +269,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autonomous.getAutonomousCommand(subsystems);
+  }
+
+  public static double getOuttakeSpeedL2L3() {
+    return outtakeSpeedWidget.getDouble(2);
   }
 
   public void periodic() {
