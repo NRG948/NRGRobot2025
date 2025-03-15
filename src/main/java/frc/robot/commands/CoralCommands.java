@@ -8,7 +8,6 @@
 package frc.robot.commands;
 
 import static frc.robot.parameters.Colors.YELLOW;
-import static frc.robot.parameters.ElevatorLevel.L4;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -34,7 +33,10 @@ public final class CoralCommands {
   public static Command outtakeCoral(Subsystems subsystems) {
     CoralRoller coralRoller = subsystems.coralRoller;
 
-    return Commands.runOnce(() -> coralRoller.outtake(), coralRoller).withName("OuttakeCoral");
+    ElevatorLevel elevatorLevel = subsystems.elevator.getCurrentElevatorLevel();
+
+    return Commands.runOnce(() -> coralRoller.outtake(elevatorLevel.getOuttakeSpeed()), coralRoller)
+        .withName("OuttakeCoral");
   }
 
   /** Returns a command that intakes coral until it is detected. */
@@ -61,10 +63,8 @@ public final class CoralCommands {
 
     return Commands.sequence(
             outtakeCoral(subsystems),
-            Commands.either(
-                Commands.sequence(Commands.waitSeconds(0.5), stowArm(subsystems)),
-                Commands.none(),
-                () -> elevator.isSeekingLevel(L4)),
+            Commands.waitSeconds(elevator.getCurrentElevatorLevel().getOuttakeDelay()),
+            stowArm(subsystems),
             Commands.idle(coralRoller).until(() -> !coralRoller.hasCoral()))
         .finallyDo(coralRoller::disable)
         .withName("OuttakeUntilCoralNotDetected");

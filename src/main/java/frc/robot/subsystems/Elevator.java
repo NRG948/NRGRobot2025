@@ -140,6 +140,8 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private boolean atLowerLimit;
   private double currentVoltage;
 
+  private ElevatorLevel currentElevatorLevel = ElevatorLevel.STOWED;
+
   /** The offset below the goal height when it is safe to pivot the arm. */
   private double armPivotHeightOffset = 0;
 
@@ -185,6 +187,11 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
    */
   public void setGoalHeight(ElevatorLevel level) {
     setGoalHeight(level.getElevatorHeight(), level.getArmOffset());
+    currentElevatorLevel = level;
+  }
+
+  public ElevatorLevel getCurrentElevatorLevel() {
+    return currentElevatorLevel;
   }
 
   /**

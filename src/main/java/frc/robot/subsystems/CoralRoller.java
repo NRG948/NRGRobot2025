@@ -143,6 +143,11 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
     outtakeTimer.restart();
   }
 
+  public void outtake(double outtakeSpeed) {
+    setGoalVelocity(outtakeSpeed);
+    outtakeTimer.restart();
+  }
+
   /** Updates hasError if stuckTimer exceeds 3 seconds. */
   public void checkError() {
     hasError = outtakeTimer.hasElapsed(ERROR_TIME);
