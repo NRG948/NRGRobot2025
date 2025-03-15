@@ -423,7 +423,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     VideoSource video =
         new HttpCamera(
             "photonvision_Port_1190_Output_MJPEG_Server",
-            "http://photonvision.local:1190/stream.mjpg",
+            "http://photonvision.local:1183/stream.mjpg",
             HttpCameraKind.kMJPGStreamer);
 
     ShuffleboardTab visionTab = Shuffleboard.getTab(getName());

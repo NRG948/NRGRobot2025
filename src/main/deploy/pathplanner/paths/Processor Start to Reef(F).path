@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.937750000000001,
-        "y": 2.3089999999999997
+        "x": 6.413422131147541,
+        "y": 1.9691086065573769
       },
       "isLocked": false,
       "linkedName": "Processor Center Start"
@@ -20,8 +20,8 @@
         "y": 2.86
       },
       "prevControl": {
-        "x": 5.806993723199378,
-        "y": 2.603413059255464
+        "x": 5.76608606557377,
+        "y": 2.005071721311474
       },
       "nextControl": null,
       "isLocked": false,

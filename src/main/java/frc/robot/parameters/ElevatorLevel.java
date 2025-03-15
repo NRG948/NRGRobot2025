@@ -57,13 +57,14 @@ public enum ElevatorLevel {
   public double getOuttakeSpeed() {
     switch (this) {
       case L1:
-        return 1.0;
+        return 0.6;
       case L4:
         return 2.0;
       case L2:
+        return 1.5;
       case L3:
       default:
-        return RobotContainer.getOuttakeSpeedL2L3();
+        return RobotContainer.getOuttakeSpeedL3();
     }
   }
 

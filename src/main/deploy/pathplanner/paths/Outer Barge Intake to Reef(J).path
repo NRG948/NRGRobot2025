@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.62825,
-        "y": 7.3595
+        "x": 1.608,
+        "y": 7.319
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.856749999999999,
-        "y": 7.2132499999999995
+        "x": 2.836499999999999,
+        "y": 7.17275
       },
       "isLocked": false,
       "linkedName": "Outer Barge Intake"
