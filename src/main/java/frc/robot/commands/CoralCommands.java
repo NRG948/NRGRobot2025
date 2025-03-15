@@ -22,6 +22,12 @@ import frc.robot.subsystems.Subsystems;
 public final class CoralCommands {
   public static final double CORAL_DETECTION_DELAY = Arm.CORAL_ARM.getValue().getRollerDelay();
 
+  /** The delay for reversing the coral during auto centering. */
+  private static final double AUTO_CENTER_BACKWARDS_SECONDS = 0.2;
+
+  /** The delay for intaking the coral during auto centering. */
+  private static final double AUTO_CENTER_FORWARDS_SECONDS = 1.0;
+
   /** Returns a command that intakes coral. */
   public static Command intakeCoral(Subsystems subsystems) {
     CoralRoller coralRoller = subsystems.coralRoller;
@@ -112,5 +118,19 @@ public final class CoralCommands {
     return Commands.idle(coralArm)
         .until(elevator::isAboveSafeArmPivotHeight)
         .withName("waitForElevatorToReachArmHeight");
+  }
+
+  public static Command autoCenterCoral(Subsystems subsystems) {
+    CoralRoller coralRoller = subsystems.coralRoller;
+
+    return Commands.sequence(
+            Commands.runOnce(
+                () -> coralRoller.setGoalVelocity(CoralRoller.AUTO_CENTER_VELOCITY.getValue()),
+                coralRoller),
+            Commands.idle(coralRoller).withTimeout(AUTO_CENTER_BACKWARDS_SECONDS),
+            Commands.runOnce(() -> intakeUntilCoralDetected(subsystems))
+                .withTimeout(AUTO_CENTER_FORWARDS_SECONDS))
+        .finallyDo(coralRoller::disable)
+        .unless(coralRoller::hasCoral);
   }
 }
