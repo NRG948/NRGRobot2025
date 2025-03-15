@@ -249,10 +249,10 @@ public class RobotContainer {
         (algaeGrabber) -> {
           new Trigger(algaeGrabber::hasAlgae).onTrue(LEDCommands.indicateAlgaeAcquired(subsystems));
         });
-    new Trigger(
-            () ->
-                subsystems.coralRoller.detectsReef() && subsystems.elevator.isSeekingAboveLevel(L1))
-        .whileTrue(LEDCommands.indicateBranchDetected(subsystems));
+    // new Trigger(
+    //         () ->
+    //             subsystems.coralRoller.detectsReef() && subsystems.elevator.isSeekingAboveLevel(L1))
+    //     .whileTrue(LEDCommands.indicateBranchDetected(subsystems));
 
     new Trigger(subsystems.coralArm::hasError)
         .whileTrue(LEDCommands.indicateErrorWithBlink(subsystems));
