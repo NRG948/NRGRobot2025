@@ -273,8 +273,8 @@ public class RobotContainer {
     return autonomous.getAutonomousCommand(subsystems);
   }
 
-  public static double getOuttakeSpeedL3() {
-    return outtakeSpeedWidget.getDouble(1.5);
+  public static double getOuttakeSpeedFromSlider() {
+    return outtakeSpeedWidget.getDouble(0);
   }
 
   public void periodic() {

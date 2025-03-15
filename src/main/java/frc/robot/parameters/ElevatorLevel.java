@@ -7,7 +7,6 @@
  
 package frc.robot.parameters;
 
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.Elevator;
 
 public enum ElevatorLevel {
@@ -53,18 +52,19 @@ public enum ElevatorLevel {
     return armOffset;
   }
 
-  /** Returns the outtake speed in radians per second. */
+  /** Returns the outtake speed in meters per second. */
   public double getOuttakeSpeed() {
     switch (this) {
       case L1:
-        return 0.6;
+        return 0.2;
       case L4:
         return 2.0;
       case L2:
-        return 1.5;
+        return 1.0;
       case L3:
+        return 1.0;
       default:
-        return RobotContainer.getOuttakeSpeedL3();
+        return 2.0;
     }
   }
 
