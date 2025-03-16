@@ -17,6 +17,7 @@ import frc.robot.subsystems.CoralRoller;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.StatusLED;
 import frc.robot.subsystems.Subsystems;
+import java.util.Set;
 
 /** A namespace for coral command factory methods. */
 public final class CoralCommands {
@@ -39,9 +40,11 @@ public final class CoralCommands {
   public static Command outtakeCoral(Subsystems subsystems) {
     CoralRoller coralRoller = subsystems.coralRoller;
 
-    ElevatorLevel elevatorLevel = subsystems.elevator.getCurrentElevatorLevel();
-
-    return Commands.runOnce(() -> coralRoller.outtake(elevatorLevel.getOuttakeSpeed()), coralRoller)
+    return Commands.runOnce(
+            () ->
+                coralRoller.outtake(
+                    subsystems.elevator.getCurrentElevatorLevel().getOuttakeSpeed()),
+            coralRoller)
         .withName("OuttakeCoral");
   }
 
@@ -69,7 +72,9 @@ public final class CoralCommands {
 
     return Commands.sequence(
             outtakeCoral(subsystems),
-            Commands.waitSeconds(elevator.getCurrentElevatorLevel().getOuttakeDelay()),
+            Commands.defer(
+                () -> Commands.waitSeconds(elevator.getCurrentElevatorLevel().getOuttakeDelay()),
+                Set.of()),
             stowArm(subsystems),
             Commands.idle(coralRoller).until(() -> !coralRoller.hasCoral()))
         .finallyDo(coralRoller::disable)
@@ -127,9 +132,10 @@ public final class CoralCommands {
             Commands.runOnce(
                 () -> coralRoller.setGoalVelocity(CoralRoller.AUTO_CENTER_VELOCITY.getValue()),
                 coralRoller),
-            Commands.idle(coralRoller).withTimeout(AUTO_CENTER_BACKWARDS_SECONDS),
-            Commands.runOnce(() -> intakeUntilCoralDetected(subsystems))
-                .withTimeout(AUTO_CENTER_FORWARDS_SECONDS))
+            Commands.race(
+                Commands.idle(coralRoller), // .withTimeout(AUTO_CENTER_BACKWARDS_SECONDS),
+                Commands.waitSeconds(AUTO_CENTER_BACKWARDS_SECONDS)),
+            intakeUntilCoralDetected(subsystems).withTimeout(AUTO_CENTER_FORWARDS_SECONDS))
         .finallyDo(coralRoller::disable)
         .unless(coralRoller::hasCoral);
   }

@@ -61,7 +61,6 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.ClimberParameters;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.util.MotorIdleMode;
-import java.util.Map;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -188,15 +187,6 @@ public class RobotContainer {
           .withWidget(BuiltInWidgets.kCameraStream)
           .withSize(4, 3)
           .withPosition(2, 0);
-
-      outtakeSpeedWidget =
-          operatorTab
-              .add("OuttakeSpeed L2 L3", 2)
-              .withWidget(BuiltInWidgets.kNumberSlider)
-              .withPosition(3, 3)
-              .withSize(3, 1)
-              .withProperties(Map.of("min", 1, "max", 2)) // specify widget properties here
-              .getEntry();
     }
   }
 
@@ -271,10 +261,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autonomous.getAutonomousCommand(subsystems);
-  }
-
-  public static double getOuttakeSpeedFromSlider() {
-    return outtakeSpeedWidget.getDouble(0);
   }
 
   public void periodic() {
