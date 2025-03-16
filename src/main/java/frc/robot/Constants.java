@@ -25,7 +25,7 @@ public final class Constants {
 
     /** The swerve drive wheel diameter. */
     public static final double WHEEL_DIAMETER =
-        Units.inchesToMeters(3.99); // 3.88 for practice bot, 3.625 for crescendo bot
+        Units.inchesToMeters(3.93); // 3.88 for practice bot, 3.625 for crescendo bot
 
     /** The length of the robot including bumpers. */
     public static final double ROBOT_LENGTH = 0.928;
