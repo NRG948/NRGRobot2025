@@ -132,9 +132,7 @@ public final class CoralCommands {
             Commands.runOnce(
                 () -> coralRoller.setGoalVelocity(CoralRoller.AUTO_CENTER_VELOCITY.getValue()),
                 coralRoller),
-            Commands.race(
-                Commands.idle(coralRoller), // .withTimeout(AUTO_CENTER_BACKWARDS_SECONDS),
-                Commands.waitSeconds(AUTO_CENTER_BACKWARDS_SECONDS)),
+            Commands.idle(coralRoller).withTimeout(AUTO_CENTER_BACKWARDS_SECONDS),
             intakeUntilCoralDetected(subsystems).withTimeout(AUTO_CENTER_FORWARDS_SECONDS))
         .finallyDo(coralRoller::disable)
         .unless(coralRoller::hasCoral);
