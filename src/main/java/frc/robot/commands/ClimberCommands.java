@@ -42,7 +42,8 @@ public final class ClimberCommands {
 
   public static Command unclimb(Subsystems subsystems) {
     return Commands.sequence(
-        Commands.runOnce(() -> subsystems.climber.setGoalAngle(STOW_ANGLE), subsystems.climber),
-        Commands.idle(subsystems.climber).until(() -> subsystems.climber.atGoalAngle()));
+            Commands.runOnce(() -> subsystems.climber.setGoalAngle(STOW_ANGLE), subsystems.climber),
+            Commands.idle(subsystems.climber).until(() -> subsystems.climber.atGoalAngle()))
+        .finallyDo(subsystems.climber::disable);
   }
 }

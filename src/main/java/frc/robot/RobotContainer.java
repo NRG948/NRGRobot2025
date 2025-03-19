@@ -211,6 +211,7 @@ public class RobotContainer {
               return hid.getLeftBumperButton() && hid.getRightBumperButton();
             })
         .whileTrue(ClimberCommands.climb(subsystems));
+    m_driverController.leftTrigger().whileTrue(ClimberCommands.unclimb(subsystems));
 
     m_manipulatorController.a().onTrue(raiseElevatorAndTipCoralArm(subsystems, L1));
     m_manipulatorController.x().onTrue(raiseElevatorAndTipCoralArm(subsystems, L2));
