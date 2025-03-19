@@ -78,7 +78,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private static final double REEF_MIN_DISTANCE = Units.inchesToMeters(8.0);
 
   /** The maximum detection distance from the laserCAN to the reef branch. */
-  private static final double REEF_MAX_DISTANCE = REEF_MIN_DISTANCE + Units.inchesToMeters(13.0);
+  private static final double REEF_MAX_DISTANCE = REEF_MIN_DISTANCE + Units.inchesToMeters(16.0);
 
   private static final double ERROR_TIME = 3.0;
 
@@ -119,7 +119,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
     try {
       laserCAN.setRangingMode(LaserCan.RangingMode.SHORT);
       laserCAN.setRegionOfInterest(
-          new LaserCan.RegionOfInterest(12, 8, 8, 16)); // Makes detection region a box
+          new LaserCan.RegionOfInterest(7, 8, 2, 16)); // Makes detection region a box
       laserCAN.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
     } catch (ConfigurationFailedException e) {
       System.out.println("Configuration failed! " + e);
