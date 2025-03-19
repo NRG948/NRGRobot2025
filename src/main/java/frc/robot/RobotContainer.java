@@ -87,8 +87,6 @@ public class RobotContainer {
   private final Timer coastModeTimer = new Timer();
   private final StringLogEntry phaseLogger = new StringLogEntry(LOG, "/Robot/Phase");
 
-  private static GenericEntry outtakeSpeedWidget;
-
   public enum RobotSelector {
     PracticeRobot2025(AprilTag.PRACTICE_VISION_PARAMS, Climber.PRACTICE_BOT_PARAMETERS),
     CompetitionRobot2025(AprilTag.COMPETITION_VISION_PARAMS, Climber.COMPETITION_BOT_PARAMETERS);
