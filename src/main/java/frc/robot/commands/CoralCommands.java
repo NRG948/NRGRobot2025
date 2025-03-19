@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import static frc.robot.parameters.Colors.YELLOW;
+import static frc.robot.subsystems.CoralRoller.INTAKE_VELOCITY;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -33,7 +34,9 @@ public final class CoralCommands {
   public static Command intakeCoral(Subsystems subsystems) {
     CoralRoller coralRoller = subsystems.coralRoller;
 
-    return Commands.runOnce(() -> coralRoller.intake(), coralRoller).withName("IntakeCoral");
+    return Commands.runOnce(
+            () -> coralRoller.setGoalVelocity(INTAKE_VELOCITY.getValue()), coralRoller)
+        .withName("IntakeCoral");
   }
 
   /** Returns a command that outtakes coral. */
@@ -42,7 +45,7 @@ public final class CoralCommands {
 
     return Commands.runOnce(
             () ->
-                coralRoller.outtake(
+                coralRoller.setGoalVelocity(
                     subsystems.elevator.getCurrentElevatorLevel().getOuttakeSpeed()),
             coralRoller)
         .withName("OuttakeCoral");

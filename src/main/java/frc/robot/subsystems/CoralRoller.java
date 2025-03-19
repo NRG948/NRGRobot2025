@@ -56,10 +56,6 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
       new RobotPreferences.DoubleValue("CoralRoller", "Intake Velocity", 1);
 
   @RobotPreferencesValue
-  public static final RobotPreferences.DoubleValue OUTTAKE_VELOCITY =
-      new RobotPreferences.DoubleValue("CoralRoller", "Outtake Velocity", 2);
-
-  @RobotPreferencesValue
   public static final RobotPreferences.DoubleValue AUTO_CENTER_VELOCITY =
       new RobotPreferences.DoubleValue("CoralRoller", "Auto Center Velocity", -1);
 
@@ -134,22 +130,6 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   public void setGoalVelocity(double velocity) {
     goalVelocity = velocity;
     logGoalVelocity.append(goalVelocity);
-  }
-
-  /** Intakes the coral. */
-  public void intake() {
-    setGoalVelocity(INTAKE_VELOCITY.getValue());
-  }
-
-  /** Outakes the coral. */
-  public void outtake() {
-    setGoalVelocity(OUTTAKE_VELOCITY.getValue());
-    outtakeTimer.restart();
-  }
-
-  public void outtake(double outtakeSpeed) {
-    setGoalVelocity(outtakeSpeed);
-    outtakeTimer.restart();
   }
 
   /** Updates hasError if stuckTimer exceeds 3 seconds. */
