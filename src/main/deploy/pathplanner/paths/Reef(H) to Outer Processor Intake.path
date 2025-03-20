@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 5.79,
-        "y": 3.6
+        "y": 3.93
       },
       "prevControl": null,
       "nextControl": {
         "x": 7.527,
-        "y": 2.5039999999999996
+        "y": 2.8339999999999996
       },
       "isLocked": false,
       "linkedName": "Reef(H)"
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 54.090276920822355
+    "rotation": 54.0
   },
   "reversed": false,
   "folder": null,

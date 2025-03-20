@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.805979508196721,
-        "y": 4.420194672131146
+        "x": 6.781899547972572,
+        "y": 4.345258715749157
       },
       "isLocked": false,
       "linkedName": "Barge Center Start"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 5.79,
-        "y": 3.6
+        "y": 3.93
       },
       "prevControl": {
-        "x": 6.775389344262295,
-        "y": 3.9509200819672134
+        "x": 6.331089579379554,
+        "y": 4.151658491518404
       },
       "nextControl": null,
       "isLocked": false,
