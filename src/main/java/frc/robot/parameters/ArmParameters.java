@@ -40,12 +40,6 @@ public interface ArmParameters {
   /** Returns the robot arm length. */
   public double getArmLength();
 
-  /** Returns the absolute encoder reading in radians at the designated 0 point of the mechanism */
-  public double getAbsoluteEncoderZeroOffset();
-
-  /** Returns whether the absolute encoder is inverted. */
-  public boolean isAbsoluteEncoderInverted();
-
   /** Returns kS feedforward constant in volts. */
   public double getkS();
 

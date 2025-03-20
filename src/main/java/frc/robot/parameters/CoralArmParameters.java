@@ -27,8 +27,6 @@ public enum CoralArmParameters implements ArmParameters {
       0.315,
       PRACTICE_CORAL_ARM_MOTOR_ID,
       CORAL_ARM_ABSOLUTE_ENCODER,
-      true, // The absolute encoder is inverted.
-      Math.toRadians(10.55),
       Math.toRadians(10),
       Math.toRadians(95),
       0.08),
@@ -39,9 +37,6 @@ public enum CoralArmParameters implements ArmParameters {
       0.315,
       COMPETITION_CORAL_ARM_MOTOR_ID,
       CORAL_ARM_ABSOLUTE_ENCODER,
-      true, // The absolute encoder is inverted.
-      // Math.toRadians(34.4),
-      Math.toRadians(-92), // TODO: this works around disconected absolute encoder
       Math.toRadians(10),
       Math.toRadians(95),
       0.1);
@@ -54,9 +49,6 @@ public enum CoralArmParameters implements ArmParameters {
   private final int encoderID;
   private final double minAngleRad;
   private final double maxAngleRad;
-
-  private final boolean absoluteEncoderInverted;
-  private final double absoluteEncoderZeroOffset;
 
   private double kS;
   private double kV;
@@ -74,9 +66,6 @@ public enum CoralArmParameters implements ArmParameters {
    * @param armLength The length of the arm.
    * @param motorID The CAN ID of the motor.
    * @param encoderID The absolute encoder ID.
-   * @param absoluteEncoderInverted Whether the absolute encoder is inverted.
-   * @param absoluteEncoderZeroOffset The reading of the absolute encoder in radians at the
-   *     designated 0 point of the mechanism.
    * @param minAngleRad The min angle of the arm in radians.
    * @param maxAngleRad The max angle of the arm in radians.
    */
@@ -87,8 +76,6 @@ public enum CoralArmParameters implements ArmParameters {
       double armLength,
       int motorID,
       int encoderID,
-      boolean absoluteEncoderInverted,
-      double absoluteEncoderZeroOffset,
       double minAngleRad,
       double maxAngleRad,
       double rollerDelay) {
@@ -99,8 +86,6 @@ public enum CoralArmParameters implements ArmParameters {
     this.kS = motorParameters.getKs();
     this.motorID = motorID;
     this.encoderID = encoderID;
-    this.absoluteEncoderInverted = absoluteEncoderInverted;
-    this.absoluteEncoderZeroOffset = absoluteEncoderZeroOffset;
     this.minAngleRad = minAngleRad;
     this.maxAngleRad = maxAngleRad;
     this.rollerDelay = rollerDelay;
@@ -152,16 +137,6 @@ public enum CoralArmParameters implements ArmParameters {
   /** Returns the robot arm length. */
   public double getArmLength() {
     return armLength;
-  }
-
-  /** Returns the absolute encoder reading in radians at the designated 0 point of the mechanism */
-  public double getAbsoluteEncoderZeroOffset() {
-    return absoluteEncoderZeroOffset;
-  }
-
-  /** Returns whether the absolute encoder is inverted. */
-  public boolean isAbsoluteEncoderInverted() {
-    return absoluteEncoderInverted;
   }
 
   /** Returns kS feedforward constant in volts. */
