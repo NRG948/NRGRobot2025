@@ -21,23 +21,36 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class QuestTelemetryNT implements QuestTelemetry {
 
-  private static final float[] ZERO_VECTOR3 = new float[] {0.0f, 0.0f, 0.0f};
-  private static final float[] ZERO_VECTOR4 = new float[] {0.0f, 0.0f, 0.0f, 0.0f};
+  private static final float[] ZERO_VECTOR_3 = new float[] {0.0f, 0.0f, 0.0f};
+  private static final float[] ZERO_VECTOR_4 = new float[] {0.0f, 0.0f, 0.0f, 0.0f};
 
-  // Configure Network Tables topics (questnav/...) to communicate with the QuestNav.
+  /** The default FRC Network Tables instance. */
   private NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
+
+  /** The network table containing all of the QuestNav I/O topics. */
   private NetworkTable questnavTable = ntInstance.getTable("questnav");
 
-  // Subscribe to the questnav topics in the Network Tables.
-  // Reference: https://github.com/juchong/QuestNav/blob/main/unity/Assets/Robot/QuestNav.cs#L718
+  /**
+   * The MOSI (Master-out Slave-in) topic used to send integer command codes to the QuestNav.<br>
+   * <br>
+   * Command 1: Reset heading. <br>
+   * Command 2: Reset Quest position to pose set in topic "/questnav/resetpose" {x,y,rotDegrees}.
+   * <br>
+   * Command 3: Ping (miso ping response should be code 97.)
+   */
   private final IntegerPublisher questMosi = questnavTable.getIntegerTopic("mosi").publish();
+
+  // Subscribe to the questnav topics in the Network Tables.
+  // The MISO (Master-in Slave-out) topic is used to receive integer status codes from the QuestNav.
+  // Reference:
+  // https://github.com/juchong/QuestNav/blob/767834fba671fa53fcd75c8b4e50b61f6ae3c900/unity/Assets/Robot/QuestNav.cs#L718
   private final IntegerSubscriber questMiso = questnavTable.getIntegerTopic("miso").subscribe(0);
   private final FloatArraySubscriber questPosition =
-      questnavTable.getFloatArrayTopic("position").subscribe(ZERO_VECTOR3);
+      questnavTable.getFloatArrayTopic("position").subscribe(ZERO_VECTOR_3);
   private final FloatArraySubscriber questQuaternion =
-      questnavTable.getFloatArrayTopic("quaternion").subscribe(ZERO_VECTOR4);
+      questnavTable.getFloatArrayTopic("quaternion").subscribe(ZERO_VECTOR_4);
   private final FloatArraySubscriber questEulerAngles =
-      questnavTable.getFloatArrayTopic("eulerAngles").subscribe(ZERO_VECTOR3);
+      questnavTable.getFloatArrayTopic("eulerAngles").subscribe(ZERO_VECTOR_3);
   private final DoubleSubscriber questBattery =
       questnavTable.getDoubleTopic("batteryPercent").subscribe(0.0);
   private final DoubleSubscriber questTimestamp =
