@@ -44,7 +44,8 @@ public class QuestCalibration {
   public Command determineOffsetToRobotCenter(
       Swerve drive, Supplier<Pose2d> robotPose, Supplier<Pose2d> questPoseSupplier) {
     return Commands.repeatingSequence(
-            Commands.run(() -> drive.drive(0, 0, Math.PI / 10.0, false), drive).withTimeout(0.5),
+            Commands.run(() -> drive.drive(0, 0, Math.PI / 10.0, false), drive)
+                .withTimeout(0.5), // TODO: Pass in valid rotaional speed
             Commands.runOnce(
                     () -> {
                       // Update current offset

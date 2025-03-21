@@ -8,13 +8,12 @@
 package frc.robot.questnav;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 
-// import org.littletonrobotics.junction.AutoLog; // TODO: investigate this package
-
+/** An interface for managing QuestNav telemetry. */
 public interface QuestTelemetry extends AutoCloseable {
 
-  // @Autolog
+  /** A class containing QuestNav telemetry. */
   public static class QuestTelemetryData {
     /** Is the QuestNav headset connected to the network. */
     public boolean wasUpdated = false;
@@ -25,25 +24,52 @@ public interface QuestTelemetry extends AutoCloseable {
     /** The timestamp of the last telemetry update from the QuestNav. */
     public double timestamp = 0;
 
-    /** */
-    public double timestampDelta = 0;
-
-    /** The field-relative pose of the QuestNav device (i.e. offset by the initial pose). */
-    public Pose2d questPose = new Pose2d();
-
     /** The field-relative pose of the robot (i.e. offset by the initial pose). */
     public Pose2d robotPose = new Pose2d();
 
-    public Translation2d questTranslation = new Translation2d();
-
-    public Pose2d rawPose = new Pose2d();
+    /** The field-relative pose of the QuestNav (i.e. offset by the initial pose). */
+    public Pose2d questPose = new Pose2d();
   }
+
+  /**
+   * Sets the transform mapping the QuestNav to the center of the robot.
+   *
+   * @param questNavToRobot
+   */
+  public default void setQuestNavToRobotTransform(Transform2d questNavToRobot) {}
 
   /** Refreshes the latest questnav telemetry from the Network Tables. */
   public default void updateTelemetry(QuestTelemetryData telemetry) {}
 
+  /**
+   * Pings the QuestNav for readiness.
+   *
+   * @return Returns true when the QuestNav is ready.
+   */
+  public default boolean ping() {
+    return true;
+  }
+
   /** Sets supplied pose as the origin of all position telemetry. */
   public default void setInitialPose(Pose2d pose) {}
+
+  /**
+   * Zeroes the pose of the QuestNav.
+   *
+   * @return Returns true when completed.
+   */
+  public default boolean zeroPose() {
+    return true;
+  }
+
+  /**
+   * Zeroes the heading of the QuestNav.
+   *
+   * @return Returns true when completed.
+   */
+  public default boolean zeroHeading() {
+    return true;
+  }
 
   @Override
   public default void close() {}

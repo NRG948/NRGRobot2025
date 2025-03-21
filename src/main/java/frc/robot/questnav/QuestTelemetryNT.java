@@ -7,11 +7,10 @@
  
 package frc.robot.questnav;
 
-import static frc.robot.Constants.Quest3S.ROBOT_TO_QUEST;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.FloatArraySubscriber;
@@ -47,6 +46,8 @@ public class QuestTelemetryNT implements QuestTelemetry {
   /** The initial pose of the Quest3S in absolute field coordinates. */
   private Pose2d initialPose;
 
+  private Transform2d questNavToRobot;
+
   /** How much to offset the raw yaw angle coming from the Quest headset (in degrees). */
   private float yawOffset = 0.0f;
 
@@ -55,66 +56,79 @@ public class QuestTelemetryNT implements QuestTelemetry {
   }
 
   public void updateTelemetry(QuestTelemetryData telemetry) {
-    telemetry.questPose = getQuestPose();
-    telemetry.robotPose = getRobotPose();
-    telemetry.questTranslation = getQuestTranslation();
-    telemetry.rawPose = getRawPose();
-
-    telemetry.batteryLevel = questBattery.get();
+    cleanUpOculusMessages();
 
     double timestamp = questTimestamp.get();
-    telemetry.timestampDelta = timestamp - telemetry.timestamp;
+    double timestampDelta = timestamp - telemetry.timestamp;
     telemetry.timestamp = timestamp;
 
     // The timestampDelta is the change in the timestamp between the current and last robot loop.
     // The delta is zero if the new measurement is from the same timestamp as the last measurement,
     // meaning we have not received new data.
-    telemetry.wasUpdated = telemetry.timestampDelta != 0;
+    telemetry.wasUpdated = timestampDelta != 0;
 
-    cleanUpOculusMessages();
+    if (telemetry.wasUpdated) {
+
+      telemetry.questPose = getQuestPose();
+      telemetry.robotPose = getRobotPose();
+
+      telemetry.batteryLevel = questBattery.get();
+    }
+  }
+
+  public void setQuestNavToRobotTransform(Transform2d questNavToRobot) {
+    this.questNavToRobot = questNavToRobot;
+  }
+
+  public boolean ping() {
+    if (questMiso.get() != 97) {
+      questMosi.set(3);
+      return false;
+    }
+    return true;
   }
 
   /** Sets a supplied pose as the origin of all position telemetry. */
   public void setInitialPose(Pose2d pose) {
-    zeroAbsolutePosition();
     initialPose = pose;
   }
 
-  /** Zeroes the absolute 3D position of the robot (similar to long-pressing the quest logo) */
-  private void zeroAbsolutePosition() {
-    if (questMiso.get() != 99) {
-      questMosi.set(1);
+  /** Zeroes the absolute 3D position of the QuestNav (similar to long-pressing the quest logo) */
+  public boolean zeroPose() {
+    if (questMiso.get() != 98) {
+      questMosi.set(2);
+      return false;
     }
+    return true;
   }
 
-  private void setYawOffset() {
-    yawOffset = questEulerAngles.get()[1];
+  /** Zeroes the heading of the Questnav (similar to long-pressing the quest logo) */
+  public boolean zeroHeading() {
+    if (questMiso.get() != 99) {
+      questMosi.set(1);
+      return false;
+    }
+    return true;
   }
 
   /** Returns the questnav's yaw in radians with the zero-offset applied. */
   private double getYaw() {
     float yawRaw = questEulerAngles.get()[1];
-    return MathUtil.angleModulus(Math.toRadians(yawRaw - yawOffset));
+    return MathUtil.angleModulus(-Math.toRadians(yawRaw - yawOffset));
   }
 
   private Translation2d getQuestTranslation() {
     float[] oculusPosition = questPosition.get();
-    // return new Translation2d(-oculusPosition[0], oculusPosition[2]);
-    return new Translation2d(oculusPosition[2], -oculusPosition[0]);
-  }
-
-  private Pose2d getRawPose() {
-    return new Pose2d(getQuestTranslation(), Rotation2d.fromRadians(getYaw()));
+    return new Translation2d(-oculusPosition[0], -oculusPosition[2]);
   }
 
   private Pose2d getQuestPose() {
-    return new Pose2d(
-        getQuestTranslation().minus(ROBOT_TO_QUEST), Rotation2d.fromRadians(getYaw()));
+    return new Pose2d(getQuestTranslation(), Rotation2d.fromRadians(getYaw()))
+        .relativeTo(initialPose);
   }
 
   private Pose2d getRobotPose() {
-    return new Pose2d(
-        getQuestPose().minus(initialPose).getTranslation(), Rotation2d.fromRadians(getYaw()));
+    return getQuestPose().plus(questNavToRobot);
   }
 
   /**
@@ -122,7 +136,7 @@ public class QuestTelemetryNT implements QuestTelemetry {
    * Cleans up Oculus subroutine messages after processing on the headset.
    */
   private void cleanUpOculusMessages() {
-    if (questMiso.get() == 99) {
+    if (questMiso.get() != 0) {
       questMosi.set(0);
     }
   }
