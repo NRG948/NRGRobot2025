@@ -16,6 +16,8 @@ public interface ArmParameters {
 
   public String getArmName();
 
+  public double getStowedAngleRad();
+
   /** Returns the min angle of the arm in radians. */
   public double getMinAngleRad();
 

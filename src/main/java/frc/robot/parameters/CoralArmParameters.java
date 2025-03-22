@@ -27,6 +27,7 @@ public enum CoralArmParameters implements ArmParameters {
       0.315,
       PRACTICE_CORAL_ARM_MOTOR_ID,
       CORAL_ARM_ABSOLUTE_ENCODER,
+      Math.toRadians(92),
       Math.toRadians(10),
       Math.toRadians(95),
       0.08),
@@ -37,6 +38,7 @@ public enum CoralArmParameters implements ArmParameters {
       0.315,
       COMPETITION_CORAL_ARM_MOTOR_ID,
       CORAL_ARM_ABSOLUTE_ENCODER,
+      Math.toRadians(92),
       Math.toRadians(10),
       Math.toRadians(95),
       0.1);
@@ -47,6 +49,7 @@ public enum CoralArmParameters implements ArmParameters {
   private final double armLength;
   private final int motorID;
   private final int encoderID;
+  private final double stowedAngle;
   private final double minAngleRad;
   private final double maxAngleRad;
 
@@ -66,6 +69,7 @@ public enum CoralArmParameters implements ArmParameters {
    * @param armLength The length of the arm.
    * @param motorID The CAN ID of the motor.
    * @param encoderID The absolute encoder ID.
+   * @param stowedAngle The angle of the arm when stowed in radians.
    * @param minAngleRad The min angle of the arm in radians.
    * @param maxAngleRad The max angle of the arm in radians.
    */
@@ -76,6 +80,7 @@ public enum CoralArmParameters implements ArmParameters {
       double armLength,
       int motorID,
       int encoderID,
+      double stowedAngle,
       double minAngleRad,
       double maxAngleRad,
       double rollerDelay) {
@@ -86,6 +91,7 @@ public enum CoralArmParameters implements ArmParameters {
     this.kS = motorParameters.getKs();
     this.motorID = motorID;
     this.encoderID = encoderID;
+    this.stowedAngle = stowedAngle;
     this.minAngleRad = minAngleRad;
     this.maxAngleRad = maxAngleRad;
     this.rollerDelay = rollerDelay;
@@ -97,6 +103,11 @@ public enum CoralArmParameters implements ArmParameters {
   /** Returns the name of the arm subsystem. */
   public String getArmName() {
     return "CoralArm";
+  }
+
+  /** Returns the angle of the arm when stowed in radians. */
+  public double getStowedAngleRad() {
+    return stowedAngle;
   }
 
   /** Returns the min angle of the arm in radians. */

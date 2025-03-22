@@ -145,9 +145,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     motor =
         new TalonFXAdapter(logPrefix, talonFX, talonFXConfigs.MotorOutput, RADIANS_PER_ROTATION);
     relativeEncoder = motor.getEncoder();
-    relativeEncoder.setPosition(
-        Math.toRadians(
-            92)); // TODO: Parametize starting position? Different arms start in different degrees.
+    relativeEncoder.setPosition(parameters.getStowedAngleRad());
 
     logCurrentAngle = new DoubleLogEntry(LOG, logPrefix + "/Current Angle");
     logCurrentVelocity = new DoubleLogEntry(LOG, logPrefix + "/Current Velocity");
