@@ -27,8 +27,7 @@ public enum AlgaeArmParameters implements ArmParameters {
       Units.inchesToMeters(8),
       ALGAE_ARM_MOTOR_ID,
       ALGAE_ARM_ABSOLUTE_ENCODER,
-      true,
-      Math.toRadians(-120),
+      Math.toRadians(90),
       Math.toRadians(15),
       Math.toRadians(90)),
 
@@ -39,8 +38,7 @@ public enum AlgaeArmParameters implements ArmParameters {
       Units.inchesToMeters(8),
       ALGAE_ARM_MOTOR_ID,
       ALGAE_ARM_ABSOLUTE_ENCODER,
-      true,
-      Math.toRadians(-120.5),
+      Math.toRadians(90),
       Math.toRadians(15),
       Math.toRadians(90));
 
@@ -50,11 +48,9 @@ public enum AlgaeArmParameters implements ArmParameters {
   private final double armLength;
   private final int motorID;
   private final int encoderID;
+  private final double stowedAngle;
   private final double minAngleRad;
   private final double maxAngleRad;
-
-  private final boolean absoluteEncoderInverted;
-  private final double absoluteEncoderZeroOffset;
 
   private double kS;
   private double kV;
@@ -70,9 +66,7 @@ public enum AlgaeArmParameters implements ArmParameters {
    * @param armLength The length of the arm.
    * @param motorID The CAN ID of the motor.
    * @param encoderID The absolute encoder ID.
-   * @param absoluteEncoderInverted Whether the absolute encoder is inverted.
-   * @param absoluteEncoderZeroOffset The reading of the absolute encoder in radians at the
-   *     designated 0 point of the mechanism.
+   * @param stowedAngle The angle of the arm when stowed in radians.
    * @param minAngleRad The min angle of the arm in radians.
    * @param maxAngleRad The max angle of the arm in radians.
    */
@@ -83,8 +77,7 @@ public enum AlgaeArmParameters implements ArmParameters {
       double armLength,
       int motorID,
       int encoderID,
-      boolean absoluteEncoderInverted,
-      double absoluteEncoderZeroOffset,
+      double stowedAngle,
       double minAngleRad,
       double maxAngleRad) {
     this.gearRatio = gearRatio;
@@ -94,8 +87,7 @@ public enum AlgaeArmParameters implements ArmParameters {
     this.kS = motorParameters.getKs();
     this.motorID = motorID;
     this.encoderID = encoderID;
-    this.absoluteEncoderInverted = absoluteEncoderInverted;
-    this.absoluteEncoderZeroOffset = absoluteEncoderZeroOffset;
+    this.stowedAngle = stowedAngle;
     this.minAngleRad = minAngleRad;
     this.maxAngleRad = maxAngleRad;
     kV = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularSpeed();
@@ -106,6 +98,11 @@ public enum AlgaeArmParameters implements ArmParameters {
   /** Returns the name of the arm subsystem. */
   public String getArmName() {
     return "AlgaeArm";
+  }
+
+  /** Returns the angle of the arm when stowed in radians. */
+  public double getStowedAngleRad() {
+    return stowedAngle;
   }
 
   /** Returns the min angle of the arm in radians. */
@@ -146,16 +143,6 @@ public enum AlgaeArmParameters implements ArmParameters {
   /** Returns the robot arm length. */
   public double getArmLength() {
     return armLength;
-  }
-
-  /** Returns the absolute encoder reading in radians at the designated 0 point of the mechanism */
-  public double getAbsoluteEncoderZeroOffset() {
-    return absoluteEncoderZeroOffset;
-  }
-
-  /** Returns whether the absolute encoder is inverted. */
-  public boolean isAbsoluteEncoderInverted() {
-    return absoluteEncoderInverted;
   }
 
   /** Returns kS feedforward constant in volts. */
