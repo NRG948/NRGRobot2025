@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.networktables.FloatArrayPublisher;
 import edu.wpi.first.networktables.FloatArraySubscriber;
 import edu.wpi.first.networktables.IntegerPublisher;
 import edu.wpi.first.networktables.IntegerSubscriber;
@@ -40,6 +41,9 @@ public class QuestTelemetryNT implements QuestTelemetry {
    */
   private final IntegerPublisher questMosi = questnavTable.getIntegerTopic("mosi").publish();
 
+  private final FloatArrayPublisher questResetPose =
+      questnavTable.getFloatArrayTopic("resetpose").publish();
+
   // Subscribe to the questnav topics in the Network Tables.
   // The MISO (Master-in Slave-out) topic is used to receive integer status codes from the QuestNav.
   // Reference:
@@ -57,15 +61,12 @@ public class QuestTelemetryNT implements QuestTelemetry {
       questnavTable.getDoubleTopic("timestamp").subscribe(0.0);
 
   /** The initial pose of the Quest3S in absolute field coordinates. */
-  private Pose2d initialPose;
+  private Pose2d initialQuestPose;
 
   private Transform2d questNavToRobot;
 
-  /** How much to offset the raw yaw angle coming from the Quest headset (in degrees). */
-  private float yawOffset = 0.0f;
-
   public QuestTelemetryNT() {
-    setInitialPose(Pose2d.kZero);
+    setInitialQuestPose(Pose2d.kZero);
   }
 
   public void updateTelemetry(QuestTelemetryData telemetry) {
@@ -81,7 +82,6 @@ public class QuestTelemetryNT implements QuestTelemetry {
     telemetry.wasUpdated = timestampDelta != 0;
 
     if (telemetry.wasUpdated) {
-
       telemetry.questPose = getQuestPose();
       telemetry.robotPose = getRobotPose();
 
@@ -96,21 +96,22 @@ public class QuestTelemetryNT implements QuestTelemetry {
   public boolean ping() {
     if (questMiso.get() != 97) {
       questMosi.set(3);
-      return false;
+      return true;
     }
     return true;
   }
 
   /** Sets a supplied pose as the origin of all position telemetry. */
-  public void setInitialPose(Pose2d pose) {
-    initialPose = pose;
+  public void setInitialQuestPose(Pose2d pose) {
+    initialQuestPose = pose;
   }
 
   /** Zeroes the absolute 3D position of the QuestNav (similar to long-pressing the quest logo) */
   public boolean zeroPose() {
+    questResetPose.set(ZERO_VECTOR_3);
     if (questMiso.get() != 98) {
       questMosi.set(2);
-      return false;
+      return true;
     }
     return true;
   }
@@ -119,7 +120,7 @@ public class QuestTelemetryNT implements QuestTelemetry {
   public boolean zeroHeading() {
     if (questMiso.get() != 99) {
       questMosi.set(1);
-      return false;
+      return true;
     }
     return true;
   }
@@ -127,17 +128,18 @@ public class QuestTelemetryNT implements QuestTelemetry {
   /** Returns the questnav's yaw in radians with the zero-offset applied. */
   private double getYaw() {
     float yawRaw = questEulerAngles.get()[1];
-    return MathUtil.angleModulus(-Math.toRadians(yawRaw - yawOffset));
+    return MathUtil.angleModulus(-Math.toRadians(yawRaw));
   }
 
   private Translation2d getQuestTranslation() {
     float[] oculusPosition = questPosition.get();
-    return new Translation2d(-oculusPosition[0], -oculusPosition[2]);
+    return new Translation2d(oculusPosition[2], -oculusPosition[0]);
   }
 
   private Pose2d getQuestPose() {
-    return new Pose2d(getQuestTranslation(), Rotation2d.fromRadians(getYaw()))
-        .relativeTo(initialPose);
+    return new Pose2d(
+        initialQuestPose.getTranslation().plus(getQuestTranslation()),
+        initialQuestPose.getRotation().plus(Rotation2d.fromRadians(getYaw())));
   }
 
   private Pose2d getRobotPose() {

@@ -51,7 +51,7 @@ public interface QuestTelemetry extends AutoCloseable {
   }
 
   /** Sets supplied pose as the origin of all position telemetry. */
-  public default void setInitialPose(Pose2d pose) {}
+  public default void setInitialQuestPose(Pose2d pose) {}
 
   /**
    * Zeroes the pose of the QuestNav.

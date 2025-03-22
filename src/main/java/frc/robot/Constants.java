@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -143,7 +144,7 @@ public final class Constants {
   public class Quest3S {
 
     public static final Transform2d QUEST_TO_ROBOT =
-        new Transform2d(); // TODO: Measure real values.
+        new Transform2d(-0.38, -0.095, Rotation2d.kZero);
 
     public static final Matrix<N3, N1> STD_DEVS = VecBuilder.fill(0, 0, 0);
   }
