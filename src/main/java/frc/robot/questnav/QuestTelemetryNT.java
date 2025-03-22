@@ -19,11 +19,26 @@ import edu.wpi.first.networktables.IntegerPublisher;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.IntegerLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 
 public class QuestTelemetryNT implements QuestTelemetry {
 
+  private static final int REQUEST_IDLE = 0;
+  private static final int REQUEST_ZERO_HEADING = 1;
+  private static final int REQUEST_RESET_POSE = 2;
+  private static final int REQUEST_PING = 3;
+
+  private static final int RESPONSE_IDLE = 0;
+  private static final int RESPONSE_PING = 97;
+  private static final int RESPONSE_POSE_INITIALIZED = 98;
+  private static final int RESPONSE_HEADING_ZEROED = 99;
+
   private static final float[] ZERO_VECTOR_3 = new float[] {0.0f, 0.0f, 0.0f};
   private static final float[] ZERO_VECTOR_4 = new float[] {0.0f, 0.0f, 0.0f, 0.0f};
+
+  private static final DataLog LOG = DataLogManager.getLog();
 
   /** The default FRC Network Tables instance. */
   private NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
@@ -61,12 +76,20 @@ public class QuestTelemetryNT implements QuestTelemetry {
       questnavTable.getDoubleTopic("timestamp").subscribe(0.0);
 
   /** The initial pose of the Quest3S in absolute field coordinates. */
-  private Pose2d initialQuestPose;
+  private Pose2d initialQuestFieldPose = new Pose2d();
 
-  private Transform2d questNavToRobot;
+  private Pose2d initialRawQuestPose = new Pose2d();
 
-  public QuestTelemetryNT() {
-    setInitialQuestPose(Pose2d.kZero);
+  private Transform2d questNavToRobot = new Transform2d();
+
+  private double yawOffset;
+
+  private final IntegerLogEntry logMosi = new IntegerLogEntry(LOG, "/QuestNav/Mosi");
+  private final IntegerLogEntry logMiso = new IntegerLogEntry(LOG, "/QuestNav/Miso");
+
+  public QuestTelemetryNT(QuestTelemetryData telemetryData) {
+    updateTelemetry(telemetryData);
+    setInitialQuestFieldPose(Pose2d.kZero);
   }
 
   public void updateTelemetry(QuestTelemetryData telemetry) {
@@ -82,8 +105,10 @@ public class QuestTelemetryNT implements QuestTelemetry {
     telemetry.wasUpdated = timestampDelta != 0;
 
     if (telemetry.wasUpdated) {
-      telemetry.questPose = getQuestPose();
-      telemetry.robotPose = getRobotPose();
+      telemetry.rawQuestPose = getRawQuestPose();
+      telemetry.questPose =
+          initialQuestFieldPose.transformBy(telemetry.rawQuestPose.minus(initialRawQuestPose));
+      telemetry.robotPose = telemetry.questPose.plus(questNavToRobot);
 
       telemetry.batteryLevel = questBattery.get();
     }
@@ -94,23 +119,42 @@ public class QuestTelemetryNT implements QuestTelemetry {
   }
 
   public boolean ping() {
-    if (questMiso.get() != 97) {
-      questMosi.set(3);
+    long miso = questMiso.get();
+    logMiso.update(miso);
+    if (miso != RESPONSE_PING) {
+      questMosi.set(REQUEST_PING);
+      logMosi.update(REQUEST_PING);
       return true;
     }
     return true;
   }
 
   /** Sets a supplied pose as the origin of all position telemetry. */
-  public void setInitialQuestPose(Pose2d pose) {
-    initialQuestPose = pose;
+  public void setInitialQuestFieldPose(Pose2d pose) {
+    initialRawQuestPose = getRawQuestPose();
+    initialQuestFieldPose = pose;
+    /*float[] resetPose =
+        new float[] {
+          (float) pose.getX(), (float) pose.getY(), (float) pose.getRotation().getDegrees()
+        };
+    questResetPose.set(resetPose);
+
+    long miso = questMiso.get();
+    logMiso.update(miso);
+    if (miso != RESPONSE_POSE_INITIALIZED) {
+      questMosi.set(REQUEST_RESET_POSE);
+      logMosi.update(REQUEST_RESET_POSE);
+    }*/
   }
 
   /** Zeroes the absolute 3D position of the QuestNav (similar to long-pressing the quest logo) */
   public boolean zeroPose() {
     questResetPose.set(ZERO_VECTOR_3);
-    if (questMiso.get() != 98) {
-      questMosi.set(2);
+    long miso = questMiso.get();
+    logMiso.update(miso);
+    if (miso != RESPONSE_POSE_INITIALIZED) {
+      questMosi.set(REQUEST_RESET_POSE);
+      logMosi.update(REQUEST_RESET_POSE);
       return true;
     }
     return true;
@@ -118,17 +162,25 @@ public class QuestTelemetryNT implements QuestTelemetry {
 
   /** Zeroes the heading of the Questnav (similar to long-pressing the quest logo) */
   public boolean zeroHeading() {
-    if (questMiso.get() != 99) {
-      questMosi.set(1);
+    long miso = questMiso.get();
+    logMiso.update(miso);
+    if (miso != RESPONSE_HEADING_ZEROED) {
+      questMosi.set(REQUEST_ZERO_HEADING);
+      logMosi.update(REQUEST_ZERO_HEADING);
       return true;
     }
     return true;
   }
 
-  /** Returns the questnav's yaw in radians with the zero-offset applied. */
-  private double getYaw() {
+  /** Returns the questnav's yaw in radians. */
+  private double getRawYawRad() {
     float yawRaw = questEulerAngles.get()[1];
     return MathUtil.angleModulus(-Math.toRadians(yawRaw));
+  }
+
+  /** Returns the questnav's yaw in radians with the zero offset applied. */
+  private double getYawRad() {
+    return getRawYawRad() - yawOffset;
   }
 
   private Translation2d getQuestTranslation() {
@@ -136,14 +188,13 @@ public class QuestTelemetryNT implements QuestTelemetry {
     return new Translation2d(oculusPosition[2], -oculusPosition[0]);
   }
 
-  private Pose2d getQuestPose() {
-    return new Pose2d(
-        initialQuestPose.getTranslation().plus(getQuestTranslation()),
-        initialQuestPose.getRotation().plus(Rotation2d.fromRadians(getYaw())));
+  private Pose2d getRawQuestPose() {
+    return new Pose2d(getQuestTranslation(), Rotation2d.fromRadians(getRawYawRad()));
   }
 
-  private Pose2d getRobotPose() {
-    return getQuestPose().plus(questNavToRobot);
+  public void resetOrientation(Rotation2d orientation) {
+    initialQuestFieldPose = new Pose2d(initialQuestFieldPose.getTranslation(), orientation);
+    yawOffset = getRawYawRad();
   }
 
   /**
@@ -151,8 +202,11 @@ public class QuestTelemetryNT implements QuestTelemetry {
    * Cleans up Oculus subroutine messages after processing on the headset.
    */
   private void cleanUpOculusMessages() {
-    if (questMiso.get() != 0) {
-      questMosi.set(0);
+    long miso = questMiso.get();
+    logMiso.update(miso);
+    if (miso != RESPONSE_IDLE) {
+      questMosi.set(REQUEST_IDLE);
+      logMosi.update(REQUEST_IDLE);
     }
   }
 

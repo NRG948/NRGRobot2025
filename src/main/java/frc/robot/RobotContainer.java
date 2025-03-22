@@ -190,10 +190,12 @@ public class RobotContainer {
           .add(
               "Reset QuestNav Pose",
               Commands.runOnce(
-                  () -> {
-                    Pose2d currentPose = subsystems.drivetrain.getPosition();
-                    subsystems.questNav.setInitialRobotPose(currentPose);
-                  }))
+                      () -> {
+                        Pose2d currentPose = subsystems.drivetrain.getPosition();
+                        subsystems.questNav.setInitialRobotPose(currentPose);
+                      })
+                  .withName("Reset QuestNav Pose")
+                  .ignoringDisable(true))
           .withSize(2, 1)
           .withPosition(4, 6);
     }

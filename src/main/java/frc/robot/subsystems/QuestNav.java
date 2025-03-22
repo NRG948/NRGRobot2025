@@ -10,8 +10,10 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.Quest3S.QUEST_TO_ROBOT;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.util.datalog.StructLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -33,21 +35,27 @@ public class QuestNav extends SubsystemBase implements ShuffleboardProducer {
 
   private static final DataLog LOG = DataLogManager.getLog();
 
-  private final QuestTelemetry telemetry = new QuestTelemetryNT();
   private final QuestTelemetryData telemetryData = new QuestTelemetryData();
+  private final QuestTelemetry telemetry = new QuestTelemetryNT(telemetryData);
 
   private State state = State.INITIALIZING;
   private Pose2d initialRobotPose = Pose2d.kZero;
 
   private final StructLogEntry<Pose2d> logRobotPose =
       StructLogEntry.create(LOG, "/QuestNav/RobotPose", Pose2d.struct);
+  private final StructLogEntry<Pose2d> logRawQuestPose =
+      StructLogEntry.create(LOG, "/QuestNav/RawQuestPose", Pose2d.struct);
+  private final StructLogEntry<Pose2d> logQuestPose =
+      StructLogEntry.create(LOG, "/QuestNav/QuestPose", Pose2d.struct);
   private final BooleanLogEntry logWasUpdated = new BooleanLogEntry(LOG, "/QuestNav/WasUpdated");
+  private final StringLogEntry logState = new StringLogEntry(LOG, "/QuestNav/State");
 
   /** Creates a new QuestNav. */
   public QuestNav() {}
 
   @Override
   public void periodic() {
+    logState.update(state.name());
     switch (state) {
       case INITIALIZING:
         if (telemetry.ping()) {
@@ -55,14 +63,14 @@ public class QuestNav extends SubsystemBase implements ShuffleboardProducer {
         }
         break;
       case RESETTING_POSE:
-        if (telemetry.zeroPose()) {
-          state = State.READY;
-          telemetry.setInitialQuestPose(initialRobotPose.plus(QUEST_TO_ROBOT.inverse()));
-          telemetry.setQuestNavToRobotTransform(QUEST_TO_ROBOT);
-        }
+        state = State.READY;
+        telemetry.setInitialQuestFieldPose(initialRobotPose.plus(QUEST_TO_ROBOT.inverse()));
+        telemetry.setQuestNavToRobotTransform(QUEST_TO_ROBOT);
         break;
       case READY:
         telemetry.updateTelemetry(telemetryData);
+        logRawQuestPose.append(telemetryData.rawQuestPose);
+        logQuestPose.append(telemetryData.questPose);
         logRobotPose.append(telemetryData.robotPose);
         logWasUpdated.update(telemetryData.wasUpdated);
         break;
@@ -74,6 +82,10 @@ public class QuestNav extends SubsystemBase implements ShuffleboardProducer {
     if (state == State.READY) {
       state = State.RESETTING_POSE;
     }
+  }
+
+  public void resetOrientation(Rotation2d orientation) {
+    telemetry.resetOrientation(orientation);
   }
 
   public QuestTelemetryData getQuestTelemetryData() {
@@ -100,6 +112,7 @@ public class QuestNav extends SubsystemBase implements ShuffleboardProducer {
         tab.getLayout("Status", BuiltInLayouts.kList).withSize(2, 4).withPosition(0, 0);
     statusLayout.addBoolean("Has Data", this::hasData);
     statusLayout.addDouble("Battery Percent", this::getBatteryPercent);
+    statusLayout.addString("State", () -> state.name());
 
     ShuffleboardLayout poseLayout =
         tab.getLayout("Robot Pose", BuiltInLayouts.kList).withSize(2, 4).withPosition(2, 0);

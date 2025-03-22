@@ -8,6 +8,7 @@
 package frc.robot.questnav;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 
 /** An interface for managing QuestNav telemetry. */
@@ -29,6 +30,9 @@ public interface QuestTelemetry extends AutoCloseable {
 
     /** The field-relative pose of the QuestNav (i.e. offset by the initial pose). */
     public Pose2d questPose = new Pose2d();
+
+    /** The raw pose of the QuestNav. */
+    public Pose2d rawQuestPose = new Pose2d();
   }
 
   /**
@@ -51,7 +55,9 @@ public interface QuestTelemetry extends AutoCloseable {
   }
 
   /** Sets supplied pose as the origin of all position telemetry. */
-  public default void setInitialQuestPose(Pose2d pose) {}
+  public default void setInitialQuestFieldPose(Pose2d pose) {}
+
+  public default void resetOrientation(Rotation2d orientation) {}
 
   /**
    * Zeroes the pose of the QuestNav.
