@@ -50,6 +50,7 @@ import frc.robot.util.TalonFXAdapter;
     gridColumns = 4,
     gridRows = 1)
 public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
+  private static final double TOLERANCE = Math.toRadians(1.5);
   private static final double RADIANS_PER_ROTATION = 2 * Math.PI;
   private static final double ERROR_MARGIN = Math.toRadians(5);
   private static final double ERROR_TIME = 1.0;
@@ -125,7 +126,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     slot0Configs.kA = parameters.getkA() * RADIANS_PER_ROTATION;
     slot0Configs.kG = 0.9;
     slot0Configs.GravityType = GravityTypeValue.Arm_Cosine;
-    slot0Configs.kP = 80.0;
+    slot0Configs.kP = 120.0;
     slot0Configs.kI = 0;
     slot0Configs.kD = 0;
 
@@ -197,7 +198,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
 
   /** Returns whether the coral arm is at goal angle. */
   public boolean atGoalAngle() {
-    return Math.abs(goalAngle - currentAngle) <= Math.toRadians(1);
+    return Math.abs(goalAngle - currentAngle) <= TOLERANCE;
   }
 
   /** Returns whether the coral arm has an error. */
