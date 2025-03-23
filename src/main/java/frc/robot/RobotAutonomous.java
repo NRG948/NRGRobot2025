@@ -33,7 +33,7 @@ import java.util.function.DoubleSupplier;
 public class RobotAutonomous {
   private final SendableChooser<Command> chooser;
 
-  private final RobotConfig config = Swerve.PARAMETERS.getValue().getPathplannerConfig();
+  private final RobotConfig config = Swerve.PARAMETERS.getPathplannerConfig();
 
   public RobotAutonomous(Subsystems subsystems, DoubleSupplier rotationFeedbackOverride) {
     AutoBuilder.configure(

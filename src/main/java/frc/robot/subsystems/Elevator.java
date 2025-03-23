@@ -9,6 +9,8 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
 import static frc.robot.Constants.RobotConstants.PERIODIC_INTERVAL;
+import static frc.robot.RobotContainer.RobotSelector.CompetitionRobot2025;
+import static frc.robot.RobotContainer.RobotSelector.PracticeRobot2025;
 import static frc.robot.parameters.MotorParameters.KrakenX60;
 
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -39,12 +41,14 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.commands.ElevatorCommands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.parameters.ElevatorParameters;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
+import java.util.Map;
 import java.util.Set;
 
 @RobotPreferencesLayout(groupName = "Elevator", row = 0, column = 5, width = 1, height = 3)
@@ -57,24 +61,27 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private static final double POSITION_ERROR_TIME = 2.0; // seconds
 
   @RobotPreferencesValue
-  public static RobotPreferences.EnumValue<ElevatorParameters> PARAMETERS =
-      new RobotPreferences.EnumValue<ElevatorParameters>(
-          "Elevator", "Robot Base", ElevatorParameters.CompetitionBase2025);
-
-  @RobotPreferencesValue
   public static RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("Elevator", "Enable Tab", false);
+
+  public static final ElevatorParameters PARAMETERS =
+      RobotContainer.ROBOT_TYPE
+          .select(
+              Map.of(
+                  PracticeRobot2025, ElevatorParameters.PracticeBase2025,
+                  CompetitionRobot2025, ElevatorParameters.CompetitionBase2025))
+          .orElse(ElevatorParameters.CompetitionBase2025);
 
   // Physical parameters of the elevator
   public static final double PRACTICE_BOT_GEAR_RATIO = 9.0 / 2;
   public static final double COMPETITION_BOT_GEAR_RATIO = 9.0 / 2;
-  private static final double GEAR_RATIO = PARAMETERS.getValue().getGearRatio();
+  private static final double GEAR_RATIO = PARAMETERS.getGearRatio();
   private static final double SPROCKET_DIAMETER = 0.05; // meters
-  private static final double MASS = PARAMETERS.getValue().getMass(); // kilograms
+  private static final double MASS = PARAMETERS.getMass(); // kilograms
   private static final double METERS_PER_REVOLUTION = (SPROCKET_DIAMETER * Math.PI) / GEAR_RATIO;
 
-  private static final double MAX_HEIGHT = PARAMETERS.getValue().getMaxHeight(); // meters
-  private static final double MIN_HEIGHT = PARAMETERS.getValue().getMinHeight(); // meters
+  private static final double MAX_HEIGHT = PARAMETERS.getMaxHeight(); // meters
+  private static final double MIN_HEIGHT = PARAMETERS.getMinHeight(); // meters
   private static final double DISABLE_HEIGHT = MIN_HEIGHT + 0.01;
   public static final double STOWED_HEIGHT_FOR_PID = (MIN_HEIGHT + DISABLE_HEIGHT) / 2;
 
@@ -110,8 +117,8 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   private final TalonFXAdapter mainMotor =
       new TalonFXAdapter(
           "/Elevator",
-          new TalonFX(PARAMETERS.getValue().getMotorID(), "rio"),
-          PARAMETERS.getValue().getMotorDirection(),
+          new TalonFX(PARAMETERS.getMotorID(), "rio"),
+          PARAMETERS.getMotorDirection(),
           MotorIdleMode.BRAKE,
           METERS_PER_REVOLUTION);
 
@@ -288,7 +295,7 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
 
     if (atLowerLimit
         && goalState.position == STOWED_HEIGHT_FOR_PID
-        && PARAMETERS.getValue().resetEncoderWhenStowed()) {
+        && PARAMETERS.resetEncoderWhenStowed()) {
       if (!resetEncoderTimer.isRunning()) {
         resetEncoderTimer.restart();
       } else if (resetEncoderTimer.hasElapsed(2.0)) {
