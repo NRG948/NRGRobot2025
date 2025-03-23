@@ -7,6 +7,9 @@
  
 package frc.robot.subsystems;
 
+import static frc.robot.RobotContainer.RobotSelector.CompetitionRobot2025;
+import static frc.robot.RobotContainer.RobotSelector.PracticeRobot2025;
+
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.nrg948.preferences.RobotPreferences;
@@ -49,6 +52,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.commands.DriveToPose;
 import frc.robot.drive.SwerveDrive;
 import frc.robot.drive.SwerveModule;
@@ -66,65 +70,57 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
-@RobotPreferencesLayout(
-    groupName = "Drive",
-    column = 1,
-    row = 0,
-    width = 3,
-    height = 1,
-    type = "Grid Layout",
-    gridColumns = 2,
-    gridRows = 2)
+@RobotPreferencesLayout(groupName = "Drive", column = 2, row = 0, width = 2, height = 2)
 public class Swerve extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   private static final DataLog LOG = DataLogManager.getLog();
   private static final Rotation2d ROTATE_180_DEGREES = Rotation2d.fromDegrees(180);
 
-  @RobotPreferencesValue(column = 0, row = 0)
-  public static RobotPreferences.EnumValue<SwerveDriveParameters> PARAMETERS =
-      new RobotPreferences.EnumValue<SwerveDriveParameters>(
-          "Drive", "Robot Base", SwerveDriveParameters.CompetitionBase2025);
-
-  @RobotPreferencesValue(column = 1, row = 0)
+  @RobotPreferencesValue
   public static RobotPreferences.BooleanValue ENABLE_DRIVE_TAB =
       new RobotPreferences.BooleanValue("Drive", "Enable Tab", false);
 
-  @RobotPreferencesValue(column = 1, row = 1)
+  @RobotPreferencesValue
   public static RobotPreferences.BooleanValue ENABLE_RUMBLE =
       new RobotPreferences.BooleanValue("Drive", "Enable Rumble", true);
+
+  public static final SwerveDriveParameters PARAMETERS =
+      RobotContainer.ROBOT_TYPE
+          .select(
+              Map.of(
+                  PracticeRobot2025, SwerveDriveParameters.PracticeBase2025,
+                  CompetitionRobot2025, SwerveDriveParameters.CompetitionBase2025))
+          .orElse(SwerveDriveParameters.CompetitionBase2025);
 
   public static final double ROTATIONAL_KP = 1.0;
   public static final double DRIVE_KP = 1.0;
 
   // 4 pairs of motors for drive & steering.
   private final MotorController frontLeftDriveMotor =
-      PARAMETERS.getValue().getMotorController(SwerveMotors.FrontLeftDrive);
+      PARAMETERS.getMotorController(SwerveMotors.FrontLeftDrive);
   private final MotorController frontLeftSteeringMotor =
-      PARAMETERS.getValue().getMotorController(SwerveMotors.FrontLeftSteering);
+      PARAMETERS.getMotorController(SwerveMotors.FrontLeftSteering);
 
   private final MotorController frontRightDriveMotor =
-      PARAMETERS.getValue().getMotorController(SwerveMotors.FrontRightDrive);
+      PARAMETERS.getMotorController(SwerveMotors.FrontRightDrive);
   private final MotorController frontRightSteeringMotor =
-      PARAMETERS.getValue().getMotorController(SwerveMotors.FrontRightSteering);
+      PARAMETERS.getMotorController(SwerveMotors.FrontRightSteering);
 
   private final MotorController backLeftDriveMotor =
-      PARAMETERS.getValue().getMotorController(SwerveMotors.BackLeftDrive);
+      PARAMETERS.getMotorController(SwerveMotors.BackLeftDrive);
   private final MotorController backLeftSteeringMotor =
-      PARAMETERS.getValue().getMotorController(SwerveMotors.BackLeftSteering);
+      PARAMETERS.getMotorController(SwerveMotors.BackLeftSteering);
 
   private final MotorController backRightDriveMotor =
-      PARAMETERS.getValue().getMotorController(SwerveMotors.BackRightDrive);
+      PARAMETERS.getMotorController(SwerveMotors.BackRightDrive);
   private final MotorController backRightSteeringMotor =
-      PARAMETERS.getValue().getMotorController(SwerveMotors.BackRightSteering);
+      PARAMETERS.getMotorController(SwerveMotors.BackRightSteering);
 
   // 4 CANcoders for the steering angle.
-  private final CANcoder frontLeftAngle =
-      PARAMETERS.getValue().getAngleEncoder(SwerveAngleEncoder.FrontLeft);
+  private final CANcoder frontLeftAngle = PARAMETERS.getAngleEncoder(SwerveAngleEncoder.FrontLeft);
   private final CANcoder frontRightAngle =
-      PARAMETERS.getValue().getAngleEncoder(SwerveAngleEncoder.FrontRight);
-  private final CANcoder backLeftAngle =
-      PARAMETERS.getValue().getAngleEncoder(SwerveAngleEncoder.BackLeft);
-  private final CANcoder backRightAngle =
-      PARAMETERS.getValue().getAngleEncoder(SwerveAngleEncoder.BackRight);
+      PARAMETERS.getAngleEncoder(SwerveAngleEncoder.FrontRight);
+  private final CANcoder backLeftAngle = PARAMETERS.getAngleEncoder(SwerveAngleEncoder.BackLeft);
+  private final CANcoder backRightAngle = PARAMETERS.getAngleEncoder(SwerveAngleEncoder.BackRight);
 
   private final SwerveModule frontLeftModule =
       createSwerveModule(frontLeftDriveMotor, frontLeftSteeringMotor, frontLeftAngle, "Front Left");
@@ -140,10 +136,10 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
     frontLeftModule, frontRightModule, backLeftModule, backRightModule
   };
 
-  private final Gyro gyro = PARAMETERS.getValue().getGyro();
+  private final Gyro gyro = PARAMETERS.getGyro();
   private final BuiltInAccelerometer accelerometer = new BuiltInAccelerometer();
 
-  private final SwerveDriveKinematics kinematics = PARAMETERS.getValue().getKinematics();
+  private final SwerveDriveKinematics kinematics = PARAMETERS.getKinematics();
 
   private final SwerveDrive drivetrain;
   private final SwerveDrivePoseEstimator odometry;
@@ -180,7 +176,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
     StatusSignal<AngularVelocity> angularVelocity = wheelAngle.getVelocity();
 
     return new SwerveModule(
-        PARAMETERS.getValue(),
+        PARAMETERS,
         driveMotor,
         driveEncoder::getPosition,
         driveEncoder::getVelocity,
@@ -194,7 +190,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
   public Swerve() {
     initializeSensorState();
 
-    drivetrain = new SwerveDrive(PARAMETERS.getValue(), modules, () -> getOrientation());
+    drivetrain = new SwerveDrive(PARAMETERS, modules, () -> getOrientation());
     odometry =
         new SwerveDrivePoseEstimator(
             kinematics, getOrientation(), drivetrain.getModulesPositions(), new Pose2d());
@@ -289,7 +285,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
    * @return The maximum drive speed.
    */
   public static double getMaxSpeed() {
-    return PARAMETERS.getValue().getMaxDriveSpeed();
+    return PARAMETERS.getMaxDriveSpeed();
   }
 
   /**
@@ -298,7 +294,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
    * @return The maximum drive acceleration.
    */
   public static double getMaxAcceleration() {
-    return PARAMETERS.getValue().getMaxDriveAcceleration();
+    return PARAMETERS.getMaxDriveAcceleration();
   }
 
   /** Gets acceleration in g with an range of +/- 8 g's */
@@ -323,7 +319,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
    *     kinematics constraints when following a trajectory.
    */
   public static SwerveDriveKinematicsConstraint getKinematicsConstraint() {
-    return PARAMETERS.getValue().getKinematicsConstraint();
+    return PARAMETERS.getKinematicsConstraint();
   }
 
   /**
@@ -343,7 +339,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
    *     constraints on the controller used to reach the goal robot orientation.
    */
   public static TrapezoidProfile.Constraints getRotationalConstraints() {
-    return PARAMETERS.getValue().getRotationalConstraints();
+    return PARAMETERS.getRotationalConstraints();
   }
 
   /**
@@ -352,7 +348,7 @@ public class Swerve extends SubsystemBase implements ActiveSubsystem, Shuffleboa
    * @return The wheel base radius in meters.
    */
   public static double getWheelBaseRadius() {
-    return PARAMETERS.getValue().getWheelBaseRadius();
+    return PARAMETERS.getWheelBaseRadius();
   }
 
   /**

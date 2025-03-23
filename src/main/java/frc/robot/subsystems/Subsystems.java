@@ -7,12 +7,14 @@
  
 package frc.robot.subsystems;
 
+import static frc.robot.subsystems.Arm.CORAL_ARM_PARAMETERS;
+import static frc.robot.subsystems.Arm.CORAL_GROUND_INTAKE_ARM_PARAMETERS;
+
 import com.nrg948.preferences.RobotPreferences;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.RobotContainer;
 import frc.robot.commands.CoralCommands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.util.MotorIdleMode;
@@ -30,11 +32,11 @@ public class Subsystems {
   public final Elevator elevator = new Elevator();
 
   public final CoralRoller coralRoller = new CoralRoller();
-  public final Arm coralArm = new Arm(Arm.CORAL_ARM.getValue(), coralRoller::hasCoral);
+  public final Arm coralArm = new Arm(CORAL_ARM_PARAMETERS, coralRoller::hasCoral);
 
   public final CoralGroundIntakeGrabber coralIntakeGrabber = new CoralGroundIntakeGrabber();
   public final Arm coralIntakeArm =
-      new Arm(Arm.CORAL_GROUND_INTAKE_ARM.getValue(), coralIntakeGrabber::hasCoral);
+      new Arm(CORAL_GROUND_INTAKE_ARM_PARAMETERS, coralIntakeGrabber::hasCoral);
 
   public final Climber climber = new Climber();
 
@@ -58,11 +60,9 @@ public class Subsystems {
     // Add all non-manipulator subsystems to the `all` list.
     var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, statusLEDs, climber));
 
-    var visionParams = RobotContainer.PARAMETERS.getValue().visionParameters();
-
     // Add optional subsystems to the appropriate list.
     frontCamera =
-        visionParams
+        AprilTag.PARAMETERS
             .robotToFrontCamera()
             .flatMap(
                 (t) -> newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "FrontCamera", t));
@@ -70,7 +70,7 @@ public class Subsystems {
     frontCamera.ifPresent((s) -> all.add(s));
 
     backCamera =
-        visionParams
+        AprilTag.PARAMETERS
             .robotToBackCamera()
             .flatMap(
                 (t) -> newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "BackCamera", t));

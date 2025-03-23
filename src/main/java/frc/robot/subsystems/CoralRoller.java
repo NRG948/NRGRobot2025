@@ -46,18 +46,26 @@ import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
 import java.util.Set;
 
-@RobotPreferencesLayout(groupName = "CoralRoller", row = 2, column = 0, width = 1, height = 2)
+@RobotPreferencesLayout(
+    groupName = "CoralRoller",
+    row = 2,
+    column = 0,
+    width = 2,
+    height = 2,
+    type = "Grid Layout",
+    gridColumns = 2,
+    gridRows = 2)
 public class CoralRoller extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
 
-  @RobotPreferencesValue
+  @RobotPreferencesValue(column = 0, row = 0)
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("CoralRoller", "Enable Tab", false);
 
-  @RobotPreferencesValue
+  @RobotPreferencesValue(column = 1, row = 0)
   public static final RobotPreferences.DoubleValue INTAKE_VELOCITY =
       new RobotPreferences.DoubleValue("CoralRoller", "Intake Velocity", 1);
 
-  @RobotPreferencesValue
+  @RobotPreferencesValue(column = 1, row = 1)
   public static final RobotPreferences.DoubleValue AUTO_CENTER_VELOCITY =
       new RobotPreferences.DoubleValue("CoralRoller", "Auto Center Velocity", -1);
 

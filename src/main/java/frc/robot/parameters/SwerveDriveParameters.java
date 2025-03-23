@@ -9,7 +9,6 @@ package frc.robot.parameters;
 
 import static frc.robot.Constants.RobotConstants.COMPETITION_ROBOT_MASS_KG;
 import static frc.robot.Constants.RobotConstants.PRACTICE_ROBOT_MASS_KG;
-import static frc.robot.parameters.MotorParameters.Falcon500;
 import static frc.robot.parameters.MotorParameters.KrakenX60;
 import static frc.robot.parameters.MotorParameters.NeoV1_1;
 import static frc.robot.parameters.SwerveModuleParameters.MK4I_L2_PLUS;
@@ -35,19 +34,6 @@ import frc.robot.util.Pigeon2Gyro;
 
 /** An enum representing the properties for the swerve drive base of a specific robot instance. */
 public enum SwerveDriveParameters {
-  CompetitionBase2024(
-      58.5,
-      Units.inchesToMeters(22.755), // .578m  (22.755)
-      Units.inchesToMeters(20.59), // .523m (20.59)
-      MK4I_L2_PLUS,
-      Falcon500,
-      NeoV1_1,
-      // for 2025 testing, the camera is treated as the front of the robot
-      new int[] {13, 14, 8, 9, 19, 18, 6, 7}, // drive, steer motor controller CAN IDs
-      new int[] {34, 33, 32, 31}, // CANCoder CAN IDs
-      new double[] {22.85, 300.85, 324.67, 349.10},
-      false,
-      0),
   PracticeBase2025(
       PRACTICE_ROBOT_MASS_KG,
       Units.inchesToMeters(23.5),
