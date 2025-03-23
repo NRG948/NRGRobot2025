@@ -7,6 +7,9 @@
  
 package frc.robot.subsystems;
 
+import static frc.robot.RobotContainer.RobotSelector.CompetitionRobot2025;
+import static frc.robot.RobotContainer.RobotSelector.PracticeRobot2025;
+
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -33,22 +36,16 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.parameters.AlgaeArmParameters;
 import frc.robot.parameters.ArmParameters;
 import frc.robot.parameters.CoralArmParameters;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
+import java.util.Map;
 
-@RobotPreferencesLayout(
-    groupName = "Arm",
-    row = 3,
-    column = 4,
-    width = 4,
-    height = 1,
-    type = "Grid Layout",
-    gridColumns = 4,
-    gridRows = 1)
+@RobotPreferencesLayout(groupName = "Arm", row = 0, column = 6, width = 1, height = 2)
 public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
   private static final double RADIANS_PER_ROTATION = 2 * Math.PI;
   private static final double ERROR_MARGIN = Math.toRadians(5);
@@ -59,18 +56,24 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
       new RobotPreferences.BooleanValue("Arm", "Enable Tab", false);
 
   @RobotPreferencesValue(row = 0, column = 1, width = 1, height = 1)
-  public static final RobotPreferences.EnumValue<CoralArmParameters> CORAL_ARM =
-      new RobotPreferences.EnumValue<CoralArmParameters>(
-          "Arm", "Coral Arm", CoralArmParameters.CompetitionBase2025);
-
-  @RobotPreferencesValue(row = 0, column = 2, width = 1, height = 1)
-  public static final RobotPreferences.EnumValue<AlgaeArmParameters> ALGAE_ARM =
-      new RobotPreferences.EnumValue<AlgaeArmParameters>(
-          "Arm", "Algae Arm", AlgaeArmParameters.CompetitionBase2025);
-
-  @RobotPreferencesValue(row = 0, column = 3, width = 1, height = 1)
   public static final RobotPreferences.BooleanValue ENABLE_ALGAE_ARM =
       new RobotPreferences.BooleanValue("Arm", "Enable Algae Arm", true);
+
+  public static final AlgaeArmParameters ALGAE_ARM_PARAMETERS =
+      RobotContainer.ROBOT_TYPE
+          .select(
+              Map.of(
+                  PracticeRobot2025, AlgaeArmParameters.PracticeBase2025,
+                  CompetitionRobot2025, AlgaeArmParameters.CompetitionBase2025))
+          .orElse(AlgaeArmParameters.CompetitionBase2025);
+
+  public static final CoralArmParameters CORAL_ARM_PARAMETERS =
+      RobotContainer.ROBOT_TYPE
+          .select(
+              Map.of(
+                  PracticeRobot2025, CoralArmParameters.PracticeBase2025,
+                  CompetitionRobot2025, CoralArmParameters.CompetitionBase2025))
+          .orElse(CoralArmParameters.CompetitionBase2025);
 
   private static final DataLog LOG = DataLogManager.getLog();
 

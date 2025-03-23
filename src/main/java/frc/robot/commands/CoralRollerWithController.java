@@ -17,7 +17,7 @@ import frc.robot.subsystems.Subsystems;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class CoralRollerWithController extends Command {
-  @RobotPreferencesValue
+  @RobotPreferencesValue(column = 0, row = 1)
   public static final RobotPreferences.DoubleValue DEADBAND =
       new RobotPreferences.DoubleValue("CoralRoller", "Deadband", 0.1);
 

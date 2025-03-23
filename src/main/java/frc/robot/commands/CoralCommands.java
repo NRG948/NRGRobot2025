@@ -22,7 +22,7 @@ import java.util.Set;
 
 /** A namespace for coral command factory methods. */
 public final class CoralCommands {
-  public static final double CORAL_DETECTION_DELAY = Arm.CORAL_ARM.getValue().getRollerDelay();
+  public static final double CORAL_DETECTION_DELAY = Arm.CORAL_ARM_PARAMETERS.getRollerDelay();
 
   /** The delay for reversing the coral during auto centering. */
   private static final double AUTO_CENTER_BACKWARDS_SECONDS = 0.2;

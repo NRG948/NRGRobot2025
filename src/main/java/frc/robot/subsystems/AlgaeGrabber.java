@@ -36,15 +36,7 @@ import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
 
-@RobotPreferencesLayout(
-    groupName = "AlgaeGrabber",
-    row = 0,
-    column = 6,
-    width = 1,
-    height = 1,
-    type = "Grid Layout",
-    gridColumns = 1,
-    gridRows = 3)
+@RobotPreferencesLayout(groupName = "AlgaeGrabber", row = 2, column = 6, width = 1, height = 1)
 public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
 
   @RobotPreferencesValue(column = 0, row = 0)

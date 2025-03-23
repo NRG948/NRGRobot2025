@@ -150,7 +150,7 @@ public final class DriveCommands {
     System.out.println("TARGET pose: " + targetPose);
     System.out.println("Target Branch: " + reefPosition);
 
-    SwerveDriveParameters currentSwerveParameters = Swerve.PARAMETERS.getValue();
+    SwerveDriveParameters currentSwerveParameters = Swerve.PARAMETERS;
 
     return AutoBuilder.pathfindToPose(
             targetPose,
