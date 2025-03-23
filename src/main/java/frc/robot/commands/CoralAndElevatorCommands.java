@@ -19,7 +19,10 @@ public final class CoralAndElevatorCommands {
             ElevatorCommands.goToElevatorLevel(subsystems, level),
             Commands.sequence(
                 CoralCommands.waitForElevatorToReachArmHeight(subsystems),
-                CoralCommands.setArmAngleForReefLevel(subsystems, level)))
+                CoralCommands.setArmAngleForReefLevel(subsystems, level),
+                Commands.idle(subsystems.coralArm)
+                    .until(subsystems.coralArm::atGoalAngle)
+                    .withTimeout(0.5)))
         .withName("RaiseElevatorAndCoralArm");
   }
 }
