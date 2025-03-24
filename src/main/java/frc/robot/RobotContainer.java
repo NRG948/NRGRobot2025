@@ -51,9 +51,9 @@ import frc.robot.commands.CoralCommands;
 import frc.robot.commands.CoralRollerWithController;
 import frc.robot.commands.DriveUsingController;
 import frc.robot.commands.ElevatorCommands;
-import frc.robot.commands.FlameCycle;
 import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
+import frc.robot.parameters.Colors;
 import frc.robot.subsystems.AprilTag;
 import frc.robot.subsystems.AprilTag.VisionParameters;
 import frc.robot.subsystems.Climber;
@@ -122,7 +122,7 @@ public class RobotContainer {
     subsystems.coralRoller.setDefaultCommand(
         new CoralRollerWithController(subsystems, m_manipulatorController));
 
-    subsystems.statusLEDs.setDefaultCommand(new FlameCycle(subsystems.statusLEDs));
+    // subsystems.statusLEDs.setDefaultCommand(new FlameCycle(subsystems.statusLEDs));
 
     // Configure the trigger bindings
     configureBindings();
@@ -175,8 +175,8 @@ public class RobotContainer {
     if (subsystems.frontCamera.isPresent()) {
       VideoSource video =
           new HttpCamera(
-              "photonvision_Port_1190_Output_MJPEG_Server",
-              "http://photonvision.local:1190/stream.mjpg",
+              "photonvision_Port_1184_Output_MJPEG_Server",
+              "http://photonvision.local:1184/stream.mjpg",
               HttpCameraKind.kMJPGStreamer);
 
       operatorTab
@@ -238,11 +238,32 @@ public class RobotContainer {
         (algaeGrabber) -> {
           new Trigger(algaeGrabber::hasAlgae).onTrue(LEDCommands.indicateAlgaeAcquired(subsystems));
         });
-    // new Trigger(
-    //         () ->
-    //             subsystems.coralRoller.detectsReef() &&
-    // subsystems.elevator.isSeekingAboveLevel(L1))
-    //     .whileTrue(LEDCommands.indicateBranchDetected(subsystems));
+
+    new Trigger(
+            () ->
+                subsystems.coralRoller.detectsReef() && subsystems.elevator.isSeekingAboveLevel(L1))
+        .whileTrue(LEDCommands.indicateBranchDetected(subsystems));
+
+    new Trigger(
+            () ->
+                subsystems.coralRoller.isLeftLaserCANDetected()
+                    && !subsystems.coralRoller.isRightLaserCANDetected()
+                    && subsystems.elevator.isSeekingAboveLevel(L1))
+        .whileTrue(LEDCommands.setColor(subsystems.statusLEDs, Colors.BLUE));
+
+    new Trigger(
+            () ->
+                !subsystems.coralRoller.isLeftLaserCANDetected()
+                    && subsystems.coralRoller.isRightLaserCANDetected()
+                    && subsystems.elevator.isSeekingAboveLevel(L1))
+        .whileTrue(LEDCommands.setColor(subsystems.statusLEDs, Colors.ORANGE));
+
+    new Trigger(
+            () ->
+                (!subsystems.coralRoller.isLeftLaserCANDetected()
+                        && !subsystems.coralRoller.isRightLaserCANDetected())
+                    || !subsystems.elevator.isSeekingAboveLevel(L1))
+        .whileTrue(LEDCommands.setColor(subsystems.statusLEDs, Colors.BLACK));
 
     new Trigger(subsystems.coralArm::hasError)
         .whileTrue(LEDCommands.indicateErrorWithBlink(subsystems));
