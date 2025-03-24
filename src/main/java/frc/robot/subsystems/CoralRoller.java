@@ -91,20 +91,26 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
           METERS_PER_REVOLUTION);
   private final RelativeEncoder encoder = motor.getEncoder();
   private DigitalInput beamBreak = new DigitalInput(CORAL_ROLLER_BEAM_BREAK);
-  private LaserCan laserCAN = new LaserCan(CAN.CORAL_ARM_LASER_CAN_ID);
+
+  private LaserCan leftLaserCAN = new LaserCan(CAN.LEFT_CORAL_ARM_LASER_CAN_ID);
+  private LaserCan rightLaserCAN = new LaserCan(CAN.RIGHT_CORAL_ARM_LASER_CAN_ID);
 
   private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(KS, KV);
   private final PIDController pidController = new PIDController(1, 0, 0);
   private final Timer outtakeTimer = new Timer();
 
-  private double branchDistance = NO_MEASUREMENT;
+  private double leftDistance = NO_MEASUREMENT;
+  private double rightDistance = NO_MEASUREMENT;
   private double goalVelocity = 0;
   private double currentVelocity = 0;
   private boolean hasCoral = false;
   private boolean hasError = false;
   private boolean detectsReef = false;
+  private boolean leftLaserCANDetected = false;
+  private boolean rightLaserCANDetected = false;
 
-  private DoubleLogEntry logBranchDistance = new DoubleLogEntry(LOG, "/CoralRoller/branchDistance");
+  private DoubleLogEntry logLeftDistance = new DoubleLogEntry(LOG, "/CoralRoller/leftDistance");
+  private DoubleLogEntry logRightDistance = new DoubleLogEntry(LOG, "/CoralRoller/rightDistance");
   private BooleanLogEntry logDetectsReef = new BooleanLogEntry(LOG, "/CoralRoller/detectsReef");
   private DoubleLogEntry logCurrentVelocity =
       new DoubleLogEntry(LOG, "/CoralRoller/currentVelocity");
@@ -117,10 +123,15 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   /** Creates a new CoralRoller. */
   public CoralRoller() {
     try {
-      laserCAN.setRangingMode(LaserCan.RangingMode.SHORT);
-      laserCAN.setRegionOfInterest(
-          new LaserCan.RegionOfInterest(12, 8, 8, 16)); // Makes detection region a box
-      laserCAN.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
+      leftLaserCAN.setRangingMode(LaserCan.RangingMode.SHORT);
+      leftLaserCAN.setRegionOfInterest(
+          new LaserCan.RegionOfInterest(12, 8, 16, 4)); // Makes detection region a box
+      leftLaserCAN.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
+
+      rightLaserCAN.setRangingMode(LaserCan.RangingMode.SHORT);
+      rightLaserCAN.setRegionOfInterest(
+          new LaserCan.RegionOfInterest(12, 8, 16, 4)); // Makes detection region a box
+      rightLaserCAN.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
     } catch (ConfigurationFailedException e) {
       System.out.println("Configuration failed! " + e);
     }
@@ -161,6 +172,14 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
     return detectsReef;
   }
 
+  public boolean isLeftLaserCANDetected() {
+    return leftLaserCANDetected;
+  }
+
+  public boolean isRightLaserCANDetected() {
+    return rightLaserCANDetected;
+  }
+
   @Override
   public void setIdleMode(MotorIdleMode idleMode) {
     motor.setIdleMode(idleMode);
@@ -188,15 +207,32 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private void updateTelemetry() {
     hasCoral = !beamBreak.get();
 
-    Measurement measurement = laserCAN.getMeasurement();
+    Measurement leftMeasurement = leftLaserCAN.getMeasurement();
+    Measurement rightMeasurement = rightLaserCAN.getMeasurement();
 
-    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      branchDistance = measurement.distance_mm / 1000.0;
+    if (leftMeasurement != null
+        && leftMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+      leftDistance = leftMeasurement.distance_mm / 1000.0;
     } else {
-      branchDistance = NO_MEASUREMENT;
+      leftDistance = NO_MEASUREMENT;
     }
-    detectsReef = branchDistance >= REEF_MIN_DISTANCE && branchDistance <= REEF_MAX_DISTANCE;
-    logBranchDistance.append(branchDistance);
+
+    if (rightMeasurement != null
+        && rightMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+      rightDistance = rightMeasurement.distance_mm / 1000.0;
+    } else {
+      rightDistance = NO_MEASUREMENT;
+    }
+
+    leftLaserCANDetected = leftDistance >= REEF_MIN_DISTANCE && leftDistance <= REEF_MAX_DISTANCE;
+
+    rightLaserCANDetected =
+        rightDistance >= REEF_MIN_DISTANCE && rightDistance <= REEF_MAX_DISTANCE;
+
+    detectsReef = leftLaserCANDetected && rightLaserCANDetected;
+
+    logLeftDistance.append(leftDistance);
+    logRightDistance.append(rightDistance);
     logDetectsReef.append(detectsReef);
 
     currentVelocity = encoder.getVelocity();
@@ -213,13 +249,16 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
 
     ShuffleboardTab rollerTab = Shuffleboard.getTab("Coral Roller");
     ShuffleboardLayout statusLayout =
-        rollerTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 5);
+        rollerTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 8);
     statusLayout.addDouble("Goal Velocity", () -> goalVelocity);
     statusLayout.addDouble("Current Velocity", () -> currentVelocity);
     statusLayout.addBoolean("Has Coral", () -> hasCoral);
     statusLayout.add("Max Velocity", MAX_VELOCITY);
     statusLayout.addBoolean("Detects Reef", () -> detectsReef);
-    statusLayout.addDouble("Branch Distance", () -> branchDistance);
+    statusLayout.addBoolean("Detects Right LaserCAN", () -> rightLaserCANDetected);
+    statusLayout.addBoolean("Detects Left LaserCAN", () -> leftLaserCANDetected);
+    statusLayout.addDouble("Left Distance", () -> leftDistance);
+    statusLayout.addDouble("Right Distance", () -> leftDistance);
 
     ShuffleboardLayout controlLayout =
         rollerTab.getLayout("Control", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
