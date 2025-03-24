@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.Quest3S.QUEST_TO_ROBOT;
+import static frc.robot.Constants.Quest3S.ROBOT_TO_QUEST;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -64,7 +65,7 @@ public class QuestNav extends SubsystemBase implements ShuffleboardProducer {
         break;
       case RESETTING_POSE:
         state = State.READY;
-        telemetry.setInitialQuestFieldPose(initialRobotPose.plus(QUEST_TO_ROBOT.inverse()));
+        telemetry.setInitialQuestFieldPose(initialRobotPose.plus(ROBOT_TO_QUEST));
         telemetry.setQuestNavToRobotTransform(QUEST_TO_ROBOT);
         break;
       case READY:
