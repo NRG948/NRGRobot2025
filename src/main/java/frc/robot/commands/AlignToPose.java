@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
+import frc.robot.util.FieldUtils;
 
 /**
  * A {@link Command} that autonomous drives and aligns the robot to the specified branch of the
@@ -120,6 +121,11 @@ public class AlignToPose extends Command {
     double rSpeed =
         MathUtil.clamp(
             rController.calculate(currentR), -MAX_ROTATIONAL_POWER, MAX_ROTATIONAL_POWER);
+
+    if (FieldUtils.isRedAlliance()) {
+      xSpeed = -xSpeed;
+      ySpeed = -ySpeed;
+    }
 
     drivetrain.drive(xSpeed, ySpeed, rSpeed, true);
   }

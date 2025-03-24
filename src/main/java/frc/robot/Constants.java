@@ -61,7 +61,7 @@ public final class Constants {
      * The x distance from the odometry center (center of the wheels) to the edge of the front
      * bumper.
      */
-    public static final double ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X = ROBOT_LENGTH / 2;
+    public static final double ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X = 0.43; // ROBOT_LENGTH / 2;
 
     /**
      * The x distance from the odometry center (center of the wheels) to the edge of the rear
@@ -101,7 +101,8 @@ public final class Constants {
         public static final int COMPETITION_BOT_CLIMBER_MOTOR_ID = 11;
       }
 
-      public static final int CORAL_ARM_LASER_CAN_ID = 22;
+      public static final int LEFT_CORAL_ARM_LASER_CAN_ID = 23;
+      public static final int RIGHT_CORAL_ARM_LASER_CAN_ID = 22;
     }
 
     /** Digital I/O port numbers. */
