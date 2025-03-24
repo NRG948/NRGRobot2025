@@ -95,6 +95,7 @@ public final class Constants {
         public static final int PRACTICE_CORAL_ARM_MOTOR_ID = 6;
         public static final int COMPETITION_CORAL_ARM_MOTOR_ID = 4;
         public static final int CORAL_ROLLER_MOTOR_ID = 5; // For both bots
+        public static final int GROUND_INTAKE_MOTOR_ID = 0; // TODO: Find real motor id
         public static final int ALGAE_ARM_MOTOR_ID = 12;
         public static final int ALGAE_GRABBER_MOTOR_ID = 3;
         public static final int PRACTICE_BOT_CLIMBER_MOTOR_ID = 4;
