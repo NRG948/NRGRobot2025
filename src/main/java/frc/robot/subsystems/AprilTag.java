@@ -72,7 +72,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   public static final Transform3d PRACTICE_ROBOT_TO_FRONT_CAMERA =
       new Transform3d(new Translation3d(0.28, -0.26, 0.327), Rotation3d.kZero);
   public static final Transform3d COMPETITION_ROBOT_TO_FRONT_CAMERA =
-      new Transform3d(new Translation3d(0.33, -0.236, 0.327), Rotation3d.kZero);
+      new Transform3d(new Translation3d(0.33, -0.26, 0.327), Rotation3d.kZero);
 
   private static final Rotation3d REAR_CAMERA_ROTATION =
       new Rotation3d(0, toRadians(-15), toRadians(180));
@@ -277,6 +277,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     Optional<PhotonPipelineResult> currentResult = Optional.empty();
     List<PhotonPipelineResult> allUnreadResults = camera.getAllUnreadResults();
     for (var change : allUnreadResults) {
+
       visionEst = estimator.update(change);
       updateEstimationStdDevs(visionEst, change.getTargets());
       currentResult = Optional.of(change);
