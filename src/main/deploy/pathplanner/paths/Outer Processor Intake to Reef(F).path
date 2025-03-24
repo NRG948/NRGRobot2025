@@ -8,11 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9706389554922887,
-        "y": 1.4419185959603755
+        "x": 3.436172570758953,
+        "y": 0.42761404859859575
       },
       "isLocked": false,
       "linkedName": "Outer Processor Intake"
+    },
+    {
+      "anchor": {
+        "x": 4.31925,
+        "y": 0.963
+      },
+      "prevControl": {
+        "x": 4.0444722914443325,
+        "y": 0.7779724237942688
+      },
+      "nextControl": {
+        "x": 4.745627657673275,
+        "y": 1.2501107156481004
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,8 +36,8 @@
         "y": 2.86
       },
       "prevControl": {
-        "x": 5.0020491803278695,
-        "y": 2.3924795081967214
+        "x": 5.009255978334048,
+        "y": 1.8141555535387957
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +49,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.5,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 4.5,
+    "maxAcceleration": 9.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

@@ -5,22 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Processor Start to Reef(H)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
-                }
-              }
-            ]
+            "pathName": "Processor Start to Reef(H)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Elevator L4"
           }
         },
         {
@@ -55,22 +48,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Outer Processor Intake to Reef(G)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
-                }
-              }
-            ]
+            "pathName": "Outer Processor Intake to Reef(F)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Elevator L4"
           }
         },
         {
@@ -86,7 +72,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(G) to Outer Processor Intake"
+                  "pathName": "Reef(F) to Outer Processor Intake"
                 }
               },
               {
@@ -105,22 +91,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Outer Processor Intake to Reef(F)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
-                }
-              }
-            ]
+            "pathName": "Outer Processor Intake to Reef(G)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Elevator L4"
           }
         },
         {

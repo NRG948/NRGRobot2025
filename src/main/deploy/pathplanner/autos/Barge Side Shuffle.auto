@@ -5,22 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Barge Start to Reef(I)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
-                }
-              }
-            ]
+            "pathName": "Barge Start to Reef(I)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Elevator L4"
           }
         },
         {
@@ -61,16 +54,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Outer Barge Intake to Reef(J)"
-                }
-              }
-            ]
+            "pathName": "Outer Barge Intake to Reef(J)"
           }
         },
         {
@@ -111,16 +97,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Outer Barge Intake to Reef(K)"
-                }
-              }
-            ]
+            "pathName": "Outer Barge Intake to Reef(K)"
           }
         },
         {
