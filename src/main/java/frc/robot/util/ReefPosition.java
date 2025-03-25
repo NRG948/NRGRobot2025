@@ -27,13 +27,14 @@ public enum ReefPosition {
 
   private final double yOffset;
   private final Transform2d tagToRobot;
+  private static final double FUDGE_OFFSET = 0.03;
 
   ReefPosition(double yOffset) {
     this.yOffset = yOffset;
     this.tagToRobot =
         new Transform2d(
             ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X,
-            CORAL_ARM_CENTER_Y_OFFSET + yOffset,
+            CORAL_ARM_CENTER_Y_OFFSET + yOffset + FUDGE_OFFSET,
             Rotation2d.k180deg);
   }
 
