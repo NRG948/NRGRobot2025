@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.AlgaeArmParameters;
 import frc.robot.parameters.ArmParameters;
 import frc.robot.parameters.CoralArmParameters;
+import frc.robot.parameters.CoralGroundIntakeArmParameters;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
@@ -73,6 +74,16 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   public static final RobotPreferences.BooleanValue ENABLE_ALGAE_ARM =
       new RobotPreferences.BooleanValue("Arm", "Enable Algae Arm", true);
 
+  @RobotPreferencesValue(row = 0, column = 2, width = 1, height = 1)
+  public static final RobotPreferences.EnumValue<CoralGroundIntakeArmParameters>
+      CORAL_GROUND_INTAKE_ARM =
+          new RobotPreferences.EnumValue<CoralGroundIntakeArmParameters>(
+              "Arm", "Coral Ground Intake Arm", CoralGroundIntakeArmParameters.CompetitionBase2025);
+
+  @RobotPreferencesValue(row = 0, column = 3, width = 1, height = 1)
+  public static final RobotPreferences.BooleanValue ENABLE_CORAL_GROUND_INTAKE_ARM =
+      new RobotPreferences.BooleanValue("Arm", "Enable Coral Ground Intake Arm", true);
+
   private static final DataLog LOG = DataLogManager.getLog();
 
   private final double MIN_ANGLE;
@@ -102,6 +113,11 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
 
   /** Creates a new Arm from {@link CoralArmParameters}. */
   public Arm(CoralArmParameters parameters) {
+    this((ArmParameters) parameters);
+  }
+
+  /** Creates a new Arm from {@link CoralGroundIntakeArmParameters}. */
+  public Arm(CoralGroundIntakeArmParameters parameters) {
     this((ArmParameters) parameters);
   }
 
