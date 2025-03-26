@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Processor Start to Reef(H)"
+                  "pathName": "Processor Start to Reef(G)"
                 }
               },
               {
@@ -21,12 +21,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
           }
         },
         {
@@ -42,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(H) to Outer Processor Intake"
+                  "pathName": "Reef(G) to Outer Processor Intake"
                 }
               },
               {
@@ -69,14 +63,14 @@
                 "data": {
                   "pathName": "Outer Processor Intake to Reef(D)"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator L4"
+                }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
           }
         },
         {
@@ -119,14 +113,14 @@
                 "data": {
                   "pathName": "Outer Processor Intake to Reef(C)"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator L4"
+                }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
           }
         },
         {
