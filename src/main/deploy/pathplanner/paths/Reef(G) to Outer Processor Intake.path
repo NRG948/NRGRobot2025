@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.3893852459016385,
-        "y": 2.8088114754098363
+        "x": 6.54225,
+        "y": 2.075
       },
       "isLocked": false,
       "linkedName": "Reef(G)"
@@ -20,8 +20,8 @@
         "y": 0.963
       },
       "prevControl": {
-        "x": 4.079086065573771,
-        "y": 2.401524590163935
+        "x": 3.5197500000000006,
+        "y": 1.402249999999999
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,7 +29,21 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.9081885856079399,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
