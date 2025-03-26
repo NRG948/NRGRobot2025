@@ -246,22 +246,22 @@ public class RobotContainer {
 
     new Trigger(
             () ->
-                subsystems.coralRoller.isLeftLaserCANDetected()
-                    && !subsystems.coralRoller.isRightLaserCANDetected()
+                subsystems.coralRoller.isLeftReefDetected()
+                    && !subsystems.coralRoller.isRightReefDetected()
                     && subsystems.elevator.isSeekingAboveLevel(L1))
         .whileTrue(LEDCommands.setColor(subsystems.statusLEDs, Colors.BLUE));
 
     new Trigger(
             () ->
-                !subsystems.coralRoller.isLeftLaserCANDetected()
-                    && subsystems.coralRoller.isRightLaserCANDetected()
+                !subsystems.coralRoller.isLeftReefDetected()
+                    && subsystems.coralRoller.isRightReefDetected()
                     && subsystems.elevator.isSeekingAboveLevel(L1))
         .whileTrue(LEDCommands.setColor(subsystems.statusLEDs, Colors.ORANGE));
 
     new Trigger(
             () ->
-                (!subsystems.coralRoller.isLeftLaserCANDetected()
-                        && !subsystems.coralRoller.isRightLaserCANDetected())
+                (!subsystems.coralRoller.isLeftReefDetected()
+                        && !subsystems.coralRoller.isRightReefDetected())
                     || !subsystems.elevator.isSeekingAboveLevel(L1))
         .whileTrue(LEDCommands.setColor(subsystems.statusLEDs, Colors.BLACK));
 
