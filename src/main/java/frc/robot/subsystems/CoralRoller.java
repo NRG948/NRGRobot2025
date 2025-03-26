@@ -125,13 +125,13 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
     try {
       leftLaserCAN.setRangingMode(LaserCan.RangingMode.SHORT);
       leftLaserCAN.setRegionOfInterest(
-          new LaserCan.RegionOfInterest(12, 8, 16, 4)); // Makes detection region a box
+          new LaserCan.RegionOfInterest(8, 8, 16, 4)); // Makes detection region a box
       leftLaserCAN.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
 
       rightLaserCAN.setRangingMode(LaserCan.RangingMode.SHORT);
       rightLaserCAN.setRegionOfInterest(
-          new LaserCan.RegionOfInterest(12, 8, 16, 4)); // Makes detection region a box
-      rightLaserCAN.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
+          new LaserCan.RegionOfInterest(8, 8, 16, 4)); // Makes detection region a box
+      rightLaserCAN.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
     } catch (ConfigurationFailedException e) {
       System.out.println("Configuration failed! " + e);
     }
@@ -207,22 +207,8 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   private void updateTelemetry() {
     hasCoral = !beamBreak.get();
 
-    Measurement leftMeasurement = leftLaserCAN.getMeasurement();
-    Measurement rightMeasurement = rightLaserCAN.getMeasurement();
-
-    if (leftMeasurement != null
-        && leftMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      leftDistance = leftMeasurement.distance_mm / 1000.0;
-    } else {
-      leftDistance = NO_MEASUREMENT;
-    }
-
-    if (rightMeasurement != null
-        && rightMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      rightDistance = rightMeasurement.distance_mm / 1000.0;
-    } else {
-      rightDistance = NO_MEASUREMENT;
-    }
+    leftDistance = getDistance(leftLaserCAN);
+    rightDistance = getDistance(rightLaserCAN);
 
     leftLaserCANDetected = leftDistance >= REEF_MIN_DISTANCE && leftDistance <= REEF_MAX_DISTANCE;
 
@@ -239,6 +225,15 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
     logHasCoral.update(hasCoral);
     logCurrentVelocity.append(currentVelocity);
     motor.logTelemetry();
+  }
+
+  private double getDistance(LaserCan laserCan) {
+    Measurement measurement = laserCan.getMeasurement();
+    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+      return measurement.distance_mm / 1000.0;
+    } else {
+      return NO_MEASUREMENT;
+    }
   }
 
   @Override
