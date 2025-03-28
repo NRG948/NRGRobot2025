@@ -230,6 +230,10 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
   }
 
   private double getDistance(LaserCan laserCan) {
+    if (laserCan == null) {
+      return NO_MEASUREMENT;
+    }
+
     Measurement measurement = laserCan.getMeasurement();
     if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       return measurement.distance_mm / 1000.0;
