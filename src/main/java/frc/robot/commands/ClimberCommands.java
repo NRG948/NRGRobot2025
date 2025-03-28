@@ -19,7 +19,7 @@ import frc.robot.subsystems.Subsystems;
 
 /** A namespace for climber command factory methods. */
 public final class ClimberCommands {
-  private static final double CLIMB_ANGLE = Math.toRadians(-93);
+  private static final double CLIMB_ANGLE = Math.toRadians(-94);
   private static final double STOW_ANGLE = Math.toRadians(90);
 
   /** Returns a command that climbs. */
