@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.parameters.AlgaeArmParameters;
 import frc.robot.parameters.ArmParameters;
 import frc.robot.parameters.CoralArmParameters;
 import frc.robot.parameters.CoralGroundIntakeArmParameters;
@@ -66,15 +65,6 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
           "Arm", "Coral Arm", CoralArmParameters.CompetitionBase2025);
 
   @RobotPreferencesValue(row = 0, column = 2, width = 1, height = 1)
-  public static final RobotPreferences.EnumValue<AlgaeArmParameters> ALGAE_ARM =
-      new RobotPreferences.EnumValue<AlgaeArmParameters>(
-          "Arm", "Algae Arm", AlgaeArmParameters.CompetitionBase2025);
-
-  @RobotPreferencesValue(row = 0, column = 3, width = 1, height = 1)
-  public static final RobotPreferences.BooleanValue ENABLE_ALGAE_ARM =
-      new RobotPreferences.BooleanValue("Arm", "Enable Algae Arm", true);
-
-  @RobotPreferencesValue(row = 0, column = 2, width = 1, height = 1)
   public static final RobotPreferences.EnumValue<CoralGroundIntakeArmParameters>
       CORAL_GROUND_INTAKE_ARM =
           new RobotPreferences.EnumValue<CoralGroundIntakeArmParameters>(
@@ -105,11 +95,6 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   private DoubleLogEntry logCurrentVelocity;
   private DoubleLogEntry logGoalAngle;
   private BooleanLogEntry logEnabled;
-
-  /** Creates a new Arm from {@link AlgaeArmParameters}. */
-  public Arm(AlgaeArmParameters parameters) {
-    this((ArmParameters) parameters);
-  }
 
   /** Creates a new Arm from {@link CoralArmParameters}. */
   public Arm(CoralArmParameters parameters) {

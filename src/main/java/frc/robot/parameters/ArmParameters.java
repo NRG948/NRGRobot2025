@@ -57,9 +57,6 @@ public interface ArmParameters {
   /** Returns the CAN ID of the motor. */
   public int getMotorID();
 
-  /** Returns the Encoder ID. */
-  public int getEncoderID();
-
   /** Returns the max angular speed in rad/s. */
   public double getMaxAngularSpeed();
 

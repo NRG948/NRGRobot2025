@@ -7,10 +7,7 @@
  
 package frc.robot;
 
-import static frc.robot.commands.AlgaeCommands.intakeAlgae;
-import static frc.robot.commands.AlgaeCommands.outtakeAlgae;
 import static frc.robot.commands.AlgaeCommands.removeAlgaeAtLevel;
-import static frc.robot.commands.AlgaeCommands.stopAndStowAlgaeIntake;
 import static frc.robot.commands.CoralAndElevatorCommands.raiseElevatorAndTipCoralArm;
 import static frc.robot.commands.CoralCommands.outtakeUntilCoralNotDetected;
 import static frc.robot.commands.DriveCommands.alignToCoralStation;
@@ -215,10 +212,10 @@ public class RobotContainer {
     m_manipulatorController.b().onTrue(raiseElevatorAndTipCoralArm(subsystems, L3));
     m_manipulatorController.y().onTrue(raiseElevatorAndTipCoralArm(subsystems, L4));
 
-    m_manipulatorController.rightBumper().whileTrue(intakeAlgae(subsystems));
-    m_manipulatorController.rightBumper().onFalse(stopAndStowAlgaeIntake(subsystems));
-    m_manipulatorController.leftBumper().whileTrue(outtakeAlgae(subsystems));
-    m_manipulatorController.leftBumper().onFalse(stopAndStowAlgaeIntake(subsystems));
+    m_manipulatorController.rightBumper().whileTrue(CoralCommands.intakeFromGround(subsystems));
+    m_manipulatorController.rightBumper().onFalse(CoralCommands.stowGroundIntake(subsystems));
+    // m_manipulatorController.leftBumper().whileTrue(outtakeAlgae(subsystems));
+    // m_manipulatorController.leftBumper().onFalse(stopAndStowAlgaeIntake(subsystems));
     m_manipulatorController.povLeft().whileTrue(CoralCommands.intakeUntilCoralDetected(subsystems));
     m_manipulatorController.povRight().whileTrue(outtakeUntilCoralNotDetected(subsystems));
     m_manipulatorController
@@ -234,10 +231,6 @@ public class RobotContainer {
 
     new Trigger(subsystems.coralRoller::hasCoral)
         .onTrue(LEDCommands.indicateCoralAcquired(subsystems));
-    subsystems.algaeGrabber.ifPresent(
-        (algaeGrabber) -> {
-          new Trigger(algaeGrabber::hasAlgae).onTrue(LEDCommands.indicateAlgaeAcquired(subsystems));
-        });
 
     new Trigger(
             () ->

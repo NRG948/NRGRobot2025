@@ -9,7 +9,6 @@ package frc.robot.parameters;
 
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.COMPETITION_CORAL_ARM_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.PRACTICE_CORAL_ARM_MOTOR_ID;
-import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_ARM_ABSOLUTE_ENCODER;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 
@@ -26,10 +25,9 @@ public enum CoralArmParameters implements ArmParameters {
       3.0 * 9.0 * 54.0 / 36.0,
       0.315,
       PRACTICE_CORAL_ARM_MOTOR_ID,
-      CORAL_ARM_ABSOLUTE_ENCODER,
-      Math.toRadians(92),
+      Math.toRadians(94),
       Math.toRadians(10),
-      Math.toRadians(95),
+      Math.toRadians(96),
       0.08),
   CompetitionBase2025(
       MotorParameters.KrakenX60,
@@ -37,7 +35,6 @@ public enum CoralArmParameters implements ArmParameters {
       27.0 * 54.0 / 36.0,
       0.315,
       COMPETITION_CORAL_ARM_MOTOR_ID,
-      CORAL_ARM_ABSOLUTE_ENCODER,
       Math.toRadians(93),
       Math.toRadians(10),
       Math.toRadians(95),
@@ -48,7 +45,6 @@ public enum CoralArmParameters implements ArmParameters {
   private final double mass;
   private final double armLength;
   private final int motorID;
-  private final int encoderID;
   private final double stowedAngle;
   private final double minAngleRad;
   private final double maxAngleRad;
@@ -68,7 +64,6 @@ public enum CoralArmParameters implements ArmParameters {
    * @param gearRatio The gear ratio.
    * @param armLength The length of the arm.
    * @param motorID The CAN ID of the motor.
-   * @param encoderID The absolute encoder ID.
    * @param stowedAngle The angle of the arm when stowed in radians.
    * @param minAngleRad The min angle of the arm in radians.
    * @param maxAngleRad The max angle of the arm in radians.
@@ -79,7 +74,6 @@ public enum CoralArmParameters implements ArmParameters {
       double gearRatio,
       double armLength,
       int motorID,
-      int encoderID,
       double stowedAngle,
       double minAngleRad,
       double maxAngleRad,
@@ -90,7 +84,6 @@ public enum CoralArmParameters implements ArmParameters {
     this.armLength = armLength;
     this.kS = motorParameters.getKs();
     this.motorID = motorID;
-    this.encoderID = encoderID;
     this.stowedAngle = stowedAngle;
     this.minAngleRad = minAngleRad;
     this.maxAngleRad = maxAngleRad;
@@ -173,11 +166,6 @@ public enum CoralArmParameters implements ArmParameters {
   /** Returns the CAN ID of the motor. */
   public int getMotorID() {
     return motorID;
-  }
-
-  /** Returns the Encoder ID. */
-  public int getEncoderID() {
-    return encoderID;
   }
 
   /** Returns the max angular speed in rad/s. */

@@ -22,6 +22,10 @@ import java.util.Set;
 
 /** A namespace for coral command factory methods. */
 public final class CoralCommands {
+  public static final int GROUND_INTAKE_INTAKE_ANGLE = -28;
+
+  public static final int GROUND_INTAKE_STOWED_ANGLE = 128;
+
   public static final double CORAL_DETECTION_DELAY = Arm.CORAL_ARM.getValue().getRollerDelay();
 
   /** The delay for reversing the coral during auto centering. */
@@ -139,5 +143,46 @@ public final class CoralCommands {
             intakeUntilCoralDetected(subsystems).withTimeout(AUTO_CENTER_FORWARDS_SECONDS))
         .finallyDo(coralRoller::disable)
         .unless(coralRoller::hasCoral);
+  }
+
+  public static Command intakeFromGround(Subsystems subsystems) {
+    var coralIntakeArmOpt = subsystems.coralIntakeArm;
+    var coralIntakeGrabberOpt = subsystems.coralIntakeGrabber;
+    if (coralIntakeArmOpt.isEmpty() || coralIntakeGrabberOpt.isEmpty()) {
+      return Commands.none();
+    }
+    var coralIntakeArm = coralIntakeArmOpt.get();
+    var coralIntakeGrabber = coralIntakeGrabberOpt.get();
+    return Commands.sequence(
+            Commands.parallel(
+                Commands.runOnce(
+                    () -> coralIntakeArm.setGoalAngle(GROUND_INTAKE_INTAKE_ANGLE), coralIntakeArm),
+                Commands.runOnce(() -> coralIntakeGrabber.setGoalVelocity(1), coralIntakeGrabber)),
+            Commands.idle(coralIntakeArm, coralIntakeGrabber).until(coralIntakeGrabber::hasCoral),
+            Commands.runOnce(coralIntakeGrabber::disable, coralIntakeGrabber),
+            Commands.waitSeconds(0.25),
+            Commands.runOnce(
+                () -> coralIntakeArm.setGoalAngle(GROUND_INTAKE_STOWED_ANGLE), coralIntakeArm),
+            Commands.idle(coralIntakeGrabber, coralIntakeArm).until(coralIntakeArm::atGoalAngle),
+            Commands.waitSeconds(0.25),
+            Commands.runOnce(() -> coralIntakeGrabber.setGoalVelocity(-0.8), coralIntakeGrabber),
+            Commands.idle(coralIntakeGrabber, coralIntakeArm)
+                .until(() -> !coralIntakeGrabber.hasCoral()),
+            Commands.waitSeconds(0.25))
+        .finallyDo(coralIntakeGrabber::disable);
+  }
+
+  public static Command stowGroundIntake(Subsystems subsystems) {
+    var coralIntakeArmOpt = subsystems.coralIntakeArm;
+    var coralIntakeGrabberOpt = subsystems.coralIntakeGrabber;
+    if (coralIntakeArmOpt.isEmpty() || coralIntakeGrabberOpt.isEmpty()) {
+      return Commands.none();
+    }
+    var coralIntakeArm = coralIntakeArmOpt.get();
+    var coralIntakeGrabber = coralIntakeGrabberOpt.get();
+    return Commands.parallel(
+        Commands.runOnce(
+            () -> coralIntakeArm.setGoalAngle(GROUND_INTAKE_STOWED_ANGLE), coralIntakeArm),
+        Commands.runOnce(coralIntakeGrabber::disable, coralIntakeGrabber));
   }
 }

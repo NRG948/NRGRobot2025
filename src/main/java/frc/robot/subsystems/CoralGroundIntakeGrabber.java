@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_GROUND_INTAKE_BEAM_BREAK;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
 import static frc.robot.parameters.MotorParameters.KrakenX60;
 import static frc.robot.util.MotorDirection.CLOCKWISE_POSITIVE;
@@ -25,6 +26,7 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -38,7 +40,7 @@ import frc.robot.util.TalonFXAdapter;
 
 @RobotPreferencesLayout(
     groupName = "CoralGroundIntakeGrabber",
-    row = 0,
+    row = 1,
     column = 6,
     width = 1,
     height = 1,
@@ -72,6 +74,7 @@ public class CoralGroundIntakeGrabber extends SubsystemBase
           BRAKE,
           METERS_PER_REVOLUTION);
   private final RelativeEncoder encoder = motor.getEncoder();
+  private DigitalInput beamBreak = new DigitalInput(CORAL_GROUND_INTAKE_BEAM_BREAK);
 
   private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(KS, KV);
   private final PIDController pidController = new PIDController(1, 0, 0);
@@ -140,7 +143,7 @@ public class CoralGroundIntakeGrabber extends SubsystemBase
   /** Updates and logs the current sensors states. */
   private void updateTelemetry() {
     currentVelocity = encoder.getVelocity();
-
+    hasCoral = !beamBreak.get();
     logHasCoral.update(hasCoral);
     logCurrentVelocity.append(currentVelocity);
     motor.logTelemetry();

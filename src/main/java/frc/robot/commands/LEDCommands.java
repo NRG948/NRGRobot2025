@@ -15,7 +15,6 @@ import static frc.robot.parameters.Colors.RED;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.parameters.Colors;
-import frc.robot.subsystems.AlgaeGrabber;
 import frc.robot.subsystems.CoralRoller;
 import frc.robot.subsystems.StatusLED;
 import frc.robot.subsystems.Subsystems;
@@ -54,38 +53,6 @@ public final class LEDCommands {
             setColor(statusLEDs, GREEN),
             Commands.idle(statusLEDs).until(() -> !coralRoller.hasCoral()))
         .withName("IndicateCoralAcquired");
-  }
-
-  /**
-   * Returns a command that blinks the status LEDs green for one second and then sets the color to
-   * solid green when an algae is acquired.
-   *
-   * @param subsystem The subsystems container.
-   * @param period The period of the blink.
-   * @return A command that blinks the status LEDs.
-   */
-  public static Command indicateAlgaeAcquired(Subsystems subsystems) {
-    return subsystems
-        .algaeGrabber
-        .map((algaeGrabber) -> indicateAlgaeAcquired(algaeGrabber, subsystems.statusLEDs))
-        .orElse(Commands.none());
-  }
-
-  /**
-   * Returns a command that blinks the status LEDs green for one second and then sets the color to
-   * solid green when an algae is acquired.
-   *
-   * @param algaeGrabber The algae grabber subsystem.
-   * @param statusLEDs The status LED subsystem.
-   * @param period The period of the blink.
-   * @return A command that blinks the status LEDs.
-   */
-  public static Command indicateAlgaeAcquired(AlgaeGrabber algaeGrabber, StatusLED statusLEDs) {
-    return Commands.sequence(
-            new BlinkColor(statusLEDs, GREEN).withTimeout(BLINK_DURATION),
-            setColor(statusLEDs, GREEN),
-            Commands.idle(statusLEDs).until(() -> !algaeGrabber.hasAlgae()))
-        .withName("IndicateAlgaeAcquired");
   }
 
   /**

@@ -95,10 +95,8 @@ public final class Constants {
         public static final int PRACTICE_CORAL_ARM_MOTOR_ID = 6;
         public static final int COMPETITION_CORAL_ARM_MOTOR_ID = 4;
         public static final int CORAL_ROLLER_MOTOR_ID = 5; // For both bots
-        public static final int ALGAE_ARM_MOTOR_ID = 32;
-        public static final int ALGAE_GRABBER_MOTOR_ID = 33;
         public static final int CORAL_GROUND_INTAKE_ARM_MOTOR_ID = 12;
-        public static final int CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID = 12;
+        public static final int CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID = 3;
         public static final int PRACTICE_BOT_CLIMBER_MOTOR_ID = 4;
         public static final int COMPETITION_BOT_CLIMBER_MOTOR_ID = 11;
       }
@@ -110,8 +108,8 @@ public final class Constants {
     /** Digital I/O port numbers. */
     public static class DigitalIO {
       public static final int CORAL_ROLLER_BEAM_BREAK = 9;
+      public static final int CORAL_GROUND_INTAKE_BEAM_BREAK = 8;
       public static final int CORAL_ARM_ABSOLUTE_ENCODER = 0;
-      public static final int ALGAE_ARM_ABSOLUTE_ENCODER = 1;
       public static final int CORAL_GROUND_INTAKE_ARM_ABSOLUTE_ENCODER = 4;
       public static final int CLIMBER_ABSOLUTE_ENCODER = 2;
     }

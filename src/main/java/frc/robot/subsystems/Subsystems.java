@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotContainer;
-import frc.robot.parameters.AlgaeArmState;
+import frc.robot.commands.CoralCommands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.util.MotorIdleMode;
 import java.lang.reflect.InvocationTargetException;
@@ -32,8 +32,8 @@ public class Subsystems {
   public final Arm coralArm = new Arm(Arm.CORAL_ARM.getValue());
   public final CoralRoller coralRoller = new CoralRoller();
 
-  public final Optional<Arm> algaeArm;
-  public final Optional<AlgaeGrabber> algaeGrabber;
+  public final Optional<Arm> coralIntakeArm;
+  public final Optional<CoralGroundIntakeGrabber> coralIntakeGrabber;
 
   public final Climber climber = new Climber();
 
@@ -74,11 +74,14 @@ public class Subsystems {
 
     backCamera.ifPresent((s) -> all.add(s));
 
-    algaeArm = newOptionalSubsystem(Arm.class, Arm.ENABLE_ALGAE_ARM, Arm.ALGAE_ARM.getValue());
-    algaeArm.ifPresent((s) -> manipulators.add(s));
+    coralIntakeArm =
+        newOptionalSubsystem(
+            Arm.class, Arm.ENABLE_CORAL_GROUND_INTAKE_ARM, Arm.CORAL_GROUND_INTAKE_ARM.getValue());
+    coralIntakeArm.ifPresent((s) -> manipulators.add(s));
 
-    algaeGrabber = newOptionalSubsystem(AlgaeGrabber.class, Arm.ENABLE_ALGAE_ARM);
-    algaeGrabber.ifPresent((s) -> manipulators.add(s));
+    coralIntakeGrabber =
+        newOptionalSubsystem(CoralGroundIntakeGrabber.class, Arm.ENABLE_CORAL_GROUND_INTAKE_ARM);
+    coralIntakeGrabber.ifPresent((s) -> manipulators.add(s));
 
     // Add all manipulator subsystems to the `all` list.
     all.addAll(manipulators);
@@ -161,7 +164,7 @@ public class Subsystems {
 
   public void setInitialStates() {
     coralArm.setGoalAngle(ElevatorLevel.STOWED.getArmAngle());
-    algaeArm.ifPresent(algaeArm -> algaeArm.setGoalAngle(AlgaeArmState.STOWED.armAngle()));
+    coralIntakeArm.ifPresent((arm) -> arm.setGoalAngle(CoralCommands.GROUND_INTAKE_STOWED_ANGLE));
   }
 
   /** Disables the specified subsystems implementing the {@link ActiveSubsystem} interface. */
