@@ -12,8 +12,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoubleSubscriber;
-import edu.wpi.first.networktables.FloatArrayPublisher;
 import edu.wpi.first.networktables.FloatArraySubscriber;
 import edu.wpi.first.networktables.IntegerPublisher;
 import edu.wpi.first.networktables.IntegerSubscriber;
@@ -37,6 +37,7 @@ public class QuestTelemetryNT implements QuestTelemetry {
 
   private static final float[] ZERO_VECTOR_3 = new float[] {0.0f, 0.0f, 0.0f};
   private static final float[] ZERO_VECTOR_4 = new float[] {0.0f, 0.0f, 0.0f, 0.0f};
+  private static final double[] ZERO_VECTOR_D3 = new double[] {0.0, 0.0, 0.0};
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -56,8 +57,8 @@ public class QuestTelemetryNT implements QuestTelemetry {
    */
   private final IntegerPublisher questMosi = questnavTable.getIntegerTopic("mosi").publish();
 
-  private final FloatArrayPublisher questResetPose =
-      questnavTable.getFloatArrayTopic("resetpose").publish();
+  private final DoubleArrayPublisher questResetPose =
+      questnavTable.getDoubleArrayTopic("resetpose").publish();
 
   // Subscribe to the questnav topics in the Network Tables.
   // The MISO (Master-in Slave-out) topic is used to receive integer status codes from the QuestNav.
@@ -149,7 +150,7 @@ public class QuestTelemetryNT implements QuestTelemetry {
 
   /** Zeroes the absolute 3D position of the QuestNav (similar to long-pressing the quest logo) */
   public boolean zeroPose() {
-    questResetPose.set(ZERO_VECTOR_3);
+    questResetPose.set(ZERO_VECTOR_D3);
     long miso = questMiso.get();
     logMiso.update(miso);
     if (miso != RESPONSE_POSE_INITIALIZED) {

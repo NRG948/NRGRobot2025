@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.questnav.QuestTelemetry;
 import frc.robot.questnav.QuestTelemetry.QuestTelemetryData;
@@ -123,7 +124,8 @@ public class QuestNav extends SubsystemBase implements ShuffleboardProducer {
 
     ShuffleboardLayout controlLayout =
         tab.getLayout("Control", BuiltInLayouts.kList).withPosition(4, 0).withSize(2, 4);
-    // controlLayout.add(Commands.runOnce(() -> zeroPosition(), this).withName("Zero Position"));
-    // controlLayout.add(Commands.runOnce(() -> zeroHeading(), this).withName("Zero Heading"));
+    controlLayout.add(Commands.runOnce(() -> telemetry.zeroPose(), this).withName("Zero Pose"));
+    // controlLayout.add(Commands.runOnce(() -> telemetry.zeroHeading(), this).withName("Zero
+    // Heading"));
   }
 }
