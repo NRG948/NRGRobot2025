@@ -38,7 +38,7 @@ public enum CoralArmParameters implements ArmParameters {
       0.315,
       COMPETITION_CORAL_ARM_MOTOR_ID,
       CORAL_ARM_ABSOLUTE_ENCODER,
-      Math.toRadians(92),
+      Math.toRadians(93),
       Math.toRadians(10),
       Math.toRadians(95),
       0.1);
