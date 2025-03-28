@@ -45,8 +45,8 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   private static final DataLog LOG = DataLogManager.getLog();
 
-  private final double MIN_ANGLE = Math.toRadians(-100);
-  private final double MAX_ANGLE = Math.toRadians(135);
+  private final double MIN_ANGLE = Math.toRadians(-94);
+  private final double MAX_ANGLE = Math.toRadians(110);
 
   @SuppressWarnings("unused")
   private final double GEAR_RATIO = 5.0 * 5.0 * 66.0 / 18.0;
