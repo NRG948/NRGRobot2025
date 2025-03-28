@@ -19,7 +19,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.9
+            "waitTime": 0.2
           }
         },
         {
@@ -60,9 +60,15 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Elevator L4"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.2
           }
         },
         {
@@ -97,21 +103,21 @@
           }
         },
         {
-          "type": "parallel",
-          "data": {
-            "commands": []
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Outer Processor Intake to Reef(D)"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Elevator L4"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.2
           }
         },
         {
