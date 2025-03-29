@@ -35,7 +35,7 @@ public interface ArmParameters {
   /** Returns the direction the motor rotates when a positive voltage is applied. */
   public MotorDirection getMotorDirection();
 
-  /** Returns the robot mass. */
+  /** Returns the robot mass in kg. */
   public double getMass();
 
   /** Returns the robot arm length. */
@@ -48,13 +48,13 @@ public interface ArmParameters {
   public double getkV();
 
   /** Returns kA feedforward constant Vs^2/rad. */
-  public double getkA();
+  public double getkAWithoutCoral();
 
   /** Returns kA feedforward constant with coral Vs^2/rad. */
   public double getkAWithCoral();
 
   /** Returns kG feedforward constant Vs^2/rad. */
-  public double getkG();
+  public double getkGWithoutCoral();
 
   /** Returns kG feedforward constant with coral Vs^2/rad. */
   public double getkGWithCoral();

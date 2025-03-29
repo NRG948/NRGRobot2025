@@ -7,7 +7,6 @@
  
 package frc.robot.commands;
 
-import static frc.robot.commands.CoralCommands.CORAL_DETECTION_DELAY;
 import static frc.robot.parameters.Colors.GREEN;
 import static frc.robot.parameters.Colors.PURPLE;
 import static frc.robot.parameters.Colors.RED;
@@ -41,14 +40,16 @@ public final class LEDCommands {
    *
    * @param subsystems The subsystems container.
    * @param period The period of the blink.
+   * @param detectionDelay The delay in seconds after the beam break is triggered before the LEDs
+   *     change color.
    * @return A command that blinks the status LEDs.
    */
-  public static Command indicateCoralAcquired(Subsystems subsystems) {
+  public static Command indicateCoralAcquired(Subsystems subsystems, double detectionDelay) {
     StatusLED statusLEDs = subsystems.statusLEDs;
     CoralRoller coralRoller = subsystems.coralRoller;
 
     return Commands.sequence(
-            Commands.waitSeconds(CORAL_DETECTION_DELAY),
+            Commands.waitSeconds(detectionDelay),
             new BlinkColor(statusLEDs, GREEN).withTimeout(BLINK_DURATION),
             setColor(statusLEDs, GREEN),
             Commands.idle(statusLEDs).until(() -> !coralRoller.hasCoral()))

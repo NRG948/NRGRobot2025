@@ -8,6 +8,7 @@
 package frc.robot.parameters;
 
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CORAL_GROUND_INTAKE_ARM_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.CORAL_GROUND_INTAKE_ARM_MASS_KG;
 import static frc.robot.Constants.RobotConstants.CORAL_MASS_KG;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
@@ -21,23 +22,25 @@ import frc.robot.util.MotorDirection;
 public enum CoralGroundIntakeArmParameters implements ArmParameters {
   PracticeBase2025(
       MotorParameters.KrakenX60,
-      4.245,
+      CORAL_GROUND_INTAKE_ARM_MASS_KG,
       72.0,
       Units.inchesToMeters(21),
       CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
       Math.toRadians(128),
       Math.toRadians(-35),
-      Math.toRadians(128)),
+      Math.toRadians(128),
+      0.25),
 
   CompetitionBase2025(
       MotorParameters.KrakenX60,
-      4.245,
+      CORAL_GROUND_INTAKE_ARM_MASS_KG,
       72.0,
       Units.inchesToMeters(21),
       CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
       Math.toRadians(128),
       Math.toRadians(-35),
-      Math.toRadians(128));
+      Math.toRadians(128),
+      0.25);
 
   private final MotorParameters motorParameters;
   private final double gearRatio;
@@ -53,6 +56,8 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
   private final double kA;
   private final double kAWithCoral;
 
+  private final double rollerDelay;
+
   /**
    * Constructs a new ArmParameters.
    *
@@ -64,6 +69,8 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
    * @param stowedAngle The angle of the arm when stowed in radians.
    * @param minAngleRad The min angle of the arm in radians.
    * @param maxAngleRad The max angle of the arm in radians.
+   * @param rollerDelay The delay delay in seconds from detection of the coral to stopping the motor
+   *     during intake.
    */
   private CoralGroundIntakeArmParameters(
       MotorParameters motorParameters,
@@ -73,7 +80,8 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
       int motorID,
       double stowedAngle,
       double minAngleRad,
-      double maxAngleRad) {
+      double maxAngleRad,
+      double rollerDelay) {
     this.gearRatio = gearRatio;
     this.motorParameters = motorParameters;
     this.mass = mass;
@@ -83,6 +91,7 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
     this.stowedAngle = stowedAngle;
     this.minAngleRad = minAngleRad;
     this.maxAngleRad = maxAngleRad;
+    this.rollerDelay = rollerDelay;
     kV = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularSpeed();
     kA = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAcceleration();
     kAWithCoral = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAccelerationWithCoral();
@@ -149,7 +158,7 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
   }
 
   /** Returns kA feedforward constant Vs^2/rad. */
-  public double getkA() {
+  public double getkAWithoutCoral() {
     return kA;
   }
 
@@ -159,7 +168,7 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
   }
 
   /** Returns kG feedforward constant Vs^2/rad. */
-  public double getkG() {
+  public double getkGWithoutCoral() {
     return 9.81 * kA;
   }
 
@@ -202,5 +211,12 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
   /** Returns a {@link ProfiledPIDController} object for use with the arm. */
   public ProfiledPIDController getProfiledPIDController() {
     return new ProfiledPIDController(1.0, 0, 0, getConstraints());
+  }
+
+  /**
+   * Returns the delay in seconds from detection of the coral to stopping the motor during intake.
+   */
+  public double getRollerDelay() {
+    return rollerDelay;
   }
 }

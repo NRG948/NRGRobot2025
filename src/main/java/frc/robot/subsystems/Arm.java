@@ -128,7 +128,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     slot0Configs.kS = parameters.getkS();
     // Need to convert kV and kA from radians to rotations.
     slot0Configs.kV = parameters.getkV() * RADIANS_PER_ROTATION;
-    slot0Configs.kA = parameters.getkA() * RADIANS_PER_ROTATION;
+    slot0Configs.kA = parameters.getkAWithoutCoral() * RADIANS_PER_ROTATION;
     slot0Configs.kG = 0.9;
     slot0Configs.GravityType = GravityTypeValue.Arm_Cosine;
     slot0Configs.kP = 120.0;
