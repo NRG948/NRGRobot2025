@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9454614220270436,
-        "y": 7.207445431838748
+        "x": 2.3692500000046253,
+        "y": 6.228499999996379
       },
       "isLocked": false,
       "linkedName": "Outer Barge Intake"
@@ -20,8 +20,8 @@
         "y": 5.36
       },
       "prevControl": {
-        "x": 3.861212276453055,
-        "y": 5.857190061475411
+        "x": 3.207750000004625,
+        "y": 5.770249999996379
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,7 +32,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.88,
+      "minWaypointRelativePos": 0.8,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.0,
@@ -45,19 +45,7 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Elevator L4",
-      "waypointRelativePos": 0.49330024813895773,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Elevator L4"
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 4.0,
