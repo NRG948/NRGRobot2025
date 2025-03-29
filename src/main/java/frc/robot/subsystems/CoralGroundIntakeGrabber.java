@@ -7,7 +7,8 @@
  
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.RobotConstants.CAN.TalonFX.ALGAE_GRABBER_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_GROUND_INTAKE_BEAM_BREAK;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
 import static frc.robot.parameters.MotorParameters.KrakenX60;
 import static frc.robot.util.MotorDirection.CLOCKWISE_POSITIVE;
@@ -25,6 +26,7 @@ import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -37,24 +39,25 @@ import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
 
 @RobotPreferencesLayout(
-    groupName = "AlgaeGrabber",
-    row = 0,
+    groupName = "CoralGroundIntakeGrabber",
+    row = 1,
     column = 6,
     width = 1,
     height = 1,
     type = "Grid Layout",
     gridColumns = 1,
     gridRows = 3)
-public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
+public class CoralGroundIntakeGrabber extends SubsystemBase
+    implements ActiveSubsystem, ShuffleboardProducer {
 
   @RobotPreferencesValue(column = 0, row = 0)
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
-      new RobotPreferences.BooleanValue("AlgaeGrabber", "Enable Tab", false);
+      new RobotPreferences.BooleanValue("CoralGroundIntakeGrabber", "Enable Tab", true);
 
   private static final DataLog LOG = DataLogManager.getLog();
 
-  private static final double WHEEL_DIAMETER = Units.inchesToMeters(3);
-  private static final double GEAR_RATIO = 25.0;
+  private static final double WHEEL_DIAMETER = Units.inchesToMeters(3.5);
+  private static final double GEAR_RATIO = 9.0;
 
   private static final double METERS_PER_REVOLUTION = (WHEEL_DIAMETER * Math.PI) / GEAR_RATIO;
   private static final double MAX_VELOCITY =
@@ -65,12 +68,13 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
 
   private final TalonFXAdapter motor =
       new TalonFXAdapter(
-          "/AlgaeGrabber",
-          new TalonFX(ALGAE_GRABBER_MOTOR_ID, "rio"),
+          "/CoralGroundIntakeGrabber",
+          new TalonFX(CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID, "rio"),
           CLOCKWISE_POSITIVE,
           BRAKE,
           METERS_PER_REVOLUTION);
   private final RelativeEncoder encoder = motor.getEncoder();
+  private DigitalInput beamBreak = new DigitalInput(CORAL_GROUND_INTAKE_BEAM_BREAK);
 
   private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(KS, KV);
   private final PIDController pidController = new PIDController(1, 0, 0);
@@ -78,18 +82,22 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
   private double goalVelocity = 0;
   private double currentVelocity = 0;
   private boolean enabled;
-  private boolean hasAlgae = false;
+  private boolean hasCoral = false;
 
   private DoubleLogEntry logCurrentVelocity =
-      new DoubleLogEntry(LOG, "/AlgaeGrabber/currentVelocity");
-  private DoubleLogEntry logGoalVelocity = new DoubleLogEntry(LOG, "/AlgaeGrabber/goalVelocity");
-  private BooleanLogEntry logHasAlgae = new BooleanLogEntry(LOG, "/AlgaeGrabber/hasAlgae");
-  private DoubleLogEntry logFeedForward = new DoubleLogEntry(LOG, "/AlgaeGrabber/feedforward");
-  private DoubleLogEntry logFeedBack = new DoubleLogEntry(LOG, "/AlgaeGrabber/feedback");
-  private DoubleLogEntry logVoltage = new DoubleLogEntry(LOG, "/AlgaeGrabber/voltage");
+      new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/currentVelocity");
+  private DoubleLogEntry logGoalVelocity =
+      new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/goalVelocity");
+  private BooleanLogEntry logHasCoral =
+      new BooleanLogEntry(LOG, "/CoralGroundIntakeGrabber/hasCoral");
+  private DoubleLogEntry logFeedForward =
+      new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/feedforward");
+  private DoubleLogEntry logFeedBack =
+      new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/feedback");
+  private DoubleLogEntry logVoltage = new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/voltage");
 
-  /** Creates a new AlgaeGrabber. */
-  public AlgaeGrabber() {}
+  /** Creates a new CoralGroundIntakeGrabber. */
+  public CoralGroundIntakeGrabber() {}
 
   /** Sets the goal velocity in meters per second. */
   public void setGoalVelocity(double velocity) {
@@ -108,8 +116,8 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
   }
 
   /** Returns whether we have coral. */
-  public boolean hasAlgae() {
-    return hasAlgae;
+  public boolean hasCoral() {
+    return hasCoral;
   }
 
   @Override
@@ -135,8 +143,8 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
   /** Updates and logs the current sensors states. */
   private void updateTelemetry() {
     currentVelocity = encoder.getVelocity();
-
-    logHasAlgae.update(hasAlgae);
+    hasCoral = !beamBreak.get();
+    logHasCoral.update(hasCoral);
     logCurrentVelocity.append(currentVelocity);
     motor.logTelemetry();
   }
@@ -147,13 +155,13 @@ public class AlgaeGrabber extends SubsystemBase implements ActiveSubsystem, Shuf
       return;
     }
 
-    ShuffleboardTab rollerTab = Shuffleboard.getTab("Algae Grabber");
+    ShuffleboardTab rollerTab = Shuffleboard.getTab("Coral Ground Intake Grabber");
     ShuffleboardLayout statusLayout =
         rollerTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
     statusLayout.addBoolean("Enabled", () -> enabled);
     statusLayout.addDouble("Goal Velocity", () -> goalVelocity);
     statusLayout.addDouble("Current Velocity", () -> currentVelocity);
-    statusLayout.addBoolean("Has Algae", () -> hasAlgae);
+    statusLayout.addBoolean("Has Coral", () -> hasCoral);
     statusLayout.add("Max Velocity", MAX_VELOCITY);
 
     ShuffleboardLayout controlLayout =

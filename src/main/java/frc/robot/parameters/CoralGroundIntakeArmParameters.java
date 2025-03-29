@@ -7,55 +7,56 @@
  
 package frc.robot.parameters;
 
-import static frc.robot.Constants.RobotConstants.CAN.TalonFX.ALGAE_ARM_MOTOR_ID;
-import static frc.robot.Constants.RobotConstants.DigitalIO.ALGAE_ARM_ABSOLUTE_ENCODER;
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CORAL_GROUND_INTAKE_ARM_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.CORAL_GROUND_INTAKE_ARM_MASS_KG;
+import static frc.robot.Constants.RobotConstants.CORAL_MASS_KG;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
-import static frc.robot.util.MotorDirection.CLOCKWISE_POSITIVE;
+import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.robot.util.MotorDirection;
 
 /** A class to hold the feedforward constants calculated from maximum velocity and acceleration. */
-public enum AlgaeArmParameters implements ArmParameters {
+public enum CoralGroundIntakeArmParameters implements ArmParameters {
   PracticeBase2025(
       MotorParameters.KrakenX60,
-      2.086,
-      25.0,
-      Units.inchesToMeters(8),
-      ALGAE_ARM_MOTOR_ID,
-      ALGAE_ARM_ABSOLUTE_ENCODER,
-      Math.toRadians(90),
-      Math.toRadians(15),
-      Math.toRadians(90)),
+      CORAL_GROUND_INTAKE_ARM_MASS_KG,
+      72.0,
+      Units.inchesToMeters(21),
+      CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
+      Math.toRadians(128),
+      Math.toRadians(-35),
+      Math.toRadians(128),
+      0.25),
 
   CompetitionBase2025(
       MotorParameters.KrakenX60,
-      2.086,
-      25.0,
-      Units.inchesToMeters(8),
-      ALGAE_ARM_MOTOR_ID,
-      ALGAE_ARM_ABSOLUTE_ENCODER,
-      Math.toRadians(90),
-      Math.toRadians(15),
-      Math.toRadians(90));
+      CORAL_GROUND_INTAKE_ARM_MASS_KG,
+      72.0,
+      Units.inchesToMeters(21),
+      CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
+      Math.toRadians(128),
+      Math.toRadians(-35),
+      Math.toRadians(128),
+      0.25);
 
   private final MotorParameters motorParameters;
   private final double gearRatio;
   private final double mass;
   private final double armLength;
   private final int motorID;
-  private final int encoderID;
   private final double stowedAngle;
   private final double minAngleRad;
   private final double maxAngleRad;
 
-  private double kS;
-  private double kV;
-  private double kA;
-  private double kG;
+  private final double kS;
+  private final double kV;
+  private final double kA;
+  private final double kAWithCoral;
+
+  private final double rollerDelay;
 
   /**
    * Constructs a new ArmParameters.
@@ -65,39 +66,40 @@ public enum AlgaeArmParameters implements ArmParameters {
    * @param gearRatio The gear ratio.
    * @param armLength The length of the arm.
    * @param motorID The CAN ID of the motor.
-   * @param encoderID The absolute encoder ID.
    * @param stowedAngle The angle of the arm when stowed in radians.
    * @param minAngleRad The min angle of the arm in radians.
    * @param maxAngleRad The max angle of the arm in radians.
+   * @param rollerDelay The delay delay in seconds from detection of the coral to stopping the motor
+   *     during intake.
    */
-  private AlgaeArmParameters(
+  private CoralGroundIntakeArmParameters(
       MotorParameters motorParameters,
       double mass,
       double gearRatio,
       double armLength,
       int motorID,
-      int encoderID,
       double stowedAngle,
       double minAngleRad,
-      double maxAngleRad) {
+      double maxAngleRad,
+      double rollerDelay) {
     this.gearRatio = gearRatio;
     this.motorParameters = motorParameters;
     this.mass = mass;
     this.armLength = armLength;
     this.kS = motorParameters.getKs();
     this.motorID = motorID;
-    this.encoderID = encoderID;
     this.stowedAngle = stowedAngle;
     this.minAngleRad = minAngleRad;
     this.maxAngleRad = maxAngleRad;
+    this.rollerDelay = rollerDelay;
     kV = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularSpeed();
     kA = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAcceleration();
-    kG = kA * 9.81;
+    kAWithCoral = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAccelerationWithCoral();
   }
 
   /** Returns the name of the arm subsystem. */
   public String getArmName() {
-    return "AlgaeArm";
+    return "CoralGroundIntakeArm";
   }
 
   /** Returns the angle of the arm when stowed in radians. */
@@ -132,7 +134,7 @@ public enum AlgaeArmParameters implements ArmParameters {
 
   /** Returns the direction the motor rotates when a positive voltage is applied. */
   public MotorDirection getMotorDirection() {
-    return CLOCKWISE_POSITIVE;
+    return COUNTER_CLOCKWISE_POSITIVE;
   }
 
   /** Returns the robot mass. */
@@ -156,23 +158,28 @@ public enum AlgaeArmParameters implements ArmParameters {
   }
 
   /** Returns kA feedforward constant Vs^2/rad. */
-  public double getkA() {
+  public double getkAWithoutCoral() {
     return kA;
   }
 
+  /** Returns kAWithCoral feedforward constant Vs^2/rad. */
+  public double getkAWithCoral() {
+    return kAWithCoral;
+  }
+
   /** Returns kG feedforward constant Vs^2/rad. */
-  public double getkG() {
+  public double getkGWithoutCoral() {
     return 9.81 * kA;
+  }
+
+  /** Returns kGWithCoral feedforward constant Vs^2/rad. */
+  public double getkGWithCoral() {
+    return 9.81 * kAWithCoral;
   }
 
   /** Returns the CAN ID of the motor. */
   public int getMotorID() {
     return motorID;
-  }
-
-  /** Returns the Encoder ID. */
-  public int getEncoderID() {
-    return encoderID;
   }
 
   /** Returns the max angular speed in rad/s. */
@@ -186,9 +193,10 @@ public enum AlgaeArmParameters implements ArmParameters {
         / (this.mass * this.armLength);
   }
 
-  /** Returns an {@link ArmFeedforward} object for use with the arm. */
-  public ArmFeedforward getArmFeedforward() {
-    return new ArmFeedforward(kS, kG, kV, kA);
+  /** Returns the max angular acceleration with coral in rad/s^2. */
+  public double getMaxAngularAccelerationWithCoral() {
+    return (this.motorParameters.getDCMotor().stallTorqueNewtonMeters * this.gearRatio)
+        / ((this.mass + CORAL_MASS_KG) * this.armLength);
   }
 
   /**
@@ -203,5 +211,12 @@ public enum AlgaeArmParameters implements ArmParameters {
   /** Returns a {@link ProfiledPIDController} object for use with the arm. */
   public ProfiledPIDController getProfiledPIDController() {
     return new ProfiledPIDController(1.0, 0, 0, getConstraints());
+  }
+
+  /**
+   * Returns the delay in seconds from detection of the coral to stopping the motor during intake.
+   */
+  public double getRollerDelay() {
+    return rollerDelay;
   }
 }
