@@ -8,8 +8,8 @@
 package frc.robot.commands;
 
 import static frc.robot.parameters.Colors.YELLOW;
-import static frc.robot.subsystems.Arm.CORAL_ARM;
-import static frc.robot.subsystems.Arm.CORAL_GROUND_INTAKE_ARM;
+import static frc.robot.subsystems.Arm.CORAL_ARM_PARAMETERS;
+import static frc.robot.subsystems.Arm.CORAL_GROUND_INTAKE_ARM_PARAMETERS;
 import static frc.robot.subsystems.CoralRoller.INTAKE_VELOCITY;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,13 +25,13 @@ import java.util.Set;
 /** A namespace for coral command factory methods. */
 public final class CoralCommands {
   public static final double GROUND_INTAKE_INTAKE_ANGLE =
-      CORAL_GROUND_INTAKE_ARM.getValue().getMinAngleRad();
+      CORAL_GROUND_INTAKE_ARM_PARAMETERS.getMinAngleRad();
   public static final double GROUND_INTAKE_STOWED_ANGLE =
-      CORAL_GROUND_INTAKE_ARM.getValue().getMaxAngleRad();
+      CORAL_GROUND_INTAKE_ARM_PARAMETERS.getMaxAngleRad();
 
-  public static final double CORAL_ROLLER_DETECTION_DELAY = CORAL_ARM.getValue().getRollerDelay();
+  public static final double CORAL_ROLLER_DETECTION_DELAY = CORAL_ARM_PARAMETERS.getRollerDelay();
   public static final double CORAL_GRABBER_DETECTION_DELAY =
-      CORAL_GROUND_INTAKE_ARM.getValue().getRollerDelay();
+      CORAL_GROUND_INTAKE_ARM_PARAMETERS.getRollerDelay();
 
   /** The delay for reversing the coral during auto centering. */
   private static final double AUTO_CENTER_BACKWARDS_SECONDS = 0.2;

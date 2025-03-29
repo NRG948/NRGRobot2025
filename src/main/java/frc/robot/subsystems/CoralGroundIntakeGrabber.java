@@ -40,9 +40,9 @@ import frc.robot.util.TalonFXAdapter;
 
 @RobotPreferencesLayout(
     groupName = "CoralGroundIntakeGrabber",
-    row = 1,
-    column = 6,
-    width = 1,
+    row = 2,
+    column = 2,
+    width = 2,
     height = 1,
     type = "Grid Layout",
     gridColumns = 1,
@@ -52,7 +52,7 @@ public class CoralGroundIntakeGrabber extends SubsystemBase
 
   @RobotPreferencesValue(column = 0, row = 0)
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
-      new RobotPreferences.BooleanValue("CoralGroundIntakeGrabber", "Enable Tab", true);
+      new RobotPreferences.BooleanValue("CoralGroundIntakeGrabber", "Enable Tab", false);
 
   private static final DataLog LOG = DataLogManager.getLog();
 

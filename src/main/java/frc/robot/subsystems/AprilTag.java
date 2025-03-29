@@ -7,6 +7,8 @@
  
 package frc.robot.subsystems;
 
+import static frc.robot.RobotContainer.RobotSelector.CompetitionRobot2025;
+import static frc.robot.RobotContainer.RobotSelector.PracticeRobot2025;
 import static java.lang.Math.toRadians;
 
 import com.nrg948.preferences.RobotPreferences;
@@ -38,6 +40,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.util.FieldUtils;
 import java.util.List;
 import java.util.Map;
@@ -51,12 +54,12 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 @RobotPreferencesLayout(
     groupName = "AprilTag",
-    column = 1,
-    row = 2,
-    width = 3,
-    height = 2,
+    column = 2,
+    row = 3,
+    width = 6,
+    height = 1,
     type = "Grid Layout",
-    gridColumns = 2,
+    gridColumns = 4,
     gridRows = 1)
 public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
 
@@ -100,6 +103,14 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
           // Optional.of(COMPETITION_ROBOT_TO_BACK_CAMERA));
           Optional.empty());
 
+  public static final VisionParameters PARAMETERS =
+      RobotContainer.ROBOT_TYPE
+          .select(
+              Map.of(
+                  PracticeRobot2025, PRACTICE_VISION_PARAMS,
+                  CompetitionRobot2025, COMPETITION_VISION_PARAMS))
+          .orElse(COMPETITION_VISION_PARAMS);
+
   @RobotPreferencesValue(column = 0, row = 0)
   public static final RobotPreferences.BooleanValue ENABLED =
       new RobotPreferences.BooleanValue("AprilTag", "Enabled", true);
@@ -129,7 +140,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     }
   }
 
-  @RobotPreferencesValue(column = 0, row = 1)
+  @RobotPreferencesValue(column = 2, row = 0)
   public static EnumValue<PoseEstimationStrategy> POSE_ESTIMATION_STRATEGY =
       new EnumValue<PoseEstimationStrategy>(
           "AprilTag", "Pose Est. Strategy", PoseEstimationStrategy.MultiTagPnpOnCoprocessor);

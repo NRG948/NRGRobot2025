@@ -53,10 +53,6 @@ import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.parameters.Colors;
-import frc.robot.subsystems.AprilTag;
-import frc.robot.subsystems.AprilTag.VisionParameters;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Climber.ClimberParameters;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.util.MotorIdleMode;
 
@@ -66,7 +62,7 @@ import frc.robot.util.MotorIdleMode;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-@RobotPreferencesLayout(groupName = "Preferences", column = 0, row = 0, width = 1, height = 2)
+@RobotPreferencesLayout(groupName = "Preferences", column = 0, row = 0, width = 2, height = 2)
 public class RobotContainer {
   private static final int COAST_MODE_DELAY = 10;
 
@@ -86,28 +82,12 @@ public class RobotContainer {
   private final StringLogEntry phaseLogger = new StringLogEntry(LOG, "/Robot/Phase");
 
   public enum RobotSelector {
-    PracticeRobot2025(AprilTag.PRACTICE_VISION_PARAMS, Climber.PRACTICE_BOT_PARAMETERS),
-    CompetitionRobot2025(AprilTag.COMPETITION_VISION_PARAMS, Climber.COMPETITION_BOT_PARAMETERS);
-
-    private final VisionParameters visionParams;
-    private final ClimberParameters climberParams;
-
-    private RobotSelector(VisionParameters visionParams, ClimberParameters climberParams) {
-      this.visionParams = visionParams;
-      this.climberParams = climberParams;
-    }
-
-    public VisionParameters visionParameters() {
-      return visionParams;
-    }
-
-    public ClimberParameters climberParameters() {
-      return climberParams;
-    }
+    PracticeRobot2025,
+    CompetitionRobot2025;
   }
 
   @RobotPreferencesValue
-  public static EnumValue<RobotSelector> PARAMETERS =
+  public static EnumValue<RobotSelector> ROBOT_TYPE =
       new EnumValue<RobotSelector>("Preferences", "Robot Type", RobotSelector.CompetitionRobot2025);
 
   /** The container for the robot. Contains subsystems, OI devices, and command bindings. */

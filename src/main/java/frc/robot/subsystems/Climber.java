@@ -10,6 +10,8 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.COMPETITION_BOT_CLIMBER_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.PRACTICE_BOT_CLIMBER_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.DigitalIO.CLIMBER_ABSOLUTE_ENCODER;
+import static frc.robot.RobotContainer.RobotSelector.CompetitionRobot2025;
+import static frc.robot.RobotContainer.RobotSelector.PracticeRobot2025;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 import static frc.robot.util.MotorIdleMode.BRAKE;
 
@@ -36,8 +38,9 @@ import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.RevThroughboreEncoderAdapter;
 import frc.robot.util.TalonFXAdapter;
+import java.util.Map;
 
-@RobotPreferencesLayout(groupName = "Climber", row = 0, column = 7, width = 1, height = 3)
+@RobotPreferencesLayout(groupName = "Climber", row = 0, column = 6, width = 2, height = 3)
 public class Climber extends SubsystemBase implements ShuffleboardProducer, ActiveSubsystem {
   @RobotPreferencesValue
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
@@ -66,7 +69,12 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   public static final ClimberParameters COMPETITION_BOT_PARAMETERS =
       new ClimberParameters(COMPETITION_BOT_CLIMBER_MOTOR_ID, Math.toRadians(179.74));
   public static final ClimberParameters PARAMETERS =
-      RobotContainer.PARAMETERS.getValue().climberParameters();
+      RobotContainer.ROBOT_TYPE
+          .select(
+              Map.of(
+                  PracticeRobot2025, PRACTICE_BOT_PARAMETERS,
+                  CompetitionRobot2025, COMPETITION_BOT_PARAMETERS))
+          .orElse(COMPETITION_BOT_PARAMETERS);
 
   @RobotPreferencesValue
   public static DoubleValue CLIMB_MAX_POWER = new DoubleValue("Climber", "Max Power", 0.75);
