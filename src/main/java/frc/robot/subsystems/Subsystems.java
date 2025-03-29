@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotContainer;
-import frc.robot.parameters.AlgaeArmState;
+import frc.robot.commands.CoralCommands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.util.MotorIdleMode;
 import java.lang.reflect.InvocationTargetException;
@@ -29,11 +29,12 @@ public class Subsystems {
   public final Swerve drivetrain = new Swerve();
   public final Elevator elevator = new Elevator();
 
-  public final Arm coralArm = new Arm(Arm.CORAL_ARM.getValue());
   public final CoralRoller coralRoller = new CoralRoller();
+  public final Arm coralArm = new Arm(Arm.CORAL_ARM.getValue(), coralRoller::hasCoral);
 
-  public final Optional<Arm> algaeArm;
-  public final Optional<AlgaeGrabber> algaeGrabber;
+  public final CoralGroundIntakeGrabber coralIntakeGrabber = new CoralGroundIntakeGrabber();
+  public final Arm coralIntakeArm =
+      new Arm(Arm.CORAL_GROUND_INTAKE_ARM.getValue(), coralIntakeGrabber::hasCoral);
 
   public final Climber climber = new Climber();
 
@@ -50,7 +51,9 @@ public class Subsystems {
   /** Constructs the robot subsystems container. */
   public Subsystems() {
     // Add all manipulator subsystems to the `manipulators` list.
-    var manipulators = new ArrayList<Subsystem>(Arrays.asList(elevator, coralArm, coralRoller));
+    var manipulators =
+        new ArrayList<Subsystem>(
+            Arrays.asList(elevator, coralArm, coralRoller, coralIntakeArm, coralIntakeGrabber));
 
     // Add all non-manipulator subsystems to the `all` list.
     var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, statusLEDs, climber));
@@ -73,12 +76,6 @@ public class Subsystems {
                 (t) -> newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "BackCamera", t));
 
     backCamera.ifPresent((s) -> all.add(s));
-
-    algaeArm = newOptionalSubsystem(Arm.class, Arm.ENABLE_ALGAE_ARM, Arm.ALGAE_ARM.getValue());
-    algaeArm.ifPresent((s) -> manipulators.add(s));
-
-    algaeGrabber = newOptionalSubsystem(AlgaeGrabber.class, Arm.ENABLE_ALGAE_ARM);
-    algaeGrabber.ifPresent((s) -> manipulators.add(s));
 
     // Add all manipulator subsystems to the `all` list.
     all.addAll(manipulators);
@@ -161,7 +158,7 @@ public class Subsystems {
 
   public void setInitialStates() {
     coralArm.setGoalAngle(ElevatorLevel.STOWED.getArmAngle());
-    algaeArm.ifPresent(algaeArm -> algaeArm.setGoalAngle(AlgaeArmState.STOWED.armAngle()));
+    coralIntakeArm.setGoalAngle(CoralCommands.GROUND_INTAKE_STOWED_ANGLE);
   }
 
   /** Disables the specified subsystems implementing the {@link ActiveSubsystem} interface. */

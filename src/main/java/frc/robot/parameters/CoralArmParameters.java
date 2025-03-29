@@ -9,11 +9,10 @@ package frc.robot.parameters;
 
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.COMPETITION_CORAL_ARM_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.PRACTICE_CORAL_ARM_MOTOR_ID;
-import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_ARM_ABSOLUTE_ENCODER;
+import static frc.robot.Constants.RobotConstants.CORAL_MASS_KG;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.util.MotorDirection;
@@ -26,10 +25,9 @@ public enum CoralArmParameters implements ArmParameters {
       3.0 * 9.0 * 54.0 / 36.0,
       0.315,
       PRACTICE_CORAL_ARM_MOTOR_ID,
-      CORAL_ARM_ABSOLUTE_ENCODER,
-      Math.toRadians(92),
+      Math.toRadians(94),
       Math.toRadians(10),
-      Math.toRadians(95),
+      Math.toRadians(96),
       0.08),
   CompetitionBase2025(
       MotorParameters.KrakenX60,
@@ -37,7 +35,6 @@ public enum CoralArmParameters implements ArmParameters {
       27.0 * 54.0 / 36.0,
       0.315,
       COMPETITION_CORAL_ARM_MOTOR_ID,
-      CORAL_ARM_ABSOLUTE_ENCODER,
       Math.toRadians(93),
       Math.toRadians(10),
       Math.toRadians(95),
@@ -45,20 +42,19 @@ public enum CoralArmParameters implements ArmParameters {
 
   private final MotorParameters motorParameters;
   private final double gearRatio;
-  private final double mass;
+  private final double massKg;
   private final double armLength;
   private final int motorID;
-  private final int encoderID;
   private final double stowedAngle;
   private final double minAngleRad;
   private final double maxAngleRad;
 
-  private double kS;
-  private double kV;
-  private double kA;
-  private double kG;
+  private final double kS;
+  private final double kV;
+  private final double kA;
+  private final double kAWithCoral;
 
-  private double rollerDelay;
+  private final double rollerDelay;
 
   /**
    * Constructs a new ArmParameters.
@@ -68,10 +64,11 @@ public enum CoralArmParameters implements ArmParameters {
    * @param gearRatio The gear ratio.
    * @param armLength The length of the arm.
    * @param motorID The CAN ID of the motor.
-   * @param encoderID The absolute encoder ID.
    * @param stowedAngle The angle of the arm when stowed in radians.
    * @param minAngleRad The min angle of the arm in radians.
    * @param maxAngleRad The max angle of the arm in radians.
+   * @param rollerDelay The delay delay in seconds from detection of the coral to stopping the motor
+   *     during intake.
    */
   private CoralArmParameters(
       MotorParameters motorParameters,
@@ -79,25 +76,23 @@ public enum CoralArmParameters implements ArmParameters {
       double gearRatio,
       double armLength,
       int motorID,
-      int encoderID,
       double stowedAngle,
       double minAngleRad,
       double maxAngleRad,
       double rollerDelay) {
     this.gearRatio = gearRatio;
     this.motorParameters = motorParameters;
-    this.mass = mass;
+    this.massKg = mass;
     this.armLength = armLength;
     this.kS = motorParameters.getKs();
     this.motorID = motorID;
-    this.encoderID = encoderID;
     this.stowedAngle = stowedAngle;
     this.minAngleRad = minAngleRad;
     this.maxAngleRad = maxAngleRad;
     this.rollerDelay = rollerDelay;
     kV = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularSpeed();
     kA = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAcceleration();
-    kG = kA * 9.81;
+    kAWithCoral = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAccelerationWithCoral();
   }
 
   /** Returns the name of the arm subsystem. */
@@ -140,9 +135,9 @@ public enum CoralArmParameters implements ArmParameters {
     return COUNTER_CLOCKWISE_POSITIVE;
   }
 
-  /** Returns the robot mass. */
+  /** Returns the robot mass in kg. */
   public double getMass() {
-    return mass;
+    return massKg;
   }
 
   /** Returns the robot arm length. */
@@ -161,23 +156,28 @@ public enum CoralArmParameters implements ArmParameters {
   }
 
   /** Returns kA feedforward constant Vs^2/rad. */
-  public double getkA() {
+  public double getkAWithoutCoral() {
     return kA;
   }
 
+  /** Returns kAWithCoral feedforward constant Vs^2/rad. */
+  public double getkAWithCoral() {
+    return kAWithCoral;
+  }
+
   /** Returns kG feedforward constant Vs^2/rad. */
-  public double getkG() {
+  public double getkGWithoutCoral() {
     return 9.81 * kA;
+  }
+
+  /** Returns kGWithCoral feedforward constant Vs^2/rad. */
+  public double getkGWithCoral() {
+    return 9.81 * kAWithCoral;
   }
 
   /** Returns the CAN ID of the motor. */
   public int getMotorID() {
     return motorID;
-  }
-
-  /** Returns the Encoder ID. */
-  public int getEncoderID() {
-    return encoderID;
   }
 
   /** Returns the max angular speed in rad/s. */
@@ -188,12 +188,13 @@ public enum CoralArmParameters implements ArmParameters {
   /** Returns the max angular acceleration in rad/s^2. */
   public double getMaxAngularAcceleration() {
     return (this.motorParameters.getDCMotor().stallTorqueNewtonMeters * this.gearRatio)
-        / (this.mass * this.armLength);
+        / (this.massKg * this.armLength);
   }
 
-  /** Returns an {@link ArmFeedforward} object for use with the arm. */
-  public ArmFeedforward getArmFeedforward() {
-    return new ArmFeedforward(kS, kG, kV, kA);
+  /** Returns the max angular acceleration with coral in rad/s^2. */
+  public double getMaxAngularAccelerationWithCoral() {
+    return (this.motorParameters.getDCMotor().stallTorqueNewtonMeters * this.gearRatio)
+        / ((this.massKg + CORAL_MASS_KG) * this.armLength);
   }
 
   /**
@@ -210,6 +211,9 @@ public enum CoralArmParameters implements ArmParameters {
     return new ProfiledPIDController(1.0, 0, 0, getConstraints());
   }
 
+  /**
+   * Returns the delay in seconds from detection of the coral to stopping the motor during intake.
+   */
   public double getRollerDelay() {
     return rollerDelay;
   }

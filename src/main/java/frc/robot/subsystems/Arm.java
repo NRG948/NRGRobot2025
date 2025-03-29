@@ -11,6 +11,7 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -33,12 +34,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.parameters.AlgaeArmParameters;
 import frc.robot.parameters.ArmParameters;
 import frc.robot.parameters.CoralArmParameters;
+import frc.robot.parameters.CoralGroundIntakeArmParameters;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
+import java.util.function.BooleanSupplier;
 
 @RobotPreferencesLayout(
     groupName = "Arm",
@@ -65,13 +67,14 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
           "Arm", "Coral Arm", CoralArmParameters.CompetitionBase2025);
 
   @RobotPreferencesValue(row = 0, column = 2, width = 1, height = 1)
-  public static final RobotPreferences.EnumValue<AlgaeArmParameters> ALGAE_ARM =
-      new RobotPreferences.EnumValue<AlgaeArmParameters>(
-          "Arm", "Algae Arm", AlgaeArmParameters.CompetitionBase2025);
+  public static final RobotPreferences.EnumValue<CoralGroundIntakeArmParameters>
+      CORAL_GROUND_INTAKE_ARM =
+          new RobotPreferences.EnumValue<CoralGroundIntakeArmParameters>(
+              "Arm", "Coral Ground Intake Arm", CoralGroundIntakeArmParameters.CompetitionBase2025);
 
   @RobotPreferencesValue(row = 0, column = 3, width = 1, height = 1)
-  public static final RobotPreferences.BooleanValue ENABLE_ALGAE_ARM =
-      new RobotPreferences.BooleanValue("Arm", "Enable Algae Arm", true);
+  public static final RobotPreferences.BooleanValue ENABLE_CORAL_GROUND_INTAKE_ARM =
+      new RobotPreferences.BooleanValue("Arm", "Enable Coral Ground Intake Arm", true);
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -82,6 +85,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   private final TalonFXAdapter motor;
   private final RelativeEncoder relativeEncoder;
   private final Timer stuckTimer = new Timer();
+  private final BooleanSupplier hasCoral;
   private double currentAngle = 0;
   private double currentVelocity = 0;
   private double goalAngle = 0;
@@ -95,19 +99,20 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   private DoubleLogEntry logGoalAngle;
   private BooleanLogEntry logEnabled;
 
-  /** Creates a new Arm from {@link AlgaeArmParameters}. */
-  public Arm(AlgaeArmParameters parameters) {
-    this((ArmParameters) parameters);
+  /** Creates a new Arm from {@link CoralArmParameters}. */
+  public Arm(CoralArmParameters parameters, BooleanSupplier hasCoral) {
+    this((ArmParameters) parameters, hasCoral);
   }
 
-  /** Creates a new Arm from {@link CoralArmParameters}. */
-  public Arm(CoralArmParameters parameters) {
-    this((ArmParameters) parameters);
+  /** Creates a new Arm from {@link CoralGroundIntakeArmParameters}. */
+  public Arm(CoralGroundIntakeArmParameters parameters, BooleanSupplier hasCoral) {
+    this((ArmParameters) parameters, hasCoral);
   }
 
   /** Creates a new Arm. */
-  private Arm(ArmParameters parameters) {
+  private Arm(ArmParameters parameters, BooleanSupplier hasCoral) {
     setName(parameters.getArmName());
+    this.hasCoral = hasCoral;
     MIN_ANGLE = parameters.getMinAngleRad();
     MAX_ANGLE = parameters.getMaxAngleRad();
 
@@ -123,12 +128,24 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     slot0Configs.kS = parameters.getkS();
     // Need to convert kV and kA from radians to rotations.
     slot0Configs.kV = parameters.getkV() * RADIANS_PER_ROTATION;
-    slot0Configs.kA = parameters.getkA() * RADIANS_PER_ROTATION;
+    slot0Configs.kA = parameters.getkAWithoutCoral() * RADIANS_PER_ROTATION;
     slot0Configs.kG = 0.9;
     slot0Configs.GravityType = GravityTypeValue.Arm_Cosine;
     slot0Configs.kP = 120.0;
     slot0Configs.kI = 0;
     slot0Configs.kD = 0;
+
+    // set slot 1 gains
+    Slot1Configs slot1Configs = talonFXConfigs.Slot1;
+    slot1Configs.kS = parameters.getkS();
+    // Need to convert kV and kA from radians to rotations.
+    slot1Configs.kV = parameters.getkV() * RADIANS_PER_ROTATION;
+    slot1Configs.kA = parameters.getkAWithCoral() * RADIANS_PER_ROTATION;
+    slot1Configs.kG = 0.9;
+    slot1Configs.GravityType = GravityTypeValue.Arm_Cosine;
+    slot1Configs.kP = 120.0;
+    slot1Configs.kI = 0;
+    slot1Configs.kD = 0;
 
     // set Motion Magic settings
     MotionMagicConfigs motionMagicConfigs = talonFXConfigs.MotionMagic;
@@ -190,8 +207,12 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     angle = MathUtil.clamp(angle, MIN_ANGLE, MAX_ANGLE);
     goalAngle = angle;
     enabled = true;
-    // set target position to 100 rotations
-    talonFX.setControl(motionMagicRequest.withPosition(angle / RADIANS_PER_ROTATION));
+
+    talonFX.setControl(
+        motionMagicRequest
+            .withPosition(angle / RADIANS_PER_ROTATION)
+            .withSlot(hasCoral.getAsBoolean() ? 1 : 0));
+
     logGoalAngle.append(angle);
     logEnabled.update(enabled);
   }
