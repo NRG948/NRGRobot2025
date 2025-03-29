@@ -128,7 +128,7 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     slot0Configs.kS = parameters.getkS();
     // Need to convert kV and kA from radians to rotations.
     slot0Configs.kV = parameters.getkV() * RADIANS_PER_ROTATION;
-    slot0Configs.kA = parameters.getkA() * RADIANS_PER_ROTATION;
+    slot0Configs.kA = parameters.getkAWithoutCoral() * RADIANS_PER_ROTATION;
     slot0Configs.kG = 0.9;
     slot0Configs.GravityType = GravityTypeValue.Arm_Cosine;
     slot0Configs.kP = 120.0;
@@ -207,11 +207,12 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     angle = MathUtil.clamp(angle, MIN_ANGLE, MAX_ANGLE);
     goalAngle = angle;
     enabled = true;
-    // set target position to 100 rotations
+
     talonFX.setControl(
         motionMagicRequest
             .withPosition(angle / RADIANS_PER_ROTATION)
             .withSlot(hasCoral.getAsBoolean() ? 1 : 0));
+
     logGoalAngle.append(angle);
     logEnabled.update(enabled);
   }

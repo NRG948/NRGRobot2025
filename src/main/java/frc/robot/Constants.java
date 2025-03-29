@@ -60,6 +60,9 @@ public final class Constants {
     /** The average mass of the coral in kg. */
     public static final double CORAL_MASS_KG = 0.68;
 
+    /** The coral arm mass in kg. */
+    public static final double CORAL_GROUND_INTAKE_ARM_MASS_KG = 4.245;
+
     /**
      * The x distance from the odometry center (center of the wheels) to the edge of the front
      * bumper.
@@ -112,8 +115,6 @@ public final class Constants {
     public static class DigitalIO {
       public static final int CORAL_ROLLER_BEAM_BREAK = 9;
       public static final int CORAL_GROUND_INTAKE_BEAM_BREAK = 8;
-      public static final int CORAL_ARM_ABSOLUTE_ENCODER = 0;
-      public static final int CORAL_GROUND_INTAKE_ARM_ABSOLUTE_ENCODER = 4;
       public static final int CLIMBER_ABSOLUTE_ENCODER = 2;
     }
   }

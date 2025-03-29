@@ -8,6 +8,8 @@
 package frc.robot.commands;
 
 import static frc.robot.parameters.Colors.YELLOW;
+import static frc.robot.subsystems.Arm.CORAL_ARM;
+import static frc.robot.subsystems.Arm.CORAL_GROUND_INTAKE_ARM;
 import static frc.robot.subsystems.CoralRoller.INTAKE_VELOCITY;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,11 +24,14 @@ import java.util.Set;
 
 /** A namespace for coral command factory methods. */
 public final class CoralCommands {
-  public static final int GROUND_INTAKE_INTAKE_ANGLE = -28;
+  public static final double GROUND_INTAKE_INTAKE_ANGLE =
+      CORAL_GROUND_INTAKE_ARM.getValue().getMinAngleRad();
+  public static final double GROUND_INTAKE_STOWED_ANGLE =
+      CORAL_GROUND_INTAKE_ARM.getValue().getMaxAngleRad();
 
-  public static final int GROUND_INTAKE_STOWED_ANGLE = 128;
-
-  public static final double CORAL_DETECTION_DELAY = Arm.CORAL_ARM.getValue().getRollerDelay();
+  public static final double CORAL_ROLLER_DETECTION_DELAY = CORAL_ARM.getValue().getRollerDelay();
+  public static final double CORAL_GRABBER_DETECTION_DELAY =
+      CORAL_GROUND_INTAKE_ARM.getValue().getRollerDelay();
 
   /** The delay for reversing the coral during auto centering. */
   private static final double AUTO_CENTER_BACKWARDS_SECONDS = 0.2;
@@ -65,7 +70,7 @@ public final class CoralCommands {
             Commands.sequence(
                 intakeCoral(subsystems),
                 Commands.idle(coralRoller).until(coralRoller::hasCoral),
-                Commands.waitSeconds(CORAL_DETECTION_DELAY),
+                Commands.waitSeconds(CORAL_ROLLER_DETECTION_DELAY),
                 Commands.runOnce(coralRoller::disable, coralRoller)))
         .finallyDo(coralRoller::disable)
         .unless(coralRoller::hasCoral)
@@ -149,21 +154,20 @@ public final class CoralCommands {
     var coralIntakeArm = subsystems.coralIntakeArm;
     var coralIntakeGrabber = subsystems.coralIntakeGrabber;
     return Commands.sequence(
-            Commands.parallel(
-                Commands.runOnce(
-                    () -> coralIntakeArm.setGoalAngle(GROUND_INTAKE_INTAKE_ANGLE), coralIntakeArm),
-                Commands.runOnce(() -> coralIntakeGrabber.setGoalVelocity(1), coralIntakeGrabber)),
+            Commands.runOnce(
+                () -> coralIntakeArm.setGoalAngle(GROUND_INTAKE_INTAKE_ANGLE), coralIntakeArm),
+            Commands.runOnce(() -> coralIntakeGrabber.setGoalVelocity(1), coralIntakeGrabber),
             Commands.idle(coralIntakeArm, coralIntakeGrabber).until(coralIntakeGrabber::hasCoral),
             Commands.runOnce(coralIntakeGrabber::disable, coralIntakeGrabber),
-            Commands.waitSeconds(0.25),
+            Commands.waitSeconds(CORAL_GRABBER_DETECTION_DELAY),
             Commands.runOnce(
                 () -> coralIntakeArm.setGoalAngle(GROUND_INTAKE_STOWED_ANGLE), coralIntakeArm),
             Commands.idle(coralIntakeGrabber, coralIntakeArm).until(coralIntakeArm::atGoalAngle),
-            Commands.waitSeconds(0.25),
+            Commands.waitSeconds(CORAL_GRABBER_DETECTION_DELAY),
             Commands.runOnce(() -> coralIntakeGrabber.setGoalVelocity(-1.0), coralIntakeGrabber),
             Commands.idle(coralIntakeGrabber, coralIntakeArm)
                 .until(() -> !coralIntakeGrabber.hasCoral()),
-            Commands.waitSeconds(0.75))
+            Commands.waitSeconds(CORAL_GRABBER_DETECTION_DELAY))
         .finallyDo(coralIntakeGrabber::disable);
   }
 

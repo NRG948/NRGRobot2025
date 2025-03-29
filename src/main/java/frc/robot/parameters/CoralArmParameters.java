@@ -42,7 +42,7 @@ public enum CoralArmParameters implements ArmParameters {
 
   private final MotorParameters motorParameters;
   private final double gearRatio;
-  private final double mass;
+  private final double massKg;
   private final double armLength;
   private final int motorID;
   private final double stowedAngle;
@@ -67,6 +67,8 @@ public enum CoralArmParameters implements ArmParameters {
    * @param stowedAngle The angle of the arm when stowed in radians.
    * @param minAngleRad The min angle of the arm in radians.
    * @param maxAngleRad The max angle of the arm in radians.
+   * @param rollerDelay The delay delay in seconds from detection of the coral to stopping the motor
+   *     during intake.
    */
   private CoralArmParameters(
       MotorParameters motorParameters,
@@ -80,7 +82,7 @@ public enum CoralArmParameters implements ArmParameters {
       double rollerDelay) {
     this.gearRatio = gearRatio;
     this.motorParameters = motorParameters;
-    this.mass = mass;
+    this.massKg = mass;
     this.armLength = armLength;
     this.kS = motorParameters.getKs();
     this.motorID = motorID;
@@ -133,9 +135,9 @@ public enum CoralArmParameters implements ArmParameters {
     return COUNTER_CLOCKWISE_POSITIVE;
   }
 
-  /** Returns the robot mass. */
+  /** Returns the robot mass in kg. */
   public double getMass() {
-    return mass;
+    return massKg;
   }
 
   /** Returns the robot arm length. */
@@ -154,7 +156,7 @@ public enum CoralArmParameters implements ArmParameters {
   }
 
   /** Returns kA feedforward constant Vs^2/rad. */
-  public double getkA() {
+  public double getkAWithoutCoral() {
     return kA;
   }
 
@@ -164,7 +166,7 @@ public enum CoralArmParameters implements ArmParameters {
   }
 
   /** Returns kG feedforward constant Vs^2/rad. */
-  public double getkG() {
+  public double getkGWithoutCoral() {
     return 9.81 * kA;
   }
 
@@ -186,13 +188,13 @@ public enum CoralArmParameters implements ArmParameters {
   /** Returns the max angular acceleration in rad/s^2. */
   public double getMaxAngularAcceleration() {
     return (this.motorParameters.getDCMotor().stallTorqueNewtonMeters * this.gearRatio)
-        / (this.mass * this.armLength);
+        / (this.massKg * this.armLength);
   }
 
   /** Returns the max angular acceleration with coral in rad/s^2. */
   public double getMaxAngularAccelerationWithCoral() {
     return (this.motorParameters.getDCMotor().stallTorqueNewtonMeters * this.gearRatio)
-        / ((this.mass + CORAL_MASS_KG) * this.armLength);
+        / ((this.massKg + CORAL_MASS_KG) * this.armLength);
   }
 
   /**
@@ -209,6 +211,9 @@ public enum CoralArmParameters implements ArmParameters {
     return new ProfiledPIDController(1.0, 0, 0, getConstraints());
   }
 
+  /**
+   * Returns the delay in seconds from detection of the coral to stopping the motor during intake.
+   */
   public double getRollerDelay() {
     return rollerDelay;
   }
