@@ -57,6 +57,9 @@ public final class Constants {
     /** The total mass in kg of the practice robot including bumpers and battery. */
     public static final double PRACTICE_ROBOT_MASS_KG = 59.6;
 
+    /** The average mass of the coral in kg. */
+    public static final double CORAL_MASS_KG = 0.68;
+
     /**
      * The x distance from the odometry center (center of the wheels) to the edge of the front
      * bumper.

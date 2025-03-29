@@ -7,7 +7,6 @@
  
 package frc.robot.parameters;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.util.MotorDirection;
@@ -51,8 +50,14 @@ public interface ArmParameters {
   /** Returns kA feedforward constant Vs^2/rad. */
   public double getkA();
 
+  /** Returns kA feedforward constant with coral Vs^2/rad. */
+  public double getkAWithCoral();
+
   /** Returns kG feedforward constant Vs^2/rad. */
   public double getkG();
+
+  /** Returns kG feedforward constant with coral Vs^2/rad. */
+  public double getkGWithCoral();
 
   /** Returns the CAN ID of the motor. */
   public int getMotorID();
@@ -63,8 +68,8 @@ public interface ArmParameters {
   /** Returns the max angular acceleration in rad/s^2. */
   public double getMaxAngularAcceleration();
 
-  /** Returns an {@link ArmFeedforward} object for use with the arm. */
-  public ArmFeedforward getArmFeedforward();
+  /** Returns the max angular acceleration with coral in rad/s^2. */
+  public double getMaxAngularAccelerationWithCoral();
 
   /**
    * Returns constraints limiting the maximum angluar velocity and acceleration to 30% and 50% of

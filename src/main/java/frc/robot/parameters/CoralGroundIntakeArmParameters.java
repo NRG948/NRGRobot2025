@@ -8,10 +8,10 @@
 package frc.robot.parameters;
 
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CORAL_GROUND_INTAKE_ARM_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.CORAL_MASS_KG;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -21,22 +21,22 @@ import frc.robot.util.MotorDirection;
 public enum CoralGroundIntakeArmParameters implements ArmParameters {
   PracticeBase2025(
       MotorParameters.KrakenX60,
-      4.245 + 0.68,
-      45.0 * 32 / 16,
+      4.245,
+      72.0,
       Units.inchesToMeters(21),
       CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
       Math.toRadians(128),
-      Math.toRadians(-29),
+      Math.toRadians(-35),
       Math.toRadians(128)),
 
   CompetitionBase2025(
       MotorParameters.KrakenX60,
-      4.245 + 0.68,
-      45.0 * 32 / 16,
+      4.245,
+      72.0,
       Units.inchesToMeters(21),
       CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
       Math.toRadians(128),
-      Math.toRadians(-29),
+      Math.toRadians(-35),
       Math.toRadians(128));
 
   private final MotorParameters motorParameters;
@@ -48,10 +48,10 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
   private final double minAngleRad;
   private final double maxAngleRad;
 
-  private double kS;
-  private double kV;
-  private double kA;
-  private double kG;
+  private final double kS;
+  private final double kV;
+  private final double kA;
+  private final double kAWithCoral;
 
   /**
    * Constructs a new ArmParameters.
@@ -85,7 +85,7 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
     this.maxAngleRad = maxAngleRad;
     kV = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularSpeed();
     kA = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAcceleration();
-    kG = kA * 9.81;
+    kAWithCoral = (MAX_BATTERY_VOLTAGE - kS) / getMaxAngularAccelerationWithCoral();
   }
 
   /** Returns the name of the arm subsystem. */
@@ -153,9 +153,19 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
     return kA;
   }
 
+  /** Returns kAWithCoral feedforward constant Vs^2/rad. */
+  public double getkAWithCoral() {
+    return kAWithCoral;
+  }
+
   /** Returns kG feedforward constant Vs^2/rad. */
   public double getkG() {
     return 9.81 * kA;
+  }
+
+  /** Returns kGWithCoral feedforward constant Vs^2/rad. */
+  public double getkGWithCoral() {
+    return 9.81 * kAWithCoral;
   }
 
   /** Returns the CAN ID of the motor. */
@@ -174,9 +184,10 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
         / (this.mass * this.armLength);
   }
 
-  /** Returns an {@link ArmFeedforward} object for use with the arm. */
-  public ArmFeedforward getArmFeedforward() {
-    return new ArmFeedforward(kS, kG, kV, kA);
+  /** Returns the max angular acceleration with coral in rad/s^2. */
+  public double getMaxAngularAccelerationWithCoral() {
+    return (this.motorParameters.getDCMotor().stallTorqueNewtonMeters * this.gearRatio)
+        / ((this.mass + CORAL_MASS_KG) * this.armLength);
   }
 
   /**

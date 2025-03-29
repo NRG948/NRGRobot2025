@@ -146,13 +146,8 @@ public final class CoralCommands {
   }
 
   public static Command intakeFromGround(Subsystems subsystems) {
-    var coralIntakeArmOpt = subsystems.coralIntakeArm;
-    var coralIntakeGrabberOpt = subsystems.coralIntakeGrabber;
-    if (coralIntakeArmOpt.isEmpty() || coralIntakeGrabberOpt.isEmpty()) {
-      return Commands.none();
-    }
-    var coralIntakeArm = coralIntakeArmOpt.get();
-    var coralIntakeGrabber = coralIntakeGrabberOpt.get();
+    var coralIntakeArm = subsystems.coralIntakeArm;
+    var coralIntakeGrabber = subsystems.coralIntakeGrabber;
     return Commands.sequence(
             Commands.parallel(
                 Commands.runOnce(
@@ -165,21 +160,16 @@ public final class CoralCommands {
                 () -> coralIntakeArm.setGoalAngle(GROUND_INTAKE_STOWED_ANGLE), coralIntakeArm),
             Commands.idle(coralIntakeGrabber, coralIntakeArm).until(coralIntakeArm::atGoalAngle),
             Commands.waitSeconds(0.25),
-            Commands.runOnce(() -> coralIntakeGrabber.setGoalVelocity(-0.8), coralIntakeGrabber),
+            Commands.runOnce(() -> coralIntakeGrabber.setGoalVelocity(-1.0), coralIntakeGrabber),
             Commands.idle(coralIntakeGrabber, coralIntakeArm)
                 .until(() -> !coralIntakeGrabber.hasCoral()),
-            Commands.waitSeconds(0.25))
+            Commands.waitSeconds(0.75))
         .finallyDo(coralIntakeGrabber::disable);
   }
 
   public static Command stowGroundIntake(Subsystems subsystems) {
-    var coralIntakeArmOpt = subsystems.coralIntakeArm;
-    var coralIntakeGrabberOpt = subsystems.coralIntakeGrabber;
-    if (coralIntakeArmOpt.isEmpty() || coralIntakeGrabberOpt.isEmpty()) {
-      return Commands.none();
-    }
-    var coralIntakeArm = coralIntakeArmOpt.get();
-    var coralIntakeGrabber = coralIntakeGrabberOpt.get();
+    var coralIntakeArm = subsystems.coralIntakeArm;
+    var coralIntakeGrabber = subsystems.coralIntakeGrabber;
     return Commands.parallel(
         Commands.runOnce(
             () -> coralIntakeArm.setGoalAngle(GROUND_INTAKE_STOWED_ANGLE), coralIntakeArm),

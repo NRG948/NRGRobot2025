@@ -29,11 +29,12 @@ public class Subsystems {
   public final Swerve drivetrain = new Swerve();
   public final Elevator elevator = new Elevator();
 
-  public final Arm coralArm = new Arm(Arm.CORAL_ARM.getValue());
   public final CoralRoller coralRoller = new CoralRoller();
+  public final Arm coralArm = new Arm(Arm.CORAL_ARM.getValue(), coralRoller::hasCoral);
 
-  public final Optional<Arm> coralIntakeArm;
-  public final Optional<CoralGroundIntakeGrabber> coralIntakeGrabber;
+  public final CoralGroundIntakeGrabber coralIntakeGrabber = new CoralGroundIntakeGrabber();
+  public final Arm coralIntakeArm =
+      new Arm(Arm.CORAL_GROUND_INTAKE_ARM.getValue(), coralIntakeGrabber::hasCoral);
 
   public final Climber climber = new Climber();
 
@@ -50,7 +51,9 @@ public class Subsystems {
   /** Constructs the robot subsystems container. */
   public Subsystems() {
     // Add all manipulator subsystems to the `manipulators` list.
-    var manipulators = new ArrayList<Subsystem>(Arrays.asList(elevator, coralArm, coralRoller));
+    var manipulators =
+        new ArrayList<Subsystem>(
+            Arrays.asList(elevator, coralArm, coralRoller, coralIntakeArm, coralIntakeGrabber));
 
     // Add all non-manipulator subsystems to the `all` list.
     var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, statusLEDs, climber));
@@ -73,15 +76,6 @@ public class Subsystems {
                 (t) -> newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "BackCamera", t));
 
     backCamera.ifPresent((s) -> all.add(s));
-
-    coralIntakeArm =
-        newOptionalSubsystem(
-            Arm.class, Arm.ENABLE_CORAL_GROUND_INTAKE_ARM, Arm.CORAL_GROUND_INTAKE_ARM.getValue());
-    coralIntakeArm.ifPresent((s) -> manipulators.add(s));
-
-    coralIntakeGrabber =
-        newOptionalSubsystem(CoralGroundIntakeGrabber.class, Arm.ENABLE_CORAL_GROUND_INTAKE_ARM);
-    coralIntakeGrabber.ifPresent((s) -> manipulators.add(s));
 
     // Add all manipulator subsystems to the `all` list.
     all.addAll(manipulators);
@@ -164,7 +158,7 @@ public class Subsystems {
 
   public void setInitialStates() {
     coralArm.setGoalAngle(ElevatorLevel.STOWED.getArmAngle());
-    coralIntakeArm.ifPresent((arm) -> arm.setGoalAngle(CoralCommands.GROUND_INTAKE_STOWED_ANGLE));
+    coralIntakeArm.setGoalAngle(CoralCommands.GROUND_INTAKE_STOWED_ANGLE);
   }
 
   /** Disables the specified subsystems implementing the {@link ActiveSubsystem} interface. */
