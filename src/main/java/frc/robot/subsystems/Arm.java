@@ -78,8 +78,9 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
 
   private static final DataLog LOG = DataLogManager.getLog();
 
-  private final double MIN_ANGLE;
-  private final double MAX_ANGLE;
+  private final double minAngle;
+  private final double maxAngle;
+  private final double stowedAngle;
 
   private final TalonFX talonFX;
   private final TalonFXAdapter motor;
@@ -113,8 +114,9 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   private Arm(ArmParameters parameters, BooleanSupplier hasCoral) {
     setName(parameters.getArmName());
     this.hasCoral = hasCoral;
-    MIN_ANGLE = parameters.getMinAngleRad();
-    MAX_ANGLE = parameters.getMaxAngleRad();
+    minAngle = parameters.getMinAngleRad();
+    maxAngle = parameters.getMaxAngleRad();
+    stowedAngle = parameters.getStowedAngleRad();
 
     talonFX = new TalonFX(parameters.getMotorID(), "rio");
     TalonFXConfiguration talonFXConfigs = new TalonFXConfiguration();
@@ -197,14 +199,14 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     }
 
     hasError =
-        currentAngle > MAX_ANGLE + ERROR_MARGIN
-            || currentAngle < MIN_ANGLE - ERROR_MARGIN
+        currentAngle > maxAngle + ERROR_MARGIN
+            || currentAngle < minAngle - ERROR_MARGIN
             || stuckTimer.hasElapsed(ERROR_TIME);
   }
 
   /** Sets the goal angle in radians and enables periodic control. */
   public void setGoalAngle(double angle) {
-    angle = MathUtil.clamp(angle, MIN_ANGLE, MAX_ANGLE);
+    angle = MathUtil.clamp(angle, minAngle, maxAngle);
     goalAngle = angle;
     enabled = true;
 
@@ -218,8 +220,16 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   }
 
   /** Returns whether the coral arm is at goal angle. */
-  public boolean atGoalAngle() {
+  public boolean atGoalAngle(double goalAngle) {
     return Math.abs(goalAngle - currentAngle) <= TOLERANCE;
+  }
+
+  public boolean atGoalAngle() {
+    return atGoalAngle(this.goalAngle);
+  }
+
+  public boolean isStowed() {
+    return atGoalAngle(this.stowedAngle);
   }
 
   /** Returns whether the coral arm has an error. */
