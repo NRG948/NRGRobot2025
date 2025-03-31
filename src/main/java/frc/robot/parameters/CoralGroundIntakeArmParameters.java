@@ -29,7 +29,7 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
       Math.toRadians(128),
       Math.toRadians(-35),
       Math.toRadians(128),
-      0.25),
+      0.15),
 
   CompetitionBase2025(
       MotorParameters.KrakenX60,
@@ -37,10 +37,10 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
       72.0,
       Units.inchesToMeters(21),
       CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
-      Math.toRadians(128),
+      Math.toRadians(129),
       Math.toRadians(-35),
-      Math.toRadians(128),
-      0.25);
+      Math.toRadians(129),
+      0.15);
 
   private final MotorParameters motorParameters;
   private final double gearRatio;
