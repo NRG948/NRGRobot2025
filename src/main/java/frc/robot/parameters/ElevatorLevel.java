@@ -10,20 +10,21 @@ package frc.robot.parameters;
 import frc.robot.subsystems.Elevator;
 
 public enum ElevatorLevel {
-  STOWED(Elevator.STOWED_HEIGHT_FOR_PID, Math.toRadians(92), 0, 0, 0),
-  L1(0.15, Math.toRadians(36), .2, 1.5, 0.3),
-  L2(0.33, Math.toRadians(60), .2, 0, 1.5),
-  L3(0.74, Math.toRadians(60), .2, 0, 1.5),
-  L4(1.34, Math.toRadians(50), .3, .1, 2.0),
+  STOWED(Elevator.STOWED_HEIGHT_FOR_PID, Math.toRadians(92), 0, 0, 0, Double.MAX_VALUE),
+  L1(0.15, Math.toRadians(36), .2, 1.5, 0.3, Double.MAX_VALUE),
+  L2(0.33, Math.toRadians(60), .2, 0, 1.5, Double.MAX_VALUE),
+  L3(0.74, Math.toRadians(60), .2, 0, 1.5, 1),
+  L4(1.34, Math.toRadians(50), .2, .1, 2.0, 0.8),
 
-  AlgaeL2(0.25, Math.toRadians(40), .2, 0, 2.0),
-  AlgaeL3(0.65, Math.toRadians(40), .2, 0, 2.0);
+  AlgaeL2(0.25, Math.toRadians(40), .2, 0, 2.0, Double.MAX_VALUE),
+  AlgaeL3(0.65, Math.toRadians(40), .2, 0, 2.0, Double.MAX_VALUE);
 
   private final double elevatorHeight;
   private final double armAngle;
   private final double armOffset;
   private final double outtakeDelay;
   private final double outtakeSpeed;
+  private final double accelLimit;
 
   /**
    * Constructs a variant of this enum.
@@ -32,12 +33,18 @@ public enum ElevatorLevel {
    * @param armAngle The desired arm angle in radians.
    */
   private ElevatorLevel(
-      double height, double armAngle, double armOffset, double outtakeDelay, double outtakeSpeed) {
+      double height,
+      double armAngle,
+      double armOffset,
+      double outtakeDelay,
+      double outtakeSpeed,
+      double accelLimit) {
     this.elevatorHeight = height;
     this.armAngle = armAngle;
     this.armOffset = armOffset;
     this.outtakeDelay = outtakeDelay;
     this.outtakeSpeed = outtakeSpeed;
+    this.accelLimit = accelLimit;
   }
 
   /** Returns the desired height in meters. */
@@ -63,5 +70,10 @@ public enum ElevatorLevel {
   /** Gets the outtake delay in seconds. */
   public double getOuttakeDelay() {
     return outtakeDelay;
+  }
+
+  /** Gets the acceleration limit in units per second. */
+  public double getAccelLimit() {
+    return accelLimit;
   }
 }
