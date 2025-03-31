@@ -10,7 +10,7 @@ package frc.robot.commands;
 import static frc.robot.commands.AlgaeCommands.removeAlgaeAtLevel;
 import static frc.robot.commands.CoralAndElevatorCommands.raiseElevatorAndTipCoralArm;
 import static frc.robot.commands.CoralCommands.intakeUntilCoralDetected;
-import static frc.robot.commands.CoralCommands.outtakeUntilCoralNotDetected;
+import static frc.robot.commands.CoralCommands.scoreToReefL2ThruL4;
 import static frc.robot.commands.ElevatorCommands.stowElevator;
 
 import com.nrg948.autonomous.AutonomousCommandGenerator;
@@ -134,7 +134,7 @@ public final class Autos {
     eventMaps.put("Remove Algae L3", removeAlgaeAtLevel(subsystems, ElevatorLevel.AlgaeL3));
 
     eventMaps.put("Coral Intake", intakeUntilCoralDetected(subsystems));
-    eventMaps.put("Coral Outtake", outtakeUntilCoralNotDetected(subsystems));
+    eventMaps.put("Coral Outtake", scoreToReefL2ThruL4(subsystems));
 
     eventMaps.put("Elevator L1", raiseElevatorAndTipCoralArm(subsystems, ElevatorLevel.L1));
     eventMaps.put("Elevator L2", raiseElevatorAndTipCoralArm(subsystems, ElevatorLevel.L2));

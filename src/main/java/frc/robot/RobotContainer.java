@@ -11,7 +11,6 @@ import static frc.robot.commands.AlgaeCommands.removeAlgaeAtLevel;
 import static frc.robot.commands.CoralAndElevatorCommands.raiseElevatorAndTipCoralArm;
 import static frc.robot.commands.CoralCommands.CORAL_GRABBER_DETECTION_DELAY;
 import static frc.robot.commands.CoralCommands.CORAL_ROLLER_DETECTION_DELAY;
-import static frc.robot.commands.CoralCommands.outtakeUntilCoralNotDetected;
 import static frc.robot.commands.DriveCommands.alignToCoralStation;
 import static frc.robot.commands.DriveCommands.alignToReefPosition;
 import static frc.robot.commands.DriveCommands.resetOrientation;
@@ -50,6 +49,7 @@ import frc.robot.commands.CoralCommands;
 import frc.robot.commands.CoralRollerWithController;
 import frc.robot.commands.DriveUsingController;
 import frc.robot.commands.ElevatorCommands;
+import frc.robot.commands.FlameCycle;
 import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
 import frc.robot.parameters.Colors;
@@ -101,7 +101,7 @@ public class RobotContainer {
     subsystems.coralRoller.setDefaultCommand(
         new CoralRollerWithController(subsystems, m_manipulatorController));
 
-    // subsystems.statusLEDs.setDefaultCommand(new FlameCycle(subsystems.statusLEDs));
+    subsystems.statusLEDs.setDefaultCommand(new FlameCycle(subsystems.statusLEDs));
 
     // Configure the trigger bindings
     configureBindings();
@@ -189,18 +189,19 @@ public class RobotContainer {
         .whileTrue(ClimberCommands.climb(subsystems));
     m_driverController.leftTrigger().whileTrue(ClimberCommands.unclimb(subsystems));
 
-    m_manipulatorController.a().onTrue(raiseElevatorAndTipCoralArm(subsystems, L1));
+    m_manipulatorController.a().onTrue(CoralCommands.extendToReefL1(subsystems));
     m_manipulatorController.x().onTrue(raiseElevatorAndTipCoralArm(subsystems, L2));
     m_manipulatorController.b().onTrue(raiseElevatorAndTipCoralArm(subsystems, L3));
     m_manipulatorController.y().onTrue(raiseElevatorAndTipCoralArm(subsystems, L4));
 
+    m_manipulatorController
+        .leftBumper()
+        .whileTrue(CoralCommands.transferFromGroundIntake(subsystems));
     m_manipulatorController.rightBumper().whileTrue(CoralCommands.intakeFromGround(subsystems));
     m_manipulatorController.rightBumper().onFalse(CoralCommands.stowGroundIntake(subsystems));
     m_manipulatorController.povLeft().whileTrue(CoralCommands.intakeUntilCoralDetected(subsystems));
-    m_manipulatorController.povRight().whileTrue(outtakeUntilCoralNotDetected(subsystems));
-    m_manipulatorController
-        .povRight()
-        .onFalse(ElevatorCommands.stowElevatorAndArmForCoral(subsystems));
+    m_manipulatorController.povRight().whileTrue(CoralCommands.scoreToReef(subsystems));
+    m_manipulatorController.povRight().onFalse(CoralCommands.stowAfterScoring(subsystems));
     m_manipulatorController.povDown().whileTrue(removeAlgaeAtLevel(subsystems, AlgaeL2));
     m_manipulatorController.povUp().whileTrue(removeAlgaeAtLevel(subsystems, AlgaeL3));
     m_manipulatorController.povDown().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
@@ -208,6 +209,7 @@ public class RobotContainer {
     m_manipulatorController.back().onTrue(ManipulatorCommands.interruptAll(subsystems));
     m_manipulatorController.start().onTrue(ElevatorCommands.stowElevatorAndArm(subsystems));
     m_manipulatorController.rightTrigger().whileTrue(CoralCommands.autoCenterCoral(subsystems));
+    m_manipulatorController.leftTrigger().whileTrue(CoralCommands.manualGroundOuttake(subsystems));
 
     new Trigger(subsystems.coralRoller::hasCoral)
         .onTrue(LEDCommands.indicateCoralAcquired(subsystems, CORAL_ROLLER_DETECTION_DELAY));
