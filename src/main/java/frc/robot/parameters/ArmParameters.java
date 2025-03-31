@@ -7,8 +7,6 @@
  
 package frc.robot.parameters;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.util.MotorDirection;
 
 public interface ArmParameters {
@@ -65,18 +63,18 @@ public interface ArmParameters {
   /** Returns the max angular speed in rad/s. */
   public double getMaxAngularSpeed();
 
+  /** Returns the scaled angular speed in rad/s. */
+  public double getAngularSpeed();
+
   /** Returns the max angular acceleration in rad/s^2. */
   public double getMaxAngularAcceleration();
+
+  /** Returns the scaled angular acceleration in rad/s^2. */
+  public double getAngularAcceleration();
 
   /** Returns the max angular acceleration with coral in rad/s^2. */
   public double getMaxAngularAccelerationWithCoral();
 
-  /**
-   * Returns constraints limiting the maximum angluar velocity and acceleration to 30% and 50% of
-   * maximum, respectively.
-   */
-  public TrapezoidProfile.Constraints getConstraints();
-
-  /** Returns a {@link ProfiledPIDController} object for use with the arm. */
-  public ProfiledPIDController getProfiledPIDController();
+  /** Returns the scaled angular acceleration with coral in rad/s^2. */
+  public double getAngularAccelerationWithCoral();
 }

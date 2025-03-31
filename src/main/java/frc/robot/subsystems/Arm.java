@@ -152,9 +152,9 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
     // set Motion Magic settings
     MotionMagicConfigs motionMagicConfigs = talonFXConfigs.MotionMagic;
     motionMagicConfigs.MotionMagicCruiseVelocity =
-        0.3 * parameters.getMaxAngularSpeed() / RADIANS_PER_ROTATION;
+        parameters.getAngularSpeed() / RADIANS_PER_ROTATION;
     motionMagicConfigs.MotionMagicAcceleration =
-        0.015625 * parameters.getMaxAngularAcceleration() / RADIANS_PER_ROTATION;
+        parameters.getAngularAcceleration() / RADIANS_PER_ROTATION;
 
     TalonFXConfigurator configurator = talonFX.getConfigurator();
 

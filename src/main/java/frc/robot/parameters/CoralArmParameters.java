@@ -13,8 +13,6 @@ import static frc.robot.Constants.RobotConstants.CORAL_MASS_KG;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.util.MotorDirection;
 
 /** A class to hold the feedforward constants calculated from maximum velocity and acceleration. */
@@ -55,6 +53,9 @@ public enum CoralArmParameters implements ArmParameters {
   private final double kAWithCoral;
 
   private final double rollerDelay;
+
+  private static final double ACCELERATION_SCALE_FACTOR = 1.0 / 64;
+  private static final double SPEED_SCALE_FACTOR = 0.3;
 
   /**
    * Constructs a new ArmParameters.
@@ -185,10 +186,18 @@ public enum CoralArmParameters implements ArmParameters {
     return this.motorParameters.getDCMotor().freeSpeedRadPerSec / this.gearRatio;
   }
 
+  public double getAngularSpeed() {
+    return this.getMaxAngularSpeed() * SPEED_SCALE_FACTOR;
+  }
+
   /** Returns the max angular acceleration in rad/s^2. */
   public double getMaxAngularAcceleration() {
     return (this.motorParameters.getDCMotor().stallTorqueNewtonMeters * this.gearRatio)
         / (this.massKg * this.armLength);
+  }
+
+  public double getAngularAcceleration() {
+    return this.getMaxAngularAcceleration() * ACCELERATION_SCALE_FACTOR;
   }
 
   /** Returns the max angular acceleration with coral in rad/s^2. */
@@ -197,18 +206,8 @@ public enum CoralArmParameters implements ArmParameters {
         / ((this.massKg + CORAL_MASS_KG) * this.armLength);
   }
 
-  /**
-   * Returns constraints limiting the maximum angluar velocity and acceleration to 30% and 50% of
-   * maximum, respectively.
-   */
-  public TrapezoidProfile.Constraints getConstraints() {
-    return new TrapezoidProfile.Constraints(
-        getMaxAngularSpeed() * 0.3, getMaxAngularAcceleration() * 0.5);
-  }
-
-  /** Returns a {@link ProfiledPIDController} object for use with the arm. */
-  public ProfiledPIDController getProfiledPIDController() {
-    return new ProfiledPIDController(1.0, 0, 0, getConstraints());
+  public double getAngularAccelerationWithCoral() {
+    return this.getAngularAccelerationWithCoral() * ACCELERATION_SCALE_FACTOR;
   }
 
   /**
