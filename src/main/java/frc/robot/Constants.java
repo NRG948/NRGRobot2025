@@ -24,7 +24,7 @@ public final class Constants {
     public static final double MAX_BATTERY_VOLTAGE = 12.0;
 
     /** The swerve drive wheel diameter in meters. */
-    public static final double WHEEL_DIAMETER = 0.0996; // for comp bot.
+    public static final double WHEEL_DIAMETER = 0.0996; // Units.inchesToMeters(3.865) for practice bot; 0.0996m for comp bot
 
     /** The length of the robot including bumpers. */
     public static final double ROBOT_LENGTH = 0.928;
@@ -54,7 +54,7 @@ public final class Constants {
         COMPETITION_CHASSIS_KG + BATTERY_KG + BUMPER_KG;
 
     /** The total mass in kg of the practice robot including bumpers and battery. */
-    public static final double PRACTICE_ROBOT_MASS_KG = 59.6;
+    public static final double PRACTICE_ROBOT_MASS_KG = 57.0;
 
     /** The average mass of the coral in kg. */
     public static final double CORAL_MASS_KG = 0.68;
