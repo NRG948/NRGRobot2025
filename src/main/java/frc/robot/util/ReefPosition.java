@@ -27,7 +27,7 @@ public enum ReefPosition {
 
   private final double yOffset;
   private final Transform2d tagToRobot;
-  private static final double FUDGE_OFFSET = 0.03;
+  private static final double FUDGE_OFFSET = 0.0;
 
   ReefPosition(double yOffset) {
     this.yOffset = yOffset;
