@@ -188,6 +188,10 @@ public class RobotContainer {
             })
         .whileTrue(ClimberCommands.climb(subsystems));
 
+    // Prepare to climb if any POV button is pressed
+    new Trigger(() -> m_driverController.getHID().getPOV() != -1)
+        .onTrue(ClimberCommands.prepareToClimb(subsystems));
+
     m_manipulatorController.a().onTrue(CoralCommands.extendToReefL1(subsystems));
     m_manipulatorController.x().onTrue(raiseElevatorAndTipCoralArm(subsystems, L2));
     m_manipulatorController.b().onTrue(raiseElevatorAndTipCoralArm(subsystems, L3));
