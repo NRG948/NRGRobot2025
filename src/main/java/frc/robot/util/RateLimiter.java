@@ -22,30 +22,20 @@ public class RateLimiter {
   private double prevTime;
 
   /**
-   * Creates a new SlewRateLimiter with the given positive and negative rate limits and initial
-   * value.
+   * Creates a new RateLimiter with the given rate limit and initial value.
    *
-   * @param positiveRateLimit The rate-of-change limit in the positive direction, in units per
-   *     second. This is expected to be positive.
-   * @param initialValue The initial value of the input.
+   * @param rateLimit The rate-of-change limit in either direction, in units per second. This is
+   *     expected to be positive.
    */
-  public RateLimiter(double positiveRateLimit, double initialValue) {
-    rateLimit = positiveRateLimit;
-    prevVal = initialValue;
+  public RateLimiter(double rateLimit) {
+    setRateLimit(rateLimit);
+    prevVal = 0;
     prevTime = MathSharedStore.getTimestamp();
   }
 
-  /**
-   * Creates a new SlewRateLimiter with the given positive rate limit and negative rate limit of
-   * -rateLimit.
-   *
-   * @param rateLimit The rate-of-change limit, in units per second.
-   */
-  public RateLimiter(double rateLimit) {
-    this(rateLimit, 0);
-  }
-
+  /** Sets the rate limit to the given limit. */
   public void setRateLimit(double rate) {
+    assert (rateLimit > 0);
     rateLimit = rate;
   }
 
@@ -53,27 +43,19 @@ public class RateLimiter {
    * Filters the input to limit its slew rate.
    *
    * @param input The input value whose slew rate is to be limited.
-   * @return The filtered value, which will not change faster than the slew rate.
+   * @return The filtered value, which will not change faster than the slew rate limit.
    */
   public double calculate(double input) {
     double currentTime = MathSharedStore.getTimestamp();
     double elapsedTime = currentTime - prevTime;
-    prevVal += MathUtil.clamp(input - prevVal, -rateLimit * elapsedTime, rateLimit * elapsedTime);
     prevTime = currentTime;
+    double changeLimit = rateLimit * elapsedTime;
+    prevVal += MathUtil.clamp(input - prevVal, -changeLimit, changeLimit);
     return prevVal;
   }
 
   /**
-   * Returns the value last calculated by the SlewRateLimiter.
-   *
-   * @return The last value.
-   */
-  public double lastValue() {
-    return prevVal;
-  }
-
-  /**
-   * Resets the slew rate limiter to the specified value; ignores the rate limit when doing so.
+   * Resets the rate limiter to the specified value; ignores the rate limit when doing so.
    *
    * @param value The value to reset to.
    */
