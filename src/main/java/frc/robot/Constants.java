@@ -78,6 +78,9 @@ public final class Constants {
     /** The robot iteration period in seconds. */
     public static final double PERIODIC_INTERVAL = 0.02;
 
+    /** A default acceleration rate limit that does not limit robot acceleration. */
+    public static final double NO_ACCEL_LIMIT = 1.0 / PERIODIC_INTERVAL;
+
     /**
      * The y-offset of the coral end effector from the center of the robot in the robot's frame of
      * reference.
