@@ -22,8 +22,6 @@ import frc.robot.util.RateLimiter;
 public class DriveUsingController extends Command {
   private static final double RUMBLE_MIN_G = 1.0;
   private static final double RUMBLE_MAX_G = 8.0;
-  public static final RobotPreferences.DoubleValue minPower =
-      new DoubleValue("Drive", "Min Power", 0.3);
   public static final RobotPreferences.DoubleValue climbAccelLimit =
       new DoubleValue("Drive", "Climb Accel Limit", 0.3);
   private static final double DEADBAND = 0.08;
@@ -53,7 +51,7 @@ public class DriveUsingController extends Command {
     double rSpeed = -xboxController.getRightX();
     double xSpeed = -xboxController.getLeftY();
     double ySpeed = -xboxController.getLeftX();
-    double inputScalar = Math.max(1.0 - xboxController.getRightTriggerAxis(), minPower.getValue());
+    double inputScalar = Math.max(1.0 - xboxController.getRightTriggerAxis(), 0.15);
 
     // Applies deadbands to x and y joystick values and multiples all
     // values with inputScalar which allows finer driving control.
@@ -69,7 +67,7 @@ public class DriveUsingController extends Command {
     xAccelLimiter.setRateLimit(accelLimit);
     yAccelLimiter.setRateLimit(accelLimit);
     xSpeed = xAccelLimiter.calculate(xSpeed);
-    ySpeed = xAccelLimiter.calculate(ySpeed);
+    ySpeed = yAccelLimiter.calculate(ySpeed);
 
     drivetrain.drive(xSpeed, ySpeed, rSpeed, true);
 
