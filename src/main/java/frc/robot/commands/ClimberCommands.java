@@ -40,4 +40,11 @@ public final class ClimberCommands {
             Commands.idle(subsystems.climber).until(() -> subsystems.climber.atGoalAngle()))
         .finallyDo(subsystems.climber::disable);
   }
+
+  public static Command prepareToClimb(Subsystems subsystems) {
+    return Commands.parallel(
+        Commands.runOnce(() -> unclimb(subsystems), subsystems.climber),
+        Commands.runOnce(
+            () -> subsystems.coralIntakeArm.setGoalAngle(90), subsystems.coralIntakeArm));
+  }
 }
