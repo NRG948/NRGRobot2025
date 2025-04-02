@@ -7,6 +7,8 @@
  
 package frc.robot.commands;
 
+import com.nrg948.preferences.RobotPreferences;
+import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,6 +18,11 @@ import frc.robot.subsystems.Swerve;
 
 /** A command that enables the driver to drive the robot using an Xbox controller. */
 public class DriveUsingController extends Command {
+
+  @RobotPreferencesValue
+  public static final RobotPreferences.DoubleValue RIGHT_TRIGGER_SCALAR =
+      new RobotPreferences.DoubleValue("Drive", "Right Trigger Scalar", 0.25);
+
   private static final double RUMBLE_MIN_G = 1.0;
   private static final double RUMBLE_MAX_G = 8.0;
 
@@ -24,11 +31,12 @@ public class DriveUsingController extends Command {
   private final Swerve drivetrain;
   private final CommandXboxController xboxController;
 
-  /** Creates a new DriveUsingController. */
+  /** Creates a command which allows a human to drive the robot using an Xbox controller. */
   public DriveUsingController(Subsystems subsystems, CommandXboxController xboxController) {
-    // Use addRequirements() here to declare subsystem dependencies.
     drivetrain = subsystems.drivetrain;
     this.xboxController = xboxController;
+
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
   }
 
@@ -42,13 +50,17 @@ public class DriveUsingController extends Command {
     double rSpeed = -xboxController.getRightX();
     double xSpeed = -xboxController.getLeftY();
     double ySpeed = -xboxController.getLeftX();
-    double inputScalar = Math.max(1.0 - xboxController.getRightTriggerAxis(), 0.15);
 
-    // Applies deadbands to x and y joystick values and multiples all
-    // values with inputScalar which allows finer driving control.
-    xSpeed = MathUtil.applyDeadband(xSpeed, DEADBAND) * inputScalar;
-    ySpeed = MathUtil.applyDeadband(ySpeed, DEADBAND) * inputScalar;
-    rSpeed = MathUtil.applyDeadband(rSpeed, DEADBAND) * inputScalar;
+    // The `powerScalar` linearly scales the robot's drive power from 1.0 (when the right trigger is
+    // not pressed) down to RIGHT_TRIGGER_SCALAR (when the right trigger is fully depressed).
+    double powerScalar =
+        (RIGHT_TRIGGER_SCALAR.getValue() - 1.0) * xboxController.getRightTriggerAxis() + 1.0;
+
+    // Applies deadbands to the x, y, and rotation joystick values and then multiplies all speeds by
+    // the powerScalar, which allows finer driving control.
+    xSpeed = MathUtil.applyDeadband(xSpeed, DEADBAND) * powerScalar;
+    ySpeed = MathUtil.applyDeadband(ySpeed, DEADBAND) * powerScalar;
+    rSpeed = MathUtil.applyDeadband(rSpeed, DEADBAND) * powerScalar;
 
     drivetrain.drive(xSpeed, ySpeed, rSpeed, true);
 
