@@ -17,10 +17,12 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.FieldUtils;
+import java.util.Map;
 import java.util.function.DoubleSupplier;
 
 // import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -31,8 +33,8 @@ import java.util.function.DoubleSupplier;
  * autonomous routines.
  */
 public class RobotAutonomous {
-  private final SendableChooser<Command> chooser;
-
+  private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Integer> delayChooser = new SendableChooser<>();
   private final RobotConfig config = Swerve.PARAMETERS.getPathplannerConfig();
 
   public RobotAutonomous(Subsystems subsystems, DoubleSupplier rotationFeedbackOverride) {
@@ -49,9 +51,14 @@ public class RobotAutonomous {
 
     PPHolonomicDriveController.overrideRotationFeedback(rotationFeedbackOverride);
 
-    this.chooser = Autonomous.getChooser(subsystems, "frc.robot");
-    chooser.onChange(Autos::preloadAuto);
-    Autos.preloadAuto(chooser.getSelected());
+    this.autoChooser = Autonomous.getChooser(subsystems, "frc.robot");
+    autoChooser.onChange(Autos::preloadAuto);
+    Autos.preloadAuto(autoChooser.getSelected());
+
+    this.delayChooser.setDefaultOption("No Delay", (Integer) 0);
+    for (var i = 1; i < 8; i++) {
+      this.delayChooser.addOption(String.format("%d Second Delay", i), (Integer) i);
+    }
   }
 
   /**
@@ -60,8 +67,8 @@ public class RobotAutonomous {
    * @return The autonomous command selected in the chooser.
    */
   public Command getAutonomousCommand(Subsystems subsystems) {
-
-    return this.chooser.getSelected();
+    return Commands.sequence(
+        Commands.waitSeconds(this.delayChooser.getSelected()), this.autoChooser.getSelected());
   }
 
   /**
@@ -71,7 +78,11 @@ public class RobotAutonomous {
    */
   public void addShuffleboardLayout(ShuffleboardTab tab) {
     ShuffleboardLayout layout =
-        tab.getLayout("Autonomous", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 2);
-    layout.add("Routine", chooser);
+        tab.getLayout("Autonomous", BuiltInLayouts.kGrid)
+            .withProperties(Map.of("Number of columns", 1, "Number of rows", 1))
+            .withPosition(0, 0)
+            .withSize(2, 2);
+    layout.add("Routine", autoChooser).withPosition(0, 0);
+    layout.add("Delay", delayChooser).withPosition(0, 1);
   }
 }
