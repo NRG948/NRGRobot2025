@@ -7,17 +7,19 @@
  
 package frc.robot.parameters;
 
+import static frc.robot.Constants.RobotConstants.NO_ACCEL_LIMIT;
+
 import frc.robot.subsystems.Elevator;
 
 public enum ElevatorLevel {
-  STOWED(Elevator.STOWED_HEIGHT_FOR_PID, Math.toRadians(92), 0, 0, 0, Double.MAX_VALUE),
-  L1(0.15, Math.toRadians(36), .2, 1.5, 0.3, Double.MAX_VALUE),
-  L2(0.33, Math.toRadians(60), .2, 0, 1.5, Double.MAX_VALUE),
+  STOWED(Elevator.STOWED_HEIGHT_FOR_PID, Math.toRadians(92), 0, 0, 0, NO_ACCEL_LIMIT),
+  L1(0.15, Math.toRadians(36), .2, 1.5, 0.3, NO_ACCEL_LIMIT),
+  L2(0.33, Math.toRadians(60), .2, 0, 1.5, NO_ACCEL_LIMIT),
   L3(0.74, Math.toRadians(60), .2, 0, 1.5, 1),
   L4(1.34, Math.toRadians(50), .2, .1, 2.0, 0.8),
 
-  AlgaeL2(0.25, Math.toRadians(40), .2, 0, 2.0, Double.MAX_VALUE),
-  AlgaeL3(0.65, Math.toRadians(40), .2, 0, 2.0, Double.MAX_VALUE);
+  AlgaeL2(0.25, Math.toRadians(40), .2, 0, 2.0, NO_ACCEL_LIMIT),
+  AlgaeL3(0.65, Math.toRadians(40), .2, 0, 2.0, NO_ACCEL_LIMIT);
 
   private final double elevatorHeight;
   private final double armAngle;
