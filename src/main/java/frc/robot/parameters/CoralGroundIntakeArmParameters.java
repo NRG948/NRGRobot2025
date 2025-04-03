@@ -55,8 +55,8 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
   private final double kAWithCoral;
 
   private final double rollerDelay;
-  private static final double ACCELERATION_SCALE_FACTOR = 1.0 / 64;
-  private static final double SPEED_SCALE_FACTOR = 0.5;
+  private static final double ACCELERATION_SCALE_FACTOR = 0.05;
+  private static final double SPEED_SCALE_FACTOR = 0.7;
 
   /**
    * Constructs a new ArmParameters.

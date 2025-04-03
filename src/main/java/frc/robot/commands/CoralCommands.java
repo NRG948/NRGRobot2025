@@ -24,6 +24,7 @@ import java.util.Set;
 
 /** A namespace for coral command factory methods. */
 public final class CoralCommands {
+  private static final double CORAL_GRABBER_OUTTAKE_VELOCITY = -1.0;
   public static final double GROUND_INTAKE_INTAKE_ANGLE =
       CORAL_GROUND_INTAKE_ARM_PARAMETERS.getMinAngleRad();
   public static final double GROUND_INTAKE_STOWED_ANGLE =
@@ -41,7 +42,7 @@ public final class CoralCommands {
   private static final double AUTO_CENTER_FORWARDS_SECONDS = 1.0;
 
   /** The velocity for transfering the coral from the ground intake into the funnel. */
-  private static final double CORAL_GRABBER_TRANSFER_VELOCITY = -1.0;
+  private static final double CORAL_GRABBER_TRANSFER_VELOCITY = -0.7;
 
   /** The velocity for intaking the coral using the ground intake. */
   private static final double CORAL_GRABBER_INTAKE_VELOCITY = 1.0;
@@ -258,10 +259,16 @@ public final class CoralCommands {
   public static Command manualGroundOuttake(Subsystems subsystems) {
     var coralIntakeGrabber = subsystems.coralIntakeGrabber;
     return Commands.sequence(
-            Commands.runOnce(() -> coralIntakeGrabber.setGoalVelocity(-1.0), coralIntakeGrabber),
-            Commands.idle(coralIntakeGrabber).until(() -> !coralIntakeGrabber.hasCoral()))
-        .unless(() -> !coralIntakeGrabber.hasCoral())
+            Commands.runOnce(
+                () -> coralIntakeGrabber.setGoalVelocity(CORAL_GRABBER_OUTTAKE_VELOCITY),
+                coralIntakeGrabber),
+            Commands.idle(coralIntakeGrabber))
         .finallyDo(coralIntakeGrabber::disable)
         .withName("ManualGroundOuttake");
+  }
+
+  public static Command disableManualGroundOuttake(Subsystems subsystems) {
+    var coralIntakeGrabber = subsystems.coralIntakeGrabber;
+    return Commands.runOnce(() -> coralIntakeGrabber.disable(), coralIntakeGrabber);
   }
 }

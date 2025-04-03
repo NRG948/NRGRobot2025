@@ -213,6 +213,7 @@ public class RobotContainer {
     m_manipulatorController.start().onTrue(ElevatorCommands.stowElevatorAndArm(subsystems));
     m_manipulatorController.rightTrigger().whileTrue(CoralCommands.autoCenterCoral(subsystems));
     m_manipulatorController.leftTrigger().whileTrue(CoralCommands.manualGroundOuttake(subsystems));
+    m_driverController.leftTrigger().onFalse(CoralCommands.disableManualGroundOuttake(subsystems));
 
     new Trigger(subsystems.coralRoller::hasCoral)
         .onTrue(LEDCommands.indicateCoralAcquired(subsystems, CORAL_ROLLER_DETECTION_DELAY));
