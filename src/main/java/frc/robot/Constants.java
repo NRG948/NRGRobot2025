@@ -25,7 +25,7 @@ public final class Constants {
 
     /** The swerve drive wheel diameter in meters. */
     public static final double WHEEL_DIAMETER =
-        0.0996; // Units.inchesToMeters(3.865) for practice bot; 0.0996m for comp bot
+        Units.inchesToMeters(3.96); // Units.inchesToMeters(3.865) for practice bot; Units.inchesToMeters(3.96) for comp bot
 
     /** The length of the robot including bumpers. */
     public static final double ROBOT_LENGTH = 0.928;
@@ -44,7 +44,7 @@ public final class Constants {
     private static final double BUMPER_KG = Units.lbsToKilograms((20.3 + 19.3) / 2);
 
     /** The mass in kg of the competition robot without bumpers and battery. */
-    private static final double COMPETITION_CHASSIS_KG = Units.lbsToKilograms(114.6);
+    private static final double COMPETITION_CHASSIS_KG = Units.lbsToKilograms(112.9);
 
     /** The mass in kg of the practice robot without bumpers and battery. */
     private static final double PRACTICE_CHASSIS_KG =
