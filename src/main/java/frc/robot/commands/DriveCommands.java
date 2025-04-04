@@ -17,9 +17,11 @@ import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.parameters.SwerveDriveParameters;
+import frc.robot.subsystems.QuestNav;
 import frc.robot.subsystems.StatusLED;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
@@ -85,10 +87,12 @@ public final class DriveCommands {
    */
   public static Command resetOrientation(Subsystems subsystems) {
     Swerve drivetrain = subsystems.drivetrain;
+    QuestNav questNav = subsystems.questNav;
+    Rotation2d orientation = FieldUtils.isRedAlliance() ? k180deg : kZero;
 
-    return Commands.runOnce(
-            () -> drivetrain.resetOrientation(FieldUtils.isRedAlliance() ? k180deg : kZero),
-            drivetrain)
+    return Commands.parallel(
+            Commands.runOnce(() -> drivetrain.resetOrientation(orientation), drivetrain),
+            Commands.runOnce(() -> questNav.resetOrientation(orientation), questNav))
         .withName("ResetOrientation");
   }
 

@@ -45,6 +45,8 @@ public class Subsystems {
   public final Optional<AprilTag> frontCamera;
   public final Optional<AprilTag> backCamera;
 
+  public final QuestNav questNav = new QuestNav();
+
   private final Subsystem[] all;
   private final Subsystem[] manipulators;
 
@@ -58,7 +60,7 @@ public class Subsystems {
             Arrays.asList(elevator, coralArm, coralRoller, coralIntakeArm, coralIntakeGrabber));
 
     // Add all non-manipulator subsystems to the `all` list.
-    var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, statusLEDs, climber));
+    var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, statusLEDs, climber, questNav));
 
     // Add optional subsystems to the appropriate list.
     frontCamera =

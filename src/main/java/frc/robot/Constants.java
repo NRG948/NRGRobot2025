@@ -7,6 +7,12 @@
  
 package frc.robot;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -139,5 +145,15 @@ public final class Constants {
 
     /** The rotational tolerance value for aligning to the reef. */
     public static final double POSE_ALIGNMENT_TOLERANCE_R = 1.0; // in deg
+  }
+
+  public class Quest3S {
+
+    public static final Transform2d ROBOT_TO_QUEST =
+        new Transform2d(-0.25, -0.30, Rotation2d.fromDegrees(-45));
+
+    public static final Transform2d QUEST_TO_ROBOT = ROBOT_TO_QUEST.inverse();
+
+    public static final Matrix<N3, N1> STD_DEVS = VecBuilder.fill(0, 0, 0);
   }
 }
