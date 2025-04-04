@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.97125,
-        "y": 0.6904999999999996
+        "x": 7.708094262295082,
+        "y": 0.5425717213114762
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.0352500000000004,
-        "y": 1.5387500000000003
+        "x": 6.772094262295082,
+        "y": 1.390821721311477
       },
       "isLocked": false,
       "linkedName": "Processor Side Start"
@@ -62,7 +62,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 119.99999999999999
+    "rotation": 179.0289780689208
   },
   "useDefaultConstraints": true
 }

@@ -3,16 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.97125,
-        "y": 0.6904999999999996
+        "x": 7.708094262295082,
+        "y": 0.5425717213114762
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.04748724489796,
-        "y": 1.0629400510204086
+        "x": 5.993852459016393,
+        "y": 1.4896004098360647
       },
       "isLocked": false,
       "linkedName": "Processor Side Start"
+    },
+    {
+      "anchor": {
+        "x": 4.219672131147541,
+        "y": 1.153944672131147
+      },
+      "prevControl": {
+        "x": 4.914959016393443,
+        "y": 0.7703381147540984
+      },
+      "nextControl": {
+        "x": 3.6852945537081987,
+        "y": 1.4487736803735423
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,20 +36,25 @@
         "y": 3.12
       },
       "prevControl": {
-        "x": 4.33875,
-        "y": 2.305764204545454
+        "x": 3.752151639344262,
+        "y": 1.9091700819672122
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Reef(C)"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.2814498933902006,
+      "rotationDegrees": 113.15410622172242
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.88,
-      "maxWaypointRelativePos": 0.9993247805536798,
+      "minWaypointRelativePos": 1.75,
+      "maxWaypointRelativePos": 2,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 4.0,
@@ -62,7 +83,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 119.99999999999999
+    "rotation": 179.0289780689208
   },
   "useDefaultConstraints": true
 }
