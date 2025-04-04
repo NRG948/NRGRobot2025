@@ -21,7 +21,7 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
   PracticeBase2025(
       MotorParameters.KrakenX60,
       CORAL_GROUND_INTAKE_ARM_MASS_KG,
-      72.0,
+      36.0 * 22.0 / 15.0,
       Units.inchesToMeters(21),
       CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
       Math.toRadians(128),
@@ -32,11 +32,11 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
   CompetitionBase2025(
       MotorParameters.KrakenX60,
       CORAL_GROUND_INTAKE_ARM_MASS_KG,
-      72.0,
+      36.0 * 22.0 / 15.0,
       Units.inchesToMeters(21),
       CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
       Math.toRadians(129),
-      Math.toRadians(-35),
+      Math.toRadians(-22),
       Math.toRadians(129),
       0.15);
 
