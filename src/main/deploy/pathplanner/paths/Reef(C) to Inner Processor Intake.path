@@ -8,31 +8,31 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8618465909109965,
-        "y": 1.773835227275768
+        "x": 2.481454918032787,
+        "y": 2.088985655737704
       },
       "isLocked": false,
       "linkedName": "Reef(C)"
     },
     {
       "anchor": {
-        "x": 0.7507499999999999,
-        "y": 1.353499999999999
+        "x": 1.238,
+        "y": 0.963
       },
       "prevControl": {
-        "x": 1.9792500000000004,
-        "y": 1.295
+        "x": 2.2177254098360653,
+        "y": 1.8732069672131149
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Inner Processor Intake"
+      "linkedName": "Outer Processor Intake"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.86,
+      "minWaypointRelativePos": 0.7,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.0,
@@ -56,7 +56,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 54.090276920822355
+    "rotation": 54.0
   },
   "reversed": false,
   "folder": null,
