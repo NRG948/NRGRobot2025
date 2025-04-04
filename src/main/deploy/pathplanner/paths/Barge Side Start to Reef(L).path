@@ -8,11 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.153544994212962,
-        "y": 6.314546566456444
+        "x": 5.562295081967213,
+        "y": 6.896055327868852
       },
       "isLocked": false,
       "linkedName": "Barge Side Start"
+    },
+    {
+      "anchor": {
+        "x": 4.111782786885246,
+        "y": 6.955993852459016
+      },
+      "prevControl": {
+        "x": 4.460555071721312,
+        "y": 7.104855276639344
+      },
+      "nextControl": {
+        "x": 3.7630105020491795,
+        "y": 6.807132428278687
+      },
+      "isLocked": false,
+      "linkedName": null
     },
     {
       "anchor": {
@@ -20,20 +36,25 @@
         "y": 5.19
       },
       "prevControl": {
-        "x": 3.707058459746887,
-        "y": 6.190559741670462
+        "x": 3.536372950819672,
+        "y": 6.464497950819672
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Reef(L)"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.34968017057569356,
+      "rotationDegrees": -119.27614663584093
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.88,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 1.75,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 4.0,
@@ -48,7 +69,7 @@
   "eventMarkers": [
     {
       "name": "Elevator L4",
-      "waypointRelativePos": 0.4694789081885897,
+      "waypointRelativePos": 0.95,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
