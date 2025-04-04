@@ -63,7 +63,7 @@ import frc.robot.util.MotorIdleMode;
  */
 @RobotPreferencesLayout(groupName = "Preferences", column = 0, row = 0, width = 2, height = 2)
 public class RobotContainer {
-  private static final int COAST_MODE_DELAY = 10;
+  private static final int COAST_MODE_DELAY = 30;
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -203,7 +203,7 @@ public class RobotContainer {
         .leftBumper()
         .whileTrue(CoralCommands.transferFromGroundIntake(subsystems));
     m_manipulatorController.rightBumper().whileTrue(CoralCommands.intakeFromGround(subsystems));
-    m_manipulatorController.rightBumper().onFalse(CoralCommands.stowGroundIntake(subsystems));
+    m_manipulatorController.rightBumper().onFalse(CoralCommands.extendToReefL1(subsystems));
     m_manipulatorController.povLeft().whileTrue(CoralCommands.intakeUntilCoralDetected(subsystems));
     m_manipulatorController.povRight().whileTrue(CoralCommands.scoreToReef(subsystems));
     m_manipulatorController.povRight().onFalse(CoralCommands.stowAfterScoring(subsystems));
