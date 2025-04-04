@@ -20,6 +20,7 @@ import frc.robot.subsystems.Subsystems;
 public final class ClimberCommands {
   private static final double CLIMB_ANGLE = Math.toRadians(-94);
   private static final double STOW_ANGLE = Math.toRadians(90);
+  private static final double CLIMB_GROUND_INTAKE_ANGLE = Math.toRadians(97);
 
   /** Returns a command that climbs. */
   public static Command climb(Subsystems subsystems) {
@@ -42,9 +43,10 @@ public final class ClimberCommands {
   }
 
   public static Command prepareToClimb(Subsystems subsystems) {
-    return Commands.parallel(
-        Commands.runOnce(() -> unclimb(subsystems), subsystems.climber),
+    return Commands.sequence(
+        Commands.print("PREPARE TO CLIMB"),
         Commands.runOnce(
-            () -> subsystems.coralIntakeArm.setGoalAngle(90), subsystems.coralIntakeArm));
+            () -> subsystems.coralIntakeArm.setGoalAngle(CLIMB_GROUND_INTAKE_ANGLE),
+            subsystems.coralIntakeArm));
   }
 }
