@@ -11,7 +11,6 @@ import static frc.robot.commands.AlgaeCommands.removeAlgaeAtLevel;
 import static frc.robot.commands.CoralAndElevatorCommands.raiseElevatorAndTipCoralArm;
 import static frc.robot.commands.CoralCommands.CORAL_GRABBER_DETECTION_DELAY;
 import static frc.robot.commands.CoralCommands.CORAL_ROLLER_DETECTION_DELAY;
-import static frc.robot.commands.DriveCommands.alignToCoralStation;
 import static frc.robot.commands.DriveCommands.alignToReefPosition;
 import static frc.robot.commands.DriveCommands.resetOrientation;
 import static frc.robot.parameters.ElevatorLevel.AlgaeL2;
@@ -180,7 +179,8 @@ public class RobotContainer {
     m_driverController.x().whileTrue(alignToReefPosition(subsystems, LEFT_BRANCH));
     m_driverController.y().whileTrue(alignToReefPosition(subsystems, CENTER_REEF));
     m_driverController.b().whileTrue(alignToReefPosition(subsystems, RIGHT_BRANCH));
-    m_driverController.a().whileTrue(alignToCoralStation(subsystems));
+    // m_driverController.a().whileTrue(alignToCoralStation(subsystems));
+
     new Trigger(
             () -> {
               XboxController hid = m_driverController.getHID();
@@ -188,9 +188,11 @@ public class RobotContainer {
             })
         .whileTrue(ClimberCommands.climb(subsystems));
 
-    // Prepare to climb if any POV button is pressed
+    // Prepare to climb if any POV button is presseds
     new Trigger(() -> m_driverController.getHID().getPOV() != -1)
         .onTrue(ClimberCommands.prepareToClimb(subsystems));
+
+    m_driverController.a().onTrue(ClimberCommands.prepareToClimb(subsystems));
 
     m_manipulatorController.a().onTrue(CoralCommands.extendToReefL1(subsystems));
     m_manipulatorController.x().onTrue(raiseElevatorAndTipCoralArm(subsystems, L2));
