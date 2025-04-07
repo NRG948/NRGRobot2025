@@ -31,6 +31,7 @@ import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
 import edu.wpi.first.cscore.VideoSource;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -40,6 +41,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -163,6 +165,18 @@ public class RobotContainer {
           .withWidget(BuiltInWidgets.kCameraStream)
           .withSize(4, 3)
           .withPosition(2, 0);
+      operatorTab
+          .add(
+              "Reset QuestNav Pose",
+              Commands.runOnce(
+                      () -> {
+                        Pose2d currentPose = subsystems.drivetrain.getPosition();
+                        subsystems.questNav.setInitialRobotPose(currentPose);
+                      })
+                  .withName("Reset QuestNav Pose")
+                  .ignoringDisable(true))
+          .withSize(2, 1)
+          .withPosition(4, 6);
     }
   }
 

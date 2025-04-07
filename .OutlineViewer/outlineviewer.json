@@ -1,0 +1,17 @@
+{
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "948"
+  },
+  "transitory": {
+    "questnav": {
+      "float[]##v_/questnav/eulerAngles": {
+        "open": true
+      },
+      "float[]##v_/questnav/position": {
+        "open": true
+      },
+      "open": true
+    }
+  }
+}

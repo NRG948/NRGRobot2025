@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.Autos;
+import frc.robot.subsystems.QuestNav;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.FieldUtils;
@@ -38,16 +39,21 @@ public class RobotAutonomous {
   private final RobotConfig config = Swerve.PARAMETERS.getPathplannerConfig();
 
   public RobotAutonomous(Subsystems subsystems, DoubleSupplier rotationFeedbackOverride) {
+    Swerve drivetrain = subsystems.drivetrain;
+    QuestNav questNav = subsystems.questNav;
     AutoBuilder.configure(
-        subsystems.drivetrain::getPosition,
-        subsystems.drivetrain::resetPosition,
-        subsystems.drivetrain::getChassisSpeeds,
-        subsystems.drivetrain::setChassisSpeeds,
+        drivetrain::getPosition,
+        (p) -> {
+          drivetrain.resetPosition(p);
+          questNav.setInitialRobotPose(p);
+        },
+        drivetrain::getChassisSpeeds,
+        drivetrain::setChassisSpeeds,
         new PPHolonomicDriveController(
             new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
         config,
         FieldUtils::isRedAlliance,
-        subsystems.drivetrain);
+        drivetrain);
 
     PPHolonomicDriveController.overrideRotationFeedback(rotationFeedbackOverride);
 
