@@ -106,7 +106,7 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
     ShuffleboardLayout statusLayout =
         LaserCANTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 8);
     statusLayout.addDouble("Left Distance", () -> leftDistance);
-    statusLayout.addDouble("Right Distance", () -> leftDistance);
+    statusLayout.addDouble("Right Distance", () -> rightDistance);
     statusLayout.addDouble("Average Distance", this::getAverageDistance);
   }
 }
