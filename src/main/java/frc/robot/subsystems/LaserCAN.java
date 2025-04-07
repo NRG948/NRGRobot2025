@@ -27,7 +27,7 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
   private static final DataLog LOG = DataLogManager.getLog();
 
   /** A value indicating no measurement was available on the laserCAN distance sensor. */
-  private static final double NO_MEASUREMENT = 0.0;
+  public static final double NO_MEASUREMENT = 0.0;
 
   // TODO: Find the actual distance between laser CANs.
   /** The distance between the two laser CAN devices in meters */
@@ -74,6 +74,10 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
     return rightDistance;
   }
 
+  /**
+   * Returns the angle to the wall in degrees.
+   * @return The angle to the wall in degrees.
+   */
   public double getAngleToWall() {
     return angleToWall;
   }
@@ -92,8 +96,13 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
   private void updateTelemetry() {
     leftDistance = getDistance(leftLaserCAN);
     rightDistance = getDistance(rightLaserCAN);
-    angleToWall =
-        Math.toDegrees(Math.atan((rightDistance - leftDistance) / distanceBetweenLaserCANs));
+
+    if (leftDistance == NO_MEASUREMENT || rightDistance == NO_MEASUREMENT) {
+      angleToWall = NO_MEASUREMENT;
+    } else {
+      angleToWall =
+          Math.toDegrees(Math.atan((rightDistance - leftDistance) / distanceBetweenLaserCANs));
+    }
 
     logLeftDistance.append(leftDistance);
     logRightDistance.append(rightDistance);
