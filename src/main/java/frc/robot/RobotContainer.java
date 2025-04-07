@@ -15,7 +15,6 @@ import static frc.robot.commands.DriveCommands.alignToReefPosition;
 import static frc.robot.commands.DriveCommands.resetOrientation;
 import static frc.robot.parameters.ElevatorLevel.AlgaeL2;
 import static frc.robot.parameters.ElevatorLevel.AlgaeL3;
-import static frc.robot.parameters.ElevatorLevel.L1;
 import static frc.robot.parameters.ElevatorLevel.L2;
 import static frc.robot.parameters.ElevatorLevel.L3;
 import static frc.robot.parameters.ElevatorLevel.L4;
@@ -52,7 +51,6 @@ import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.FlameCycle;
 import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
-import frc.robot.parameters.Colors;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.util.MotorIdleMode;
 
@@ -146,11 +144,6 @@ public class RobotContainer {
         .withSize(2, 2)
         .withPosition(6, 0);
 
-    operatorTab
-        .addBoolean("Branch Detected", () -> subsystems.coralRoller.detectsReef())
-        .withSize(2, 2)
-        .withPosition(6, 2);
-
     if (subsystems.frontCamera.isPresent()) {
       VideoSource video =
           new HttpCamera(
@@ -219,32 +212,6 @@ public class RobotContainer {
         .onTrue(LEDCommands.indicateCoralAcquired(subsystems, CORAL_ROLLER_DETECTION_DELAY));
     new Trigger(subsystems.coralIntakeGrabber::hasCoral)
         .onTrue(LEDCommands.indicateCoralAcquired(subsystems, CORAL_GRABBER_DETECTION_DELAY));
-
-    new Trigger(
-            () ->
-                subsystems.coralRoller.detectsReef() && subsystems.elevator.isSeekingAboveLevel(L1))
-        .whileTrue(LEDCommands.indicateBranchDetected(subsystems));
-
-    new Trigger(
-            () ->
-                subsystems.coralRoller.isLeftReefDetected()
-                    && !subsystems.coralRoller.isRightReefDetected()
-                    && subsystems.elevator.isSeekingAboveLevel(L1))
-        .whileTrue(LEDCommands.setColor(subsystems.statusLEDs, Colors.BLUE));
-
-    new Trigger(
-            () ->
-                !subsystems.coralRoller.isLeftReefDetected()
-                    && subsystems.coralRoller.isRightReefDetected()
-                    && subsystems.elevator.isSeekingAboveLevel(L1))
-        .whileTrue(LEDCommands.setColor(subsystems.statusLEDs, Colors.ORANGE));
-
-    new Trigger(
-            () ->
-                (!subsystems.coralRoller.isLeftReefDetected()
-                        && !subsystems.coralRoller.isRightReefDetected())
-                    || !subsystems.elevator.isSeekingAboveLevel(L1))
-        .whileTrue(LEDCommands.setColor(subsystems.statusLEDs, Colors.BLACK));
 
     new Trigger(subsystems.coralArm::hasError)
         .whileTrue(LEDCommands.indicateErrorWithBlink(subsystems));
