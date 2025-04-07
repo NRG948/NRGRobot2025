@@ -24,9 +24,8 @@ public final class Constants {
     public static final double MAX_BATTERY_VOLTAGE = 12.0;
 
     /** The swerve drive wheel diameter in meters. */
-    public static final double WHEEL_DIAMETER = 0.0997;
-    // Units.inchesToMeters(3.865) for practice bot; 99.7mm for comp bot.
-
+    public static final double WHEEL_DIAMETER =
+        0.0997; // Units.inchesToMeters(3.865) for practice bot; 99.7mm for comp bot.
 
     /** The length of the robot including bumpers. */
     public static final double ROBOT_LENGTH = 0.928;
@@ -107,8 +106,12 @@ public final class Constants {
         public static final int COMPETITION_BOT_CLIMBER_MOTOR_ID = 11;
       }
 
-      public static final int LEFT_CORAL_ARM_LASER_CAN_ID = 23;
-      public static final int RIGHT_CORAL_ARM_LASER_CAN_ID = 22;
+      // TODO: verify laser CAN IDs.
+      /** The laser CAN closest to the funnel. */
+      public static final int LEFT_LASER_CAN_ID = 23;
+
+      /** The laser CAN closest to the ground intake. */
+      public static final int RIGHT_LASER_CAN_ID = 22;
     }
 
     /** Digital I/O port numbers. */
