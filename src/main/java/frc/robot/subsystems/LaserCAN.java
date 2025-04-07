@@ -76,6 +76,7 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
 
   /**
    * Returns the angle to the wall in degrees.
+   *
    * @return The angle to the wall in degrees.
    */
   public double getAngleToWall() {
