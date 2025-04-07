@@ -42,6 +42,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlignRearBumperToWall;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.CoralAndElevatorCommands;
 import frc.robot.commands.CoralCommands;
@@ -174,6 +175,9 @@ public class RobotContainer {
     m_driverController.y().whileTrue(alignToReefPosition(subsystems, CENTER_REEF));
     m_driverController.b().whileTrue(alignToReefPosition(subsystems, RIGHT_BRANCH));
     m_driverController.a().onTrue(ClimberCommands.prepareToClimb(subsystems));
+
+    // TODO: remove when done testing
+    m_driverController.rightTrigger().whileTrue(new AlignRearBumperToWall(subsystems));
 
     new Trigger(
             () -> {
