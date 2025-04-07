@@ -29,6 +29,10 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
   /** A value indicating no measurement was available on the laserCAN distance sensor. */
   private static final double NO_MEASUREMENT = 0.0;
 
+  // TODO: Find the actual distance between laser CANs.
+  /** The distance between the two laser CAN devices in meters */
+  private static final double distanceBetweenLaserCANs = 0.8;
+
   /** The laser CAN closest to the funnel. */
   private LaserCan leftLaserCAN;
 
@@ -37,9 +41,11 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
 
   private double leftDistance = NO_MEASUREMENT;
   private double rightDistance = NO_MEASUREMENT;
+  private double angleToWall = NO_MEASUREMENT;
 
   private DoubleLogEntry logLeftDistance = new DoubleLogEntry(LOG, "/LaserCAN/leftDistance");
   private DoubleLogEntry logRightDistance = new DoubleLogEntry(LOG, "/LaserCAN/rightDistance");
+  private DoubleLogEntry logAngleToWall = new DoubleLogEntry(LOG, "/LaserCAN/angleToWall");
 
   /** Creates a new LaserCAN. */
   public LaserCAN() {
@@ -68,6 +74,10 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
     return rightDistance;
   }
 
+  public double getAngleToWall() {
+    return angleToWall;
+  }
+
   private LaserCan createLaserCAN(int id, LaserCan.TimingBudget timingBudget)
       throws ConfigurationFailedException {
     LaserCan laserCAN = new LaserCan(id);
@@ -82,9 +92,12 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
   private void updateTelemetry() {
     leftDistance = getDistance(leftLaserCAN);
     rightDistance = getDistance(rightLaserCAN);
+    angleToWall =
+        Math.toDegrees(Math.atan((rightDistance - leftDistance) / distanceBetweenLaserCANs));
 
     logLeftDistance.append(leftDistance);
     logRightDistance.append(rightDistance);
+    logAngleToWall.append(angleToWall);
   }
 
   private double getDistance(LaserCan laserCan) {
@@ -107,6 +120,7 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
         LaserCANTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 8);
     statusLayout.addDouble("Left Distance", () -> leftDistance);
     statusLayout.addDouble("Right Distance", () -> rightDistance);
+    statusLayout.addDouble("Angle to Wall", () -> angleToWall);
     statusLayout.addDouble("Average Distance", this::getAverageDistance);
   }
 }
