@@ -86,9 +86,14 @@ public class AlignRearBumperToWall extends Command {
     xErrorLog.append(xTarget - currentX);
     rErrorLog.append(rTarget - currentR);
 
-    double xSpeed =
-        MathUtil.clamp(
-            xController.calculate(currentX), -MAX_TRANSLATIONAL_POWER, MAX_TRANSLATIONAL_POWER);
+    double xSpeed;
+    if (currentX == LaserCAN.NO_MEASUREMENT) {
+      xSpeed = 0;
+    } else {
+      xSpeed =
+          MathUtil.clamp(
+              xController.calculate(currentX), -MAX_TRANSLATIONAL_POWER, MAX_TRANSLATIONAL_POWER);
+    }
     double rSpeed =
         MathUtil.clamp(
             rController.calculate(currentR), -MAX_ROTATIONAL_POWER, MAX_ROTATIONAL_POWER);
