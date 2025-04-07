@@ -12,9 +12,6 @@ import static au.grapplerobotics.interfaces.LaserCanInterface.TimingBudget.TIMIN
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
-import com.nrg948.preferences.RobotPreferences;
-import com.nrg948.preferences.RobotPreferencesLayout;
-import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -25,20 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants.CAN;
 
-@RobotPreferencesLayout(
-    groupName = "LaserCAN",
-    row = 4,
-    column = 0,
-    width = 2,
-    height = 1,
-    type = "Grid Layout",
-    gridColumns = 2,
-    gridRows = 2)
 public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
-
-  @RobotPreferencesValue(column = 0, row = 0)
-  public static final RobotPreferences.BooleanValue ENABLE_TAB =
-      new RobotPreferences.BooleanValue("LaserCAN", "Enable Tab", false);
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -118,14 +102,11 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
 
   @Override
   public void addShuffleboardTab() {
-    if (!ENABLE_TAB.getValue()) {
-      return;
-    }
-
     ShuffleboardTab LaserCANTab = Shuffleboard.getTab("Laser CAN");
     ShuffleboardLayout statusLayout =
         LaserCANTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 8);
     statusLayout.addDouble("Left Distance", () -> leftDistance);
     statusLayout.addDouble("Right Distance", () -> leftDistance);
+    statusLayout.addDouble("Average Distance", this::getAverageDistance);
   }
 }
