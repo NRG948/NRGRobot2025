@@ -24,8 +24,8 @@ public final class Constants {
     public static final double MAX_BATTERY_VOLTAGE = 12.0;
 
     /** The swerve drive wheel diameter in meters. */
-    public static final double WHEEL_DIAMETER =
-        0.0997; // Units.inchesToMeters(3.865) for practice bot; 99.7mm for comp bot.
+    // Units.inchesToMeters(3.865) for practice bot; 99.7mm for comp bot.
+    public static final double WHEEL_DIAMETER = 0.0997;
 
     /** The length of the robot including bumpers. */
     public static final double ROBOT_LENGTH = 0.928;
