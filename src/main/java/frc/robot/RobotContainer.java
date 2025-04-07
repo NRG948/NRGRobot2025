@@ -179,7 +179,7 @@ public class RobotContainer {
     m_driverController.x().whileTrue(alignToReefPosition(subsystems, LEFT_BRANCH));
     m_driverController.y().whileTrue(alignToReefPosition(subsystems, CENTER_REEF));
     m_driverController.b().whileTrue(alignToReefPosition(subsystems, RIGHT_BRANCH));
-    // m_driverController.a().whileTrue(alignToCoralStation(subsystems));
+    m_driverController.a().onTrue(ClimberCommands.prepareToClimb(subsystems));
 
     new Trigger(
             () -> {
@@ -188,20 +188,15 @@ public class RobotContainer {
             })
         .whileTrue(ClimberCommands.climb(subsystems));
 
-    // Prepare to climb if any POV button is presseds
+    // Prepare to climb if any POV button is pressed
     new Trigger(() -> m_driverController.getHID().getPOV() != -1)
         .onTrue(ClimberCommands.prepareToClimb(subsystems));
-
-    m_driverController.a().onTrue(ClimberCommands.prepareToClimb(subsystems));
 
     m_manipulatorController.a().onTrue(CoralCommands.extendToReefL1(subsystems));
     m_manipulatorController.x().onTrue(raiseElevatorAndTipCoralArm(subsystems, L2));
     m_manipulatorController.b().onTrue(raiseElevatorAndTipCoralArm(subsystems, L3));
     m_manipulatorController.y().onTrue(raiseElevatorAndTipCoralArm(subsystems, L4));
 
-    // m_manipulatorController
-    //     .leftBumper()
-    //     .whileTrue(CoralCommands.transferFromGroundIntake(subsystems));
     m_manipulatorController.leftBumper().whileTrue(CoralCommands.manualGroundOuttake(subsystems));
     m_manipulatorController.leftBumper().onFalse(CoralCommands.stowAll(subsystems));
     m_manipulatorController.rightBumper().whileTrue(CoralCommands.intakeFromGround(subsystems));
