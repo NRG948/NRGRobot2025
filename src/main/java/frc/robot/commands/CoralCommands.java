@@ -271,9 +271,4 @@ public final class CoralCommands {
     var coralIntakeGrabber = subsystems.coralIntakeGrabber;
     return Commands.runOnce(() -> coralIntakeGrabber.disable(), coralIntakeGrabber);
   }
-
-  public static Command stowAll(Subsystems subsystems) {
-    return Commands.parallel(
-        ElevatorCommands.stowElevatorAndArm(subsystems), stowGroundIntake(subsystems));
-  }
 }
