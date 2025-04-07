@@ -35,9 +35,9 @@ public enum CoralGroundIntakeArmParameters implements ArmParameters {
       36.0 * 22.0 / 15.0,
       Units.inchesToMeters(21),
       CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
-      Math.toRadians(129),
-      Math.toRadians(-22),
-      Math.toRadians(129),
+      Math.toRadians(127),
+      Math.toRadians(-25),
+      Math.toRadians(127),
       0.15);
 
   private final MotorParameters motorParameters;
