@@ -42,8 +42,8 @@ public class Subsystems {
 
   public final StatusLED statusLEDs = new StatusLED();
 
-  public final Optional<AprilTag> frontCamera;
-  public final Optional<AprilTag> backCamera;
+  public final Optional<AprilTag> frontRightCamera;
+  public final Optional<AprilTag> frontLeftCamera;
 
   private final Subsystem[] all;
   private final Subsystem[] manipulators;
@@ -61,21 +61,23 @@ public class Subsystems {
     var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, statusLEDs, climber));
 
     // Add optional subsystems to the appropriate list.
-    frontCamera =
+    frontRightCamera =
         AprilTag.PARAMETERS
-            .robotToFrontCamera()
+            .robotToFrontRightCamera()
             .flatMap(
-                (t) -> newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "FrontCamera", t));
+                (t) ->
+                    newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "FrontRightCamera", t));
 
-    frontCamera.ifPresent((s) -> all.add(s));
+    frontRightCamera.ifPresent((s) -> all.add(s));
 
-    backCamera =
+    frontLeftCamera =
         AprilTag.PARAMETERS
-            .robotToBackCamera()
+            .robotToFrontLeftCamera()
             .flatMap(
-                (t) -> newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "BackCamera", t));
+                (t) ->
+                    newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "FrontLeftCamera", t));
 
-    backCamera.ifPresent((s) -> all.add(s));
+    frontLeftCamera.ifPresent((s) -> all.add(s));
 
     // Add all manipulator subsystems to the `all` list.
     all.addAll(manipulators);
@@ -206,8 +208,8 @@ public class Subsystems {
 
   /** Called to perform periodic actions. */
   public void periodic() {
-    frontCamera.ifPresent(this::updateEstimatedPose);
-    backCamera.ifPresent(this::updateEstimatedPose);
+    frontRightCamera.ifPresent(this::updateEstimatedPose);
+    frontLeftCamera.ifPresent(this::updateEstimatedPose);
   }
 
   /**
