@@ -27,4 +27,10 @@ public final class CoralAndElevatorCommands {
                     .withTimeout(0.5)))
         .withName("RaiseElevatorAndCoralArm");
   }
+
+  public static Command stowAll(Subsystems subsystems) {
+    return Commands.parallel(
+        ElevatorCommands.stowElevatorAndArm(subsystems),
+        CoralCommands.stowGroundIntake(subsystems));
+  }
 }
