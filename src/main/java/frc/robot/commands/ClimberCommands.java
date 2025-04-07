@@ -43,10 +43,8 @@ public final class ClimberCommands {
   }
 
   public static Command prepareToClimb(Subsystems subsystems) {
-    return Commands.sequence(
-        Commands.print("PREPARE TO CLIMB"),
-        Commands.runOnce(
-            () -> subsystems.coralIntakeArm.setGoalAngle(CLIMB_GROUND_INTAKE_ANGLE),
-            subsystems.coralIntakeArm));
+    return Commands.runOnce(
+        () -> subsystems.coralIntakeArm.setGoalAngle(CLIMB_GROUND_INTAKE_ANGLE),
+        subsystems.coralIntakeArm);
   }
 }
