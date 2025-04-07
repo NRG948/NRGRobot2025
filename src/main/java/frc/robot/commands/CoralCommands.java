@@ -260,7 +260,7 @@ public final class CoralCommands {
     var coralIntakeGrabber = subsystems.coralIntakeGrabber;
     return Commands.sequence(
             Commands.runOnce(
-                () -> coralIntakeGrabber.setGoalVelocity(CORAL_GRABBER_OUTTAKE_VELOCITY),
+                () -> coralIntakeGrabber.setGoalVelocity(CORAL_GRABBER_L1_VELOCITY),
                 coralIntakeGrabber),
             Commands.idle(coralIntakeGrabber))
         .finallyDo(coralIntakeGrabber::disable)
@@ -270,5 +270,10 @@ public final class CoralCommands {
   public static Command disableManualGroundOuttake(Subsystems subsystems) {
     var coralIntakeGrabber = subsystems.coralIntakeGrabber;
     return Commands.runOnce(() -> coralIntakeGrabber.disable(), coralIntakeGrabber);
+  }
+
+  public static Command stowAll(Subsystems subsystems) {
+    return Commands.parallel(
+        ElevatorCommands.stowElevatorAndArm(subsystems), stowGroundIntake(subsystems));
   }
 }

@@ -199,9 +199,11 @@ public class RobotContainer {
     m_manipulatorController.b().onTrue(raiseElevatorAndTipCoralArm(subsystems, L3));
     m_manipulatorController.y().onTrue(raiseElevatorAndTipCoralArm(subsystems, L4));
 
-    m_manipulatorController
-        .leftBumper()
-        .whileTrue(CoralCommands.transferFromGroundIntake(subsystems));
+    // m_manipulatorController
+    //     .leftBumper()
+    //     .whileTrue(CoralCommands.transferFromGroundIntake(subsystems));
+    m_manipulatorController.leftBumper().whileTrue(CoralCommands.manualGroundOuttake(subsystems));
+    m_manipulatorController.leftBumper().onFalse(CoralCommands.stowAll(subsystems));
     m_manipulatorController.rightBumper().whileTrue(CoralCommands.intakeFromGround(subsystems));
     m_manipulatorController.rightBumper().onFalse(CoralCommands.extendToReefL1(subsystems));
     m_manipulatorController.povLeft().whileTrue(CoralCommands.intakeUntilCoralDetected(subsystems));
@@ -212,7 +214,7 @@ public class RobotContainer {
     m_manipulatorController.povDown().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
     m_manipulatorController.povUp().onFalse(ElevatorCommands.stowElevatorAndArm(subsystems));
     m_manipulatorController.back().onTrue(ManipulatorCommands.interruptAll(subsystems));
-    m_manipulatorController.start().onTrue(ElevatorCommands.stowElevatorAndArm(subsystems));
+    m_manipulatorController.start().onTrue(CoralCommands.stowAll(subsystems));
     m_manipulatorController.rightTrigger().whileTrue(CoralCommands.autoCenterCoral(subsystems));
     m_manipulatorController.leftTrigger().whileTrue(CoralCommands.manualGroundOuttake(subsystems));
     m_driverController.leftTrigger().onFalse(CoralCommands.disableManualGroundOuttake(subsystems));
