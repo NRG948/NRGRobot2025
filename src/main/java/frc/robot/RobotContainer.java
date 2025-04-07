@@ -170,6 +170,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    // m_driverController.rightTrigger() is already bound to slowing the drivetrain
     m_driverController.start().onTrue(resetOrientation(subsystems));
     m_driverController.x().whileTrue(alignToReefPosition(subsystems, LEFT_BRANCH));
     m_driverController.y().whileTrue(alignToReefPosition(subsystems, CENTER_REEF));
@@ -177,7 +178,7 @@ public class RobotContainer {
     m_driverController.a().onTrue(ClimberCommands.prepareToClimb(subsystems));
 
     // TODO: remove when done testing
-    m_driverController.rightTrigger().whileTrue(new AlignRearBumperToWall(subsystems));
+    m_driverController.leftTrigger().whileTrue(new AlignRearBumperToWall(subsystems));
 
     new Trigger(
             () -> {
@@ -210,7 +211,9 @@ public class RobotContainer {
     m_manipulatorController.start().onTrue(CoralAndElevatorCommands.stowAll(subsystems));
     m_manipulatorController.rightTrigger().whileTrue(CoralCommands.autoCenterCoral(subsystems));
     m_manipulatorController.leftTrigger().whileTrue(CoralCommands.manualGroundOuttake(subsystems));
-    m_driverController.leftTrigger().onFalse(CoralCommands.disableManualGroundOuttake(subsystems));
+    m_manipulatorController
+        .leftTrigger()
+        .onFalse(CoralCommands.disableManualGroundOuttake(subsystems));
 
     new Trigger(subsystems.coralRoller::hasCoral)
         .onTrue(LEDCommands.indicateCoralAcquired(subsystems, CORAL_ROLLER_DETECTION_DELAY));
