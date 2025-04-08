@@ -45,6 +45,8 @@ public class Subsystems {
   public final Optional<AprilTag> frontRightCamera;
   public final Optional<AprilTag> frontLeftCamera;
 
+  public final LaserCAN laserCAN = new LaserCAN();
+
   private final Subsystem[] all;
   private final Subsystem[] manipulators;
 
@@ -58,7 +60,7 @@ public class Subsystems {
             Arrays.asList(elevator, coralArm, coralRoller, coralIntakeArm, coralIntakeGrabber));
 
     // Add all non-manipulator subsystems to the `all` list.
-    var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, statusLEDs, climber));
+    var all = new ArrayList<Subsystem>(Arrays.asList(drivetrain, statusLEDs, climber, laserCAN));
 
     // Add optional subsystems to the appropriate list.
     frontRightCamera =
