@@ -42,6 +42,7 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
   private double leftDistance = NO_MEASUREMENT;
   private double rightDistance = NO_MEASUREMENT;
   private double angleToWall = NO_MEASUREMENT;
+  private boolean hasValidMeasurement = false;
 
   private DoubleLogEntry logLeftDistance = new DoubleLogEntry(LOG, "/LaserCAN/leftDistance");
   private DoubleLogEntry logRightDistance = new DoubleLogEntry(LOG, "/LaserCAN/rightDistance");
@@ -60,6 +61,10 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
   @Override
   public void periodic() {
     updateTelemetry();
+  }
+
+  public boolean hasValidMeasurement(){
+    return hasValidMeasurement;
   }
 
   public double getAverageDistance() {
@@ -99,8 +104,10 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
     rightDistance = getDistance(rightLaserCAN);
 
     if (leftDistance == NO_MEASUREMENT || rightDistance == NO_MEASUREMENT) {
+      hasValidMeasurement = false;
       angleToWall = NO_MEASUREMENT;
     } else {
+      hasValidMeasurement = true;
       angleToWall =
           Math.toDegrees(Math.atan((rightDistance - leftDistance) / distanceBetweenLaserCANs));
     }
