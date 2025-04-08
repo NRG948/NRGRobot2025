@@ -52,7 +52,7 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
   public LaserCAN() {
     try {
       leftLaserCAN = createLaserCAN(CAN.LEFT_LASER_CAN_ID, TIMING_BUDGET_20MS);
-      rightLaserCAN = createLaserCAN(CAN.RIGHT_LASER_CAN_ID, TIMING_BUDGET_20MS);
+      rightLaserCAN = leftLaserCAN;
     } catch (ConfigurationFailedException e) {
       System.out.println("Configuration failed! " + e);
     }
