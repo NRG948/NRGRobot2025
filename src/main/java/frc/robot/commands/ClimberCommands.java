@@ -7,32 +7,19 @@
  
 package frc.robot.commands;
 
-import static frc.robot.parameters.ElevatorLevel.STOWED;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.StatusLED;
 import frc.robot.subsystems.Subsystems;
 
 /** A namespace for climber command factory methods. */
 public final class ClimberCommands {
-  private static final double CLIMB_ANGLE = Math.toRadians(-90);
-  private static final double STOW_ANGLE = Math.toRadians(90);
-  private static final double CLIMB_GROUND_INTAKE_ANGLE = Math.toRadians(97);
+  public static final double CLIMB_ANGLE = Math.toRadians(-90);
+  public static final double STOW_ANGLE = Math.toRadians(90);
+  public static final double CLIMB_GROUND_INTAKE_ANGLE = Math.toRadians(97);
 
   /** Returns a command that climbs. */
   public static Command climb(Subsystems subsystems) {
-    Climber climber = subsystems.climber;
-    StatusLED statusLEDs = subsystems.statusLEDs;
-    Arm coralArm = subsystems.coralArm;
-
-    return Commands.parallel(
-            Commands.runOnce(() -> coralArm.setGoalAngle(STOWED.getArmAngle())),
-            Commands.runOnce(() -> climber.setGoalAngle(CLIMB_ANGLE)),
-            new RainbowCycle(statusLEDs))
-        .withName("Climb");
+    return new Latch(subsystems).withName("Climb");
   }
 
   public static Command unclimb(Subsystems subsystems) {
