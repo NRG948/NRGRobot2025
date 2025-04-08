@@ -110,7 +110,6 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
       new VisionParameters(
           Optional.of(COMPETITION_ROBOT_TO_FRONT_RIGHT_CAMERA),
           Optional.of(COMPETITION_ROBOT_TO_FRONT_LEFT_CAMERA));
-  // Optional.empty());
 
   public static final VisionParameters PARAMETERS =
       RobotContainer.ROBOT_TYPE
