@@ -22,7 +22,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.LaserCAN;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
-import frc.robot.util.FieldUtils;
 
 @RobotPreferencesLayout(
     groupName = "AlignRearBumperToWall",
@@ -47,8 +46,8 @@ public class AlignRearBumperToWall extends Command {
   private final PIDController xController = new PIDController(Px.getValue(), 0, 0);
   private final PIDController rController = new PIDController(Pr.getValue(), 0, 0);
 
-  private final DoubleLogEntry xErrorLog = new DoubleLogEntry(LOG, "Vision/X Error");
-  private final DoubleLogEntry rErrorLog = new DoubleLogEntry(LOG, "Vision/Yaw Error");
+  private final DoubleLogEntry xErrorLog = new DoubleLogEntry(LOG, "AlignToWall/X Error");
+  private final DoubleLogEntry rErrorLog = new DoubleLogEntry(LOG, "AlignToWall/Yaw Error");
 
   private double xTarget = LASER_CAN_TO_REAR_BUMBER_DELTA_X;
   private double rTarget = 0.0; // in degrees
@@ -58,7 +57,7 @@ public class AlignRearBumperToWall extends Command {
     this.drivetrain = subsystems.drivetrain;
     this.laserCAN = subsystems.laserCAN;
 
-    addRequirements(drivetrain);
+    addRequirements(drivetrain, laserCAN);
   }
 
   // Called when the command is initially scheduled.
@@ -86,20 +85,15 @@ public class AlignRearBumperToWall extends Command {
     xErrorLog.append(xTarget - currentX);
     rErrorLog.append(rTarget - currentR);
 
-    double xSpeed;
-    if (currentX == LaserCAN.NO_MEASUREMENT) {
-      xSpeed = 0;
-    } else {
+    double xSpeed = 0;
+    double rSpeed = 0;
+    if (currentX != LaserCAN.NO_MEASUREMENT && currentR != LaserCAN.NO_MEASUREMENT) {
       xSpeed =
           MathUtil.clamp(
               xController.calculate(currentX), -MAX_TRANSLATIONAL_POWER, MAX_TRANSLATIONAL_POWER);
-    }
-    double rSpeed =
-        MathUtil.clamp(
-            rController.calculate(currentR), -MAX_ROTATIONAL_POWER, MAX_ROTATIONAL_POWER);
-
-    if (FieldUtils.isRedAlliance()) {
-      xSpeed = -xSpeed;
+      rSpeed =
+          MathUtil.clamp(
+              rController.calculate(currentR), -MAX_ROTATIONAL_POWER, MAX_ROTATIONAL_POWER);
     }
 
     drivetrain.drive(xSpeed, 0, rSpeed, false);
