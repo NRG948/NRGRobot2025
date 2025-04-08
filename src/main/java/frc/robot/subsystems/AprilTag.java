@@ -76,19 +76,16 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   private static final Rotation3d FRONT_RIGHT_CAMERA_ROTATION =
       new Rotation3d(0, toRadians(20), toRadians(15));
   public static final Transform3d PRACTICE_ROBOT_TO_FRONT_RIGHT_CAMERA =
-      new Transform3d(
-          new Translation3d(+0.274, +0.286, +0.197), FRONT_RIGHT_CAMERA_ROTATION);
+      new Transform3d(new Translation3d(+0.274, -0.286, +0.197), FRONT_RIGHT_CAMERA_ROTATION);
   public static final Transform3d COMPETITION_ROBOT_TO_FRONT_RIGHT_CAMERA =
-      new Transform3d(
-          new Translation3d(+0.274, -0.286, +0.197), FRONT_RIGHT_CAMERA_ROTATION);
+      new Transform3d(new Translation3d(+0.274, -0.286, +0.197), FRONT_RIGHT_CAMERA_ROTATION);
 
-  private static final Rotation3d FRONT_LEFT_CAMERA_ROTATION = new Rotation3d(0, toRadians(20), toRadians(-15));
+  private static final Rotation3d FRONT_LEFT_CAMERA_ROTATION =
+      new Rotation3d(0, toRadians(20), toRadians(-15));
   public static final Transform3d PRACTICE_ROBOT_TO_FRONT_LEFT_CAMERA =
-      new Transform3d(
-          new Translation3d(+0.274, +0.286, +0.197), FRONT_LEFT_CAMERA_ROTATION);
+      new Transform3d(new Translation3d(+0.274, +0.286, +0.197), FRONT_LEFT_CAMERA_ROTATION);
   public static final Transform3d COMPETITION_ROBOT_TO_FRONT_LEFT_CAMERA =
-      new Transform3d(
-          new Translation3d(+0.274, +0.286, +0.197), FRONT_LEFT_CAMERA_ROTATION);
+      new Transform3d(new Translation3d(+0.274, +0.286, +0.197), FRONT_LEFT_CAMERA_ROTATION);
 
   /**
    * The robot's vision parameters.
