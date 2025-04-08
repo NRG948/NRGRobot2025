@@ -83,7 +83,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   public static DoubleValue TOLERANCE_DEG = new DoubleValue("Climber", "Tolerance (deg)", 1);
 
   @RobotPreferencesValue
-  public static DoubleValue LOW_POWER_RANGE_DEG = new DoubleValue("Climber", "Tolerance (deg)", 5);
+  public static DoubleValue LOW_KP_RANGE_DEG = new DoubleValue("Climber", "Low kP Range (deg)", 4);
 
   @RobotPreferencesValue
   public static DoubleValue PROPORTIONAL_CONTROL_THRESHOLD_DEG =
@@ -91,6 +91,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   private double currentAngle; // in radians
   private double goalAngle; // in radians
+  private boolean isInLowKPMode;
   private boolean enabled;
 
   private final AbsoluteAngleEncoder absoluteEncoder =
@@ -127,7 +128,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
       // Runs at max power until within small angle of goal, then ramps power down linearly.
       double maxPower = CLIMB_MAX_POWER.getValue();
       double kP = maxPower / Math.toRadians(PROPORTIONAL_CONTROL_THRESHOLD_DEG.getValue());
-      kP = withinLowPowerRange() ? kP / 2 : kP;
+      kP = isInLowKPMode ? kP / 2 : kP;
       motorPower = MathUtil.clamp(kP * angleError, -maxPower, maxPower);
     } else {
       motorPower = 0;
@@ -151,8 +152,16 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
     logEnabled.update(enabled);
   }
 
-  public boolean withinLowPowerRange() {
-    return MathUtil.isNear(goalAngle, currentAngle, Math.toRadians(LOW_POWER_RANGE_DEG.getValue()));
+  public boolean withinLowKPRange() {
+    return MathUtil.isNear(goalAngle, currentAngle, Math.toRadians(LOW_KP_RANGE_DEG.getValue()));
+  }
+
+  public void enterLowKPMode() {
+    isInLowKPMode = true;
+  }
+
+  public void exitLowKPMode() {
+    isInLowKPMode = false;
   }
 
   public boolean atGoalAngle() {
