@@ -7,8 +7,6 @@
  
 package frc.robot.commands;
 
-import static frc.robot.Constants.RobotConstants.LASER_CAN_TO_REAR_BUMBER_DELTA_X;
-
 import com.nrg948.preferences.RobotPreferences.DoubleValue;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
@@ -33,6 +31,9 @@ public class AlignRearBumperToWall extends Command {
   private static final DataLog LOG = DataLogManager.getLog();
   private static final double MAX_TRANSLATIONAL_POWER = 0.30;
   private static final double MAX_ROTATIONAL_POWER = 0.5;
+
+  /** The x distance from the laser CANs to the edge of the rear bumper. */
+  public static final double LASER_CAN_TO_REAR_BUMBER_DELTA_X = 0.13;
 
   @RobotPreferencesValue
   public static DoubleValue Px = new DoubleValue("AlignRearBumperToWall", "X KP", 1);
