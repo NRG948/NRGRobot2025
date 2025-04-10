@@ -83,10 +83,6 @@ public final class Constants {
      */
     public static final double CORAL_ARM_CENTER_Y_OFFSET = -Units.inchesToMeters(10.25);
 
-    /** The x distance from the laser CANs to the edge of the rear bumper. */
-    // TODO: find actual distance
-    public static final double LASER_CAN_TO_REAR_BUMBER_DELTA_X = 0.1;
-
     public static class PWMPort {
       public static final int LED = 1;
     }
