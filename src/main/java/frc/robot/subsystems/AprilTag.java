@@ -72,36 +72,41 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
       new EstimatedRobotPose(new Pose3d(), 0, List.of(), PoseStrategy.LOWEST_AMBIGUITY);
   private static final double LAST_RESULT_TIMEOUT = 0.1;
 
-  public static final Transform3d PRACTICE_ROBOT_TO_FRONT_CAMERA =
-      new Transform3d(new Translation3d(0.28, -0.26, 0.327), Rotation3d.kZero);
-  public static final Transform3d COMPETITION_ROBOT_TO_FRONT_CAMERA =
-      new Transform3d(new Translation3d(0.33, -0.26, 0.327), Rotation3d.kZero);
+  // TODO: verify ALL camera rotations and transforms.
+  private static final Rotation3d FRONT_RIGHT_CAMERA_ROTATION =
+      new Rotation3d(0, toRadians(20), toRadians(15));
+  public static final Transform3d PRACTICE_ROBOT_TO_FRONT_RIGHT_CAMERA =
+      new Transform3d(new Translation3d(+0.274, -0.286, +0.197), FRONT_RIGHT_CAMERA_ROTATION);
+  public static final Transform3d COMPETITION_ROBOT_TO_FRONT_RIGHT_CAMERA =
+      new Transform3d(new Translation3d(+0.274, -0.286, +0.197), FRONT_RIGHT_CAMERA_ROTATION);
 
-  private static final Rotation3d REAR_CAMERA_ROTATION =
-      new Rotation3d(0, toRadians(-15), toRadians(180));
-  public static final Transform3d PRACTICE_ROBOT_TO_BACK_CAMERA =
-      new Transform3d(new Translation3d(-0.33, -0.255, +0.818), REAR_CAMERA_ROTATION);
-  public static final Transform3d COMPETITION_ROBOT_TO_BACK_CAMERA =
-      new Transform3d(new Translation3d(-0.36, -0.265, +0.80), REAR_CAMERA_ROTATION);
+  private static final Rotation3d FRONT_LEFT_CAMERA_ROTATION =
+      new Rotation3d(0, toRadians(20), toRadians(-15));
+  public static final Transform3d PRACTICE_ROBOT_TO_FRONT_LEFT_CAMERA =
+      new Transform3d(new Translation3d(+0.274, +0.286, +0.197), FRONT_LEFT_CAMERA_ROTATION);
+  public static final Transform3d COMPETITION_ROBOT_TO_FRONT_LEFT_CAMERA =
+      new Transform3d(new Translation3d(+0.274, +0.286, +0.197), FRONT_LEFT_CAMERA_ROTATION);
 
   /**
    * The robot's vision parameters.
    *
-   * @param robotToFrontCamera transform from the robot's odometry center to the front camera.
-   * @param robotToBackCamera transform from the robot's odometry center to the back camera.
+   * @param robotToFrontRightCamera transform from the robot's odometry center to the front right
+   *     camera.
+   * @param robotToFrontLeftCamera transform from the robot's odometry center to the front left
+   *     camera.
    */
   public record VisionParameters(
-      Optional<Transform3d> robotToFrontCamera, Optional<Transform3d> robotToBackCamera) {}
+      Optional<Transform3d> robotToFrontRightCamera,
+      Optional<Transform3d> robotToFrontLeftCamera) {}
 
   public static final VisionParameters PRACTICE_VISION_PARAMS =
       new VisionParameters(
-          Optional.of(PRACTICE_ROBOT_TO_FRONT_CAMERA), //
-          Optional.of(PRACTICE_ROBOT_TO_BACK_CAMERA));
+          Optional.of(PRACTICE_ROBOT_TO_FRONT_RIGHT_CAMERA), //
+          Optional.of(PRACTICE_ROBOT_TO_FRONT_LEFT_CAMERA));
   public static final VisionParameters COMPETITION_VISION_PARAMS =
       new VisionParameters(
-          Optional.of(COMPETITION_ROBOT_TO_FRONT_CAMERA), //
-          // Optional.of(COMPETITION_ROBOT_TO_BACK_CAMERA));
-          Optional.empty());
+          Optional.of(COMPETITION_ROBOT_TO_FRONT_RIGHT_CAMERA),
+          Optional.of(COMPETITION_ROBOT_TO_FRONT_LEFT_CAMERA));
 
   public static final VisionParameters PARAMETERS =
       RobotContainer.ROBOT_TYPE

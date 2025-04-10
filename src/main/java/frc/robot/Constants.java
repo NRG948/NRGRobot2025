@@ -85,6 +85,10 @@ public final class Constants {
      */
     public static final double CORAL_ARM_CENTER_Y_OFFSET = -Units.inchesToMeters(10.25);
 
+    /** The x distance from the laser CANs to the edge of the rear bumper. */
+    // TODO: find actual distance
+    public static final double LASER_CAN_TO_REAR_BUMBER_DELTA_X = 0.1;
+
     public static class PWMPort {
       public static final int LED = 1;
     }
@@ -108,8 +112,12 @@ public final class Constants {
         public static final int COMPETITION_BOT_CLIMBER_MOTOR_ID = 11;
       }
 
-      public static final int LEFT_CORAL_ARM_LASER_CAN_ID = 23;
-      public static final int RIGHT_CORAL_ARM_LASER_CAN_ID = 22;
+      // TODO: verify laser CAN IDs.
+      /** The laser CAN closest to the funnel. */
+      public static final int LEFT_LASER_CAN_ID = 23;
+
+      /** The laser CAN closest to the ground intake. */
+      public static final int RIGHT_LASER_CAN_ID = 22;
     }
 
     /** Digital I/O port numbers. */

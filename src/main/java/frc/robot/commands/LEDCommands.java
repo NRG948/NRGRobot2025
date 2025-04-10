@@ -8,7 +8,6 @@
 package frc.robot.commands;
 
 import static frc.robot.parameters.Colors.GREEN;
-import static frc.robot.parameters.Colors.PURPLE;
 import static frc.robot.parameters.Colors.RED;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -54,19 +53,6 @@ public final class LEDCommands {
             setColor(statusLEDs, GREEN),
             Commands.idle(statusLEDs).until(() -> !coralRoller.hasCoral()))
         .withName("IndicateCoralAcquired");
-  }
-
-  /**
-   * Returns a command that sets the status LEDs to solid purple when a reef branch is detected.
-   *
-   * @param subsystems The subsystems container.
-   * @return A command that sets the status LEDs to purple.
-   */
-  public static Command indicateBranchDetected(Subsystems subsystems) {
-    return Commands.sequence(
-            setColor(subsystems.statusLEDs, PURPLE),
-            Commands.idle(subsystems.statusLEDs).until(() -> !subsystems.coralRoller.detectsReef()))
-        .withName("IndicateBranchDetected");
   }
 
   /**
