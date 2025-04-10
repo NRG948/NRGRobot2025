@@ -18,18 +18,18 @@ import frc.robot.subsystems.Subsystems;
 
 /** A namespace for climber command factory methods. */
 public final class ClimberCommands {
-  public static final double CLIMB_ANGLE = Math.toRadians(-90);
   public static final double STOW_ANGLE = Math.toRadians(90);
-  public static final double CLIMB_GROUND_INTAKE_ANGLE = Math.toRadians(97);
+  public static final double GROUND_INTAKE_ANGLE_FOR_CLIMBING = Math.toRadians(97);
 
-  /** Returns a command that climbs. */
+  /** Returns a command that performs a Reefscape deep climb. */
   public static Command climb(Subsystems subsystems) {
     Climber climber = subsystems.climber;
     StatusLED statusLEDs = subsystems.statusLEDs;
     Arm coralArm = subsystems.coralArm;
+
     return Commands.parallel(
+            Commands.runOnce(() -> climber.setDeepClimbAngle(), climber),
             Commands.runOnce(() -> coralArm.setGoalAngle(STOWED.getArmAngle()), coralArm),
-            Commands.runOnce(() -> climber.setGoalAngle(CLIMB_ANGLE), climber), //
             new RainbowCycle(statusLEDs))
         .withName("Climb");
   }
@@ -43,7 +43,7 @@ public final class ClimberCommands {
 
   public static Command prepareToClimb(Subsystems subsystems) {
     return Commands.runOnce(
-        () -> subsystems.coralIntakeArm.setGoalAngle(CLIMB_GROUND_INTAKE_ANGLE),
+        () -> subsystems.coralIntakeArm.setGoalAngle(GROUND_INTAKE_ANGLE_FOR_CLIMBING),
         subsystems.coralIntakeArm);
   }
 }
