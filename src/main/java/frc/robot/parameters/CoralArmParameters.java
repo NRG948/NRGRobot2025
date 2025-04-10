@@ -7,8 +7,7 @@
  
 package frc.robot.parameters;
 
-import static frc.robot.Constants.RobotConstants.CAN.TalonFX.COMPETITION_CORAL_ARM_MOTOR_ID;
-import static frc.robot.Constants.RobotConstants.CAN.TalonFX.PRACTICE_CORAL_ARM_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CORAL_ARM_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.CORAL_MASS_KG;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
@@ -22,7 +21,7 @@ public enum CoralArmParameters implements ArmParameters {
       1.25,
       3.0 * 9.0 * 54.0 / 36.0,
       0.315,
-      PRACTICE_CORAL_ARM_MOTOR_ID,
+      CORAL_ARM_MOTOR_ID,
       Math.toRadians(94),
       Math.toRadians(10),
       Math.toRadians(96),
@@ -32,7 +31,7 @@ public enum CoralArmParameters implements ArmParameters {
       1.25,
       27.0 * 54.0 / 36.0,
       0.315,
-      COMPETITION_CORAL_ARM_MOTOR_ID,
+      CORAL_ARM_MOTOR_ID,
       Math.toRadians(95),
       Math.toRadians(10),
       Math.toRadians(97),
