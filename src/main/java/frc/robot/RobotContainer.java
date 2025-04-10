@@ -145,7 +145,7 @@ public class RobotContainer {
         .withSize(2, 2)
         .withPosition(6, 0);
 
-    if (subsystems.frontCamera.isPresent()) {
+    if (subsystems.frontRightCamera.isPresent()) {
       VideoSource video =
           new HttpCamera(
               "photonvision_Port_1184_Output_MJPEG_Server",
