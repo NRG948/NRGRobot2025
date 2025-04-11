@@ -47,8 +47,6 @@ public class Subsystems {
 
   public final LaserCAN laserCAN = new LaserCAN();
 
-  public final LaserCAN laserCAN = new LaserCAN();
-
   private final Subsystem[] all;
   private final Subsystem[] manipulators;
 
