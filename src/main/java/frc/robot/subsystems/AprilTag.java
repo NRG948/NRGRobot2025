@@ -172,6 +172,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   private int selectedAprilTag;
   private Pose3d selectedAprilTagPose = new Pose3d();
   private Optional<EstimatedRobotPose> globalEstimatedPose = Optional.empty();
+  private Pose2d lastEstimatedPose = Pose2d.kZero;
   private Matrix<N3, N1> curStdDevs = SINGLE_TAG_STD_DEVS;
 
   /**
@@ -302,7 +303,8 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     globalEstimatedPose = visionEst;
     globalEstimatedPose.ifPresent(
         (e) -> {
-          estimatedPoseLogger.append(e.estimatedPose.toPose2d());
+          lastEstimatedPose = e.estimatedPose.toPose2d();
+          estimatedPoseLogger.append(lastEstimatedPose);
         });
 
     boolean hasTargets = currentResult.orElse(NO_RESULT).hasTargets();
@@ -486,48 +488,11 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     ShuffleboardLayout estimatedLayout =
         aprilTagLayout
             .getLayout("Global Estimated Pose", BuiltInLayouts.kGrid)
-            .withProperties(Map.of("Number of columns", 3, "Number of rows", 2));
+            .withProperties(Map.of("Number of columns", 3, "Number of rows", 1));
+    estimatedLayout.addDouble("X", () -> lastEstimatedPose.getX()).withPosition(0, 0);
+    estimatedLayout.addDouble("Y", () -> lastEstimatedPose.getY()).withPosition(1, 0);
     estimatedLayout
-        .addDouble("X", () -> globalEstimatedPose.orElse(NO_APRILTAG_ESTIMATE).estimatedPose.getX())
-        .withPosition(0, 0);
-    estimatedLayout
-        .addDouble("Y", () -> globalEstimatedPose.orElse(NO_APRILTAG_ESTIMATE).estimatedPose.getY())
-        .withPosition(1, 0);
-    estimatedLayout
-        .addDouble("Z", () -> globalEstimatedPose.orElse(NO_APRILTAG_ESTIMATE).estimatedPose.getZ())
+        .addDouble("Yaw", () -> lastEstimatedPose.getRotation().getDegrees())
         .withPosition(2, 0);
-    estimatedLayout
-        .addDouble(
-            "Roll",
-            () ->
-                Math.toDegrees(
-                    globalEstimatedPose
-                        .orElse(NO_APRILTAG_ESTIMATE)
-                        .estimatedPose
-                        .getRotation()
-                        .getX()))
-        .withPosition(0, 1);
-    estimatedLayout
-        .addDouble(
-            "Pitch",
-            () ->
-                Math.toDegrees(
-                    globalEstimatedPose
-                        .orElse(NO_APRILTAG_ESTIMATE)
-                        .estimatedPose
-                        .getRotation()
-                        .getY()))
-        .withPosition(1, 1);
-    estimatedLayout
-        .addDouble(
-            "Yaw",
-            () ->
-                Math.toDegrees(
-                    globalEstimatedPose
-                        .orElse(NO_APRILTAG_ESTIMATE)
-                        .estimatedPose
-                        .getRotation()
-                        .getZ()))
-        .withPosition(2, 1);
   }
 }
