@@ -24,7 +24,6 @@ import java.util.Set;
 
 /** A namespace for coral command factory methods. */
 public final class CoralCommands {
-  private static final double CORAL_GRABBER_OUTTAKE_VELOCITY = -1.0;
   public static final double GROUND_INTAKE_INTAKE_ANGLE =
       CORAL_GROUND_INTAKE_ARM_PARAMETERS.getMinAngleRad();
   public static final double GROUND_INTAKE_STOWED_ANGLE =
