@@ -113,7 +113,7 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
       leftDistance += DISTANCE_CORRECTION;
       rightDistance += DISTANCE_CORRECTION;
       angleToWall =
-          Math.toDegrees(Math.atan((rightDistance - leftDistance) / DISTANCE_BETWEEN_LASER_CANS));
+          Math.toDegrees(Math.atan((leftDistance - rightDistance) / DISTANCE_BETWEEN_LASER_CANS));
     }
 
     logLeftDistance.append(leftDistance);
