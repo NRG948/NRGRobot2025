@@ -15,8 +15,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.LaserCAN;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
@@ -32,14 +32,20 @@ public class AlignRearBumperToWall extends Command {
   private static final double MAX_TRANSLATIONAL_POWER = 0.30;
   private static final double MAX_ROTATIONAL_POWER = 0.5;
 
+  /** The translational tolerance value for aligning to the wall. */
+  public static final double ALIGNMENT_TOLERANCE_X = 0.015; // in m
+
+  /** The rotational tolerance value for aligning to the wall. */
+  public static final double ALIGNMENT_TOLERANCE_R = 2.0; // in deg
+
   /** The x distance from the laser CANs to the edge of the rear bumper. */
   public static final double LASER_CAN_TO_REAR_BUMBER_DELTA_X = 0.13;
 
   @RobotPreferencesValue
-  public static DoubleValue Px = new DoubleValue("AlignRearBumperToWall", "X KP", 1);
+  public static DoubleValue Px = new DoubleValue("AlignRearBumperToWall", "X KP", 0.6);
 
   @RobotPreferencesValue
-  public static DoubleValue Pr = new DoubleValue("AlignRearBumperToWall", "R KP", 0.02);
+  public static DoubleValue Pr = new DoubleValue("AlignRearBumperToWall", "R KP", 0.01);
 
   private final Swerve drivetrain;
   private final LaserCAN laserCAN;
@@ -49,6 +55,8 @@ public class AlignRearBumperToWall extends Command {
 
   private final DoubleLogEntry xErrorLog = new DoubleLogEntry(LOG, "AlignToWall/X Error");
   private final DoubleLogEntry rErrorLog = new DoubleLogEntry(LOG, "AlignToWall/Yaw Error");
+
+  private final Timer timer = new Timer();
 
   private double xTarget = LASER_CAN_TO_REAR_BUMBER_DELTA_X;
   private double rTarget = 0.0; // in degrees
@@ -71,10 +79,13 @@ public class AlignRearBumperToWall extends Command {
     xController.setPID(Px.getValue(), 0, 0);
     rController.setPID(Pr.getValue(), 0, 0);
 
-    xController.setTolerance(Constants.VisionConstants.POSE_ALIGNMENT_TOLERANCE_XY);
-    rController.setTolerance(Constants.VisionConstants.POSE_ALIGNMENT_TOLERANCE_R);
+    xController.setTolerance(ALIGNMENT_TOLERANCE_X);
+    rController.setTolerance(ALIGNMENT_TOLERANCE_R);
 
     rController.enableContinuousInput(-180, 180);
+
+    timer.stop();
+    timer.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -83,8 +94,11 @@ public class AlignRearBumperToWall extends Command {
     double currentX = laserCAN.getAverageDistance();
     double currentR = laserCAN.getAngleToWall();
 
-    xErrorLog.append(xTarget - currentX);
-    rErrorLog.append(rTarget - currentR);
+    double xError = xTarget - currentX;
+    double rError = rTarget - currentR;
+
+    xErrorLog.append(xError);
+    rErrorLog.append(rError);
 
     double xSpeed = 0;
     double rSpeed = 0;
@@ -92,9 +106,11 @@ public class AlignRearBumperToWall extends Command {
       xSpeed =
           MathUtil.clamp(
               xController.calculate(currentX), -MAX_TRANSLATIONAL_POWER, MAX_TRANSLATIONAL_POWER);
-      rSpeed =
-          MathUtil.clamp(
-              rController.calculate(currentR), -MAX_ROTATIONAL_POWER, MAX_ROTATIONAL_POWER);
+      if (!(Math.abs(rError) < ALIGNMENT_TOLERANCE_R)) {
+        rSpeed =
+            MathUtil.clamp(
+                rController.calculate(currentR), -MAX_ROTATIONAL_POWER, MAX_ROTATIONAL_POWER);
+      }
     }
 
     drivetrain.drive(xSpeed, 0, rSpeed, false);
@@ -109,6 +125,12 @@ public class AlignRearBumperToWall extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return xController.atSetpoint() && rController.atSetpoint();
+    if (xController.atSetpoint() && rController.atSetpoint()) {
+      timer.start();
+    } else {
+      timer.reset();
+    }
+
+    return timer.hasElapsed(0.1);
   }
 }
