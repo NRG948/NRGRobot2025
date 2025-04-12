@@ -29,7 +29,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StructLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
@@ -154,19 +153,15 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   private final SendableChooser<Integer> aprilTagIdChooser = new SendableChooser<>();
 
   private final BooleanLogEntry hasTargetLogger;
-  private final DoubleLogEntry distanceLogger;
-  private final DoubleLogEntry angleLogger;
   private final StructLogEntry<Pose2d> estimatedPoseLogger;
 
   private Optional<PhotonPipelineResult> result = Optional.empty();
-  private double angleToBestTarget;
-  private double distanceToBestTarget;
+
+  private int selectedAprilTag;
+  private Pose3d selectedAprilTagPose = new Pose3d();
   private double angleToSelectedTarget;
   private double distanceToSelectedTarget;
 
-  private double poseAmibiguity;
-  private int selectedAprilTag;
-  private Pose3d selectedAprilTagPose = new Pose3d();
   private Optional<EstimatedRobotPose> globalEstimatedPose = Optional.empty();
   private Pose2d lastEstimatedPose = Pose2d.kZero;
   private Matrix<N3, N1> curStdDevs = SINGLE_TAG_STD_DEVS;
@@ -195,8 +190,6 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     aprilTagIdChooser.setDefaultOption("1", 1);
 
     hasTargetLogger = new BooleanLogEntry(LOG, String.format("/%s/Has Target", cameraName));
-    distanceLogger = new DoubleLogEntry(LOG, String.format("/%s/Distance", cameraName));
-    angleLogger = new DoubleLogEntry(LOG, String.format("/%s/Angle", cameraName));
     estimatedPoseLogger =
         StructLogEntry.create(LOG, String.format("/%s/Estimated Pose", cameraName), Pose2d.struct);
   }
@@ -303,28 +296,13 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
           estimatedPoseLogger.append(lastEstimatedPose);
         });
 
-    boolean hasTargets = currentResult.orElse(NO_RESULT).hasTargets();
-
-    if (this.result.orElse(NO_RESULT).hasTargets() != hasTargets) {
-      hasTargetLogger.append(hasTargets);
-    }
-
     if (currentResult.isPresent()
         || (Timer.getFPGATimestamp() - this.result.orElse(NO_RESULT).getTimestampSeconds())
             > LAST_RESULT_TIMEOUT) {
       this.result = currentResult;
     }
 
-    if (hasTargets()) {
-      PhotonTrackedTarget bestTarget = getBestTarget();
-      Transform3d bestTargetTransform = robotToCamera.plus(bestTarget.getBestCameraToTarget());
-      distanceToBestTarget = Math.hypot(bestTargetTransform.getX(), bestTargetTransform.getY());
-      angleToBestTarget = Math.atan2(bestTargetTransform.getY(), bestTargetTransform.getX());
-      poseAmibiguity = bestTarget.getPoseAmbiguity();
-
-      distanceLogger.append(distanceToBestTarget);
-      angleLogger.append(angleToBestTarget);
-    }
+    hasTargetLogger.update(hasTargets());
 
     if (ENABLE_TAB.getValue()) {
       selectedAprilTag = aprilTagIdChooser.getSelected().intValue();
@@ -374,21 +352,6 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   /** Returns the best target AprilTag. */
   public PhotonTrackedTarget getBestTarget() {
     return result.orElse(NO_RESULT).getBestTarget();
-  }
-
-  /** Returns the distance in meters to the best target from the robot center. */
-  public double getDistanceToBestTarget() {
-    return distanceToBestTarget;
-  }
-
-  /** Returns angle in radians to best target relative to robot center. */
-  public double getAngleToBestTarget() {
-    return angleToBestTarget;
-  }
-
-  /** Returns the pose ambiguity of the best target. */
-  public double getAmibiguity() {
-    return poseAmibiguity;
   }
 
   /**
