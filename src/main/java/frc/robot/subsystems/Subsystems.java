@@ -223,7 +223,7 @@ public class Subsystems {
    *     estimated pose.
    */
   private void updateEstimatedPose(AprilTag camera) {
-    var visionEst = camera.getEstimateGlobalPose();
+    var visionEst = camera.getEstimatedGlobalPose();
 
     visionEst.ifPresent(
         (est) -> {
