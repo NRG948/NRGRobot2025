@@ -29,6 +29,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.StructArrayLogEntry;
 import edu.wpi.first.util.datalog.StructLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
@@ -154,6 +155,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
 
   private final BooleanLogEntry hasTargetLogger;
   private final StructLogEntry<Pose2d> estimatedPoseLogger;
+  private final StructArrayLogEntry<Pose2d> targetPoseArrayLogger;
 
   private Optional<PhotonPipelineResult> result = Optional.empty();
 
@@ -192,6 +194,9 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     hasTargetLogger = new BooleanLogEntry(LOG, String.format("/%s/Has Target", cameraName));
     estimatedPoseLogger =
         StructLogEntry.create(LOG, String.format("/%s/Estimated Pose", cameraName), Pose2d.struct);
+    targetPoseArrayLogger =
+        StructArrayLogEntry.create(
+            LOG, String.format("/%s/Target Poses", cameraName), Pose2d.struct);
   }
 
   /**
@@ -204,7 +209,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
    * @return An {@link EstimatedRobotPose} with an estimated pose, estimate timestamp, and targets
    *     used for estimation.
    */
-  public Optional<EstimatedRobotPose> getEstimateGlobalPose() {
+  public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
     return this.globalEstimatedPose;
   }
 
@@ -267,7 +272,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   }
 
   /**
-   * The standard deviations of the estimated pose from {@link #getEstimateGlobalPose()}, for use
+   * The standard deviations of the estimated pose from {@link #getEstimatedGlobalPose()}, for use
    * with {@link edu.wpi.first.math.estimator.SwerveDrivePoseEstimator SwerveDrivePoseEstimator}.
    * This should only be used when there are targets visible.
    */
@@ -303,10 +308,19 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
           estimatedPoseLogger.append(lastEstimatedPose);
         });
 
+    // Update the result if present or if the last result is within the lifetime timeout period.
     if (currentResult.isPresent()
-        || (Timer.getFPGATimestamp() - this.result.orElse(NO_RESULT).getTimestampSeconds())
-            > LAST_RESULT_TIMEOUT) {
+        || this.result
+            .map(r -> (Timer.getFPGATimestamp() - r.getTimestampSeconds()) < LAST_RESULT_TIMEOUT)
+            .orElse(false)) {
       this.result = currentResult;
+
+      // Log the visible target poses.
+      Pose2d[] targets =
+          currentResult.orElse(NO_RESULT).getTargets().stream()
+              .map(t -> FieldUtils.getAprilTagPose2d(t.getFiducialId()))
+              .toArray(Pose2d[]::new);
+      targetPoseArrayLogger.append(targets);
     }
 
     hasTargetLogger.update(hasTargets());
