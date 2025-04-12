@@ -29,7 +29,7 @@ import frc.robot.subsystems.Swerve;
     height = 2)
 public class AlignRearBumperToWall extends Command {
   private static final DataLog LOG = DataLogManager.getLog();
-  private static final double MAX_TRANSLATIONAL_POWER = 0.30;
+  private static final double MAX_TRANSLATIONAL_POWER = 0.50;
   private static final double MAX_ROTATIONAL_POWER = 0.5;
 
   /** The translational tolerance value for aligning to the wall. */
