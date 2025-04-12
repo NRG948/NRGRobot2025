@@ -66,19 +66,29 @@ public class Subsystems {
     // Add optional subsystems to the appropriate list.
     frontRightCamera =
         AprilTag.PARAMETERS
-            .robotToFrontRightCamera()
+            .frontRight()
             .flatMap(
-                (t) ->
-                    newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "FrontRightCamera", t));
+                (c) ->
+                    newOptionalSubsystem(
+                        AprilTag.class,
+                        AprilTag.ENABLED,
+                        c.cameraName(),
+                        c.robotToCamera(),
+                        c.streamPort()));
 
     frontRightCamera.ifPresent((s) -> all.add(s));
 
     frontLeftCamera =
         AprilTag.PARAMETERS
-            .robotToFrontLeftCamera()
+            .frontLeft()
             .flatMap(
-                (t) ->
-                    newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "FrontLeftCamera", t));
+                (c) ->
+                    newOptionalSubsystem(
+                        AprilTag.class,
+                        AprilTag.ENABLED,
+                        c.cameraName(),
+                        c.robotToCamera(),
+                        c.streamPort()));
 
     frontLeftCamera.ifPresent((s) -> all.add(s));
 
