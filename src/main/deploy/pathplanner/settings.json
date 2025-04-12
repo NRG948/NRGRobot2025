@@ -5,7 +5,10 @@
   "pathFolders": [
     "push out auto"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "NON lasercan autos",
+    "lasercan autos"
+  ],
   "defaultMaxVel": 4.5,
   "defaultMaxAccel": 7.0,
   "defaultMaxAngVel": 540.0,
