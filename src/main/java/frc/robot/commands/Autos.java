@@ -101,6 +101,10 @@ public final class Autos {
    * @param auto The auto to preload.
    */
   public static void preloadAuto(Command auto) {
+    if (auto == null) {
+      return;
+    }
+
     String autoName = auto.getName();
     File autoFile = new File(AUTOS_DIR, autoName + AUTO_FILE_TYPE);
 
@@ -141,6 +145,8 @@ public final class Autos {
     eventMaps.put("Elevator L3", raiseElevatorAndTipCoralArm(subsystems, ElevatorLevel.L3));
     eventMaps.put("Elevator L4", raiseElevatorAndTipCoralArm(subsystems, ElevatorLevel.L4));
     eventMaps.put("Elevator Dock", stowElevator(subsystems));
+
+    eventMaps.put("AlignToWall", new AlignRearBumperToWall(subsystems));
 
     return eventMaps;
   }
