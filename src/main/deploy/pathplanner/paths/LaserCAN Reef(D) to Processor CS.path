@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.76,
+        "y": 2.95
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.973247117360894,
+        "y": 2.1064377319893044
+      },
+      "isLocked": false,
+      "linkedName": "Reef(D)"
+    },
+    {
+      "anchor": {
+        "x": 1.8101434426229508,
+        "y": 1.3817110655737712
+      },
+      "prevControl": {
+        "x": 3.029143442622951,
+        "y": 2.103711065573771
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "CS laserCAN Processor"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 1.45,
+    "rotation": 54.0
+  },
+  "reversed": false,
+  "folder": "LaserCAN Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 59.99999999999999
+  },
+  "useDefaultConstraints": false
+}

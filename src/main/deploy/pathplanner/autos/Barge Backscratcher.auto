@@ -5,22 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "sequential",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Barge Start to Reef(G)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
-                }
-              }
-            ]
+            "pathName": "Barge Start to Reef(G)"
           }
         },
         {
@@ -42,7 +29,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(G) to Outer Barge Intake"
+                  "pathName": "Reef(G) to Barge CS"
                 }
               },
               {
@@ -67,7 +54,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Outer Barge Intake to Reef(H)"
+                  "pathName": "Barge CS to Reef(H)"
                 }
               }
             ]
@@ -92,7 +79,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(H) to Outer Barge Intake"
+                  "pathName": "Reef(H) to Barge CS"
                 }
               },
               {
@@ -117,7 +104,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Outer Barge Intake to Reef(I)"
+                  "pathName": "Barge CS to Reef(I)"
                 }
               }
             ]
@@ -139,6 +126,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "NON lasercan autos",
+  "folder": "Barge Routines",
   "choreoAuto": false
 }

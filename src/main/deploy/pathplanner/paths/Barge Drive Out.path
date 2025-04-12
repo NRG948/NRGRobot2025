@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.702,
+        "y": 7.515
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.12725,
+        "y": 7.145
+      },
+      "isLocked": false,
+      "linkedName": "Barge Side Start"
+    },
+    {
+      "anchor": {
+        "x": 2.6715,
+        "y": 7.38875
+      },
+      "prevControl": {
+        "x": 3.2443124999999995,
+        "y": 7.22178125
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 7.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Drive Outs",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

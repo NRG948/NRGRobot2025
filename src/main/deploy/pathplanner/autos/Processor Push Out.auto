@@ -1,0 +1,50 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Processor Start to Reef(G)"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Outtake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Reef(G) to Push Out"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator Dock"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Processor Push Out"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Processor Routines",
+  "choreoAuto": false
+}

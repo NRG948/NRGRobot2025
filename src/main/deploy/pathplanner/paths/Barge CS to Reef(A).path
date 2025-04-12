@@ -1,0 +1,80 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.69224999999435,
+        "y": 6.745249999996049
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.271750513488352,
+        "y": 6.881744058043062
+      },
+      "isLocked": false,
+      "linkedName": "Inner Barge Intake"
+    },
+    {
+      "anchor": {
+        "x": 3.19,
+        "y": 4.45
+      },
+      "prevControl": {
+        "x": 2.4395696721311477,
+        "y": 4.26067418032787
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef(A)"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.88,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Elevator L4",
+      "waypointRelativePos": 0.43970223325062785,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Elevator L4"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 7.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "CS to Reef",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -52.97520117037446
+  },
+  "useDefaultConstraints": true
+}

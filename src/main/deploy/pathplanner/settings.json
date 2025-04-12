@@ -3,25 +3,32 @@
   "robotLength": 0.94,
   "holonomicMode": true,
   "pathFolders": [
-    "push out auto"
+    "CS to Reef",
+    "Drive Outs",
+    "LaserCAN Paths",
+    "Push Out Paths",
+    "Reef to CS",
+    "Start Paths"
   ],
   "autoFolders": [
-    "NON lasercan autos",
-    "lasercan autos"
+    "L2 & L3 Routines",
+    "LaserCAN Routines",
+    "Barge Routines",
+    "Processor Routines"
   ],
   "defaultMaxVel": 4.5,
   "defaultMaxAccel": 7.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,
-  "robotMass": 51.483,
+  "robotMass": 44.906,
   "robotMOI": 6.883,
   "robotTrackwidth": 0.546,
   "driveWheelRadius": 0.05,
   "driveGearing": 5.143,
   "maxDriveSpeed": 5.45,
   "driveMotorType": "krakenX60",
-  "driveCurrentLimit": 160.0,
+  "driveCurrentLimit": 107.0,
   "wheelCOF": 1.2,
   "flModuleX": 0.298,
   "flModuleY": 0.298,
