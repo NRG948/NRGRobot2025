@@ -86,25 +86,37 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
       new Transform3d(new Translation3d(+0.274, +0.286, +0.197), FRONT_LEFT_CAMERA_ROTATION);
 
   /**
+   * A single camera's parameters.
+   *
+   * @param cameraName The name of the camera.
+   * @param robotToCamera The transform from the robot's odometry center to the camera.
+   * @param streamPort The port for the camera stream.
+   */
+  public record CameraParameters(String cameraName, Transform3d robotToCamera, int streamPort) {}
+
+  /**
    * The robot's vision parameters.
    *
-   * @param robotToFrontRightCamera transform from the robot's odometry center to the front right
-   *     camera.
-   * @param robotToFrontLeftCamera transform from the robot's odometry center to the front left
-   *     camera.
+   * @param frontRight The front right camera parameters.
+   * @param frontLeft The front left camera parameters.
    */
   public record VisionParameters(
-      Optional<Transform3d> robotToFrontRightCamera,
-      Optional<Transform3d> robotToFrontLeftCamera) {}
+      Optional<CameraParameters> frontRight, Optional<CameraParameters> frontLeft) {}
 
   public static final VisionParameters PRACTICE_VISION_PARAMS =
       new VisionParameters(
-          Optional.of(PRACTICE_ROBOT_TO_FRONT_RIGHT_CAMERA), //
-          Optional.of(PRACTICE_ROBOT_TO_FRONT_LEFT_CAMERA));
+          Optional.of(
+              new CameraParameters("FrontRightCamera", PRACTICE_ROBOT_TO_FRONT_RIGHT_CAMERA, 1182)),
+          Optional.of(
+              new CameraParameters("FrontLeftCamera", PRACTICE_ROBOT_TO_FRONT_LEFT_CAMERA, 1184)));
   public static final VisionParameters COMPETITION_VISION_PARAMS =
       new VisionParameters(
-          Optional.of(COMPETITION_ROBOT_TO_FRONT_RIGHT_CAMERA),
-          Optional.of(COMPETITION_ROBOT_TO_FRONT_LEFT_CAMERA));
+          Optional.of(
+              new CameraParameters(
+                  "FrontRightCamera", COMPETITION_ROBOT_TO_FRONT_RIGHT_CAMERA, 1182)),
+          Optional.of(
+              new CameraParameters(
+                  "FrontLeftCamera", COMPETITION_ROBOT_TO_FRONT_LEFT_CAMERA, 1184)));
 
   public static final VisionParameters PARAMETERS =
       RobotContainer.ROBOT_TYPE
@@ -151,6 +163,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   private final PhotonCamera camera;
   private final Transform3d cameraToRobot;
   private final Transform3d robotToCamera;
+  private final int streamPort;
   private final PhotonPoseEstimator estimator;
 
   private final SendableChooser<Integer> aprilTagIdChooser = new SendableChooser<>();
@@ -175,12 +188,14 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
    *
    * @param cameraName The name of the camera.
    * @param robotToCamera The transform from the robot to the camera.
+   * @param streamPort The port for the camera stream.
    */
-  public AprilTag(String cameraName, Transform3d robotToCamera) {
+  public AprilTag(String cameraName, Transform3d robotToCamera, Integer streamPort) {
     setName(cameraName);
     this.camera = new PhotonCamera(cameraName);
     this.robotToCamera = robotToCamera;
     this.cameraToRobot = robotToCamera.inverse();
+    this.streamPort = streamPort.intValue();
 
     estimator =
         new PhotonPoseEstimator(
@@ -416,8 +431,8 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     }
     VideoSource video =
         new HttpCamera(
-            "photonvision_Port_1190_Output_MJPEG_Server",
-            "http://photonvision.local:1183/stream.mjpg",
+            String.format("photonvision_Port_%d_Output_MJPEG_Server", streamPort),
+            String.format("http://photonvision.local:%d/stream.mjpg", streamPort),
             HttpCameraKind.kMJPGStreamer);
 
     ShuffleboardTab visionTab = Shuffleboard.getTab(getName());
