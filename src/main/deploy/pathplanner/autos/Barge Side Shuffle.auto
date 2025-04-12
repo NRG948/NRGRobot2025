@@ -11,9 +11,46 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Elevator L4"
+            "name": "Coral Outtake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Reef(I) to Barge CS"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator Dock"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Barge CS to Reef(J)"
           }
         },
         {
@@ -35,7 +72,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(I) to Outer Barge Intake"
+                  "pathName": "Reef(J) to Barge CS"
                 }
               },
               {
@@ -56,50 +93,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Outer Barge Intake to Reef(J)"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Coral Outtake"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Reef(J) to Outer Barge Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator Dock"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Coral Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Outer Barge Intake to Reef(K)"
+            "pathName": "Barge CS to Reef(K)"
           }
         },
         {
@@ -124,6 +118,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "NON lasercan autos",
+  "folder": "Barge Routines",
   "choreoAuto": false
 }

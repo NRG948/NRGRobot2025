@@ -5,22 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "sequential",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Processor Start to Reef(G)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
-                }
-              }
-            ]
+            "pathName": "Processor Start to Reef(G)"
           }
         },
         {
@@ -36,7 +23,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(G) to Outer Processor Intake"
+                  "pathName": "Reef(G) to Processor CS"
                 }
               },
               {
@@ -61,13 +48,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Outer Processor Intake to Reef(C)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
+                  "pathName": "Processor CS to Reef(C)"
                 }
               }
             ]
@@ -88,7 +69,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef(C) to Inner Processor Intake"
+            "pathName": "Reef(C) to Processor CS"
           }
         },
         {
@@ -101,6 +82,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "NON lasercan autos",
+  "folder": "Processor Routines",
   "choreoAuto": false
 }

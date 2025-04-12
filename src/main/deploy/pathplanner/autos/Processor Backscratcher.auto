@@ -13,12 +13,6 @@
         {
           "type": "named",
           "data": {
-            "name": "Elevator L4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "Coral Outtake"
           }
         },
@@ -29,7 +23,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(H) to Outer Processor Intake"
+                  "pathName": "Reef(H) to Processor CS"
                 }
               },
               {
@@ -50,13 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Outer Processor Intake to Reef(F)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Elevator L4"
+            "pathName": "Processor CS to Reef(F)"
           }
         },
         {
@@ -72,7 +60,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(F) to Outer Processor Intake"
+                  "pathName": "Reef(F) to Processor CS"
                 }
               },
               {
@@ -93,13 +81,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Outer Processor Intake to Reef(G)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Elevator L4"
+            "pathName": "Processor CS to Reef(G)"
           }
         },
         {
@@ -118,6 +100,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "NON lasercan autos",
+  "folder": "Processor Routines",
   "choreoAuto": false
 }

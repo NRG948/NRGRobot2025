@@ -5,22 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "sequential",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Processor Side to Reef(C)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
-                }
-              }
-            ]
+            "pathName": "Processor Side to Reef(C)"
           }
         },
         {
@@ -36,7 +23,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(C) to Inner Processor Intake"
+                  "pathName": "Reef(C) to Processor CS"
                 }
               },
               {
@@ -55,22 +42,9 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Inner Processor Intake to Reef(A)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
-                }
-              }
-            ]
+            "pathName": "Processor CS to Reef(A)"
           }
         },
         {
@@ -86,7 +60,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(A) to Inner Processor Intake"
+                  "pathName": "Reef(A) to Processor CS"
                 }
               },
               {
@@ -105,22 +79,9 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Inner Processor Intake to Reef(B)"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator L4"
-                }
-              }
-            ]
+            "pathName": "Processor CS to Reef(B)"
           }
         },
         {
@@ -139,6 +100,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "NON lasercan autos",
+  "folder": "Processor Routines",
   "choreoAuto": false
 }

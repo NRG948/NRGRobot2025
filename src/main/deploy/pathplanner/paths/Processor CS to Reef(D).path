@@ -1,0 +1,80 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.41375,
+        "y": 0.8367499999999995
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.15925,
+        "y": 1.2077500000000003
+      },
+      "isLocked": false,
+      "linkedName": "CS Processor"
+    },
+    {
+      "anchor": {
+        "x": 3.76,
+        "y": 2.95
+      },
+      "prevControl": {
+        "x": 3.3539999999999996,
+        "y": 2.328499999999999
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef(D)"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.65,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Elevator L4",
+      "waypointRelativePos": 0.44294395678595677,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Elevator L4"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 59.99999999999999
+  },
+  "reversed": false,
+  "folder": "CS to Reef",
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": 54.0
+  },
+  "useDefaultConstraints": false
+}

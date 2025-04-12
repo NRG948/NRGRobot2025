@@ -66,7 +66,19 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Elevator L4",
+      "waypointRelativePos": 1.2045914922349796,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Elevator L4"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.5,
     "maxAcceleration": 7.0,
@@ -80,7 +92,7 @@
     "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "CS to Reef",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 179.0289780689208

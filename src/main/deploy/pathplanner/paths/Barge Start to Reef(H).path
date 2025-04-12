@@ -45,7 +45,19 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Elevator L4",
+      "waypointRelativePos": 0.3349088453747461,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Elevator L4"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.5,
     "maxAcceleration": 7.0,
@@ -59,7 +71,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Start Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

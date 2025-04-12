@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Barge Side Start to Reef(L)"
+                  "pathName": "Barge Corner to Reef(L)"
                 }
               }
             ]
@@ -36,7 +36,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(L) to Inner Barge Intake"
+                  "pathName": "Reef(L) to Barge CS"
                 }
               },
               {
@@ -61,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Inner Barge Intake to Reef(A)"
+                  "pathName": "Barge CS to Reef(A)"
                 }
               }
             ]
@@ -86,7 +86,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(A) to Inner Barge Intake"
+                  "pathName": "Reef(A) to Barge CS"
                 }
               },
               {
@@ -111,7 +111,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Inner Barge Intake to Reef(B)"
+                  "pathName": "Barge CS to Reef(B)"
                 }
               }
             ]
@@ -139,6 +139,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "NON lasercan autos",
+  "folder": "Barge Routines",
   "choreoAuto": false
 }

@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.360450819672131,
-        "y": 0.8182889344262299
+        "x": 6.93225,
+        "y": 1.5679999999999996
       },
       "isLocked": false,
       "linkedName": "Processor Side Start"
     },
     {
       "anchor": {
-        "x": 4.902971311475409,
-        "y": 0.6504610655737701
+        "x": 2.6520000000000006,
+        "y": 0.6807499999999993
       },
       "prevControl": {
-        "x": 5.46639344262295,
-        "y": 0.6624487704918033
+        "x": 3.215422131147542,
+        "y": 0.6927377049180324
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Drive Outs",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": 179.029

@@ -11,9 +11,46 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Elevator L4"
+            "name": "Coral Outtake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Reef(F) to Processor CS"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Elevator Dock"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CS to Reef(E)"
           }
         },
         {
@@ -35,7 +72,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(F) to Outer Processor Intake"
+                  "pathName": "Reef(E) to Processor CS"
                 }
               },
               {
@@ -56,62 +93,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Outer Processor Intake to Reef(E)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Elevator L4"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.2
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Coral Outtake"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Reef(E) to Outer Processor Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Elevator Dock"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Coral Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Outer Processor Intake to Reef(D)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Elevator L4"
+            "pathName": "Processor CS to Reef(D)"
           }
         },
         {
@@ -136,6 +118,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "NON lasercan autos",
+  "folder": "Processor Routines",
   "choreoAuto": false
 }

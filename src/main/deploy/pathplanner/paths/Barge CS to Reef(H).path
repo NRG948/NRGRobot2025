@@ -1,0 +1,96 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.4984631147540983,
+        "y": 7.243698770491803
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.8330836276902325,
+        "y": 6.902797611421461
+      },
+      "isLocked": false,
+      "linkedName": "Outer Barge Intake"
+    },
+    {
+      "anchor": {
+        "x": 4.663217213114754,
+        "y": 6.5963627049180324
+      },
+      "prevControl": {
+        "x": 3.7714352018537025,
+        "y": 7.248886127791972
+      },
+      "nextControl": {
+        "x": 5.646209016393443,
+        "y": 5.877100409836065
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.79,
+        "y": 3.93
+      },
+      "prevControl": {
+        "x": 7.004967213114754,
+        "y": 4.728206967213115
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Reef(H)"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.88,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Elevator L4",
+      "waypointRelativePos": 1.2640108035111446,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Elevator L4"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.25,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "CS to Reef",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -54.0
+  },
+  "useDefaultConstraints": false
+}
