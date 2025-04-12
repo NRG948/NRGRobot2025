@@ -14,6 +14,7 @@ import static frc.robot.RobotContainer.RobotSelector.CompetitionRobot2025;
 import static frc.robot.RobotContainer.RobotSelector.PracticeRobot2025;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 import static frc.robot.util.MotorIdleMode.BRAKE;
+import static java.lang.Math.toRadians;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.nrg948.preferences.RobotPreferences;
@@ -48,8 +49,9 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   private static final DataLog LOG = DataLogManager.getLog();
 
-  private final double MIN_ANGLE = Math.toRadians(-94);
-  private final double MAX_ANGLE = Math.toRadians(110);
+  private final double MIN_ANGLE = toRadians(-98);
+  private final double MAX_ANGLE = toRadians(110);
+  private final double KP_HYSTERESIS = toRadians(10);
 
   @SuppressWarnings("unused")
   private final double GEAR_RATIO = 5.0 * 5.0 * 66.0 / 18.0;
@@ -86,8 +88,17 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   public static DoubleValue PROPORTIONAL_CONTROL_THRESHOLD_DEG =
       new DoubleValue("Climber", "Proportional Control Threshold", 10);
 
+  @RobotPreferencesValue
+  public static DoubleValue DEEP_CLIMB_GOAL_ANGLE_DEG =
+      new DoubleValue("Climber", "Climb Goal Angle (deg)", -90);
+
+  @RobotPreferencesValue
+  public static DoubleValue LOWER_KP_ANGLE_DEG =
+      new DoubleValue("Climber", "Lower kP Min Angle (deg)", -86);
+
   private double currentAngle; // in radians
   private double goalAngle; // in radians
+  private double scaleKp = 1.0;
   private boolean enabled;
 
   private final AbsoluteAngleEncoder absoluteEncoder =
@@ -118,13 +129,20 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
   public void periodic() {
     updateTelemetry();
 
-    double angleError = goalAngle - currentAngle;
     double motorPower;
+    double angleError = goalAngle - currentAngle;
     if (enabled && !atGoalAngle()) {
       // Runs at max power until within small angle of goal, then ramps power down linearly.
       double maxPower = CLIMB_MAX_POWER.getValue();
-      double kP = maxPower / Math.toRadians(PROPORTIONAL_CONTROL_THRESHOLD_DEG.getValue());
-      motorPower = MathUtil.clamp(kP * angleError, -maxPower, maxPower);
+      double kP = maxPower / toRadians(PROPORTIONAL_CONTROL_THRESHOLD_DEG.getValue());
+      // To prevent oscillation, scale down Kp when close to the final climb angle.
+      double lowerKpAngle = toRadians(LOWER_KP_ANGLE_DEG.getValue());
+      if (currentAngle <= lowerKpAngle) {
+        scaleKp = 0.5;
+      } else if (currentAngle >= lowerKpAngle + KP_HYSTERESIS) {
+        scaleKp = 1.0;
+      }
+      motorPower = MathUtil.clamp(kP * scaleKp * angleError, -maxPower, maxPower);
     } else {
       motorPower = 0;
     }
@@ -142,13 +160,18 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
     logEnabled.update(enabled);
   }
 
+  /** Sets the climber goal angle for a deep climb. */
+  public void setDeepClimbAngle() {
+    setGoalAngle(toRadians(DEEP_CLIMB_GOAL_ANGLE_DEG.getValue()));
+  }
+
   public void disable() {
     enabled = false;
     logEnabled.update(enabled);
   }
 
   public boolean atGoalAngle() {
-    return MathUtil.isNear(goalAngle, currentAngle, Math.toRadians(TOLERANCE_DEG.getValue()));
+    return MathUtil.isNear(goalAngle, currentAngle, toRadians(TOLERANCE_DEG.getValue()));
   }
 
   private void updateTelemetry() {
@@ -161,7 +184,7 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   @Override
   public void setIdleMode(MotorIdleMode idleMode) {
-    mainMotor.setIdleMode(idleMode);
+    // mainMotor.setIdleMode(idleMode);
   }
 
   @Override
