@@ -101,6 +101,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "NON lasercan autos",
   "choreoAuto": false
 }
