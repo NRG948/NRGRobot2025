@@ -33,7 +33,10 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
   private static final double DISTANCE_BETWEEN_LASER_CANS = 0.60;
 
   /** Amount to add to the raw distance measurements to get accurate distances. */
-  private static final double DISTANCE_CORRECTION = 0.025;
+  private static final double LEFT_DISTANCE_CORRECTION = 0.035;
+
+  /** Amount to add to the raw distance measurements to get accurate distances. */
+  private static final double RIGHT_DISTANCE_CORRECTION = 0.025;
 
   /** The laser CAN closest to the funnel. */
   private LaserCan leftLaserCAN;
@@ -110,8 +113,8 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
       angleToWall = NO_MEASUREMENT;
     } else {
       hasValidMeasurement = true;
-      leftDistance += DISTANCE_CORRECTION;
-      rightDistance += DISTANCE_CORRECTION;
+      leftDistance += LEFT_DISTANCE_CORRECTION;
+      rightDistance += RIGHT_DISTANCE_CORRECTION;
       angleToWall =
           Math.toDegrees(Math.atan((leftDistance - rightDistance) / DISTANCE_BETWEEN_LASER_CANS));
     }
