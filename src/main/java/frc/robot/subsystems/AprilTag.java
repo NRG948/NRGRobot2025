@@ -29,7 +29,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.StructArrayLogEntry;
 import edu.wpi.first.util.datalog.StructLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
@@ -68,8 +68,6 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   private static final Matrix<N3, N1> SINGLE_TAG_STD_DEVS = VecBuilder.fill(4, 4, 8);
   private static final Matrix<N3, N1> MULTI_TAG_STD_DEVS = VecBuilder.fill(0.5, 0.5, 1);
   private static final PhotonPipelineResult NO_RESULT = new PhotonPipelineResult();
-  private static final EstimatedRobotPose NO_APRILTAG_ESTIMATE =
-      new EstimatedRobotPose(new Pose3d(), 0, List.of(), PoseStrategy.LOWEST_AMBIGUITY);
   private static final double LAST_RESULT_TIMEOUT = 0.1;
 
   // TODO: verify ALL camera rotations and transforms.
@@ -88,25 +86,37 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
       new Transform3d(new Translation3d(+0.274, +0.286, +0.197), FRONT_LEFT_CAMERA_ROTATION);
 
   /**
+   * A single camera's parameters.
+   *
+   * @param cameraName The name of the camera.
+   * @param robotToCamera The transform from the robot's odometry center to the camera.
+   * @param streamPort The port for the camera stream.
+   */
+  public record CameraParameters(String cameraName, Transform3d robotToCamera, int streamPort) {}
+
+  /**
    * The robot's vision parameters.
    *
-   * @param robotToFrontRightCamera transform from the robot's odometry center to the front right
-   *     camera.
-   * @param robotToFrontLeftCamera transform from the robot's odometry center to the front left
-   *     camera.
+   * @param frontRight The front right camera parameters.
+   * @param frontLeft The front left camera parameters.
    */
   public record VisionParameters(
-      Optional<Transform3d> robotToFrontRightCamera,
-      Optional<Transform3d> robotToFrontLeftCamera) {}
+      Optional<CameraParameters> frontRight, Optional<CameraParameters> frontLeft) {}
 
   public static final VisionParameters PRACTICE_VISION_PARAMS =
       new VisionParameters(
-          Optional.of(PRACTICE_ROBOT_TO_FRONT_RIGHT_CAMERA), //
-          Optional.of(PRACTICE_ROBOT_TO_FRONT_LEFT_CAMERA));
+          Optional.of(
+              new CameraParameters("FrontRightCamera", PRACTICE_ROBOT_TO_FRONT_RIGHT_CAMERA, 1182)),
+          Optional.of(
+              new CameraParameters("FrontLeftCamera", PRACTICE_ROBOT_TO_FRONT_LEFT_CAMERA, 1184)));
   public static final VisionParameters COMPETITION_VISION_PARAMS =
       new VisionParameters(
-          Optional.of(COMPETITION_ROBOT_TO_FRONT_RIGHT_CAMERA),
-          Optional.of(COMPETITION_ROBOT_TO_FRONT_LEFT_CAMERA));
+          Optional.of(
+              new CameraParameters(
+                  "FrontRightCamera", COMPETITION_ROBOT_TO_FRONT_RIGHT_CAMERA, 1182)),
+          Optional.of(
+              new CameraParameters(
+                  "FrontLeftCamera", COMPETITION_ROBOT_TO_FRONT_LEFT_CAMERA, 1184)));
 
   public static final VisionParameters PARAMETERS =
       RobotContainer.ROBOT_TYPE
@@ -153,24 +163,22 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   private final PhotonCamera camera;
   private final Transform3d cameraToRobot;
   private final Transform3d robotToCamera;
+  private final int streamPort;
   private final PhotonPoseEstimator estimator;
 
   private final SendableChooser<Integer> aprilTagIdChooser = new SendableChooser<>();
 
   private final BooleanLogEntry hasTargetLogger;
-  private final DoubleLogEntry distanceLogger;
-  private final DoubleLogEntry angleLogger;
   private final StructLogEntry<Pose2d> estimatedPoseLogger;
+  private final StructArrayLogEntry<Pose2d> targetPoseArrayLogger;
 
   private Optional<PhotonPipelineResult> result = Optional.empty();
-  private double angleToBestTarget;
-  private double distanceToBestTarget;
+
+  private int selectedAprilTag;
+  private Pose3d selectedAprilTagPose = new Pose3d();
   private double angleToSelectedTarget;
   private double distanceToSelectedTarget;
 
-  private double poseAmibiguity;
-  private int selectedAprilTag;
-  private Pose3d selectedAprilTagPose = new Pose3d();
   private Optional<EstimatedRobotPose> globalEstimatedPose = Optional.empty();
   private Pose2d lastEstimatedPose = Pose2d.kZero;
   private Matrix<N3, N1> curStdDevs = SINGLE_TAG_STD_DEVS;
@@ -180,12 +188,14 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
    *
    * @param cameraName The name of the camera.
    * @param robotToCamera The transform from the robot to the camera.
+   * @param streamPort The port for the camera stream.
    */
-  public AprilTag(String cameraName, Transform3d robotToCamera) {
+  public AprilTag(String cameraName, Transform3d robotToCamera, Integer streamPort) {
     setName(cameraName);
     this.camera = new PhotonCamera(cameraName);
     this.robotToCamera = robotToCamera;
     this.cameraToRobot = robotToCamera.inverse();
+    this.streamPort = streamPort.intValue();
 
     estimator =
         new PhotonPoseEstimator(
@@ -199,10 +209,11 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     aprilTagIdChooser.setDefaultOption("1", 1);
 
     hasTargetLogger = new BooleanLogEntry(LOG, String.format("/%s/Has Target", cameraName));
-    distanceLogger = new DoubleLogEntry(LOG, String.format("/%s/Distance", cameraName));
-    angleLogger = new DoubleLogEntry(LOG, String.format("/%s/Angle", cameraName));
     estimatedPoseLogger =
         StructLogEntry.create(LOG, String.format("/%s/Estimated Pose", cameraName), Pose2d.struct);
+    targetPoseArrayLogger =
+        StructArrayLogEntry.create(
+            LOG, String.format("/%s/Target Poses", cameraName), Pose2d.struct);
   }
 
   /**
@@ -215,7 +226,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
    * @return An {@link EstimatedRobotPose} with an estimated pose, estimate timestamp, and targets
    *     used for estimation.
    */
-  public Optional<EstimatedRobotPose> getEstimateGlobalPose() {
+  public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
     return this.globalEstimatedPose;
   }
 
@@ -278,7 +289,7 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   }
 
   /**
-   * The standard deviations of the estimated pose from {@link #getEstimateGlobalPose()}, for use
+   * The standard deviations of the estimated pose from {@link #getEstimatedGlobalPose()}, for use
    * with {@link edu.wpi.first.math.estimator.SwerveDrivePoseEstimator SwerveDrivePoseEstimator}.
    * This should only be used when there are targets visible.
    */
@@ -307,28 +318,22 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
           estimatedPoseLogger.append(lastEstimatedPose);
         });
 
-    boolean hasTargets = currentResult.orElse(NO_RESULT).hasTargets();
-
-    if (this.result.orElse(NO_RESULT).hasTargets() != hasTargets) {
-      hasTargetLogger.append(hasTargets);
-    }
-
+    // Update the result if present or if the last result is within the lifetime timeout period.
     if (currentResult.isPresent()
-        || (Timer.getFPGATimestamp() - this.result.orElse(NO_RESULT).getTimestampSeconds())
-            > LAST_RESULT_TIMEOUT) {
+        || this.result
+            .map(r -> (Timer.getFPGATimestamp() - r.getTimestampSeconds()) < LAST_RESULT_TIMEOUT)
+            .orElse(false)) {
       this.result = currentResult;
+
+      // Log the visible target poses.
+      Pose2d[] targets =
+          currentResult.orElse(NO_RESULT).getTargets().stream()
+              .map(t -> FieldUtils.getAprilTagPose2d(t.getFiducialId()))
+              .toArray(Pose2d[]::new);
+      targetPoseArrayLogger.append(targets);
     }
 
-    if (hasTargets()) {
-      PhotonTrackedTarget bestTarget = getBestTarget();
-      Transform3d bestTargetTransform = robotToCamera.plus(bestTarget.getBestCameraToTarget());
-      distanceToBestTarget = Math.hypot(bestTargetTransform.getX(), bestTargetTransform.getY());
-      angleToBestTarget = Math.atan2(bestTargetTransform.getY(), bestTargetTransform.getX());
-      poseAmibiguity = bestTarget.getPoseAmbiguity();
-
-      distanceLogger.append(distanceToBestTarget);
-      angleLogger.append(angleToBestTarget);
-    }
+    hasTargetLogger.update(hasTargets());
 
     if (ENABLE_TAB.getValue()) {
       selectedAprilTag = aprilTagIdChooser.getSelected().intValue();
@@ -380,21 +385,6 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     return result.orElse(NO_RESULT).getBestTarget();
   }
 
-  /** Returns the distance in meters to the best target from the robot center. */
-  public double getDistanceToBestTarget() {
-    return distanceToBestTarget;
-  }
-
-  /** Returns angle in radians to best target relative to robot center. */
-  public double getAngleToBestTarget() {
-    return angleToBestTarget;
-  }
-
-  /** Returns the pose ambiguity of the best target. */
-  public double getAmibiguity() {
-    return poseAmibiguity;
-  }
-
   /**
    * Returns the timestamp of the latest vision result. This is only valid if the subsystem has
    * targets.
@@ -441,8 +431,8 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     }
     VideoSource video =
         new HttpCamera(
-            "photonvision_Port_1190_Output_MJPEG_Server",
-            "http://photonvision.local:1183/stream.mjpg",
+            String.format("photonvision_Port_%d_Output_MJPEG_Server", streamPort),
+            String.format("http://photonvision.local:%d/stream.mjpg", streamPort),
             HttpCameraKind.kMJPGStreamer);
 
     ShuffleboardTab visionTab = Shuffleboard.getTab(getName());

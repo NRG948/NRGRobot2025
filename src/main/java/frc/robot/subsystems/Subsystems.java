@@ -65,19 +65,29 @@ public class Subsystems {
     // Add optional subsystems to the appropriate list.
     frontRightCamera =
         AprilTag.PARAMETERS
-            .robotToFrontRightCamera()
+            .frontRight()
             .flatMap(
-                (t) ->
-                    newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "FrontRightCamera", t));
+                (c) ->
+                    newOptionalSubsystem(
+                        AprilTag.class,
+                        AprilTag.ENABLED,
+                        c.cameraName(),
+                        c.robotToCamera(),
+                        c.streamPort()));
 
     frontRightCamera.ifPresent((s) -> all.add(s));
 
     frontLeftCamera =
         AprilTag.PARAMETERS
-            .robotToFrontLeftCamera()
+            .frontLeft()
             .flatMap(
-                (t) ->
-                    newOptionalSubsystem(AprilTag.class, AprilTag.ENABLED, "FrontLeftCamera", t));
+                (c) ->
+                    newOptionalSubsystem(
+                        AprilTag.class,
+                        AprilTag.ENABLED,
+                        c.cameraName(),
+                        c.robotToCamera(),
+                        c.streamPort()));
 
     frontLeftCamera.ifPresent((s) -> all.add(s));
 
@@ -221,7 +231,7 @@ public class Subsystems {
    *     estimated pose.
    */
   private void updateEstimatedPose(AprilTag camera) {
-    var visionEst = camera.getEstimateGlobalPose();
+    var visionEst = camera.getEstimatedGlobalPose();
 
     visionEst.ifPresent(
         (est) -> {
