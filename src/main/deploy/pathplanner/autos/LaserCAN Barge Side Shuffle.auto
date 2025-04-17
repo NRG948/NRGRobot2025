@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center Start to Reef(H)"
+            "pathName": "Mid-Barge to Reef(J)"
           }
         },
         {
@@ -23,7 +23,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(H) to Barge CS"
+                  "pathName": "LaserCAN Reef(J) to Barge CS"
                 }
               },
               {
@@ -36,15 +36,28 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Coral Intake"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "AlignToWall"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Coral Intake"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "LaserCAN Barge CS to Reef(K)"
           }
         },
         {
@@ -60,13 +73,32 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef(K) to Barge CS"
+                  "pathName": "LaserCAN Reef(K) to Barge CS"
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Elevator Dock"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "AlignToWall"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Coral Intake"
                 }
               }
             ]
@@ -81,13 +113,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Barge CS to Reef(L)"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Elevator L3"
+            "pathName": "LaserCAN Barge CS to Reef(L)"
           }
         },
         {
@@ -106,6 +132,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "L2 & L3 Routines",
+  "folder": "LaserCAN Routines",
   "choreoAuto": false
 }
