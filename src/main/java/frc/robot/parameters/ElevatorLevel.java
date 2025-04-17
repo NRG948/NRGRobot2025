@@ -10,11 +10,12 @@ package frc.robot.parameters;
 import frc.robot.subsystems.Elevator;
 
 public enum ElevatorLevel {
-  STOWED(Elevator.STOWED_HEIGHT_FOR_PID, Math.toRadians(94.4), 0, 0, 0),
+  // TODO: revert stowed armAngle back to 94.4 for comp bot.
+  STOWED(Elevator.STOWED_HEIGHT_FOR_PID, Math.toRadians(101), 0, 0, 0),
   L1(0.15, Math.toRadians(36), .2, 1.5, 0.3),
   L2(0.33, Math.toRadians(60), .2, 0, 1.5),
   L3(0.74, Math.toRadians(60), .2, 0, 1.5),
-  L4(1.34, Math.toRadians(50), .3, .1, 2.0),
+  L4(1.34, Math.toRadians(50), 0.65, .1, 2.0),
 
   AlgaeL2(0.25, Math.toRadians(40), .2, 0, 2.0),
   AlgaeL3(0.65, Math.toRadians(40), .2, 0, 2.0);

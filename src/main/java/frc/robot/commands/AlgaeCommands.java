@@ -25,7 +25,7 @@ public final class AlgaeCommands {
 
     return Commands.sequence(
             Commands.parallel(
-                ElevatorCommands.goToElevatorLevel(subsystems, elevatorLevel),
+                ElevatorCommands.seekToElevatorLevel(subsystems, elevatorLevel),
                 CoralCommands.setArmAngleForReefLevel(subsystems, elevatorLevel),
                 CoralCommands.outtakeCoral(subsystems)),
             Commands.idle(elevator, coralArm, coralRoller))
