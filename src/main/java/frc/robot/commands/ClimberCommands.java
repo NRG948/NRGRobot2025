@@ -9,6 +9,8 @@ package frc.robot.commands;
 
 import static frc.robot.parameters.ElevatorLevel.STOWED;
 
+import com.nrg948.preferences.RobotPreferences;
+import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.Arm;
@@ -18,7 +20,10 @@ import frc.robot.subsystems.Subsystems;
 
 /** A namespace for climber command factory methods. */
 public final class ClimberCommands {
-  private static final double CLIMB_ANGLE = Math.toRadians(-94);
+  @RobotPreferencesValue
+  public static final RobotPreferences.DoubleValue CLIMB_ANGLE =
+      new RobotPreferences.DoubleValue("Climber", "Climb Angle (deg)", -94);
+
   private static final double STOW_ANGLE = Math.toRadians(90);
   private static final double CLIMB_GROUND_INTAKE_ANGLE = Math.toRadians(97);
 
@@ -28,10 +33,16 @@ public final class ClimberCommands {
     StatusLED statusLEDs = subsystems.statusLEDs;
     Arm coralArm = subsystems.coralArm;
 
-    return Commands.parallel(
-            Commands.runOnce(() -> coralArm.setGoalAngle(STOWED.getArmAngle())),
-            Commands.runOnce(() -> climber.setGoalAngle(CLIMB_ANGLE)),
+    return Commands.race(
+            Commands.sequence(
+                Commands.runOnce(() -> coralArm.setGoalAngle(STOWED.getArmAngle())),
+                Commands.runOnce(
+                    () -> climber.setGoalAngle(Math.toRadians(CLIMB_ANGLE.getValue()))),
+                Commands.idle(climber)
+                    .until(
+                        () -> climber.getCurrentAngle() <= Math.toRadians(CLIMB_ANGLE.getValue()))),
             new RainbowCycle(statusLEDs))
+        .finallyDo(climber::disable)
         .withName("Climb");
   }
 
