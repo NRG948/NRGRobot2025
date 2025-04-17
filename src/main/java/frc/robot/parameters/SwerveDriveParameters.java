@@ -715,7 +715,7 @@ public enum SwerveDriveParameters {
             1.0,
             driveMotor.getDCMotor(),
             getDriveGearRatio(),
-            107.0,
+            140,
             1);
     return new RobotConfig(getRobotMass(), getMomentOfInertia(), moduleconfig, this.wheelPositions);
   }
