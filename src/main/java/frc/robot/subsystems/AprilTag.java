@@ -68,22 +68,20 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
   private static final Matrix<N3, N1> SINGLE_TAG_STD_DEVS = VecBuilder.fill(4, 4, 8);
   private static final Matrix<N3, N1> MULTI_TAG_STD_DEVS = VecBuilder.fill(0.5, 0.5, 1);
   private static final PhotonPipelineResult NO_RESULT = new PhotonPipelineResult();
-  private static final EstimatedRobotPose NO_APRILTAG_ESTIMATE =
-      new EstimatedRobotPose(new Pose3d(), 0, List.of(), PoseStrategy.LOWEST_AMBIGUITY);
   private static final double LAST_RESULT_TIMEOUT = 0.1;
 
   // TODO: verify ALL camera rotations and transforms.
   private static final Rotation3d FRONT_RIGHT_CAMERA_ROTATION =
-      new Rotation3d(0, toRadians(-20), toRadians(15));
+      new Rotation3d(toRadians(0), toRadians(-20), toRadians(15));
   // The FR camera transform on the comp bot was previously (+0.274, -0.286, +0.197).
   public static final Transform3d ROBOT_TO_FRONT_RIGHT_CAMERA =
-      new Transform3d(new Translation3d(+0.280, -0.297, +0.197), FRONT_RIGHT_CAMERA_ROTATION);
+      new Transform3d(new Translation3d(+0.274, -0.297, +0.197), FRONT_RIGHT_CAMERA_ROTATION);
 
   private static final Rotation3d FRONT_LEFT_CAMERA_ROTATION =
-      new Rotation3d(0, toRadians(-20), toRadians(-15));
+      new Rotation3d(toRadians(0), toRadians(-20), toRadians(-15));
   // The FL camera transform on the comp bot was previously (+0.274, +0.286, +0.197).
   public static final Transform3d ROBOT_TO_FRONT_LEFT_CAMERA =
-      new Transform3d(new Translation3d(+0.280, +0.297, +0.197), FRONT_LEFT_CAMERA_ROTATION);
+      new Transform3d(new Translation3d(+0.274, +0.297, +0.197), FRONT_LEFT_CAMERA_ROTATION);
 
   /**
    * The robot's vision parameters.
@@ -103,7 +101,8 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
           Optional.of(ROBOT_TO_FRONT_LEFT_CAMERA));
   public static final VisionParameters COMPETITION_VISION_PARAMS =
       new VisionParameters(
-          Optional.of(ROBOT_TO_FRONT_RIGHT_CAMERA), Optional.of(ROBOT_TO_FRONT_LEFT_CAMERA));
+          Optional.of(ROBOT_TO_FRONT_RIGHT_CAMERA), //
+          Optional.of(ROBOT_TO_FRONT_LEFT_CAMERA));
 
   public static final VisionParameters PARAMETERS =
       RobotContainer.ROBOT_TYPE
