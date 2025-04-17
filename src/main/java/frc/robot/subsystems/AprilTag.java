@@ -72,13 +72,13 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
 
   // TODO: verify ALL camera rotations and transforms.
   private static final Rotation3d FRONT_RIGHT_CAMERA_ROTATION =
-      new Rotation3d(toRadians(0), toRadians(-20), toRadians(15));
+      new Rotation3d(toRadians(0), toRadians(-22), toRadians(16.8));
   // The FR camera transform on the comp bot was previously (+0.274, -0.286, +0.197).
   public static final Transform3d ROBOT_TO_FRONT_RIGHT_CAMERA =
       new Transform3d(new Translation3d(+0.274, -0.297, +0.197), FRONT_RIGHT_CAMERA_ROTATION);
 
   private static final Rotation3d FRONT_LEFT_CAMERA_ROTATION =
-      new Rotation3d(toRadians(0), toRadians(-20), toRadians(-15));
+      new Rotation3d(toRadians(0), toRadians(-22), toRadians(-16.8));
   // The FL camera transform on the comp bot was previously (+0.274, +0.286, +0.197).
   public static final Transform3d ROBOT_TO_FRONT_LEFT_CAMERA =
       new Transform3d(new Translation3d(+0.274, +0.297, +0.197), FRONT_LEFT_CAMERA_ROTATION);
