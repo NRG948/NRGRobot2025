@@ -7,12 +7,12 @@
  
 package frc.robot.parameters;
 
-import static frc.robot.Constants.RobotConstants.CAN.TalonFX.OLD_CORAL_GROUND_INTAKE_ARM_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.NEW_CORAL_GROUND_INTAKE_ARM_MOTOR_ID;
-import static frc.robot.Constants.RobotConstants.OLD_CORAL_GROUND_INTAKE_ARM_MASS_KG;
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.OLD_CORAL_GROUND_INTAKE_ARM_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.CORAL_MASS_KG;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
 import static frc.robot.Constants.RobotConstants.NEW_CORAL_GROUND_INTAKE_ARM_MASS_KG;
+import static frc.robot.Constants.RobotConstants.OLD_CORAL_GROUND_INTAKE_ARM_MASS_KG;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 
 import edu.wpi.first.math.util.Units;

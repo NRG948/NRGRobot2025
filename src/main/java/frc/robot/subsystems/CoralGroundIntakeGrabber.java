@@ -7,13 +7,14 @@
  
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.RobotConstants.CAN.TalonFX.OLD_CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.NEW_CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.OLD_CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID;
 import static frc.robot.Constants.RobotConstants.DigitalIO.CORAL_GROUND_INTAKE_BEAM_BREAK;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
 import static frc.robot.RobotContainer.RobotSelector.CompetitionRobot2025;
 import static frc.robot.RobotContainer.RobotSelector.PracticeRobot2025;
 import static frc.robot.parameters.MotorParameters.KrakenX60;
+import static frc.robot.util.MotorDirection.CLOCKWISE_POSITIVE;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 import static frc.robot.util.MotorIdleMode.BRAKE;
 
@@ -38,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.parameters.MotorParameters;
+import frc.robot.util.MotorDirection;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
@@ -74,12 +76,14 @@ public class CoralGroundIntakeGrabber extends SubsystemBase
       RobotContainer.isCompBot()
           ? OLD_CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID
           : NEW_CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID;
+  private static final MotorDirection MOTOR_DIRECTION =
+      RobotContainer.isCompBot() ? CLOCKWISE_POSITIVE : COUNTER_CLOCKWISE_POSITIVE;
 
   private final TalonFXAdapter motor =
       new TalonFXAdapter(
           "/CoralGroundIntakeGrabber",
           new TalonFX(MOTOR_ID, "rio"),
-          COUNTER_CLOCKWISE_POSITIVE,
+          MOTOR_DIRECTION,
           BRAKE,
           METERS_PER_REVOLUTION);
   private final RelativeEncoder encoder = motor.getEncoder();
