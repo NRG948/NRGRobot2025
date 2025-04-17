@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.4701136363636365,
-        "y": 3.12
+        "x": 4.77,
+        "y": 2.69
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.87625,
-        "y": 2.41625
+        "x": 5.187,
+        "y": 1.88
       },
       "isLocked": false,
-      "linkedName": "Reef(C)"
+      "linkedName": "Reef(E)"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 1.3817110655737712
       },
       "prevControl": {
-        "x": 2.457,
-        "y": 1.8994999999999993
+        "x": 2.4765,
+        "y": 1.548499999999999
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,8 +47,8 @@
   "reversed": false,
   "folder": "LaserCAN Paths",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 59.99999999999999
+    "velocity": 0.0,
+    "rotation": 119.99999999999999
   },
   "useDefaultConstraints": true
 }

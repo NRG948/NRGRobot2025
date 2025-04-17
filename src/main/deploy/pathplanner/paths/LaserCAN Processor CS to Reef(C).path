@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.072749999999999,
-        "y": 1.4982499999999983
+        "x": 2.418,
+        "y": 1.4314999999999998
       },
       "isLocked": false,
       "linkedName": "CS Processor"
@@ -20,8 +20,8 @@
         "y": 3.12
       },
       "prevControl": {
-        "x": 2.8960347308947085,
-        "y": 2.5491502808641058
+        "x": 3.1785,
+        "y": 2.4454999999999996
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "Elevator L4",
-      "waypointRelativePos": 0.5050641458474014,
+      "waypointRelativePos": 0.3801488833746951,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

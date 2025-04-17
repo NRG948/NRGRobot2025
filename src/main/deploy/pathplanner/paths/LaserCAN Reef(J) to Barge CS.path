@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.4701136363636365,
-        "y": 3.12
+        "x": 5.51,
+        "y": 4.93
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.87625,
-        "y": 2.41625
+        "x": 5.2065,
+        "y": 6.365
       },
       "isLocked": false,
-      "linkedName": "Reef(C)"
+      "linkedName": "Reef(I)"
     },
     {
       "anchor": {
-        "x": 1.8101434426229508,
-        "y": 1.3817110655737712
+        "x": 1.9899590163934429,
+        "y": 6.608350409836065
       },
       "prevControl": {
-        "x": 2.457,
-        "y": 1.8994999999999993
+        "x": 2.586681802056851,
+        "y": 6.516739023492995
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CS laserCAN Processor"
+      "linkedName": "CS laserCAN Barge"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 1.45,
-    "rotation": 54.0
+    "rotation": -54.0
   },
   "reversed": false,
   "folder": "LaserCAN Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }

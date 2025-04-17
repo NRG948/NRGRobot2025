@@ -3,36 +3,36 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.41375,
-        "y": 0.8367499999999995
+        "x": 7.1175,
+        "y": 6.225
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8665,
-        "y": 1.694749999999999
+        "x": 6.249750000000001,
+        "y": 5.897
       },
       "isLocked": false,
-      "linkedName": "CS Processor"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.76,
-        "y": 2.95
+        "x": 5.51,
+        "y": 4.93
       },
       "prevControl": {
-        "x": 3.3539999999999996,
-        "y": 2.328499999999999
+        "x": 5.83775,
+        "y": 5.56125
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef(D)"
+      "linkedName": "Reef(I)"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.65,
+      "minWaypointRelativePos": 0.5647642679900857,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.0,
@@ -48,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "Elevator L4",
-      "waypointRelativePos": 0.33846153846153926,
+      "waypointRelativePos": 0.19354838709677705,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -59,22 +59,22 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 4.5,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 59.99999999999999
+    "velocity": 0,
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "CS to Reef",
+  "folder": "Start Paths",
   "idealStartingState": {
-    "velocity": 0.0,
-    "rotation": 54.0
+    "velocity": 0,
+    "rotation": 180.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9755268095084144,
-        "y": 7.062343065966915
+        "x": 2.3205,
+        "y": 7.028
       },
       "isLocked": false,
       "linkedName": "Outer Barge Intake"
@@ -20,8 +20,8 @@
         "y": 5.19
       },
       "prevControl": {
-        "x": 3.6615014903129657,
-        "y": 5.52595543032787
+        "x": 3.46125,
+        "y": 6.41375
       },
       "nextControl": null,
       "isLocked": false,
