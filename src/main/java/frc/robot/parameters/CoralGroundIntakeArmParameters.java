@@ -7,10 +7,12 @@
  
 package frc.robot.parameters;
 
-import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CORAL_GROUND_INTAKE_ARM_MOTOR_ID;
-import static frc.robot.Constants.RobotConstants.CORAL_GROUND_INTAKE_ARM_MASS_KG;
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.OLD_CORAL_GROUND_INTAKE_ARM_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.CAN.TalonFX.NEW_CORAL_GROUND_INTAKE_ARM_MOTOR_ID;
+import static frc.robot.Constants.RobotConstants.OLD_CORAL_GROUND_INTAKE_ARM_MASS_KG;
 import static frc.robot.Constants.RobotConstants.CORAL_MASS_KG;
 import static frc.robot.Constants.RobotConstants.MAX_BATTERY_VOLTAGE;
+import static frc.robot.Constants.RobotConstants.NEW_CORAL_GROUND_INTAKE_ARM_MASS_KG;
 import static frc.robot.util.MotorDirection.COUNTER_CLOCKWISE_POSITIVE;
 
 import edu.wpi.first.math.util.Units;
@@ -20,21 +22,21 @@ import frc.robot.util.MotorDirection;
 public enum CoralGroundIntakeArmParameters implements ArmParameters {
   PracticeBase2025(
       MotorParameters.KrakenX60,
-      CORAL_GROUND_INTAKE_ARM_MASS_KG,
-      36.0 * 22.0 / 15.0,
-      Units.inchesToMeters(21),
-      CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
-      Math.toRadians(128),
-      Math.toRadians(-35),
-      Math.toRadians(128),
+      NEW_CORAL_GROUND_INTAKE_ARM_MASS_KG,
+      12.0 * 64.0 / 24.0,
+      0.42,
+      NEW_CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
+      Math.toRadians(-29), // TODO: once hardstop is added, fix stow angle.
+      Math.toRadians(-30),
+      Math.toRadians(125),
       0.15),
 
   CompetitionBase2025(
       MotorParameters.KrakenX60,
-      CORAL_GROUND_INTAKE_ARM_MASS_KG,
+      OLD_CORAL_GROUND_INTAKE_ARM_MASS_KG,
       36.0 * 22.0 / 15.0,
       Units.inchesToMeters(21),
-      CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
+      OLD_CORAL_GROUND_INTAKE_ARM_MOTOR_ID,
       Math.toRadians(127),
       Math.toRadians(-25),
       Math.toRadians(127),

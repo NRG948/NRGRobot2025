@@ -62,13 +62,16 @@ public final class Constants {
     public static final double CORAL_MASS_KG = 0.68;
 
     /** The coral arm mass in kg. */
-    public static final double CORAL_GROUND_INTAKE_ARM_MASS_KG = 4.245;
+    public static final double OLD_CORAL_GROUND_INTAKE_ARM_MASS_KG = 4.245;
+
+    /** The coral arm mass in kg. */
+    public static final double NEW_CORAL_GROUND_INTAKE_ARM_MASS_KG = 4.178; // est.
 
     /**
      * The x distance from the odometry center (center of the wheels) to the edge of the front
      * bumper.
      */
-    public static final double ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X = 0.43; // ROBOT_LENGTH / 2;
+    public static final double ODOMETRY_CENTER_TO_FRONT_BUMPER_DELTA_X = 0.46; // ROBOT_LENGTH / 2;
 
     /**
      * The x distance from the odometry center (center of the wheels) to the edge of the rear
@@ -105,8 +108,10 @@ public final class Constants {
       public static final class TalonFX {
         public static final int CORAL_ARM_MOTOR_ID = 4; // For both bots
         public static final int CORAL_ROLLER_MOTOR_ID = 5; // For both bots
-        public static final int CORAL_GROUND_INTAKE_ARM_MOTOR_ID = 12;
-        public static final int CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID = 3;
+        public static final int OLD_CORAL_GROUND_INTAKE_ARM_MOTOR_ID = 12;
+        public static final int OLD_CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID = 3;
+        public static final int NEW_CORAL_GROUND_INTAKE_ARM_MOTOR_ID = 3;
+        public static final int NEW_CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID = 12;
         public static final int PRACTICE_BOT_CLIMBER_MOTOR_ID = 6; // not present
         public static final int COMPETITION_BOT_CLIMBER_MOTOR_ID = 11;
       }
