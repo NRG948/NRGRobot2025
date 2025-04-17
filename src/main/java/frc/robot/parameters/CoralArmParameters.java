@@ -22,9 +22,9 @@ public enum CoralArmParameters implements ArmParameters {
       3.0 * 9.0 * 54.0 / 36.0,
       0.315,
       CORAL_ARM_MOTOR_ID,
-      Math.toRadians(94),
+      Math.toRadians(101),
       Math.toRadians(10),
-      Math.toRadians(96),
+      Math.toRadians(103),
       0.08),
   CompetitionBase2025(
       MotorParameters.KrakenX60,
