@@ -32,9 +32,9 @@ public enum CoralArmParameters implements ArmParameters {
       27.0 * 54.0 / 36.0,
       0.315,
       CORAL_ARM_MOTOR_ID,
-      Math.toRadians(95),
+      Math.toRadians(99),
       Math.toRadians(10),
-      Math.toRadians(97),
+      Math.toRadians(100),
       0.1);
 
   private final MotorParameters motorParameters;
