@@ -151,6 +151,10 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
     return MathUtil.isNear(goalAngle, currentAngle, Math.toRadians(TOLERANCE_DEG.getValue()));
   }
 
+  public double getCurrentAngle() {
+    return currentAngle;
+  }
+
   private void updateTelemetry() {
     currentAngle = absoluteEncoder.getAngle(); // in rad
 
