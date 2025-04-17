@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.418,
-        "y": 1.4314999999999998
+        "x": 2.505430327868852,
+        "y": 1.2618340163934432
       },
       "isLocked": false,
       "linkedName": "CS Processor"
@@ -20,8 +20,8 @@
         "y": 3.12
       },
       "prevControl": {
-        "x": 3.1785,
-        "y": 2.4454999999999996
+        "x": 3.3205942622950824,
+        "y": 2.1489241803278687
       },
       "nextControl": null,
       "isLocked": false,
