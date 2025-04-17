@@ -29,7 +29,7 @@ import frc.robot.subsystems.Swerve;
     height = 2)
 public class AlignRearBumperToWall extends Command {
   private static final DataLog LOG = DataLogManager.getLog();
-  private static final double MAX_TRANSLATIONAL_POWER = 0.50;
+  private static final double MAX_TRANSLATIONAL_POWER = 0.6;
   private static final double MAX_ROTATIONAL_POWER = 0.5;
 
   /** The translational tolerance value for aligning to the wall. */
@@ -42,7 +42,7 @@ public class AlignRearBumperToWall extends Command {
   public static final double LASER_CAN_TO_REAR_BUMBER_DELTA_X = 0.13;
 
   @RobotPreferencesValue
-  public static DoubleValue Px = new DoubleValue("AlignRearBumperToWall", "X KP", 0.6);
+  public static DoubleValue Px = new DoubleValue("AlignRearBumperToWall", "X KP", 0.55);
 
   @RobotPreferencesValue
   public static DoubleValue Pr = new DoubleValue("AlignRearBumperToWall", "R KP", 0.01);
