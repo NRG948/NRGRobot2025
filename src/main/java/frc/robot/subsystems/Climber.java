@@ -161,7 +161,9 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
 
   @Override
   public void setIdleMode(MotorIdleMode idleMode) {
-    mainMotor.setIdleMode(idleMode);
+    if (RobotContainer.isCompBot()) {
+      mainMotor.setIdleMode(idleMode);
+    }
   }
 
   @Override

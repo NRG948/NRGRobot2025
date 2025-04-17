@@ -106,6 +106,10 @@ public class RobotContainer {
     configureBindings();
   }
 
+  public static boolean isCompBot() {
+    return ROBOT_TYPE.getValue() == RobotSelector.CompetitionRobot2025;
+  }
+
   public void disabledInit() {
     phaseLogger.append("Disabled");
     subsystems.disableAll();
