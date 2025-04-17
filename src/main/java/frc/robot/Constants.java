@@ -46,7 +46,7 @@ public final class Constants {
     private static final double BUMPER_KG = Units.lbsToKilograms((20.3 + 19.3) / 2);
 
     /** The mass in kg of the competition robot without bumpers and battery. */
-    private static final double COMPETITION_CHASSIS_KG = Units.lbsToKilograms(113.5);
+    private static final double COMPETITION_CHASSIS_KG = Units.lbsToKilograms(114.3);
 
     /** The mass in kg of the practice robot without bumpers and battery. */
     private static final double PRACTICE_CHASSIS_KG = Units.lbsToKilograms(115.0);
