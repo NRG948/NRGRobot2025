@@ -18,7 +18,7 @@ import frc.robot.subsystems.Subsystems;
 /** A namespace for elevator command factory methods. */
 public final class ElevatorCommands {
   /** Returns a command that goes to the given elevator level. */
-  public static Command goToElevatorLevel(Subsystems subsystems, ElevatorLevel level) {
+  public static Command seekToElevatorLevel(Subsystems subsystems, ElevatorLevel level) {
     Elevator elevator = subsystems.elevator;
 
     return Commands.runOnce(() -> elevator.setGoalHeight(level), elevator)

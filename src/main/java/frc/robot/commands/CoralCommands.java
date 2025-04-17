@@ -27,7 +27,8 @@ public final class CoralCommands {
   public static final double GROUND_INTAKE_INTAKE_ANGLE =
       CORAL_GROUND_INTAKE_ARM_PARAMETERS.getMinAngleRad();
   public static final double GROUND_INTAKE_STOWED_ANGLE =
-      CORAL_GROUND_INTAKE_ARM_PARAMETERS.getMaxAngleRad();
+      CORAL_GROUND_INTAKE_ARM_PARAMETERS.getStowedAngleRad();
+
   public static final double GROUND_INTAKE_L1_ANGLE = Math.toRadians(45);
 
   public static final double CORAL_ROLLER_DETECTION_DELAY = CORAL_ARM_PARAMETERS.getRollerDelay();
@@ -44,7 +45,7 @@ public final class CoralCommands {
   private static final double CORAL_GRABBER_TRANSFER_VELOCITY = -0.7;
 
   /** The velocity for intaking the coral using the ground intake. */
-  private static final double CORAL_GRABBER_INTAKE_VELOCITY = 1.0;
+  private static final double CORAL_GRABBER_INTAKE_VELOCITY = 1.5;
 
   /** The velocity for scoring L1 using the ground intake. */
   private static final double CORAL_GRABBER_L1_VELOCITY = -0.3;
@@ -87,20 +88,20 @@ public final class CoralCommands {
         .withName("IntakeUntilCoralDetected");
   }
 
-  /** Returns a command that outtakes coral until it is not detected. */
+  /** Returns a command to outtake coral at L2-L4 until it is not detected, then stow the arm. */
   public static Command scoreToReefL2ThruL4(Subsystems subsystems) {
     CoralRoller coralRoller = subsystems.coralRoller;
     Elevator elevator = subsystems.elevator;
 
     return Commands.sequence(
             outtakeCoral(subsystems),
+            Commands.idle(coralRoller).until(() -> !coralRoller.hasCoral()).withTimeout(0.8),
             Commands.defer(
                 () -> Commands.waitSeconds(elevator.getCurrentElevatorLevel().getOuttakeDelay()),
                 Set.of()),
-            stowArm(subsystems),
-            Commands.idle(coralRoller).until(() -> !coralRoller.hasCoral()))
+            stowArm(subsystems))
         .finallyDo(coralRoller::disable)
-        .withName("OuttakeUntilCoralNotDetected");
+        .withName("ScoreToReefL2ThruL4");
   }
 
   /** Outtakes L1 coral using the ground intake. */

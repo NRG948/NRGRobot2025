@@ -15,16 +15,14 @@ import frc.robot.subsystems.Subsystems;
 public final class CoralAndElevatorCommands {
   /** Raises elevator and sets the coral arm angle when the elevator reaches the pivot height. */
   public static Command raiseElevatorAndTipCoralArm(Subsystems subsystems, ElevatorLevel level) {
-    return Commands.parallel(
-            Commands.sequence(
-                ElevatorCommands.goToElevatorLevel(subsystems, level),
-                ElevatorCommands.waitForElevatorToReachGoalHeight(subsystems.elevator)),
-            Commands.sequence(
-                CoralCommands.waitForElevatorToReachArmHeight(subsystems),
-                CoralCommands.setArmAngleForReefLevel(subsystems, level),
-                Commands.idle(subsystems.coralArm)
-                    .until(subsystems.coralArm::atGoalAngle)
-                    .withTimeout(0.5)))
+    return Commands.sequence(
+            ElevatorCommands.seekToElevatorLevel(subsystems, level),
+            CoralCommands.waitForElevatorToReachArmHeight(subsystems),
+            CoralCommands.setArmAngleForReefLevel(subsystems, level),
+            ElevatorCommands.waitForElevatorToReachGoalHeight(subsystems.elevator),
+            Commands.idle(subsystems.coralArm)
+                .until(subsystems.coralArm::atGoalAngle)
+                .withTimeout(0.5))
         .withName("RaiseElevatorAndCoralArm");
   }
 
