@@ -52,7 +52,9 @@ import frc.robot.commands.ElevatorCommands;
 import frc.robot.commands.FlameCycle;
 import frc.robot.commands.LEDCommands;
 import frc.robot.commands.ManipulatorCommands;
+import frc.robot.commands.TankDriveWithJoysticksCommand;
 import frc.robot.subsystems.Subsystems;
+import frc.robot.subsystems.TankDriveSubsystem;
 import frc.robot.util.MotorIdleMode;
 
 /**
@@ -66,6 +68,12 @@ public class RobotContainer {
   private static final int COAST_MODE_DELAY = 30;
 
   private static final DataLog LOG = DataLogManager.getLog();
+
+  private final TankDriveSubsystem tankDriveTrain = new TankDriveSubsystem();
+  private final XboxController controller = new XboxController(0);
+
+
+
 
   // The robot's subsystems and commands are defined here...
   private final Subsystems subsystems = new Subsystems();
@@ -93,7 +101,7 @@ public class RobotContainer {
   public RobotContainer() {
     initShuffleboard();
     CanBridge.runTCP();
-
+    tankDriveTrain.setDefaultCommand(new TankDriveWithJoysticksCommand(tankDriveTrain, controller));
     subsystems.drivetrain.setDefaultCommand(
         new DriveUsingController(subsystems, m_driverController));
 
