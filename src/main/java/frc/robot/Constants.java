@@ -50,8 +50,9 @@ public final class Constants {
     private static final double PRACTICE_CHASSIS_KG = Units.lbsToKilograms(115.0);
 
     /** The total mass in kg of the competition robot including bumpers and battery. */
-    public static final double COMPETITION_ROBOT_MASS_KG =
-        COMPETITION_CHASSIS_KG + BATTERY_KG + BUMPER_KG;
+    public static final double COMPETITION_ROBOT_MASS_KG = 134.5 + BATTERY_KG;
+
+    // COMPETITION_CHASSIS_KG + BATTERY_KG + BUMPER_KG;
 
     /** The total mass in kg of the practice robot including bumpers and battery. */
     public static final double PRACTICE_ROBOT_MASS_KG = 99.0;
