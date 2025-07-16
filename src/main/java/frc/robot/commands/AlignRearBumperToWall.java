@@ -42,10 +42,10 @@ public class AlignRearBumperToWall extends Command {
   public static final double LASER_CAN_TO_REAR_BUMBER_DELTA_X = 0.13;
 
   @RobotPreferencesValue
-  public static DoubleValue Px = new DoubleValue("AlignRearBumperToWall", "X KP", 0.55);
+  public static DoubleValue Px = new DoubleValue("AlignRearBumperToWall", "X KP", 1);
 
   @RobotPreferencesValue
-  public static DoubleValue Pr = new DoubleValue("AlignRearBumperToWall", "R KP", 0.01);
+  public static DoubleValue Pr = new DoubleValue("AlignRearBumperToWall", "R KP", 0.02);
 
   private final Swerve drivetrain;
   private final LaserCAN laserCAN;
