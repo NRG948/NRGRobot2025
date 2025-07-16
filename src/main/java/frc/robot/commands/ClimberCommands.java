@@ -22,7 +22,7 @@ import frc.robot.subsystems.Subsystems;
 public final class ClimberCommands {
   @RobotPreferencesValue
   public static final RobotPreferences.DoubleValue CLIMB_ANGLE =
-      new RobotPreferences.DoubleValue("Climber", "Climb Angle (deg)", -94);
+      new RobotPreferences.DoubleValue("Climber", "Climb Angle (deg)", -88);
 
   private static final double STOW_ANGLE = Math.toRadians(90);
   private static final double CLIMB_GROUND_INTAKE_ANGLE = Math.toRadians(97);
