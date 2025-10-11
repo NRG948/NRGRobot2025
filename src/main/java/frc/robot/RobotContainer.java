@@ -195,9 +195,9 @@ public class RobotContainer {
     new Trigger(() -> m_driverController.getHID().getPOV() != -1)
         .onTrue(ClimberCommands.prepareToClimb(subsystems));
 
-    m_manipulatorController.a().onTrue(CoralCommands.extendToReefL1(subsystems));
-    m_manipulatorController.x().onTrue(raiseElevatorAndTipCoralArm(subsystems, L2));
-    m_manipulatorController.b().onTrue(raiseElevatorAndTipCoralArm(subsystems, L3));
+    m_manipulatorController.b().onTrue(CoralCommands.extendToReefL1(subsystems));
+    m_manipulatorController.a().onTrue(raiseElevatorAndTipCoralArm(subsystems, L2));
+    m_manipulatorController.x().onTrue(raiseElevatorAndTipCoralArm(subsystems, L3));
     m_manipulatorController.y().onTrue(raiseElevatorAndTipCoralArm(subsystems, L4));
 
     m_manipulatorController.leftBumper().whileTrue(CoralCommands.manualGroundOuttake(subsystems));
