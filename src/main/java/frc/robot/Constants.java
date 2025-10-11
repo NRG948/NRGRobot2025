@@ -85,7 +85,7 @@ public final class Constants {
      * The y-offset of the coral end effector from the center of the robot in the robot's frame of
      * reference.
      */
-    public static final double CORAL_ARM_CENTER_Y_OFFSET = -Units.inchesToMeters(10.25);
+    public static final double CORAL_ARM_CENTER_Y_OFFSET = -Units.inchesToMeters(7);
 
     /** The x distance from the laser CANs to the edge of the rear bumper. */
     // TODO: find actual distance
