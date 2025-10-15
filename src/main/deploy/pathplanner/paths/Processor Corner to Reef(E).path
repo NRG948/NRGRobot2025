@@ -62,7 +62,7 @@
   "folder": "Start Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.0289780689208
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

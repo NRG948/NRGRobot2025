@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.993852459016393,
-        "y": 1.4896004098360647
+        "x": 5.74965399080433,
+        "y": 0.5425717213114765
       },
       "isLocked": false,
       "linkedName": "Processor Side Start"
@@ -95,7 +95,7 @@
   "folder": "CS to Reef",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.0289780689208
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
