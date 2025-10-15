@@ -15,6 +15,7 @@ import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.CoralCommands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.util.MotorIdleMode;
@@ -163,6 +164,7 @@ public class Subsystems {
   public void setInitialStates() {
     coralArm.setGoalAngle(ElevatorLevel.STOWED.getArmAngle());
     coralIntakeArm.setGoalAngle(CoralCommands.GROUND_INTAKE_STOWED_ANGLE);
+    ClimberCommands.setGoalAngle(this, ClimberCommands.NEUTRAL_ANGLE).schedule();
   }
 
   /** Disables the specified subsystems implementing the {@link ActiveSubsystem} interface. */
