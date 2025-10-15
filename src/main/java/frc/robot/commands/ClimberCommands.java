@@ -24,8 +24,17 @@ public final class ClimberCommands {
   public static final RobotPreferences.DoubleValue CLIMB_ANGLE =
       new RobotPreferences.DoubleValue("Climber", "Climb Angle (deg)", -88);
 
+  public static final double NEUTRAL_ANGLE = Math.toRadians(0);
   private static final double STOW_ANGLE = Math.toRadians(90);
   private static final double CLIMB_GROUND_INTAKE_ANGLE = Math.toRadians(97);
+
+  public static Command setGoalAngle(Subsystems subsystems, double goalAngle) {
+    Climber climber = subsystems.climber;
+    return Commands.sequence(
+            Commands.runOnce(() -> climber.setGoalAngle(goalAngle), climber),
+            Commands.idle(climber).until(climber::atGoalAngle))
+        .finallyDo(climber::disable);
+  }
 
   /** Returns a command that climbs. */
   public static Command climb(Subsystems subsystems) {
@@ -54,8 +63,10 @@ public final class ClimberCommands {
   }
 
   public static Command prepareToClimb(Subsystems subsystems) {
-    return Commands.runOnce(
-        () -> subsystems.coralIntakeArm.setGoalAngle(CLIMB_GROUND_INTAKE_ANGLE),
-        subsystems.coralIntakeArm);
+    return Commands.parallel(
+        Commands.runOnce(
+            () -> subsystems.coralIntakeArm.setGoalAngle(CLIMB_GROUND_INTAKE_ANGLE),
+            subsystems.coralIntakeArm),
+        setGoalAngle(subsystems, STOW_ANGLE));
   }
 }
