@@ -21,24 +21,17 @@ import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.MotorParameters;
 import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
-import java.util.Set;
 
 @RobotPreferencesLayout(
     groupName = "CoralRoller",
@@ -49,7 +42,7 @@ import java.util.Set;
     type = "Grid Layout",
     gridColumns = 2,
     gridRows = 2)
-public class CoralRoller extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
+public class CoralRoller extends SubsystemBase implements ActiveSubsystem {
 
   @RobotPreferencesValue(column = 0, row = 0)
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
@@ -169,40 +162,5 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, Shuff
     logHasCoral.update(hasCoral);
     logCurrentVelocity.append(currentVelocity);
     motor.logTelemetry();
-  }
-
-  @Override
-  public void addShuffleboardTab() {
-    if (!ENABLE_TAB.getValue()) {
-      return;
-    }
-
-    ShuffleboardTab rollerTab = Shuffleboard.getTab("Coral Roller");
-    ShuffleboardLayout statusLayout =
-        rollerTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 8);
-    statusLayout.addDouble("Goal Velocity", () -> goalVelocity);
-    statusLayout.addDouble("Current Velocity", () -> currentVelocity);
-    statusLayout.addBoolean("Has Coral", () -> hasCoral);
-    statusLayout.add("Max Velocity", MAX_VELOCITY);
-
-    ShuffleboardLayout controlLayout =
-        rollerTab.getLayout("Control", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
-    GenericEntry speed = controlLayout.add("Speed", 0).getEntry();
-    GenericEntry delay = controlLayout.add("Delay", 0).getEntry();
-    controlLayout.add(
-        Commands.sequence(
-                Commands.runOnce(() -> goalVelocity = speed.getDouble(0), this),
-                Commands.idle(this).until(this::hasCoral),
-                Commands.defer(() -> Commands.waitSeconds(delay.getDouble(0)), Set.of(this)),
-                Commands.runOnce(this::disable, this))
-            .withName("Intake"));
-    controlLayout.add(
-        Commands.sequence(
-                Commands.runOnce(() -> goalVelocity = speed.getDouble(0), this),
-                Commands.idle(this).until(() -> !hasCoral),
-                Commands.defer(() -> Commands.waitSeconds(delay.getDouble(0)), Set.of(this)),
-                Commands.runOnce(this::disable, this))
-            .withName("Deliver"));
-    controlLayout.add(Commands.runOnce(this::disable, this).withName("Disable"));
   }
 }

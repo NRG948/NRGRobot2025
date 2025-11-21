@@ -25,17 +25,11 @@ import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.parameters.ArmParameters;
@@ -48,7 +42,7 @@ import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 @RobotPreferencesLayout(groupName = "Arm", row = 2, column = 4, width = 1, height = 1)
-public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
+public class Arm extends SubsystemBase implements ActiveSubsystem {
   private static final double TOLERANCE = Math.toRadians(1.5);
   private static final double RADIANS_PER_ROTATION = 2 * Math.PI;
   private static final double ERROR_MARGIN = Math.toRadians(5);
@@ -253,30 +247,5 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, ShuffleboardP
   @Override
   public void periodic() {
     updateTelemetry();
-  }
-
-  @Override
-  public void addShuffleboardTab() {
-    if (!ENABLE_TAB.getValue()) {
-      return;
-    }
-    ShuffleboardTab armTab = Shuffleboard.getTab(getName());
-
-    ShuffleboardLayout statusLayout =
-        armTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
-    statusLayout.addBoolean("Enabled", () -> enabled);
-    statusLayout.addDouble("Current Angle of Motor Encoder", () -> Math.toDegrees(currentAngle));
-    statusLayout.addDouble("Goal Angle", () -> Math.toDegrees(goalAngle));
-    statusLayout.addDouble("Current Velocity", () -> Math.toDegrees(currentVelocity));
-
-    ShuffleboardLayout controlLayout =
-        armTab.getLayout("Control", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
-    GenericEntry angle = controlLayout.add("Angle", 0).getEntry();
-    controlLayout.add(
-        Commands.sequence(
-                Commands.runOnce(() -> setGoalAngle(Math.toRadians(angle.getDouble(0))), this),
-                Commands.idle(this).until(this::atGoalAngle))
-            .withName("Set Angle"));
-    controlLayout.add(Commands.runOnce(this::disable, this).withName("Disable"));
   }
 }

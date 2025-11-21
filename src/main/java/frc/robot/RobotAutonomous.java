@@ -12,9 +12,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -22,7 +19,6 @@ import frc.robot.commands.Autos;
 import frc.robot.subsystems.Subsystems;
 import frc.robot.subsystems.Swerve;
 import frc.robot.util.FieldUtils;
-import java.util.Map;
 import java.util.function.DoubleSupplier;
 
 // import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -69,20 +65,5 @@ public class RobotAutonomous {
   public Command getAutonomousCommand(Subsystems subsystems) {
     return Commands.sequence(
         Commands.waitSeconds(this.delayChooser.getSelected()), this.autoChooser.getSelected());
-  }
-
-  /**
-   * Adds the autonomous layout to the shuffleboard tab.
-   *
-   * @param tab The tab to add the layout.
-   */
-  public void addShuffleboardLayout(ShuffleboardTab tab) {
-    ShuffleboardLayout layout =
-        tab.getLayout("Autonomous", BuiltInLayouts.kGrid)
-            .withProperties(Map.of("Number of columns", 1, "Number of rows", 1))
-            .withPosition(0, 0)
-            .withSize(2, 2);
-    layout.add("Routine", autoChooser).withPosition(0, 0);
-    layout.add("Delay", delayChooser).withPosition(0, 1);
   }
 }

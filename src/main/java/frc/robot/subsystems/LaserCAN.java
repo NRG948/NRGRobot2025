@@ -15,14 +15,10 @@ import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants.CAN;
 
-public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
+public class LaserCAN extends SubsystemBase {
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -135,16 +131,5 @@ public class LaserCAN extends SubsystemBase implements ShuffleboardProducer {
     } else {
       return NO_MEASUREMENT;
     }
-  }
-
-  @Override
-  public void addShuffleboardTab() {
-    ShuffleboardTab LaserCANTab = Shuffleboard.getTab("Laser CAN");
-    ShuffleboardLayout statusLayout =
-        LaserCANTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 8);
-    statusLayout.addDouble("Left Distance", () -> leftDistance);
-    statusLayout.addDouble("Right Distance", () -> rightDistance);
-    statusLayout.addDouble("Angle to Wall", () -> angleToWall);
-    statusLayout.addDouble("Average Distance", this::getAverageDistance);
   }
 }

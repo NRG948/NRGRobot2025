@@ -15,9 +15,6 @@ import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferences.EnumValue;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
-import edu.wpi.first.cscore.HttpCamera;
-import edu.wpi.first.cscore.HttpCamera.HttpCameraKind;
-import edu.wpi.first.cscore.VideoSource;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -33,11 +30,6 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StructLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -61,7 +53,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
     type = "Grid Layout",
     gridColumns = 4,
     gridRows = 1)
-public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
+public class AprilTag extends SubsystemBase {
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -428,67 +420,5 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     }
     var bestCameraToTarget = robotToCamera.plus(target.get().getBestCameraToTarget());
     return Math.hypot(bestCameraToTarget.getX(), bestCameraToTarget.getY());
-  }
-
-  /** Adds the AprilTag tab to Shuffleboard if enabled. */
-  public void addShuffleboardTab() {
-    if (!ENABLE_TAB.getValue()) {
-      return;
-    }
-    VideoSource video =
-        new HttpCamera(
-            "photonvision_Port_1190_Output_MJPEG_Server",
-            "http://photonvision.local:1183/stream.mjpg",
-            HttpCameraKind.kMJPGStreamer);
-
-    ShuffleboardTab visionTab = Shuffleboard.getTab(getName());
-    ShuffleboardLayout targetLayout =
-        visionTab.getLayout("Target Info", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 5);
-    targetLayout.add("ID Selection", aprilTagIdChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
-    targetLayout.addBoolean("Has Target", this::hasTargets).withWidget(BuiltInWidgets.kBooleanBox);
-    targetLayout
-        .addDouble("Distance", () -> distanceToSelectedTarget)
-        .withWidget(BuiltInWidgets.kTextView);
-    targetLayout
-        .addDouble("Angle", () -> Math.toDegrees(angleToSelectedTarget))
-        .withWidget(BuiltInWidgets.kTextView);
-
-    visionTab
-        .add("April Tag", video)
-        .withWidget(BuiltInWidgets.kCameraStream)
-        .withPosition(2, 0)
-        .withSize(4, 3);
-
-    ShuffleboardLayout aprilTagLayout =
-        visionTab
-            .getLayout("Target Position", BuiltInLayouts.kList)
-            .withPosition(6, 0)
-            .withSize(2, 4);
-    ShuffleboardLayout selectedLayout =
-        aprilTagLayout
-            .getLayout("Selected April Tag", BuiltInLayouts.kGrid)
-            .withProperties(Map.of("Number of Columns", 3, "Number of Rows", 2));
-    selectedLayout.addDouble("X", () -> selectedAprilTagPose.getX()).withPosition(0, 0);
-    selectedLayout.addDouble("Y", () -> selectedAprilTagPose.getY()).withPosition(1, 0);
-    selectedLayout.addDouble("Z", () -> selectedAprilTagPose.getZ()).withPosition(2, 0);
-    selectedLayout
-        .addDouble("Roll", () -> Math.toDegrees(selectedAprilTagPose.getRotation().getX()))
-        .withPosition(0, 1);
-    selectedLayout
-        .addDouble("Pitch", () -> Math.toDegrees(selectedAprilTagPose.getRotation().getY()))
-        .withPosition(1, 1);
-    selectedLayout
-        .addDouble("Yaw", () -> Math.toDegrees(selectedAprilTagPose.getRotation().getZ()))
-        .withPosition(2, 1);
-
-    ShuffleboardLayout estimatedLayout =
-        aprilTagLayout
-            .getLayout("Global Estimated Pose", BuiltInLayouts.kGrid)
-            .withProperties(Map.of("Number of columns", 3, "Number of rows", 1));
-    estimatedLayout.addDouble("X", () -> lastEstimatedPose.getX()).withPosition(0, 0);
-    estimatedLayout.addDouble("Y", () -> lastEstimatedPose.getY()).withPosition(1, 0);
-    estimatedLayout
-        .addDouble("Yaw", () -> lastEstimatedPose.getRotation().getDegrees())
-        .withPosition(2, 0);
   }
 }

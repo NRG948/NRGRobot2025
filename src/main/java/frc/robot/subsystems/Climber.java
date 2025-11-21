@@ -21,16 +21,10 @@ import com.nrg948.preferences.RobotPreferences.DoubleValue;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.util.AbsoluteAngleEncoder;
@@ -41,7 +35,7 @@ import frc.robot.util.TalonFXAdapter;
 import java.util.Map;
 
 @RobotPreferencesLayout(groupName = "Climber", row = 0, column = 6, width = 2, height = 3)
-public class Climber extends SubsystemBase implements ShuffleboardProducer, ActiveSubsystem {
+public class Climber extends SubsystemBase implements ActiveSubsystem {
   @RobotPreferencesValue
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
       new RobotPreferences.BooleanValue("Climber", "Enable Tab", false);
@@ -168,30 +162,5 @@ public class Climber extends SubsystemBase implements ShuffleboardProducer, Acti
     if (RobotContainer.isCompBot()) {
       mainMotor.setIdleMode(idleMode);
     }
-  }
-
-  @Override
-  public void addShuffleboardTab() {
-    if (!ENABLE_TAB.getValue()) {
-      return;
-    }
-
-    ShuffleboardTab climberTab = Shuffleboard.getTab(getName());
-
-    ShuffleboardLayout statusLayout =
-        climberTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
-    statusLayout.addBoolean("Enabled", () -> enabled);
-    statusLayout.addDouble("Current Angle", () -> Math.toDegrees(currentAngle));
-    statusLayout.addDouble("Goal Angle", () -> Math.toDegrees(goalAngle));
-
-    ShuffleboardLayout controlLayout =
-        climberTab.getLayout("Control", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
-    GenericEntry angle = controlLayout.add("Angle (deg)", 0).getEntry();
-    controlLayout.add(
-        Commands.sequence(
-                Commands.runOnce(() -> setGoalAngle(Math.toRadians(angle.getDouble(0))), this),
-                Commands.idle(this).until(this::atGoalAngle))
-            .withName("Set Angle (deg)"));
-    controlLayout.add(Commands.runOnce(this::disable, this).withName("Disable"));
   }
 }

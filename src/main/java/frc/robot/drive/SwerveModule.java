@@ -17,21 +17,14 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Robot;
 import frc.robot.parameters.SwerveDriveParameters;
 import frc.robot.util.SwerveModuleVelocities;
 import frc.robot.util.SwerveModuleVoltages;
-import java.util.Map;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -335,52 +328,5 @@ public class SwerveModule {
     simWheelAngleVelocity = simSteeringMotor.getAngularVelocityRadPerSec();
     simWheelAngle =
         new Rotation2d(simWheelAngle.getRadians() + (simWheelAngleVelocity * Robot.kDefaultPeriod));
-  }
-
-  /**
-   * Adds the SwerveModule layout to the Shuffleboard tab.
-   *
-   * @param tab The Shuffleboard tab to add the layout.
-   * @return The SwerveModule layout.
-   */
-  public ShuffleboardLayout addShuffleboardLayout(ShuffleboardTab tab) {
-    ShuffleboardLayout moduleLayout =
-        tab.getLayout(name, BuiltInLayouts.kGrid)
-            .withProperties(
-                Map.of("Number of columns", 2, "Number of rows", 1, "Label position", "HIDDEN"));
-
-    moduleLayout
-        .add(
-            "Rotation",
-            new Sendable() {
-
-              @Override
-              public void initSendable(SendableBuilder builder) {
-                builder.setSmartDashboardType("Gyro");
-                builder.addDoubleProperty("Value", () -> -getPosition().angle.getDegrees(), null);
-              }
-            })
-        .withWidget(BuiltInWidgets.kGyro)
-        .withPosition(0, 0);
-
-    ShuffleboardLayout translationLayout =
-        moduleLayout
-            .getLayout("State", BuiltInLayouts.kGrid)
-            .withProperties(Map.of("Number of columns", 1, "Number of rows", 3))
-            .withPosition(1, 0);
-    translationLayout
-        .addDouble("Position", () -> getPosition().distanceMeters)
-        .withPosition(0, 0)
-        .withWidget(BuiltInWidgets.kTextView);
-    translationLayout
-        .addDouble("Velocity", () -> getState().speedMetersPerSecond)
-        .withPosition(0, 1)
-        .withWidget(BuiltInWidgets.kTextView);
-    translationLayout
-        .addDouble("Angular Velocity", () -> getVelocities().steeringVelocity)
-        .withPosition(0, 2)
-        .withWidget(BuiltInWidgets.kTextView);
-
-    return moduleLayout;
   }
 }

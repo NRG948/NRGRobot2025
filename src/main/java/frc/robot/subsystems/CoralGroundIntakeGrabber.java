@@ -25,17 +25,11 @@ import com.nrg948.preferences.RobotPreferencesValue;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.parameters.MotorParameters;
@@ -53,8 +47,7 @@ import frc.robot.util.TalonFXAdapter;
     type = "Grid Layout",
     gridColumns = 1,
     gridRows = 3)
-public class CoralGroundIntakeGrabber extends SubsystemBase
-    implements ActiveSubsystem, ShuffleboardProducer {
+public class CoralGroundIntakeGrabber extends SubsystemBase implements ActiveSubsystem {
 
   @RobotPreferencesValue(column = 0, row = 0)
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
@@ -164,31 +157,5 @@ public class CoralGroundIntakeGrabber extends SubsystemBase
     logHasCoral.update(hasCoral);
     logCurrentVelocity.append(currentVelocity);
     motor.logTelemetry();
-  }
-
-  @Override
-  public void addShuffleboardTab() {
-    if (!ENABLE_TAB.getValue()) {
-      return;
-    }
-
-    ShuffleboardTab rollerTab = Shuffleboard.getTab("Coral Ground Intake Grabber");
-    ShuffleboardLayout statusLayout =
-        rollerTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 4);
-    statusLayout.addBoolean("Enabled", () -> enabled);
-    statusLayout.addDouble("Goal Velocity", () -> goalVelocity);
-    statusLayout.addDouble("Current Velocity", () -> currentVelocity);
-    statusLayout.addBoolean("Has Coral", () -> hasCoral);
-    statusLayout.add("Max Velocity", MAX_VELOCITY);
-
-    ShuffleboardLayout controlLayout =
-        rollerTab.getLayout("Control", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 4);
-    GenericEntry intakeSpeed = controlLayout.add("Intake Speed", 0).getEntry();
-    controlLayout.add(
-        Commands.runOnce(() -> setGoalVelocity(intakeSpeed.getDouble(0)), this).withName("Intake"));
-    GenericEntry holdSpeed = controlLayout.add("Hold Speed", 0).getEntry();
-    controlLayout.add(
-        Commands.runOnce(() -> setGoalVelocity(holdSpeed.getDouble(0)), this).withName("Hold"));
-    controlLayout.add(Commands.runOnce(this::disable, this).withName("Disable"));
   }
 }

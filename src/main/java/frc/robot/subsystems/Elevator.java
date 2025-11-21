@@ -29,20 +29,13 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
-import frc.robot.commands.ElevatorCommands;
 import frc.robot.parameters.ElevatorLevel;
 import frc.robot.parameters.ElevatorParameters;
 import frc.robot.util.MotorIdleMode;
@@ -336,43 +329,5 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, Shuffleb
   public void simulationPeriodic() {
     simElevator.setInputVoltage(currentVoltage);
     simElevator.update(0.020);
-  }
-
-  @Override
-  public void addShuffleboardTab() {
-    if (!ENABLE_TAB.getValue()) {
-      return;
-    }
-
-    ShuffleboardTab elevatorTab = Shuffleboard.getTab("Elevator");
-    ShuffleboardLayout elevatorLayout =
-        elevatorTab.getLayout("Status", BuiltInLayouts.kList).withPosition(0, 0).withSize(2, 5);
-    elevatorLayout.addDouble("Current Height", () -> this.currentState.position);
-    elevatorLayout.addDouble("Current Velocity", () -> this.currentState.velocity);
-    elevatorLayout.addDouble("Goal Height", () -> this.goalState.position);
-    elevatorLayout.addDouble("Goal Velocity", () -> this.goalState.velocity);
-    elevatorLayout
-        .addBoolean("Is Enabled", () -> this.isSeekingGoal)
-        .withWidget(BuiltInWidgets.kBooleanBox);
-    elevatorLayout.add("Max Velocity", MAX_SPEED);
-    elevatorLayout.add("Max Acceleration", MAX_ACCELERATION);
-
-    ShuffleboardLayout controlLayout =
-        elevatorTab.getLayout("Control", BuiltInLayouts.kList).withPosition(2, 0).withSize(2, 5);
-    controlLayout.addDouble("Current Height", () -> this.currentState.position);
-    GenericEntry elevatorHeight = controlLayout.add("Elevator Height", 0).getEntry();
-    controlLayout.add(
-        Commands.defer(
-                () ->
-                    Commands.runOnce(() -> this.setGoalHeight(elevatorHeight.getDouble(0), 0))
-                        .until(() -> this.atGoalHeight()),
-                Set.of(this))
-            .withName("Set Height"));
-    controlLayout.add(Commands.runOnce(() -> this.disable(), this).withName("Disable"));
-    controlLayout.add(
-        Commands.runOnce(() -> encoder.reset(), this)
-            .ignoringDisable(true)
-            .withName("Reset Encoder"));
-    controlLayout.add(ElevatorCommands.stowElevator(this));
   }
 }

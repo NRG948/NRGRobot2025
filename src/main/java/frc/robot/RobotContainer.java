@@ -35,9 +35,6 @@ import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -139,28 +136,12 @@ public class RobotContainer {
   private void initShuffleboard() {
     RobotPreferences.addShuffleBoardTab();
 
-    subsystems.initShuffleboard();
-
-    ShuffleboardTab operatorTab = Shuffleboard.getTab("Operator");
-    autonomous.addShuffleboardLayout(operatorTab);
-
-    operatorTab
-        .addBoolean("Has Coral", () -> subsystems.coralRoller.hasCoral())
-        .withSize(2, 2)
-        .withPosition(6, 0);
-
     if (subsystems.frontRightCamera.isPresent()) {
       VideoSource video =
           new HttpCamera(
               "photonvision_Port_1184_Output_MJPEG_Server",
               "http://photonvision.local:1184/stream.mjpg",
               HttpCameraKind.kMJPGStreamer);
-
-      operatorTab
-          .add("Front Camera", video)
-          .withWidget(BuiltInWidgets.kCameraStream)
-          .withSize(4, 3)
-          .withPosition(2, 0);
     }
   }
 
