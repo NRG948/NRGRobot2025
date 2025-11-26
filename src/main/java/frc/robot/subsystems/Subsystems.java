@@ -198,14 +198,11 @@ public class Subsystems {
     }
   }
 
-  /**
-   * Adds Shuffleboard tabs for all subsystems implementing the {@link ShuffleboardProducer}
-   * interface.
-   */
-  public void initShuffleboard() {
+  /** Adds Shuffleboard tabs for all subsystems implementing the {@link DataPublisher} interface. */
+  public void publishAllData() {
     for (Subsystem subsystem : all) {
-      if (subsystem instanceof ShuffleboardProducer) {
-        ShuffleboardProducer.class.cast(subsystem).addShuffleboardTab();
+      if (subsystem instanceof DataPublisher) {
+        DataPublisher.class.cast(subsystem).publishData();
       }
     }
   }
@@ -214,6 +211,7 @@ public class Subsystems {
   public void periodic() {
     frontRightCamera.ifPresent(this::updateEstimatedPose);
     frontLeftCamera.ifPresent(this::updateEstimatedPose);
+    publishAllData();
   }
 
   /**
