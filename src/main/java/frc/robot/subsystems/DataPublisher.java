@@ -7,7 +7,7 @@
  
 package frc.robot.subsystems;
 
-public interface ShuffleboardProducer {
+public interface DataPublisher {
 
-  void addShuffleboardTab();
+  void publishData();
 }
