@@ -27,6 +27,7 @@ import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.parameters.MotorParameters;
 import frc.robot.util.MotorIdleMode;
@@ -42,7 +43,7 @@ import frc.robot.util.TalonFXAdapter;
     type = "Grid Layout",
     gridColumns = 2,
     gridRows = 2)
-public class CoralRoller extends SubsystemBase implements ActiveSubsystem {
+public class CoralRoller extends SubsystemBase implements ActiveSubsystem, DataPublisher {
 
   @RobotPreferencesValue(column = 0, row = 0)
   public static final RobotPreferences.BooleanValue ENABLE_TAB =
@@ -162,5 +163,10 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem {
     logHasCoral.update(hasCoral);
     logCurrentVelocity.append(currentVelocity);
     motor.logTelemetry();
+  }
+
+  @Override
+  public void publishData() {
+    SmartDashboard.putBoolean("coral intook", hasCoral());
   }
 }
