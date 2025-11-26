@@ -22,7 +22,6 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.ExponentialProfile;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -44,7 +43,7 @@ import frc.robot.util.TalonFXAdapter;
 import java.util.Map;
 
 @RobotPreferencesLayout(groupName = "Elevator", row = 0, column = 5, width = 1, height = 3)
-public class Elevator extends SubsystemBase implements ActiveSubsystem{
+public class Elevator extends SubsystemBase implements ActiveSubsystem {
 
   private static final DataLog LOG = DataLogManager.getLog();
 
