@@ -42,10 +42,9 @@ import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
 import java.util.Map;
-import java.util.Set;
 
 @RobotPreferencesLayout(groupName = "Elevator", row = 0, column = 5, width = 1, height = 3)
-public class Elevator extends SubsystemBase implements ActiveSubsystem, ShuffleboardProducer {
+public class Elevator extends SubsystemBase implements ActiveSubsystem{
 
   private static final DataLog LOG = DataLogManager.getLog();
 
