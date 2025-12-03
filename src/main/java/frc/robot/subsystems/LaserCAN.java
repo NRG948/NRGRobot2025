@@ -15,10 +15,11 @@ import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotConstants.CAN;
 
-public class LaserCAN extends SubsystemBase {
+public class LaserCAN extends SubsystemBase implements DataPublisher {
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -131,5 +132,12 @@ public class LaserCAN extends SubsystemBase {
     } else {
       return NO_MEASUREMENT;
     }
+  }
+
+  public void publishData() {
+    SmartDashboard.putNumber("LaserCAN/Status/Left Distance", leftDistance);
+    SmartDashboard.putNumber("LaserCAN/Status/Right Distance", rightDistance);
+    SmartDashboard.putNumber("LaserCAN/Status/Angle to Wall", angleToWall);
+    SmartDashboard.putNumber("LaserCAN/Status/Average Distance", getAverageDistance());
   }
 }
