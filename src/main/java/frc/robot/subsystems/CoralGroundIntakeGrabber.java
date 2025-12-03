@@ -4,7 +4,7 @@
  * Open Source Software; you can modify and/or share it under the terms of
  * the license file in the root directory of this project.
  */
- 
+
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.NEW_CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID;
@@ -30,6 +30,7 @@ import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.parameters.MotorParameters;
@@ -38,20 +39,13 @@ import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
 
-@RobotPreferencesLayout(
-    groupName = "CoralGroundIntakeGrabber",
-    row = 2,
-    column = 2,
-    width = 2,
-    height = 1,
-    type = "Grid Layout",
-    gridColumns = 1,
-    gridRows = 3)
-public class CoralGroundIntakeGrabber extends SubsystemBase implements ActiveSubsystem {
+@RobotPreferencesLayout(groupName = "CoralGroundIntakeGrabber", row = 2, column = 2, width = 2, height = 1, type = "Grid Layout", gridColumns = 1, gridRows = 3)
+public class CoralGroundIntakeGrabber extends SubsystemBase
+    implements ActiveSubsystem, DataPublisher {
 
   @RobotPreferencesValue(column = 0, row = 0)
-  public static final RobotPreferences.BooleanValue ENABLE_TAB =
-      new RobotPreferences.BooleanValue("CoralGroundIntakeGrabber", "Enable Tab", false);
+  public static final RobotPreferences.BooleanValue ENABLE_TAB = new RobotPreferences.BooleanValue(
+      "CoralGroundIntakeGrabber", "Enable Tab", false);
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -59,26 +53,23 @@ public class CoralGroundIntakeGrabber extends SubsystemBase implements ActiveSub
   private static final double GEAR_RATIO = 9.0;
 
   private static final double METERS_PER_REVOLUTION = (WHEEL_DIAMETER * Math.PI) / GEAR_RATIO;
-  private static final double MAX_VELOCITY =
-      (MotorParameters.KrakenX60.getFreeSpeedRPM() * METERS_PER_REVOLUTION) / 60;
+  private static final double MAX_VELOCITY = (MotorParameters.KrakenX60.getFreeSpeedRPM() * METERS_PER_REVOLUTION) / 60;
 
   private static final double KS = KrakenX60.getKs();
   private static final double KV = (MAX_BATTERY_VOLTAGE - KS) / MAX_VELOCITY;
 
-  private static final int MOTOR_ID =
-      RobotContainer.isCompBot()
-          ? OLD_CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID
-          : NEW_CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID;
-  private static final MotorDirection MOTOR_DIRECTION =
-      RobotContainer.isCompBot() ? CLOCKWISE_POSITIVE : COUNTER_CLOCKWISE_POSITIVE;
+  private static final int MOTOR_ID = RobotContainer.isCompBot()
+      ? OLD_CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID
+      : NEW_CORAL_GROUND_INTAKE_GRABBER_MOTOR_ID;
+  private static final MotorDirection MOTOR_DIRECTION = RobotContainer.isCompBot() ? CLOCKWISE_POSITIVE
+      : COUNTER_CLOCKWISE_POSITIVE;
 
-  private final TalonFXAdapter motor =
-      new TalonFXAdapter(
-          "/CoralGroundIntakeGrabber",
-          new TalonFX(MOTOR_ID, "rio"),
-          MOTOR_DIRECTION,
-          BRAKE,
-          METERS_PER_REVOLUTION);
+  private final TalonFXAdapter motor = new TalonFXAdapter(
+      "/CoralGroundIntakeGrabber",
+      new TalonFX(MOTOR_ID, "rio"),
+      MOTOR_DIRECTION,
+      BRAKE,
+      METERS_PER_REVOLUTION);
   private final RelativeEncoder encoder = motor.getEncoder();
   private DigitalInput beamBreak = new DigitalInput(CORAL_GROUND_INTAKE_BEAM_BREAK);
 
@@ -90,20 +81,16 @@ public class CoralGroundIntakeGrabber extends SubsystemBase implements ActiveSub
   private boolean enabled;
   private boolean hasCoral = false;
 
-  private DoubleLogEntry logCurrentVelocity =
-      new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/currentVelocity");
-  private DoubleLogEntry logGoalVelocity =
-      new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/goalVelocity");
-  private BooleanLogEntry logHasCoral =
-      new BooleanLogEntry(LOG, "/CoralGroundIntakeGrabber/hasCoral");
-  private DoubleLogEntry logFeedForward =
-      new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/feedforward");
-  private DoubleLogEntry logFeedBack =
-      new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/feedback");
+  private DoubleLogEntry logCurrentVelocity = new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/currentVelocity");
+  private DoubleLogEntry logGoalVelocity = new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/goalVelocity");
+  private BooleanLogEntry logHasCoral = new BooleanLogEntry(LOG, "/CoralGroundIntakeGrabber/hasCoral");
+  private DoubleLogEntry logFeedForward = new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/feedforward");
+  private DoubleLogEntry logFeedBack = new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/feedback");
   private DoubleLogEntry logVoltage = new DoubleLogEntry(LOG, "/CoralGroundIntakeGrabber/voltage");
 
   /** Creates a new CoralGroundIntakeGrabber. */
-  public CoralGroundIntakeGrabber() {}
+  public CoralGroundIntakeGrabber() {
+  }
 
   /** Sets the goal velocity in meters per second. */
   public void setGoalVelocity(double velocity) {
@@ -157,5 +144,22 @@ public class CoralGroundIntakeGrabber extends SubsystemBase implements ActiveSub
     logHasCoral.update(hasCoral);
     logCurrentVelocity.append(currentVelocity);
     motor.logTelemetry();
+  }
+
+  public void publishData() {
+    SmartDashboard.putBoolean("Ground Intake Grabber/Tab Enabled", enabled);
+    SmartDashboard.putNumber("Ground Intake Grabber/Goal Velocity", goalVelocity);
+    SmartDashboard.putNumber("Ground Intake Grabber/Current Velocity", currentVelocity);
+    SmartDashboard.putBoolean("Ground Intake Grabber/Has Coral", hasCoral);
+    SmartDashboard.putNumber("Ground Intake Grabber/Max Velocity", MAX_VELOCITY);
+
+    /*
+     * meant to emulate shuffleboard Commands.runOnce() set goal velocities
+     */
+    SmartDashboard.getNumber("Ground Intake Grabber/Intake Speed", 0);
+    SmartDashboard.getNumber("Ground Intake Grabber/Hold Speed", 0);
+
+    // command to disable tab
+
   }
 }
