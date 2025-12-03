@@ -43,7 +43,7 @@ import frc.robot.util.TalonFXAdapter;
 import java.util.Map;
 
 @RobotPreferencesLayout(groupName = "Elevator", row = 0, column = 5, width = 1, height = 3)
-public class Elevator extends SubsystemBase implements ActiveSubsystem {
+public class Elevator extends SubsystemBase implements ActiveSubsystem, DataPublisher {
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -327,5 +327,22 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem {
   public void simulationPeriodic() {
     simElevator.setInputVoltage(currentVoltage);
     simElevator.update(0.020);
+  }
+
+  public void publishData() {
+    if (!ENABLE_TAB.getValue()) {
+      return;
+    }
+
+    SmartDashboard.putNumber("Elevator/Status/Current Height", this.currentState.position);
+    SmartDashboard.putNumber("Elevator/Status/Current Velocity", this.currentState.velocity);
+    SmartDashboard.putNumber("Elevator/Status/Goal Height", this.goalState.position);
+    SmartDashboard.putNumber("Elevator/Status/Goal Velocity", this.goalState.velocity);
+    SmartDashboard.putBoolean("Elevator/Status/Is Enabled", this.isSeekingGoal);
+    SmartDashboard.putNumber("Elevator/Status/Max Velocity", MAX_SPEED);
+    SmartDashboard.putNumber("Elevator/Status/Max Acceleration", MAX_ACCELERATION);
+    SmartDashboard.putNumber("Elevator/Control/Current Height", this.currentState.position);
+    SmartDashboard.getNumber("Elevator/Control/Elevator Height", 0);
+    
   }
 }
