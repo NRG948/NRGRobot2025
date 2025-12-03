@@ -30,6 +30,7 @@ import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.parameters.ArmParameters;
@@ -42,7 +43,7 @@ import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 @RobotPreferencesLayout(groupName = "Arm", row = 2, column = 4, width = 1, height = 1)
-public class Arm extends SubsystemBase implements ActiveSubsystem {
+public class Arm extends SubsystemBase implements ActiveSubsystem, DataPublisher {
   private static final double TOLERANCE = Math.toRadians(1.5);
   private static final double RADIANS_PER_ROTATION = 2 * Math.PI;
   private static final double ERROR_MARGIN = Math.toRadians(5);
@@ -247,5 +248,17 @@ public class Arm extends SubsystemBase implements ActiveSubsystem {
   @Override
   public void periodic() {
     updateTelemetry();
+  }
+
+  public void publishData() {
+    if (!ENABLE_TAB.getValue()) {
+      return;
+    }
+    SmartDashboard.putBoolean("Arm - Enabled", enabled);
+    SmartDashboard.putNumber("Arm - Current Angle of Motor Encoder", Math.toDegrees(currentAngle));
+    SmartDashboard.putNumber("Arm - Goal Angle", Math.toDegrees(goalAngle));
+    SmartDashboard.putNumber("Arm - Current Velocity", Math.toDegrees(currentVelocity));
+
+    SmartDashboard.getNumber("Arm - Angle", 0);
   }
 }
