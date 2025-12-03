@@ -135,9 +135,9 @@ public class LaserCAN extends SubsystemBase implements DataPublisher {
   }
 
   public void publishData() {
-    SmartDashboard.putNumber("LaserCAN - Left Distance", leftDistance);
-    SmartDashboard.putNumber("LaserCAN - Right Distance", rightDistance);
-    SmartDashboard.putNumber("LaserCAN - Angle to Wall", angleToWall);
-    SmartDashboard.putNumber("LaserCAN - Average Distance", getAverageDistance());
+    SmartDashboard.putNumber("LaserCAN/Status/Left Distance", leftDistance);
+    SmartDashboard.putNumber("LaserCAN/Status/Right Distance", rightDistance);
+    SmartDashboard.putNumber("LaserCAN/Status/Angle to Wall", angleToWall);
+    SmartDashboard.putNumber("LaserCAN/Status/Average Distance", getAverageDistance());
   }
 }

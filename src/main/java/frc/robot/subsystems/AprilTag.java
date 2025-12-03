@@ -4,7 +4,7 @@
  * Open Source Software; you can modify and/or share it under the terms of
  * the license file in the root directory of this project.
  */
- 
+
 package frc.robot.subsystems;
 
 import static frc.robot.RobotContainer.RobotSelector.CompetitionRobot2025;
@@ -31,6 +31,7 @@ import edu.wpi.first.util.datalog.StructLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.util.FieldUtils;
@@ -44,16 +45,8 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-@RobotPreferencesLayout(
-    groupName = "AprilTag",
-    column = 2,
-    row = 3,
-    width = 6,
-    height = 1,
-    type = "Grid Layout",
-    gridColumns = 4,
-    gridRows = 1)
-public class AprilTag extends SubsystemBase {
+@RobotPreferencesLayout(groupName = "AprilTag", column = 2, row = 3, width = 6, height = 1, type = "Grid Layout", gridColumns = 4, gridRows = 1)
+public class AprilTag extends SubsystemBase implements DataPublisher {
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -63,54 +56,56 @@ public class AprilTag extends SubsystemBase {
   private static final double LAST_RESULT_TIMEOUT = 0.1;
 
   // TODO: verify ALL camera rotations and transforms.
-  private static final Rotation3d FRONT_RIGHT_CAMERA_ROTATION =
-      new Rotation3d(toRadians(0), toRadians(-22), toRadians(16.8));
-  // The FR camera transform on the comp bot was previously (+0.274, -0.286, +0.197).
-  public static final Transform3d ROBOT_TO_FRONT_RIGHT_CAMERA =
-      new Transform3d(new Translation3d(+0.274, -0.297, +0.197), FRONT_RIGHT_CAMERA_ROTATION);
+  private static final Rotation3d FRONT_RIGHT_CAMERA_ROTATION = new Rotation3d(toRadians(0), toRadians(-22),
+      toRadians(16.8));
+  // The FR camera transform on the comp bot was previously (+0.274, -0.286,
+  // +0.197).
+  public static final Transform3d ROBOT_TO_FRONT_RIGHT_CAMERA = new Transform3d(
+      new Translation3d(+0.274, -0.297, +0.197), FRONT_RIGHT_CAMERA_ROTATION);
 
-  private static final Rotation3d FRONT_LEFT_CAMERA_ROTATION =
-      new Rotation3d(toRadians(0), toRadians(-22), toRadians(-16.8));
-  // The FL camera transform on the comp bot was previously (+0.274, +0.286, +0.197).
-  public static final Transform3d ROBOT_TO_FRONT_LEFT_CAMERA =
-      new Transform3d(new Translation3d(+0.274, +0.297, +0.197), FRONT_LEFT_CAMERA_ROTATION);
+  private static final Rotation3d FRONT_LEFT_CAMERA_ROTATION = new Rotation3d(toRadians(0), toRadians(-22),
+      toRadians(-16.8));
+  // The FL camera transform on the comp bot was previously (+0.274, +0.286,
+  // +0.197).
+  public static final Transform3d ROBOT_TO_FRONT_LEFT_CAMERA = new Transform3d(
+      new Translation3d(+0.274, +0.297, +0.197), FRONT_LEFT_CAMERA_ROTATION);
 
   /**
    * The robot's vision parameters.
    *
-   * @param robotToFrontRightCamera transform from the robot's odometry center to the front right
-   *     camera.
-   * @param robotToFrontLeftCamera transform from the robot's odometry center to the front left
-   *     camera.
+   * @param robotToFrontRightCamera transform from the robot's odometry center to
+   *                                the front right
+   *                                camera.
+   * @param robotToFrontLeftCamera  transform from the robot's odometry center to
+   *                                the front left
+   *                                camera.
    */
   public record VisionParameters(
       Optional<Transform3d> robotToFrontRightCamera,
-      Optional<Transform3d> robotToFrontLeftCamera) {}
+      Optional<Transform3d> robotToFrontLeftCamera) {
+  }
 
-  public static final VisionParameters PRACTICE_VISION_PARAMS =
-      new VisionParameters(
-          Optional.of(ROBOT_TO_FRONT_RIGHT_CAMERA), //
-          Optional.of(ROBOT_TO_FRONT_LEFT_CAMERA));
-  public static final VisionParameters COMPETITION_VISION_PARAMS =
-      new VisionParameters(
-          Optional.of(ROBOT_TO_FRONT_RIGHT_CAMERA), //
-          Optional.of(ROBOT_TO_FRONT_LEFT_CAMERA));
+  public static final VisionParameters PRACTICE_VISION_PARAMS = new VisionParameters(
+      Optional.of(ROBOT_TO_FRONT_RIGHT_CAMERA), //
+      Optional.of(ROBOT_TO_FRONT_LEFT_CAMERA));
+  public static final VisionParameters COMPETITION_VISION_PARAMS = new VisionParameters(
+      Optional.of(ROBOT_TO_FRONT_RIGHT_CAMERA), //
+      Optional.of(ROBOT_TO_FRONT_LEFT_CAMERA));
 
-  public static final VisionParameters PARAMETERS =
-      RobotContainer.ROBOT_TYPE
-          .select(
-              Map.of(
-                  PracticeRobot2025, PRACTICE_VISION_PARAMS,
-                  CompetitionRobot2025, COMPETITION_VISION_PARAMS))
-          .orElse(COMPETITION_VISION_PARAMS);
+  public static final VisionParameters PARAMETERS = RobotContainer.ROBOT_TYPE
+      .select(
+          Map.of(
+              PracticeRobot2025, PRACTICE_VISION_PARAMS,
+              CompetitionRobot2025, COMPETITION_VISION_PARAMS))
+      .orElse(COMPETITION_VISION_PARAMS);
 
   @RobotPreferencesValue(column = 0, row = 0)
-  public static final RobotPreferences.BooleanValue ENABLED =
-      new RobotPreferences.BooleanValue("AprilTag", "Enabled", true);
+  public static final RobotPreferences.BooleanValue ENABLED = new RobotPreferences.BooleanValue("AprilTag", "Enabled",
+      true);
 
   @RobotPreferencesValue(column = 1, row = 0)
-  public static final RobotPreferences.BooleanValue ENABLE_TAB =
-      new RobotPreferences.BooleanValue("AprilTag", "Enable Tab", false);
+  public static final RobotPreferences.BooleanValue ENABLE_TAB = new RobotPreferences.BooleanValue("AprilTag",
+      "Enable Tab", false);
 
   private enum PoseEstimationStrategy {
     AverageBestTargets(PoseStrategy.AVERAGE_BEST_TARGETS),
@@ -134,9 +129,8 @@ public class AprilTag extends SubsystemBase {
   }
 
   @RobotPreferencesValue(column = 2, row = 0)
-  public static EnumValue<PoseEstimationStrategy> POSE_ESTIMATION_STRATEGY =
-      new EnumValue<PoseEstimationStrategy>(
-          "AprilTag", "Pose Est. Strategy", PoseEstimationStrategy.MultiTagPnpOnCoprocessor);
+  public static EnumValue<PoseEstimationStrategy> POSE_ESTIMATION_STRATEGY = new EnumValue<PoseEstimationStrategy>(
+      "AprilTag", "Pose Est. Strategy", PoseEstimationStrategy.MultiTagPnpOnCoprocessor);
 
   private final PhotonCamera camera;
   private final Transform3d cameraToRobot;
@@ -166,7 +160,7 @@ public class AprilTag extends SubsystemBase {
   /**
    * Constructs a new AprilTagSubsystem instance.
    *
-   * @param cameraName The name of the camera.
+   * @param cameraName    The name of the camera.
    * @param robotToCamera The transform from the robot to the camera.
    */
   public AprilTag(String cameraName, Transform3d robotToCamera) {
@@ -175,11 +169,10 @@ public class AprilTag extends SubsystemBase {
     this.robotToCamera = robotToCamera;
     this.cameraToRobot = robotToCamera.inverse();
 
-    estimator =
-        new PhotonPoseEstimator(
-            FieldUtils.getFieldLayout(),
-            POSE_ESTIMATION_STRATEGY.getValue().getStrategy(),
-            robotToCamera);
+    estimator = new PhotonPoseEstimator(
+        FieldUtils.getFieldLayout(),
+        POSE_ESTIMATION_STRATEGY.getValue().getStrategy(),
+        robotToCamera);
 
     for (int i = 1; i <= 22; i++) {
       aprilTagIdChooser.addOption(String.valueOf(i), i);
@@ -189,19 +182,22 @@ public class AprilTag extends SubsystemBase {
     hasTargetLogger = new BooleanLogEntry(LOG, String.format("/%s/Has Target", cameraName));
     distanceLogger = new DoubleLogEntry(LOG, String.format("/%s/Distance", cameraName));
     angleLogger = new DoubleLogEntry(LOG, String.format("/%s/Angle", cameraName));
-    estimatedPoseLogger =
-        StructLogEntry.create(LOG, String.format("/%s/Estimated Pose", cameraName), Pose2d.struct);
+    estimatedPoseLogger = StructLogEntry.create(LOG, String.format("/%s/Estimated Pose", cameraName), Pose2d.struct);
   }
 
   /**
-   * The latest estimated robot pose on the field from vision data. This may be empty. This should
+   * The latest estimated robot pose on the field from vision data. This may be
+   * empty. This should
    * only be called once per loop.
    *
-   * <p>Also includes updates for the standard deviations, which can (optionally) be retrieved with
+   * <p>
+   * Also includes updates for the standard deviations, which can (optionally) be
+   * retrieved with
    * {@link getEstimationStdDevs}
    *
-   * @return An {@link EstimatedRobotPose} with an estimated pose, estimate timestamp, and targets
-   *     used for estimation.
+   * @return An {@link EstimatedRobotPose} with an estimated pose, estimate
+   *         timestamp, and targets
+   *         used for estimation.
    */
   public Optional<EstimatedRobotPose> getEstimateGlobalPose() {
     return this.globalEstimatedPose;
@@ -210,11 +206,13 @@ public class AprilTag extends SubsystemBase {
   /**
    * Calculates new standard deviations for pose estimation.
    *
-   * <p>This algorithm is a heuristic that creates dynamic standard deviations based on number of
+   * <p>
+   * This algorithm is a heuristic that creates dynamic standard deviations based
+   * on number of
    * tags, estimation strategy, and distance from the tags.
    *
    * @param estimatedPose The estimated pose to guess standard deviations for.
-   * @param targets All targets in this camera frame
+   * @param targets       All targets in this camera frame
    */
   private void updateEstimationStdDevs(
       Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
@@ -229,19 +227,19 @@ public class AprilTag extends SubsystemBase {
       int numTags = 0;
       double avgDist = 0;
 
-      // Precalculation - see how many tags we found, and calculate an average-distance metric
+      // Precalculation - see how many tags we found, and calculate an
+      // average-distance metric
       for (var tgt : targets) {
         var tagPose = estimator.getFieldTags().getTagPose(tgt.getFiducialId());
         if (tagPose.isEmpty()) {
           continue;
         }
         numTags++;
-        avgDist +=
-            tagPose
-                .get()
-                .toPose2d()
-                .getTranslation()
-                .getDistance(estimatedPose.get().estimatedPose.toPose2d().getTranslation());
+        avgDist += tagPose
+            .get()
+            .toPose2d()
+            .getTranslation()
+            .getDistance(estimatedPose.get().estimatedPose.toPose2d().getTranslation());
       }
 
       if (numTags == 0) {
@@ -266,8 +264,10 @@ public class AprilTag extends SubsystemBase {
   }
 
   /**
-   * The standard deviations of the estimated pose from {@link #getEstimateGlobalPose()}, for use
-   * with {@link edu.wpi.first.math.estimator.SwerveDrivePoseEstimator SwerveDrivePoseEstimator}.
+   * The standard deviations of the estimated pose from
+   * {@link #getEstimateGlobalPose()}, for use
+   * with {@link edu.wpi.first.math.estimator.SwerveDrivePoseEstimator
+   * SwerveDrivePoseEstimator}.
    * This should only be used when there are targets visible.
    */
   public Matrix<N3, N1> getEstimationStdDevs() {
@@ -302,8 +302,7 @@ public class AprilTag extends SubsystemBase {
     }
 
     if (currentResult.isPresent()
-        || (Timer.getFPGATimestamp() - this.result.orElse(NO_RESULT).getTimestampSeconds())
-            > LAST_RESULT_TIMEOUT) {
+        || (Timer.getFPGATimestamp() - this.result.orElse(NO_RESULT).getTimestampSeconds()) > LAST_RESULT_TIMEOUT) {
       this.result = currentResult;
     }
 
@@ -384,7 +383,8 @@ public class AprilTag extends SubsystemBase {
   }
 
   /**
-   * Returns the timestamp of the latest vision result. This is only valid if the subsystem has
+   * Returns the timestamp of the latest vision result. This is only valid if the
+   * subsystem has
    * targets.
    */
   public double getTargetTimeStamp() {
@@ -407,7 +407,8 @@ public class AprilTag extends SubsystemBase {
   }
 
   /**
-   * Returns the distance from center of the robot to the target with the input ID. Returns 0 if
+   * Returns the distance from center of the robot to the target with the input
+   * ID. Returns 0 if
    * target not found.
    *
    * @param id The AprilTag ID.
@@ -420,5 +421,31 @@ public class AprilTag extends SubsystemBase {
     }
     var bestCameraToTarget = robotToCamera.plus(target.get().getBestCameraToTarget());
     return Math.hypot(bestCameraToTarget.getX(), bestCameraToTarget.getY());
+  }
+
+  public void publishData() {
+    SmartDashboard.putBoolean("April Tag/Has Target", hasTargets());
+    SmartDashboard.putNumber("April Tag/Selected Tag/to Target", distanceToSelectedTarget);
+    SmartDashboard.putNumber(
+        "April Tag/Selected Tag/Angle to Target", Math.toDegrees(angleToSelectedTarget));
+    SmartDashboard.putNumber(
+        "April Tag/Selected Tag/April Tag Pose X", selectedAprilTagPose.getX());
+    SmartDashboard.putNumber(
+        "April Tag/Selected Tag/April Tag Pose Y", selectedAprilTagPose.getY());
+    SmartDashboard.putNumber(
+        "April Tag/Selected Tag/April Tag Pose Z", selectedAprilTagPose.getZ());
+    SmartDashboard.putNumber(
+        "April Tag/Selected Tag/April Tag Pose Roll",
+        Math.toDegrees(selectedAprilTagPose.getRotation().getX()));
+    SmartDashboard.putNumber(
+        "April Tag/Selected Tag/April Tag Pose Pitch",
+        Math.toDegrees(selectedAprilTagPose.getRotation().getY()));
+    SmartDashboard.putNumber(
+        "April Tag/Selected Tag/April Tag Pose Yaw",
+        Math.toDegrees(selectedAprilTagPose.getRotation().getZ()));
+    SmartDashboard.putNumber("April Tag/Estimated Tag/April Tag Pose X", lastEstimatedPose.getX());
+    SmartDashboard.putNumber("April Tag/Estimated Tag/April Tag Pose Y", lastEstimatedPose.getY());
+    SmartDashboard.putNumber(
+        "April Tag/Estimated Tag/April Tag Pose Yaw", lastEstimatedPose.getRotation().getDegrees());
   }
 }
