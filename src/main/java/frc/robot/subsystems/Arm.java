@@ -251,14 +251,13 @@ public class Arm extends SubsystemBase implements ActiveSubsystem, DataPublisher
   }
 
   public void publishData() {
-    if (!ENABLE_TAB.getValue()) {
-      return;
-    }
     SmartDashboard.putBoolean("Arm/Status/Enabled", enabled);
-    SmartDashboard.putNumber("Arm/Status/Current Angle of Motor Encoder", Math.toDegrees(currentAngle));
+    SmartDashboard.putNumber(
+        "Arm/Status/Current Angle of Motor Encoder", Math.toDegrees(currentAngle));
     SmartDashboard.putNumber("Arm/Status/Goal Angle", Math.toDegrees(goalAngle));
     SmartDashboard.putNumber("Arm/Status/Current Velocity", Math.toDegrees(currentVelocity));
 
-    SmartDashboard.getNumber("Arm/Control/Angle", 0);
+    double angle = SmartDashboard.getNumber("Arm/Control/Angle", 0);
+    SmartDashboard.putNumber("Arm/Control/Angle", angle);
   }
 }

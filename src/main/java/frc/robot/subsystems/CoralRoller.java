@@ -4,7 +4,7 @@
  * Open Source Software; you can modify and/or share it under the terms of
  * the license file in the root directory of this project.
  */
-
+ 
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.CORAL_ROLLER_MOTOR_ID;
@@ -34,20 +34,28 @@ import frc.robot.util.MotorIdleMode;
 import frc.robot.util.RelativeEncoder;
 import frc.robot.util.TalonFXAdapter;
 
-@RobotPreferencesLayout(groupName = "CoralRoller", row = 2, column = 0, width = 2, height = 2, type = "Grid Layout", gridColumns = 2, gridRows = 2)
+@RobotPreferencesLayout(
+    groupName = "CoralRoller",
+    row = 2,
+    column = 0,
+    width = 2,
+    height = 2,
+    type = "Grid Layout",
+    gridColumns = 2,
+    gridRows = 2)
 public class CoralRoller extends SubsystemBase implements ActiveSubsystem, DataPublisher {
 
   @RobotPreferencesValue(column = 0, row = 0)
-  public static final RobotPreferences.BooleanValue ENABLE_TAB = new RobotPreferences.BooleanValue("CoralRoller",
-      "Enable Tab", false);
+  public static final RobotPreferences.BooleanValue ENABLE_TAB =
+      new RobotPreferences.BooleanValue("CoralRoller", "Enable Tab", false);
 
   @RobotPreferencesValue(column = 1, row = 0)
-  public static final RobotPreferences.DoubleValue INTAKE_VELOCITY = new RobotPreferences.DoubleValue("CoralRoller",
-      "Intake Velocity", 1);
+  public static final RobotPreferences.DoubleValue INTAKE_VELOCITY =
+      new RobotPreferences.DoubleValue("CoralRoller", "Intake Velocity", 1);
 
   @RobotPreferencesValue(column = 1, row = 1)
-  public static final RobotPreferences.DoubleValue AUTO_CENTER_VELOCITY = new RobotPreferences.DoubleValue(
-      "CoralRoller", "Auto Center Velocity", -1);
+  public static final RobotPreferences.DoubleValue AUTO_CENTER_VELOCITY =
+      new RobotPreferences.DoubleValue("CoralRoller", "Auto Center Velocity", -1);
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -55,19 +63,21 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, DataP
   private static final double GEAR_RATIO = 9;
 
   private static final double METERS_PER_REVOLUTION = (WHEEL_DIAMETER * Math.PI) / GEAR_RATIO;
-  private static final double MAX_VELOCITY = (MotorParameters.KrakenX60.getFreeSpeedRPM() * METERS_PER_REVOLUTION) / 60;
+  private static final double MAX_VELOCITY =
+      (MotorParameters.KrakenX60.getFreeSpeedRPM() * METERS_PER_REVOLUTION) / 60;
 
   private static final double KS = KrakenX60.getKs();
   private static final double KV = (MAX_BATTERY_VOLTAGE - KS) / MAX_VELOCITY;
 
   private static final double ERROR_TIME = 3.0;
 
-  private final TalonFXAdapter motor = new TalonFXAdapter(
-      "/CoralRoller",
-      new TalonFX(CORAL_ROLLER_MOTOR_ID, "rio"),
-      CLOCKWISE_POSITIVE,
-      BRAKE,
-      METERS_PER_REVOLUTION);
+  private final TalonFXAdapter motor =
+      new TalonFXAdapter(
+          "/CoralRoller",
+          new TalonFX(CORAL_ROLLER_MOTOR_ID, "rio"),
+          CLOCKWISE_POSITIVE,
+          BRAKE,
+          METERS_PER_REVOLUTION);
   private final RelativeEncoder encoder = motor.getEncoder();
   private DigitalInput beamBreak = new DigitalInput(CORAL_ROLLER_BEAM_BREAK);
 
@@ -80,7 +90,8 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, DataP
   private boolean hasCoral = false;
   private boolean hasError = false;
 
-  private DoubleLogEntry logCurrentVelocity = new DoubleLogEntry(LOG, "/CoralRoller/currentVelocity");
+  private DoubleLogEntry logCurrentVelocity =
+      new DoubleLogEntry(LOG, "/CoralRoller/currentVelocity");
   private DoubleLogEntry logGoalVelocity = new DoubleLogEntry(LOG, "/CoralRoller/goalVelocity");
   private BooleanLogEntry logHasCoral = new BooleanLogEntry(LOG, "/CoralRoller/hasCoral");
   private DoubleLogEntry logFeedForward = new DoubleLogEntry(LOG, "/CoralRoller/feedforward");
@@ -88,8 +99,7 @@ public class CoralRoller extends SubsystemBase implements ActiveSubsystem, DataP
   private DoubleLogEntry logVoltage = new DoubleLogEntry(LOG, "/CoralRoller/voltage");
 
   /** Creates a new CoralRoller. */
-  public CoralRoller() {
-  }
+  public CoralRoller() {}
 
   /** Sets the goal velocity in meters per second. */
   public void setGoalVelocity(double velocity) {

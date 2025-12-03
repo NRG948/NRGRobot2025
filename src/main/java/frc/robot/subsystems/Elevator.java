@@ -330,10 +330,6 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, DataPubl
   }
 
   public void publishData() {
-    if (!ENABLE_TAB.getValue()) {
-      return;
-    }
-
     SmartDashboard.putNumber("Elevator/Status/Current Height", this.currentState.position);
     SmartDashboard.putNumber("Elevator/Status/Current Velocity", this.currentState.velocity);
     SmartDashboard.putNumber("Elevator/Status/Goal Height", this.goalState.position);
@@ -343,6 +339,5 @@ public class Elevator extends SubsystemBase implements ActiveSubsystem, DataPubl
     SmartDashboard.putNumber("Elevator/Status/Max Acceleration", MAX_ACCELERATION);
     SmartDashboard.putNumber("Elevator/Control/Current Height", this.currentState.position);
     SmartDashboard.getNumber("Elevator/Control/Elevator Height", 0);
-    
   }
 }

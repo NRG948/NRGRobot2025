@@ -4,7 +4,7 @@
  * Open Source Software; you can modify and/or share it under the terms of
  * the license file in the root directory of this project.
  */
-
+ 
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.RobotConstants.CAN.TalonFX.COMPETITION_BOT_CLIMBER_MOTOR_ID;
@@ -38,8 +38,8 @@ import java.util.Map;
 @RobotPreferencesLayout(groupName = "Climber", row = 0, column = 6, width = 2, height = 3)
 public class Climber extends SubsystemBase implements ActiveSubsystem, DataPublisher {
   @RobotPreferencesValue
-  public static final RobotPreferences.BooleanValue ENABLE_TAB = new RobotPreferences.BooleanValue("Climber",
-      "Enable Tab", false);
+  public static final RobotPreferences.BooleanValue ENABLE_TAB =
+      new RobotPreferences.BooleanValue("Climber", "Enable Tab", false);
 
   private static final DataLog LOG = DataLogManager.getLog();
 
@@ -52,27 +52,24 @@ public class Climber extends SubsystemBase implements ActiveSubsystem, DataPubli
   /**
    * The robot's climber parameters.
    *
-   * @param motorID           The CAN ID of the climber motor.
-   * @param encoderZeroOffset The zero point of the encoder in radians with range
-   *                          -π to π radians.
-   *                          <p>
-   *                          To get this value, set it to zero initially and read
-   *                          the value from the encoder. Pass
-   *                          the observed value here.
+   * @param motorID The CAN ID of the climber motor.
+   * @param encoderZeroOffset The zero point of the encoder in radians with range -π to π radians.
+   *     <p>To get this value, set it to zero initially and read the value from the encoder. Pass
+   *     the observed value here.
    */
-  public record ClimberParameters(int motorID, double encoderZeroOffset) {
-  }
+  public record ClimberParameters(int motorID, double encoderZeroOffset) {}
 
-  public static final ClimberParameters PRACTICE_BOT_PARAMETERS = new ClimberParameters(PRACTICE_BOT_CLIMBER_MOTOR_ID,
-      Math.toRadians(173.1));
-  public static final ClimberParameters COMPETITION_BOT_PARAMETERS = new ClimberParameters(
-      COMPETITION_BOT_CLIMBER_MOTOR_ID, Math.toRadians(179.74));
-  public static final ClimberParameters PARAMETERS = RobotContainer.ROBOT_TYPE
-      .select(
-          Map.of(
-              PracticeRobot2025, PRACTICE_BOT_PARAMETERS,
-              CompetitionRobot2025, COMPETITION_BOT_PARAMETERS))
-      .orElse(COMPETITION_BOT_PARAMETERS);
+  public static final ClimberParameters PRACTICE_BOT_PARAMETERS =
+      new ClimberParameters(PRACTICE_BOT_CLIMBER_MOTOR_ID, Math.toRadians(173.1));
+  public static final ClimberParameters COMPETITION_BOT_PARAMETERS =
+      new ClimberParameters(COMPETITION_BOT_CLIMBER_MOTOR_ID, Math.toRadians(179.74));
+  public static final ClimberParameters PARAMETERS =
+      RobotContainer.ROBOT_TYPE
+          .select(
+              Map.of(
+                  PracticeRobot2025, PRACTICE_BOT_PARAMETERS,
+                  CompetitionRobot2025, COMPETITION_BOT_PARAMETERS))
+          .orElse(COMPETITION_BOT_PARAMETERS);
 
   @RobotPreferencesValue
   public static DoubleValue CLIMB_MAX_POWER = new DoubleValue("Climber", "Max Power", 0.75);
@@ -81,24 +78,27 @@ public class Climber extends SubsystemBase implements ActiveSubsystem, DataPubli
   public static DoubleValue TOLERANCE_DEG = new DoubleValue("Climber", "Tolerance (deg)", 1);
 
   @RobotPreferencesValue
-  public static DoubleValue PROPORTIONAL_CONTROL_THRESHOLD_DEG = new DoubleValue("Climber",
-      "Proportional Control Threshold", 10);
+  public static DoubleValue PROPORTIONAL_CONTROL_THRESHOLD_DEG =
+      new DoubleValue("Climber", "Proportional Control Threshold", 10);
 
   private double currentAngle; // in radians
   private double goalAngle; // in radians
   private boolean enabled;
 
-  private final AbsoluteAngleEncoder absoluteEncoder = new RevThroughboreEncoderAdapter(
-      CLIMBER_ABSOLUTE_ENCODER, true, PARAMETERS.encoderZeroOffset);
+  private final AbsoluteAngleEncoder absoluteEncoder =
+      new RevThroughboreEncoderAdapter(
+          CLIMBER_ABSOLUTE_ENCODER, true, PARAMETERS.encoderZeroOffset);
 
-  private TalonFXAdapter mainMotor = new TalonFXAdapter(
-      "/Climber",
-      new TalonFX(PARAMETERS.motorID, "rio"),
-      COUNTER_CLOCKWISE_POSITIVE,
-      BRAKE,
-      1.0); // filler value; motor encoder value is not used.
+  private TalonFXAdapter mainMotor =
+      new TalonFXAdapter(
+          "/Climber",
+          new TalonFX(PARAMETERS.motorID, "rio"),
+          COUNTER_CLOCKWISE_POSITIVE,
+          BRAKE,
+          1.0); // filler value; motor encoder value is not used.
 
-  private DoubleLogEntry logCurrentAbsoluteAngle = new DoubleLogEntry(LOG, "/Climber/Absolute Angle");
+  private DoubleLogEntry logCurrentAbsoluteAngle =
+      new DoubleLogEntry(LOG, "/Climber/Absolute Angle");
   private DoubleLogEntry logGoalAngle = new DoubleLogEntry(LOG, "/Climber/Goal Angle");
   private BooleanLogEntry logEnabled = new BooleanLogEntry(LOG, "/Climber/Is Enabled");
   private DoubleLogEntry logMotorPower = new DoubleLogEntry(LOG, "/Climber/Motor Power");
@@ -107,8 +107,7 @@ public class Climber extends SubsystemBase implements ActiveSubsystem, DataPubli
   private RelativeEncoder encoder = mainMotor.getEncoder();
 
   /** Creates a new Climber subsystem. */
-  public Climber() {
-  }
+  public Climber() {}
 
   @Override
   public void periodic() {
