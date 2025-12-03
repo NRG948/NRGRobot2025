@@ -198,7 +198,10 @@ public class Subsystems {
     }
   }
 
-  /** Puts data into network tables for all subsystems implementing the {@link DataPublisher} interface. */
+  /**
+   * Puts data into network tables for all subsystems implementing the {@link DataPublisher}
+   * interface.
+   */
   public void publishAllData() {
     for (Subsystem subsystem : all) {
       if (subsystem instanceof DataPublisher) {

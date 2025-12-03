@@ -23,7 +23,6 @@ import static frc.robot.util.ReefPosition.LEFT_BRANCH;
 import static frc.robot.util.ReefPosition.RIGHT_BRANCH;
 
 import au.grapplerobotics.CanBridge;
-import com.nrg948.preferences.RobotPreferences;
 import com.nrg948.preferences.RobotPreferences.EnumValue;
 import com.nrg948.preferences.RobotPreferencesLayout;
 import com.nrg948.preferences.RobotPreferencesValue;
@@ -134,7 +133,7 @@ public class RobotContainer {
   }
 
   private void initShuffleboard() {
-    RobotPreferences.addShuffleBoardTab();
+    // TODO: Port some robot preferences stuff to own stuff.
 
     if (subsystems.frontRightCamera.isPresent()) {
       VideoSource video =
