@@ -171,9 +171,11 @@ public class CoralGroundIntakeGrabber extends SubsystemBase
     /*
      * meant to emulate shuffleboard Commands.runOnce() set goal velocities
      */
-    SmartDashboard.getNumber("Ground Intake Grabber/Intake Speed", 0);
-    SmartDashboard.getNumber("Ground Intake Grabber/Hold Speed", 0);
+    double angle = SmartDashboard.getNumber("Ground Intake Grabber/Intake Speed", 0);
+    SmartDashboard.putNumber("Ground Intake Grabber/Intake Speed", angle);
 
+    angle = SmartDashboard.getNumber("Ground Intake Grabber/Hold Speed", 0);
+    SmartDashboard.putNumber("Ground Intake Grabber/Hold Speed", angle);
     // command to disable tab
 
   }

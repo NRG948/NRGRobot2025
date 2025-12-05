@@ -174,7 +174,8 @@ public class Climber extends SubsystemBase implements ActiveSubsystem, DataPubli
     /*
      * meant to emulate shuffleboard Commands.runOnce() set angle
      */
-    SmartDashboard.getNumber("Climber/Set Angle (deg)", 0);
+    double angle = SmartDashboard.getNumber("Climber/Set Angle (deg)", 0);
+    SmartDashboard.putNumber("Climber/Set Angle (deg)", angle);
     // orignal code had command for disabling current tab
   }
 }
