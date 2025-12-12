@@ -1,0 +1,105 @@
+{
+  "version": 1.0,
+  "grid_size": 128,
+  "tabs": [
+    {
+      "name": "Teleoperated",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "April Tag",
+            "x": 512.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Has Target",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/April Tag/Has Target",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              }
+            ]
+          },
+          {
+            "title": "Control",
+            "x": 256.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Current Height",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Elevator/Control/Current Height",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "Elevator Height",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/SmartDashboard/Elevator/Control/Elevator Height",
+                  "period": 0.06,
+                  "data_type": "double",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          }
+        ],
+        "containers": [
+          {
+            "title": "Preferences",
+            "x": 768.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 512.0,
+            "type": "RobotPreferences",
+            "properties": {
+              "topic": "/Preferences",
+              "period": 0.06
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Autonomous",
+      "grid_layout": {
+        "layouts": [],
+        "containers": []
+      }
+    }
+  ]
+}
