@@ -291,7 +291,14 @@ public class AprilTag extends SubsystemBase implements ShuffleboardProducer {
     List<PhotonPipelineResult> allUnreadResults = camera.getAllUnreadResults();
     for (var change : allUnreadResults) {
 
-      visionEst = estimator.update(change);
+      Optional<EstimatedRobotPose> visionEstTemp = estimator.update(change);
+      // Only update the vision estimate if it is not empty.
+      // This way, we discard empty updates from the coprocessor
+      // and ensure we are always receiving fresh data every control cycle.
+      if (visionEstTemp.isEmpty()) {
+        continue;
+      }
+      visionEst = visionEstTemp;
       updateEstimationStdDevs(visionEst, change.getTargets());
       currentResult = Optional.of(change);
     }
